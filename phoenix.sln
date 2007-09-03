@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual C++ Express 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "phoenix", "phoenix\phoenix.vcproj", "{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cpu", "cpu\cpu.vcproj", "{15A4AF88-4429-4720-AEF7-700335CF8CF1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "common", "common\common.vcproj", "{5320668F-EDA7-49EB-90FF-EEC79CABC957}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "memory", "memory\memory.vcproj", "{316E1001-8C02-460F-AD90-EBB6A9FA5744}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}.Debug|Win32.ActiveCfg = Debug|Win32
+		{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}.Debug|Win32.Build.0 = Debug|Win32
+		{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}.Release|Win32.ActiveCfg = Release|Win32
+		{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}.Release|Win32.Build.0 = Release|Win32
+		{15A4AF88-4429-4720-AEF7-700335CF8CF1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{15A4AF88-4429-4720-AEF7-700335CF8CF1}.Debug|Win32.Build.0 = Debug|Win32
+		{15A4AF88-4429-4720-AEF7-700335CF8CF1}.Release|Win32.ActiveCfg = Release|Win32
+		{15A4AF88-4429-4720-AEF7-700335CF8CF1}.Release|Win32.Build.0 = Release|Win32
+		{5320668F-EDA7-49EB-90FF-EEC79CABC957}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5320668F-EDA7-49EB-90FF-EEC79CABC957}.Debug|Win32.Build.0 = Debug|Win32
+		{5320668F-EDA7-49EB-90FF-EEC79CABC957}.Release|Win32.ActiveCfg = Release|Win32
+		{5320668F-EDA7-49EB-90FF-EEC79CABC957}.Release|Win32.Build.0 = Release|Win32
+		{316E1001-8C02-460F-AD90-EBB6A9FA5744}.Debug|Win32.ActiveCfg = Debug|Win32
+		{316E1001-8C02-460F-AD90-EBB6A9FA5744}.Debug|Win32.Build.0 = Debug|Win32
+		{316E1001-8C02-460F-AD90-EBB6A9FA5744}.Release|Win32.ActiveCfg = Release|Win32
+		{316E1001-8C02-460F-AD90-EBB6A9FA5744}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
