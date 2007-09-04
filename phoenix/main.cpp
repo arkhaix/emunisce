@@ -12,7 +12,7 @@ int main(void)
 
 	CPU::af = 0x0102;
 
-	printf("%02x%02x\n", *CPU::a, *CPU::f);
+	printf("%02x%02x\n", CPU::a, CPU::f);
 	printf("%04x\n", CPU::af);
 
 	system("pause");
