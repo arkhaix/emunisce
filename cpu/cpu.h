@@ -62,6 +62,10 @@ public:
 	static u8& h;
 	static u8& l;
 
+	static bool iff1;
+	static bool iff2;
+	static bool delayInterrupts;	//??? unneeded?  thinking it should be used after/during DI, EI?
+
 	static void Initialize();
 	static void Reset();
 
@@ -104,16 +108,14 @@ private:
 
 	static void ExecDI();
 
-	static void ExecDJNZ(u8 e);
+	static void ExecDJNZ(u8 e);	//TODO
 
 	static void ExecEI();
 
 	static void ExecEX(u16* target1, u16* target2);
 	//static void ExecEX(u16 address, u16* target2);
 
-	static void ExecEXX();
-
-	static void ExecHALT();
+	static void ExecHALT();	//TODO
 
 	static void ExecINC(u8* target);
 	static void ExecINC(u16* target);
