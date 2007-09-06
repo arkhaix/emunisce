@@ -3,6 +3,7 @@
 
 #include "../common/types.h"
 
+class Memory;
 
 //Flag positions
 #define BIT_Z (7)
@@ -66,11 +67,17 @@ public:
 	static bool iff2;
 	static bool delayInterrupts;	//??? unneeded?  thinking it should be used after/during DI, EI?
 
+	static Memory* memory;
+
 	static void Initialize();
 	static void Reset();
 
+	static int Execute();
+
 
 private:
+
+	static int	ExecuteCB(u8 opcode);
 
 	/*
 	static void AddrImmediate(u8* op1);
