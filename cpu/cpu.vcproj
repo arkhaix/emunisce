@@ -133,6 +133,10 @@
 				RelativePath=".\cpu.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\cpuexec.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
