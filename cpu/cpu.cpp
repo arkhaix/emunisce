@@ -24,6 +24,8 @@ bool CPU::iff1 = false;
 bool CPU::iff2 = false;
 bool CPU::delayInterrupts = false;
 
+Memory* CPU::memory = 0;
+
 
 void CPU::Initialize()
 {
@@ -36,6 +38,18 @@ void CPU::Reset()
 }
 
 
+//////////////////////////////////////////////////////////////////
+
+
+int CPU::Execute()
+{
+	return 0;
+}
+
+int ExecuteCB(u8 opcode)
+{
+	return 0;
+}
 
 
 //////////////////////////////////////////////////////////////////
@@ -530,7 +544,7 @@ void CPU::ExecINC(u16* target)
 void CPU::ExecJP(bool test, u16 address)
 {
 	//TODO
-
+	
 	//Z unaffected
 
 	//N unaffected
@@ -708,7 +722,7 @@ void CPU::ExecRLA()
 	//C handled above
 }
 
-void ExecRLC(u8* target)
+void CPU::ExecRLC(u8* target)
 {
 	if(*target & 0x80)
 		SET_C;
@@ -1019,7 +1033,7 @@ void CPU::ExecSRL(u8* target)
 
 void CPU::ExecSUB(u8* target)
 {
-	int res = *target - value;
+	int res = a - *target;
 
 	//Z
 	if(res == 0)
@@ -1031,7 +1045,7 @@ void CPU::ExecSUB(u8* target)
 	SET_N;
 
 	//H
-	if( (*target ^ value ^ res) & 0x10 )
+	if( (a ^ *target ^ res) & 0x10 )
 		SET_H;
 	else
 		RES_H;
@@ -1042,7 +1056,7 @@ void CPU::ExecSUB(u8* target)
 	else
 		RES_C;
 
-	*target = (u8)res;
+	a = (u8)res;
 }
 
 void CPU::ExecXOR(u8* target)
