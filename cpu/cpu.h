@@ -121,9 +121,9 @@ private:
 	static void ExecINC(u16* target);
 	//static void ExecINC(u16 address);
 
-	static void ExecJP(bool test, u16 address);
+	static void ExecJP(bool test, u16 address);		//TODO
 
-	static void ExecJR(bool test, u8 value);
+	static void ExecJR(bool test, u8 value);		//TODO
 
 	static void ExecLD(u8* target, u8 value);
 	static void ExecLD(u16* target, u16 value);
@@ -134,14 +134,14 @@ private:
 	static void ExecOR(u8* target);
 	static void ExecOR(u8 value);
 
-	static void ExecPOP(u16* target);
+	static void ExecPOP(u16* target);	//TODO
 
-	static void ExecPUSH(u16* target);
+	static void ExecPUSH(u16* target);	//TODO
 
 	static void ExecRES(u8* target, int n);
 	//static void ExecRES(u16 address, int n);
 
-	static void ExecRET(bool test);
+	static void ExecRET(bool test);		//TODO
 
 	static void ExecRL(u8* target);
 	//static void ExecRL(u16 address);
@@ -163,7 +163,7 @@ private:
 
 	static void ExecRRCA();
 
-	static void ExecRST(u16 address);
+	static void ExecRST(u16 address);	//TODO
 
 	static void ExecSBC(u8* target, u8 value);
 	static void ExecSBC(u16* target, u16 value);
@@ -177,7 +177,7 @@ private:
 	//static void ExecSLA(u16 address);
 
 	//SLL?
-	static void ExecSLL(u8* target);	//value?
+	//static void ExecSLL(u8* target);	//value?	//??? this doesn't exist?
 
 	static void ExecSRA(u8* target);
 	//static void ExecSRA(u16 address);
