@@ -526,3 +526,541 @@ void CPU::ExecINC(u16* target)
 
 	//C unaffected
 }
+
+void CPU::ExecJP(bool test, u16 address)
+{
+	//TODO
+
+	//Z unaffected
+
+	//N unaffected
+
+	//H unaffected
+
+	//C unaffected
+}
+
+void CPU::ExecJR(bool test, u8 value)
+{
+	//TODO
+
+	//Z unaffected
+
+	//N unaffected
+
+	//H unaffected
+
+	//C unaffected
+}
+
+void CPU::ExecLD(u8* target, u8 value)
+{
+	*target = value;
+
+	//Z unaffected
+
+	//N unaffected
+
+	//H unaffected
+
+	//C unaffected
+}
+
+void CPU::ExecLD(u16* target, u16 value)
+{
+	*target = value;
+
+	//Z unaffected
+
+	//N unaffected
+
+	//H unaffected
+
+	//C unaffected
+}
+
+void CPU::ExecNOP()
+{
+	//Z unaffected
+
+	//N unaffected
+
+	//H unaffected
+
+	//C unaffected
+}
+
+void CPU::ExecOR(u8* target)
+{
+	a |= *target;
+
+	//Z
+	if(a == 0)
+		SET_Z;
+	else
+		RES_Z;
+
+	//N
+	RES_N;
+
+	//H
+	RES_H;
+
+	//C
+	RES_C;
+}
+
+void CPU::ExecOR(u8 value)
+{
+	a |= value;
+
+	//Z
+	if(a == 0)
+		SET_Z;
+	else
+		RES_Z;
+
+	//N
+	RES_N;
+
+	//H
+	RES_H;
+
+	//C
+	RES_C;
+}
+
+void CPU::ExecPOP(u16* target)
+{
+	//TODO
+}
+
+void CPU::ExecPUSH(u16* target)
+{
+	//TODO
+}
+
+void CPU::ExecRES(u8* target, int n)
+{
+	*target &= ~(1<<n);
+
+	//Z unaffected
+
+	//N unaffected
+
+	//H unaffected
+
+	//C unaffected
+}
+
+void CPU::ExecRET(bool test)
+{
+	//TODO
+}
+
+void CPU::ExecRL(u8* target)
+{
+	int oldC = TST_C;
+
+	if(*target & 0x80)
+		SET_C;
+	else
+		RES_C;
+
+	*target <<= 1;
+	*target |= oldC;
+
+	//Z
+	if(*target == 0)
+		SET_Z;
+	else
+		RES_Z;
+
+	//N
+	RES_N;
+
+	//H
+	RES_H;
+	
+	//C handled above
+}
+
+void CPU::ExecRLA()
+{
+	int oldC = TST_C;
+
+	if(a & 0x80)
+		SET_C;
+	else
+		RES_C;
+
+	a <<= 1;
+	a |= oldC;
+
+	//Z unaffected
+
+	//N
+	RES_N;
+
+	//H
+	RES_H;
+
+	//C handled above
+}
+
+void ExecRLC(u8* target)
+{
+	if(*target & 0x80)
+		SET_C;
+	else
+		RES_C;
+
+	*target <<= 1;
+	*target |= TST_C;
+
+	//Z
+	if(*target == 0)
+		SET_Z;
+	else
+		RES_Z;
+
+	//N
+	RES_N;
+
+	//H
+	RES_H;
+
+	//C handled above
+}
+
+void CPU::ExecRLCA()
+{
+	if(a & 0x80)
+		SET_C;
+	else
+		RES_C;
+
+	a <<= 1;
+	a |= TST_C;
+
+	//Z
+	if(a == 0)
+		SET_Z;
+	else
+		RES_Z;
+
+	//N
+	RES_N;
+
+	//H
+	RES_H;
+
+	//C handled above
+}
+
+void CPU::ExecRR(u8* target)
+{
+	int oldC = TST_C;
+
+	if(*target & 0x01)
+		SET_C;
+	else
+		RES_C;
+
+	*target >>= 1;
+	*target |= (oldC << 7);
+
+	//Z
+	if(*target == 0)
+		SET_Z;
+	else
+		RES_Z;
+
+	//N
+	RES_N;
+
+	//H
+	RES_H;
+
+	//C handled above
+}
+
+void CPU::ExecRRA()
+{
+	int oldC = TST_C;
+
+	if(a & 0x01)
+		SET_C;
+	else
+		RES_C;
+
+	a >>= 1;
+	a |= (oldC << 7);
+
+	//Z unaffected
+
+	//N
+	RES_N;
+
+	//H
+	RES_H;
+
+	//C handled above
+}
+
+void CPU::ExecRRC(u8* target)
+{
+	if(*target & 0x01)
+		SET_C;
+	else
+		RES_C;
+
+	*target >>= 1;
+	*target |= (TST_C << 7);
+
+	//Z
+	if(*target == 0)
+		SET_Z;
+	else
+		RES_Z;
+
+	//N
+	RES_N;
+
+	//H
+	RES_H;
+
+	//C handled above
+}
+
+void CPU::ExecRRCA()
+{
+	if(a & 0x01)
+		SET_C;
+	else
+		RES_C;
+
+	a >>= 1;
+	a |= (TST_C << 7);
+
+	//Z unaffected
+
+	//N
+	RES_N;
+
+	//H
+	RES_H;
+
+	//C handled above
+}
+
+void CPU::ExecRST(u16 address)
+{
+	//TODO
+}
+
+void CPU::ExecSBC(u8* target, u8 value)
+{
+	int res = *target - value - TST_C;
+
+	//Z
+	if(res == 0)
+		SET_Z;
+	else
+		RES_Z;
+
+	//N
+	SET_N;
+
+	//H
+	if( (*target ^ value ^ res) & 0x10 )
+		SET_H;
+	else
+		RES_H;
+
+	//C
+	if(res < 0)
+		SET_C;
+	else
+		RES_C;
+
+	*target = (u8)res;
+}
+
+void CPU::ExecSBC(u16* target, u16 value)
+{
+	int res = *target - value - TST_C;
+
+	//Z
+	if(res == 0)
+		SET_Z;
+	else
+		RES_Z;
+
+	//N
+	SET_N;
+
+	//H
+	if( (*target ^ value ^ res) & 0x1000 )
+		SET_H;
+	else
+		RES_H;
+
+	//C
+	if(res < 0)
+		SET_C;
+	else
+		RES_C;
+
+	*target = (u8)res;
+}
+
+void CPU::ExecSCF()
+{
+	//Z unaffected
+
+	//N
+	RES_N;
+
+	//H
+	RES_H;
+
+	//C
+	SET_C;
+}
+
+void CPU::ExecSET(u8* target, int n)
+{
+	*target |= (1<<n);
+
+	//Z unaffected
+
+	//N unaffected
+
+	//H unaffected
+
+	//C unaffected
+}
+
+void CPU::ExecSLA(u8* target)
+{
+	if(*target & 0x80)
+		SET_C;
+	else
+		RES_C;
+
+	*target <<= 1;
+
+	//Z
+	if(*target == 0)
+		SET_Z;
+	else
+		RES_Z;
+
+	//N
+	RES_N;
+
+	//H
+	RES_H;
+
+	//C handled above
+}
+
+void CPU::ExecSRA(u8* target)
+{
+	int bit7 = (*target & 0x80);
+
+	if(*target & 0x01)
+		SET_C;
+	else
+		RES_C;
+
+	*target >>= 1;
+	*target |= bit7;
+
+	//Z
+	if(*target == 0)
+		SET_Z;
+	else
+		RES_Z;
+
+	//N
+	RES_N;
+
+	//H
+	RES_H;
+
+	//C handled above
+}
+
+void CPU::ExecSRL(u8* target)
+{
+	if(*target & 0x01)
+		SET_C;
+	else
+		RES_C;
+
+	*target >>= 1;
+
+	//Z
+	if(*target == 0)
+		SET_Z;
+	else
+		RES_Z;
+
+	//N
+	RES_N;
+
+	//H
+	RES_H;
+
+	//C handled above
+}
+
+void CPU::ExecSUB(u8* target)
+{
+	int res = *target - value;
+
+	//Z
+	if(res == 0)
+		SET_Z;
+	else
+		RES_Z;
+
+	//N
+	SET_N;
+
+	//H
+	if( (*target ^ value ^ res) & 0x10 )
+		SET_H;
+	else
+		RES_H;
+
+	//C
+	if(res < 0)
+		SET_C;
+	else
+		RES_C;
+
+	*target = (u8)res;
+}
+
+void CPU::ExecXOR(u8* target)
+{
+	a ^= *target;
+
+	//Z
+	if(a == 0)
+		SET_Z;
+	else
+		RES_Z;
+
+	//N
+	RES_N;
+
+	//H
+	RES_H;
+
+	//C
+	RES_C;
+}
