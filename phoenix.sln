@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C++ Express 2005
+# Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "phoenix", "phoenix\phoenix.vcproj", "{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cpu", "cpu\cpu.vcproj", "{15A4AF88-4429-4720-AEF7-700335CF8CF1}"
@@ -10,6 +10,22 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "memory", "memory\memory.vcproj", "{316E1001-8C02-460F-AD90-EBB6A9FA5744}"
 EndProject
 Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 5
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = phoenix\\phoenix.vcproj
+		SccLocalPath1 = .
+		SccProjectFilePathRelativizedFromConnection1 = phoenix\\
+		SccProjectUniqueName2 = cpu\\cpu.vcproj
+		SccLocalPath2 = .
+		SccProjectFilePathRelativizedFromConnection2 = cpu\\
+		SccProjectUniqueName3 = common\\common.vcproj
+		SccLocalPath3 = .
+		SccProjectFilePathRelativizedFromConnection3 = common\\
+		SccProjectUniqueName4 = memory\\memory.vcproj
+		SccLocalPath4 = .
+		SccProjectFilePathRelativizedFromConnection4 = memory\\
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Release|Win32 = Release|Win32

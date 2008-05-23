@@ -26,6 +26,9 @@ bool CPU::delayInterrupts = false;
 
 Memory* CPU::memory = 0;
 
+int CPU::optime = 0;
+bool CPU::halted = false;
+
 
 void CPU::Initialize()
 {
@@ -194,6 +197,21 @@ void CPU::ExecBIT(u8 value, int n)
 
 void CPU::ExecCALL(bool test, u16 address)
 {
+	if(!test)
+		return;
+
+	//(SP-1)<-PCH
+	sp--;
+	memory->Write8(sp, (u8)((pc & 0xff00) >> 8));
+
+	//(SP-2)<-PCL
+	sp--;
+	memory->Write8(sp, (u8)(pc & 0x00ff));
+
+	//PC<-nn
+	pc = address;
+
+	optime += 2;
 
 	//Z unaffected
 
@@ -434,8 +452,16 @@ void CPU::ExecDI()
 	//C unaffected
 }
 
-void CPU::ExecDJNZ(u8 e)
+void CPU::ExecDJNZ(s8 e)
 {
+	b--;
+
+	if(b==0)
+		return;
+
+	pc += e;
+
+	optime += 1;
 
 	//Z unaffected
 
@@ -478,6 +504,7 @@ void CPU::ExecEX(u16* target1, u16* target2)
 
 void CPU::ExecHALT()
 {
+	halted = true;
 
 	//Z unaffected
 
@@ -530,7 +557,10 @@ void CPU::ExecINC(u16* target)
 
 void CPU::ExecJP(bool test, u16 address)
 {
-	//TODO
+	if(!test)
+		return;
+
+	pc = address;
 	
 	//Z unaffected
 
@@ -541,9 +571,14 @@ void CPU::ExecJP(bool test, u16 address)
 	//C unaffected
 }
 
-void CPU::ExecJR(bool test, u8 value)
+void CPU::ExecJR(bool test, s8 value)
 {
-	//TODO
+	if(!test)
+		return;
+
+	pc += value;
+
+	optime += 1;
 
 	//Z unaffected
 

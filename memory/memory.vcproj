@@ -4,6 +4,10 @@
 	Version="8.00"
 	Name="memory"
 	ProjectGUID="{316E1001-8C02-460F-AD90-EBB6A9FA5744}"
+	SccProjectName="SAK"
+	SccAuxPath="SAK"
+	SccLocalPath="SAK"
+	SccProvider="SAK"
 	>
 	<Platforms>
 		<Platform

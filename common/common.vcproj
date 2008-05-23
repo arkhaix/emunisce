@@ -4,6 +4,10 @@
 	Version="8.00"
 	Name="common"
 	ProjectGUID="{5320668F-EDA7-49EB-90FF-EEC79CABC957}"
+	SccProjectName="SAK"
+	SccAuxPath="SAK"
+	SccLocalPath="SAK"
+	SccProvider="SAK"
 	>
 	<Platforms>
 		<Platform
