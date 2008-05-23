@@ -5,17 +5,23 @@
 
 int CPU::Execute()
 {
+	optime = 0;
+
 	u8 n;
 	u16 nn;
 	u16 address;
 
-	u8 opcode = memory->Read8(pc++);
+	u8 opcode;
+	
+	if(halted)
+		opcode = 0x00;	//When halted, we just execute NOPs until an interrupt
+	else
+		opcode = memory->Read8(pc++);
 
 	//CB xx
 	if(opcode == 0xcb)
 	{
-		opcode = memory->Read8(pc++);
-		return ExecuteCB(opcode);
+		return ExecuteCB();
 	}
 
 	switch(opcode)
@@ -28,7 +34,7 @@ int CPU::Execute()
 	case 0x00:
 		//NOP
 		ExecNOP();
-		return 1;
+		optime += 1;
 	break;
 	
 	case 0x01:
@@ -36,7 +42,7 @@ int CPU::Execute()
 		nn = memory->Read16(pc); 
 		pc+= 2;
 		ExecLD(&bc, nn);
-		return 2;
+		optime += 2;
 	break;
 
 	case 0x02:
@@ -869,10 +875,11 @@ int CPU::Execute()
 	}
 
 
-	return 0;
+	return optime;
 }
 
-int CPU::ExecuteCB(u8 opcode)
+int CPU::ExecuteCB()
 {
+	u8 opcode = memory->Read8(pc++);
 	return 0;
 }

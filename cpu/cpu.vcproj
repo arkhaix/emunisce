@@ -4,6 +4,10 @@
 	Version="8.00"
 	Name="cpu"
 	ProjectGUID="{15A4AF88-4429-4720-AEF7-700335CF8CF1}"
+	SccProjectName="SAK"
+	SccAuxPath="SAK"
+	SccLocalPath="SAK"
+	SccProvider="SAK"
 	>
 	<Platforms>
 		<Platform

@@ -4,6 +4,11 @@
 	Version="8.00"
 	Name="phoenix"
 	ProjectGUID="{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}"
+	RootNamespace="phoenix"
+	SccProjectName="SAK"
+	SccAuxPath="SAK"
+	SccLocalPath="SAK"
+	SccProvider="SAK"
 	>
 	<Platforms>
 		<Platform

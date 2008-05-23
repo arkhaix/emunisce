@@ -77,7 +77,10 @@ public:
 
 private:
 
-	static int	ExecuteCB(u8 opcode);
+	static int optime;
+	static bool halted;
+
+	static int	ExecuteCB();
 
 	/*
 	static void AddrImmediate(u8* op1);
@@ -99,7 +102,7 @@ private:
 
 	static void ExecBIT(u8 value, int n);
 
-	static void ExecCALL(bool test, u16 address);	//TODO
+	static void ExecCALL(bool test, u16 address);
 
 	static void ExecCCF();
 
@@ -115,22 +118,22 @@ private:
 
 	static void ExecDI();
 
-	static void ExecDJNZ(u8 e);	//TODO
+	static void ExecDJNZ(s8 e);
 
 	static void ExecEI();
 
 	static void ExecEX(u16* target1, u16* target2);
 	//static void ExecEX(u16 address, u16* target2);
 
-	static void ExecHALT();	//TODO
+	static void ExecHALT();
 
 	static void ExecINC(u8* target);
 	static void ExecINC(u16* target);
 	//static void ExecINC(u16 address);
 
-	static void ExecJP(bool test, u16 address);		//TODO
+	static void ExecJP(bool test, u16 address);
 
-	static void ExecJR(bool test, u8 value);		//TODO
+	static void ExecJR(bool test, s8 value);
 
 	static void ExecLD(u8* target, u8 value);
 	static void ExecLD(u16* target, u16 value);
