@@ -102,7 +102,7 @@ private:
 
 	static void ExecBIT(u8 value, int n);
 
-	static void ExecCALL(bool test, u16 address);
+	static void ExecCALL(u16 address);
 
 	static void ExecCCF();
 
@@ -131,9 +131,9 @@ private:
 	static void ExecINC(u16* target);
 	//static void ExecINC(u16 address);
 
-	static void ExecJP(bool test, u16 address);
+	static void ExecJP(u16 address);
 
-	static void ExecJR(bool test, s8 value);
+	static void ExecJR(s8 value);
 
 	static void ExecLD(u8* target, u8 value);
 	static void ExecLD(u16* target, u16 value);
@@ -144,14 +144,14 @@ private:
 	static void ExecOR(u8* target);
 	static void ExecOR(u8 value);
 
-	static void ExecPOP(u16* target);	//TODO
+	static void ExecPOP(u16* target);
 
-	static void ExecPUSH(u16* target);	//TODO
+	static void ExecPUSH(u16* target);
 
 	static void ExecRES(u8* target, int n);
 	//static void ExecRES(u16 address, int n);
 
-	static void ExecRET(bool test);		//TODO
+	static void ExecRET();
 
 	static void ExecRL(u8* target);
 	//static void ExecRL(u16 address);
@@ -173,7 +173,7 @@ private:
 
 	static void ExecRRCA();
 
-	static void ExecRST(u16 address);	//TODO
+	static void ExecRST(u16 address);
 
 	static void ExecSBC(u8* target, u8 value);
 	static void ExecSBC(u16* target, u16 value);

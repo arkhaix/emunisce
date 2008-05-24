@@ -197,9 +197,6 @@ void CPU::ExecBIT(u8 value, int n)
 
 void CPU::ExecCALL(bool test, u16 address)
 {
-	if(!test)
-		return;
-
 	//(SP-1)<-PCH
 	sp--;
 	memory->Write8(sp, (u8)((pc & 0xff00) >> 8));
@@ -555,11 +552,8 @@ void CPU::ExecINC(u16* target)
 	//C unaffected
 }
 
-void CPU::ExecJP(bool test, u16 address)
+void CPU::ExecJP(u16 address)
 {
-	if(!test)
-		return;
-
 	pc = address;
 	
 	//Z unaffected
@@ -571,11 +565,8 @@ void CPU::ExecJP(bool test, u16 address)
 	//C unaffected
 }
 
-void CPU::ExecJR(bool test, s8 value)
+void CPU::ExecJR(s8 value)
 {
-	if(!test)
-		return;
-
 	pc += value;
 
 	optime += 1;
@@ -668,12 +659,43 @@ void CPU::ExecOR(u8 value)
 
 void CPU::ExecPOP(u16* target)
 {
-	//TODO
+	//L<-(SP)
+	*target = memory->Read8(sp);
+
+	//H<-(SP+1)
+	sp++;
+	*target |= (memory->Read8(sp) << 8);
+
+	sp++;
+
+
+	//Z unaffected
+
+	//N unaffected
+
+	//H unaffected
+
+	//C unaffected
 }
 
 void CPU::ExecPUSH(u16* target)
 {
-	//TODO
+	//(SP-1)<-H
+	sp--;
+	memory->Write8(sp, (u8)(*target >> 8));
+
+	//(SP-2)<-L
+	sp--;
+	memory->Write8(sp, (u8)(*target & 0x00ff));
+
+
+	//Z unaffected
+
+	//N unaffected
+
+	//H unaffected
+
+	//C unaffected
 }
 
 void CPU::ExecRES(u8* target, int n)
@@ -689,9 +711,25 @@ void CPU::ExecRES(u8* target, int n)
 	//C unaffected
 }
 
-void CPU::ExecRET(bool test)
+void CPU::ExecRET()
 {
-	//TODO
+	//PCL<-(SP)
+	pc = memory->Read8(sp);
+
+	//PCH<-(SP+1)
+	sp++;
+	pc |= (memory->Read8(sp) << 8);
+
+	sp++;
+
+
+	//Z unaffected
+
+	//N unaffected
+
+	//H unaffected
+
+	//C unaffected
 }
 
 void CPU::ExecRL(u8* target)
@@ -892,7 +930,7 @@ void CPU::ExecRRCA()
 
 void CPU::ExecRST(u16 address)
 {
-	//TODO
+	ExecCALL(address);
 }
 
 void CPU::ExecSBC(u8* target, u8 value)
