@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="memory"
 	ProjectGUID="{316E1001-8C02-460F-AD90-EBB6A9FA5744}"
 	SccProjectName="SAK"
 	SccAuxPath="SAK"
 	SccLocalPath="SAK"
 	SccProvider="SAK"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform

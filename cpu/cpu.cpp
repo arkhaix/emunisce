@@ -195,7 +195,7 @@ void CPU::ExecBIT(u8 value, int n)
 	//C unaffected
 }
 
-void CPU::ExecCALL(bool test, u16 address)
+void CPU::ExecCALL(/*bool test, */u16 address)
 {
 	//(SP-1)<-PCH
 	sp--;

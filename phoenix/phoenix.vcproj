@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="phoenix"
 	ProjectGUID="{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}"
 	RootNamespace="phoenix"
@@ -9,6 +9,7 @@
 	SccAuxPath="SAK"
 	SccLocalPath="SAK"
 	SccProvider="SAK"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -57,6 +58,8 @@
 				Name="VCLinkerTool"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -75,9 +78,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -117,6 +117,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -137,9 +139,6 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -147,11 +146,9 @@
 	<References>
 		<ProjectReference
 			ReferencedProjectIdentifier="{15A4AF88-4429-4720-AEF7-700335CF8CF1}"
-			RelativePathToProject=".\cpu\cpu.vcproj"
 		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{316E1001-8C02-460F-AD90-EBB6A9FA5744}"
-			RelativePathToProject=".\memory\memory.vcproj"
 		/>
 	</References>
 	<Files>
