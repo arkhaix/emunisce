@@ -68,7 +68,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="cputests.cpp" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\cpu\cpu.vcxproj">
+      <Project>{15a4af88-4429-4720-aef7-700335cf8cf1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\memory\memory.vcxproj">
+      <Project>{316e1001-8c02-460f-ad90-ebb6a9fa5744}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
