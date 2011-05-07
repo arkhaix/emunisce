@@ -3,35 +3,31 @@
 #include "../memory/memory.h"
 
 
-u16 CPU::af;
-u16 CPU::bc;
-u16 CPU::de;
-u16 CPU::hl;
-u16 CPU::sp;
-u16 CPU::pc;
-
-u8& CPU::a = *(((u8*)&af)+1);
-u8& CPU::f = *(((u8*)&af)+0);
-u8& CPU::b = *(((u8*)&bc)+1);
-u8& CPU::c = *(((u8*)&bc)+0);
-u8& CPU::d = *(((u8*)&de)+1);
-u8& CPU::e = *(((u8*)&de)+0);
-u8& CPU::h = *(((u8*)&hl)+1);
-u8& CPU::l = *(((u8*)&hl)+0);
-
-//TODO: initial values for iff1, iff2, canInterrupt
-bool CPU::iff1 = false;
-bool CPU::iff2 = false;
-bool CPU::delayInterrupts = false;
-
-Memory* CPU::memory = 0;
-
-int CPU::optime = 0;
-bool CPU::halted = false;
-
+CPU::CPU()
+: a(*(((u8*)&af)+1))
+, f(*(((u8*)&af)+0))
+, b(*(((u8*)&bc)+1))
+, c(*(((u8*)&bc)+0))
+, d(*(((u8*)&de)+1))
+, e(*(((u8*)&de)+0))
+, h(*(((u8*)&hl)+1))
+, l(*(((u8*)&hl)+0))
+{
+	Initialize();
+}
 
 void CPU::Initialize()
 {
+	iff1 = false;
+	iff2 = false;
+	delayInterrupts = false;
+
+	memory = 0;
+
+	optime = 0;
+	halted = false;
+
+
 	af = 0x01b0;
 	bc = 0x0013;
 	de = 0x00d8;

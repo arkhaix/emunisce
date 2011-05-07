@@ -46,160 +46,162 @@ class CPU
 {
 public:
 
-	static u16 pc;
-	static u16 sp;
+	u16 pc;
+	u16 sp;
 
-	static u16 af;
-	static u16 bc;
-	static u16 de;
-	static u16 hl;
+	u16 af;
+	u16 bc;
+	u16 de;
+	u16 hl;
 
-	static u8& a;
-	static u8& f;
-	static u8& b;
-	static u8& c;
-	static u8& d;
-	static u8& e;
-	static u8& h;
-	static u8& l;
+	u8& a;
+	u8& f;
+	u8& b;
+	u8& c;
+	u8& d;
+	u8& e;
+	u8& h;
+	u8& l;
 
-	static bool iff1;
-	static bool iff2;
-	static bool delayInterrupts;	//??? unneeded?  thinking it should be used after/during DI, EI?
+	bool iff1;
+	bool iff2;
+	bool delayInterrupts;	//??? unneeded?  thinking it should be used after/during DI, EI?
 
-	static Memory* memory;
+	Memory* memory;
 
-	static void Initialize();
-	static void Reset();
+	CPU();
 
-	static int Execute();
+	void Initialize();
+	void Reset();
+
+	int Execute();
 
 
 private:
 
-	static int optime;
-	static bool halted;
+	int optime;
+	bool halted;
 
-	static int	ExecuteCB();
+	int	ExecuteCB();
 
 	/*
-	static void AddrImmediate(u8* op1);
+	void AddrImmediate(u8* op1);
 
-	static void AddrImmediateExtended(u16* op1);
-	//static void AddrImmediateExtended(u8* op1, u8* op2);
+	void AddrImmediateExtended(u16* op1);
+	//void AddrImmediateExtended(u8* op1, u8* op2);
 	*/
 
 
 	//Can't these be reduced?  Should never need to use address?  Done by addressing part of opcode?
 
-	static void ExecADC(u8* target, u8 value);
-	static void ExecADC(u16* target, u16 value);
+	void ExecADC(u8* target, u8 value);
+	void ExecADC(u16* target, u16 value);
 
-	static void ExecADD(u8* target, u8 value);
-	static void ExecADD(u16* target, u16 value);
+	void ExecADD(u8* target, u8 value);
+	void ExecADD(u16* target, u16 value);
 
-	static void ExecAND(u8 value);
+	void ExecAND(u8 value);
 
-	static void ExecBIT(u8 value, int n);
+	void ExecBIT(u8 value, int n);
 
-	static void ExecCALL(u16 address);
+	void ExecCALL(u16 address);
 
-	static void ExecCCF();
+	void ExecCCF();
 
-	static void ExecCP(u8 value);
+	void ExecCP(u8 value);
 
-	static void ExecCPL();
+	void ExecCPL();
 
-	static void ExecDAA();
+	void ExecDAA();
 
-	static void ExecDEC(u8* target);
-	static void ExecDEC(u16* target);
-	//static void ExecDEC(u16 address);
+	void ExecDEC(u8* target);
+	void ExecDEC(u16* target);
+	//void ExecDEC(u16 address);
 
-	static void ExecDI();
+	void ExecDI();
 
-	static void ExecDJNZ(s8 e);
+	void ExecDJNZ(s8 e);
 
-	static void ExecEI();
+	void ExecEI();
 
-	static void ExecEX(u16* target1, u16* target2);
-	//static void ExecEX(u16 address, u16* target2);
+	void ExecEX(u16* target1, u16* target2);
+	//void ExecEX(u16 address, u16* target2);
 
-	static void ExecHALT();
+	void ExecHALT();
 
-	static void ExecINC(u8* target);
-	static void ExecINC(u16* target);
-	//static void ExecINC(u16 address);
+	void ExecINC(u8* target);
+	void ExecINC(u16* target);
+	//void ExecINC(u16 address);
 
-	static void ExecJP(u16 address);
+	void ExecJP(u16 address);
 
-	static void ExecJR(s8 value);
+	void ExecJR(s8 value);
 
-	static void ExecLD(u8* target, u8 value);
-	static void ExecLD(u16* target, u16 value);
-	//static void ExecLD(u16 address, u8 value);
+	void ExecLD(u8* target, u8 value);
+	void ExecLD(u16* target, u16 value);
+	//void ExecLD(u16 address, u8 value);
 
-	static void ExecNOP();
+	void ExecNOP();
 
-	static void ExecOR(u8* target);
-	static void ExecOR(u8 value);
+	void ExecOR(u8* target);
+	void ExecOR(u8 value);
 
-	static void ExecPOP(u16* target);
+	void ExecPOP(u16* target);
 
-	static void ExecPUSH(u16* target);
+	void ExecPUSH(u16* target);
 
-	static void ExecRES(u8* target, int n);
-	//static void ExecRES(u16 address, int n);
+	void ExecRES(u8* target, int n);
+	//void ExecRES(u16 address, int n);
 
-	static void ExecRET();
+	void ExecRET();
 
-	static void ExecRL(u8* target);
-	//static void ExecRL(u16 address);
+	void ExecRL(u8* target);
+	//void ExecRL(u16 address);
 
-	static void ExecRLA();
+	void ExecRLA();
 
-	static void ExecRLC(u8* target);
-	//static void ExecRLC(u16 address);
+	void ExecRLC(u8* target);
+	//void ExecRLC(u16 address);
 
-	static void ExecRLCA();
+	void ExecRLCA();
 
-	static void ExecRR(u8* target);
-	//static void ExecRR(u16 address);
+	void ExecRR(u8* target);
+	//void ExecRR(u16 address);
 
-	static void ExecRRA();
+	void ExecRRA();
 
-	static void ExecRRC(u8* target);
-	//static void ExecRRC(u16 address);
+	void ExecRRC(u8* target);
+	//void ExecRRC(u16 address);
 
-	static void ExecRRCA();
+	void ExecRRCA();
 
-	static void ExecRST(u16 address);
+	void ExecRST(u16 address);
 
-	static void ExecSBC(u8* target, u8 value);
-	static void ExecSBC(u16* target, u16 value);
+	void ExecSBC(u8* target, u8 value);
+	void ExecSBC(u16* target, u16 value);
 
-	static void ExecSCF();
+	void ExecSCF();
 
-	static void ExecSET(u8* target, int n);
-	//static void ExecSET(u16 address, int n);
+	void ExecSET(u8* target, int n);
+	//void ExecSET(u16 address, int n);
 
-	static void ExecSLA(u8* target);
-	//static void ExecSLA(u16 address);
+	void ExecSLA(u8* target);
+	//void ExecSLA(u16 address);
 
 	//SLL?
-	//static void ExecSLL(u8* target);	//value?	//??? this doesn't exist?
+	//void ExecSLL(u8* target);	//value?	//??? this doesn't exist?
 
-	static void ExecSRA(u8* target);
-	//static void ExecSRA(u16 address);
+	void ExecSRA(u8* target);
+	//void ExecSRA(u16 address);
 
 	//SRL?
-	static void ExecSRL(u8* target);	//value?
+	void ExecSRL(u8* target);	//value?
 
-	static void ExecSUB(u8* target);
-	//static void ExecSUB(u16 address);
+	void ExecSUB(u8* target);
+	//void ExecSUB(u16 address);
 
-	static void ExecXOR(u8* target);
-	//static void ExecXOR(u16 address);
+	void ExecXOR(u8* target);
+	//void ExecXOR(u16 address);
 };
 
 
