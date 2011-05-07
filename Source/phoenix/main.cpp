@@ -8,12 +8,13 @@ using namespace std;
 int main(void)
 {
 	Memory::Initialize();
-	CPU::Initialize();
 
-	CPU::af = 0x0102;
+	CPU cpu;
 
-	printf("%02x%02x\n", CPU::a, CPU::f);
-	printf("%04x\n", CPU::af);
+	cpu.af = 0x0102;
+
+	printf("%02x%02x\n", cpu.a, cpu.f);
+	printf("%04x\n", cpu.af);
 
 	system("pause");
 	return 0;
