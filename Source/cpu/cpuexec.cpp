@@ -144,8 +144,7 @@ int CPU::Execute()
 
 	case 0x10:
 		//10      DJNZ PC+dd      STOP
-		//??
-		halted = true;
+		//?? Todo. Need to stop the screen and cpu until button press.
 	break;
 
 	case 0x11:
@@ -1314,51 +1313,149 @@ int CPU::Execute()
 
 
 	case 0xc0:
+		//C0		RET NZ			11/5	3/1	1/1	(met/not met)
+		if(TST_Z)
+		{
+			optime += 5;
+		}
+		else
+		{
+			ExecRET();
+			optime += 11;
+		}
 	break;
 
 	case 0xc1:
+		//C1		POP BC			10	3	1
+		ExecPOP(&bc);
+		optime += 10;
 	break;
 
 	case 0xc2:
+		//C2 n n		JP NZ,(nn)		10	3	1	(met or not)
+		nn = ReadNext16();
+		if(TST_Z)
+		{
+			optime += 10;
+		}
+		else
+		{
+			ExecJP(nn);
+			optime += 10;
+		}
 	break;
 
 	case 0xc3:
+		//C3 n n		JP (nn)			10	3	1
+		nn = ReadNext16();
+		ExecJP(nn);
+		optime += 10;
 	break;
 
 	case 0xc4:
+		//C4 n n		CALL NZ,(nn)		17/10	5/3	1/1	(met/not met)
+		nn = ReadNext16();
+		if(TST_Z)
+		{
+			optime += 10;
+		}
+		else
+		{
+			ExecCALL(nn);
+			optime += 17;
+		}
 	break;
 
 	case 0xc5:
+		//C5		PUSH BC			11	3	1
+		ExecPUSH(&bc);
+		optime += 11;
 	break;
 
 	case 0xc6:
+		//C6 n		ADD A,n			7	2	1
+		n = ReadNext8();
+		ExecADD(&a, n);
+		optime += 7;
 	break;
 
 	case 0xc7:
+		//C7		RST 0H			11	3	1
+		ExecRST((u16)0x00);
+		optime += 11;
 	break;
 
 	case 0xc8:
+		//C8		RET Z			11/5	3/1	1/1	(met/not met)
+		if(TST_Z)
+		{
+			ExecRET();
+			optime += 11;
+		}
+		else
+		{
+			optime += 5;
+		}
 	break;
 
 	case 0xc9:
+		//C9		RET			10	3	1
+		ExecRET();
+		optime += 10;
 	break;
 
 	case 0xca:
+		//CA n n		JP Z,(nn)		10	3	1	(always same)
+		nn = ReadNext16();
+		tt = memory->Read16(nn);
+		if(TST_Z)
+		{
+			ExecJP(tt);
+			optime += 10;
+		}
+		else
+		{
+			optime += 10;
+		}
 	break;
 
 	case 0xcb:
 	break;
 
 	case 0xcc:
+		//CC n n		CALL Z,(nn)		17/10	5/3	1/1	(met/not met)
+		nn = ReadNext16();
+		tt = memory->Read16(nn);
+		if(TST_Z)
+		{
+			ExecCALL(tt);
+			optime += 17;
+		}
+		else
+		{
+			optime += 10;
+		}
 	break;
 
 	case 0xcd:
+		//CD n n		CALL (nn)		17	5	1
+		nn = ReadNext16();
+		tt = memory->Read16(nn);
+		ExecCALL(tt);
+		optime += 17;
 	break;
 
 	case 0xce:
+		//CE n		ADC A,n			7	2	1
+		n = ReadNext8();
+		ExecADC(&a, n);
+		optime += 7;
 	break;
 
 	case 0xcf:
+		//CF		RST 8H			11	3	1
+		ExecRST((u16)0x08);
+		optime += 11;
 	break;
 
 
@@ -1366,51 +1463,144 @@ int CPU::Execute()
 
 
 	case 0xd0:
+		//D0		RET NC			5	1	1
+		if(TST_C)
+		{
+			optime += 5;
+		}
+		else
+		{
+			ExecRET();
+			optime += 11;
+		}
 	break;
 
 	case 0xd1:
+		//D1		POP DE			10	3	1
+		ExecPOP(&de);
+		optime += 10;
 	break;
 
 	case 0xd2:
+		//D2 n n		JP NC,(nn)		10	3	1	(met or not)
+		nn = ReadNext16();
+		if(TST_C)
+		{
+			optime += 10;
+		}
+		else
+		{
+			ExecJP(nn);
+			optime += 10;
+		}
 	break;
 
 	case 0xd3:
+		//D3      OUT  (n),A      -
 	break;
 
 	case 0xd4:
+		//D4 n n		CALL NC,(nn)		17/10	5/3	1/1	(met/not met)
+		nn = ReadNext16();
+		tt = memory->Read16(nn);
+		if(TST_C)
+		{
+			optime += 10;
+		}
+		else
+		{
+			ExecCALL(tt);
+			optime += 17;
+		}
 	break;
 
 	case 0xd5:
+		//D5		PUSH DE			11	3	1
+		ExecPUSH(&de);
+		optime += 11;
 	break;
 
 	case 0xd6:
+		//D6 n		SUB n			7	2	1
+		n = ReadNext8();
+		ExecSUB(n);
+		optime += 7;
 	break;
 
 	case 0xd7:
+		//D7		RST 10H			11	3	1
+		ExecRST((u16)0x10);
+		optime += 11;
 	break;
 
 	case 0xd8:
+		//D8		RET C			5	1	1
+		if(TST_C)
+		{
+			ExecRET();
+			optime += 11;
+		}
+		else
+		{
+			optime += 5;
+		}
 	break;
 
 	case 0xd9:
+		//D9      EXX             RETI
+		ExecRET();	//?? Does RETI need anything special? Doesn't seem like it.
+		optime += 10;	//?? guessing from RET.
 	break;
 
 	case 0xda:
+		//DA n n		JP C,(nn)		10	3	1	(met or not)
+		nn = ReadNext16();
+		tt = memory->Read16(nn);
+		if(TST_C)
+		{
+			ExecJP(tt);
+			optime += 10;
+		}
+		else
+		{
+			optime += 10;
+		}
 	break;
 
 	case 0xdb:
+		//DB      IN   A,(n)      -
 	break;
 
 	case 0xdc:
+		//DC n n		CALL C,(nn)		17/10	5/3	1
+		nn = ReadNext16();
+		tt = memory->Read16(nn);
+		if(TST_C)
+		{
+			ExecCALL(tt);
+			optime += 17;
+		}
+		else
+		{
+			optime += 10;
+		}
 	break;
 
 	case 0xdd:
+		//DD      <IX>            -
 	break;
 
 	case 0xde:
+		//DE n		SBC A,n
+		n = ReadNext8();
+		ExecSBC(&a, n);
+		optime += 7;
 	break;
 
 	case 0xdf:
+		//DF		RST 18H
+		ExecRST((u16)0x18);
+		optime += 11;
 	break;
 
 
