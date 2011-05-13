@@ -211,7 +211,7 @@ void CPU::ExecBIT(u8 value, int n)
 	//C unaffected
 }
 
-void CPU::ExecCALL(/*bool test, */u16 address)
+void CPU::ExecCALL(u16 address)
 {
 	//(SP-1)<-PCH
 	sp--;
@@ -223,8 +223,6 @@ void CPU::ExecCALL(/*bool test, */u16 address)
 
 	//PC<-nn
 	pc = address;
-
-	optime += 2;
 
 	//Z unaffected
 
@@ -564,8 +562,6 @@ void CPU::ExecJP(u16 address)
 void CPU::ExecJR(s8 value)
 {
 	pc += value;
-
-	optime += 1;
 
 	//Z unaffected
 
