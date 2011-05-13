@@ -492,51 +492,101 @@ int CPU::Execute()
 
 
 	case 0x40:
+		//40		LD B,B			4	1	1
+		ExecLD(&b, b);
+		optime += 4;
 	break;
 
 	case 0x41:
+		//41		LD B,C			4	1	1
+		ExecLD(&b, c);
+		optime += 4;
 	break;
 
 	case 0x42:
+		//42		LD B,D			4	1	1
+		ExecLD(&b, d);
+		optime += 4;
 	break;
 
 	case 0x43:
+		//43		LD B,E			4	1	1
+		ExecLD(&b, e);
+		optime += 4;
 	break;
 
 	case 0x44:
+		//44		LD B,H			4	1	1
+		ExecLD(&b, h);
+		optime += 4;
 	break;
 
 	case 0x45:
+		//45		LD B,L			4	1	1
+		ExecLD(&b, l);
+		optime += 4;
 	break;
 
 	case 0x46:
+		//46		LD B,(HL)		7	2	1
+		n = memory->Read8(hl);
+		ExecLD(&b, n);
+		optime += 7;
 	break;
 
 	case 0x47:
+		//47		LD B,A			4	1	1
+		ExecLD(&b, a);
+		optime += 4;
 	break;
 
 	case 0x48:
+		//48		LD C,B			4	1	1
+		ExecLD(&c, b);
+		optime += 4;
 	break;
 
 	case 0x49:
+		//49		LD C,C			4	1	1
+		ExecLD(&c, c);
+		optime += 4;
 	break;
 
 	case 0x4a:
+		//4A		LD C,D			4	1	1
+		ExecLD(&c, d);
+		optime += 4;
 	break;
 
 	case 0x4b:
+		//4B		LD C,E			4	1	1
+		ExecLD(&c, e);
+		optime += 4;
 	break;
 
 	case 0x4c:
+		//4C		LD C,H			4	1	1
+		ExecLD(&c, h);
+		optime += 4;
 	break;
 
 	case 0x4d:
+		//4D		LD C,L			4	1	1
+		ExecLD(&c, l);
+		optime += 4;
 	break;
 
 	case 0x4e:
+		//4E		LD C,(HL)		7	2	1
+		n = memory->Read8(hl);
+		ExecLD(&c, n);
+		optime += 7;
 	break;
 
 	case 0x4f:
+		//4F		LD C,A			4	1	1
+		ExecLD(&c, a);
+		optime += 4;
 	break;
 
 
@@ -544,51 +594,101 @@ int CPU::Execute()
 
 
 	case 0x50:
+		//50		LD D,B			4	1	1
+		ExecLD(&d, b);
+		optime += 4;
 	break;
 
 	case 0x51:
+		//51		LD D,C			4	1	1
+		ExecLD(&d, c);
+		optime += 4;
 	break;
 
 	case 0x52:
+		//52		LD D,D			4	1	1
+		ExecLD(&d, d);
+		optime += 4;
 	break;
 
 	case 0x53:
+		//53		LD D,E			4	1	1
+		ExecLD(&d, e);
+		optime += 4;
 	break;
 
 	case 0x54:
+		//54		LD D,H			4	1	1
+		ExecLD(&d, h);
+		optime += 4;
 	break;
 
 	case 0x55:
+		//55		LD D,L			4	1	1
+		ExecLD(&d, l);
+		optime += 4;
 	break;
 
 	case 0x56:
+		//56		LD D,(HL)		7	2	1
+		n = memory->Read8(hl);
+		ExecLD(&d, n);
+		optime += 7;
 	break;
 
 	case 0x57:
+		//57		LD D,A			4	1	1
+		ExecLD(&d, a);
+		optime += 4;
 	break;
 
 	case 0x58:
+		//58		LD E,B			4	1	1
+		ExecLD(&e, b);
+		optime += 4;
 	break;
 
 	case 0x59:
+		//59		LD E,C			4	1	1
+		ExecLD(&e, c);
+		optime += 4;
 	break;
 
 	case 0x5a:
+		//5A		LD E,D			4	1	1
+		ExecLD(&e, d);
+		optime += 4;
 	break;
 
 	case 0x5b:
+		//5B		LD E,E			4	1	1
+		ExecLD(&e, e);
+		optime += 4;
 	break;
 
 	case 0x5c:
+		//5C		LD E,H			4	1	1
+		ExecLD(&e, h);
+		optime += 4;
 	break;
 
 	case 0x5d:
+		//5D		LD E,L			4	1	1
+		ExecLD(&e, l);
+		optime += 4;
 	break;
 
 	case 0x5e:
+		//5E		LD E,(HL)		7	2	1
+		n = memory->Read8(hl);
+		ExecLD(&e, n);
+		optime += 7;
 	break;
 
 	case 0x5f:
+		//5F		LD E,A			4	1	1
+		ExecLD(&e, a);
+		optime += 4;
 	break;
 
 
@@ -596,51 +696,101 @@ int CPU::Execute()
 
 
 	case 0x60:
+		//60		LD H,B			4	1	1
+		ExecLD(&h, b);
+		optime += 4;
 	break;
 
 	case 0x61:
+		//61		LD H,C			4	1	1
+		ExecLD(&h, c);
+		optime += 4;
 	break;
 
 	case 0x62:
+		//62		LD H,D			4	1	1
+		ExecLD(&h, d);
+		optime += 4;
 	break;
 
 	case 0x63:
+		//63		LD H,E			4	1	1
+		ExecLD(&h, e);
+		optime += 4;
 	break;
 
 	case 0x64:
+		//64		LD H,H			4	1	1
+		ExecLD(&h, h);
+		optime += 4;
 	break;
 
 	case 0x65:
+		//65		LD H,L			4	1	1
+		ExecLD(&h, l);
+		optime += 4;
 	break;
 
 	case 0x66:
+		//66		LD H,(HL)		7	2	1
+		n = memory->Read8(hl);
+		ExecLD(&h, n);
+		optime += 7;
 	break;
 
 	case 0x67:
+		//67		LD H,A			4	1	1
+		ExecLD(&h, a);
+		optime += 4;
 	break;
 
 	case 0x68:
+		//68		LD L,B			4	1	1
+		ExecLD(&l, b);
+		optime += 4;
 	break;
 
 	case 0x69:
+		//69		LD L,C			4	1	1
+		ExecLD(&l, c);
+		optime += 4;
 	break;
 
 	case 0x6a:
+		//6A		LD L,D			4	1	1
+		ExecLD(&l, d);
+		optime += 4;
 	break;
 
 	case 0x6b:
+		//6B		LD L,E			4	1	1
+		ExecLD(&l, e);
+		optime += 4;
 	break;
 
 	case 0x6c:
+		//6C		LD L,H			4	1	1
+		ExecLD(&l, h);
+		optime += 4;
 	break;
 
 	case 0x6d:
+		//6D		LD L,L			4	1	1
+		ExecLD(&l, l);
+		optime += 4;
 	break;
 
 	case 0x6e:
+		//6E		LD L,(HL)		7	2	1
+		n = memory->Read8(hl);
+		ExecLD(&l, n);
+		optime += 7;
 	break;
 
 	case 0x6f:
+		//6F		LD L,A			4	1	1
+		ExecLD(&l, a);
+		optime += 4;
 	break;
 
 
@@ -648,51 +798,107 @@ int CPU::Execute()
 
 
 	case 0x70:
+		//70		LD (HL),B		7	2	1
+		ExecLD(&n, b);
+		memory->Write8(hl, n);
+		optime += 7;
 	break;
 
 	case 0x71:
+		//71		LD (HL),C		7	2	1
+		ExecLD(&n, c);
+		memory->Write8(hl, n);
+		optime += 7;
 	break;
 
 	case 0x72:
+		//72		LD (HL),D		7	2	1
+		ExecLD(&n, d);
+		memory->Write8(hl, n);
+		optime += 7;
 	break;
 
 	case 0x73:
+		//73		LD (HL),E		7	2	1
+		ExecLD(&n, e);
+		memory->Write8(hl, n);
+		optime += 7;
 	break;
 
 	case 0x74:
+		//74		LD (HL),H		7	2	1
+		ExecLD(&n, h);
+		memory->Write8(hl, n);
+		optime += 7;
 	break;
 
 	case 0x75:
+		//75		LD (HL),L		7	2	1
+		ExecLD(&n, l);
+		memory->Write8(hl, n);
+		optime += 7;
 	break;
 
 	case 0x76:
+		//76		HALT			4	1	1	(repeated till next int)
+		halted = true;
+		optime += 4;
 	break;
 
 	case 0x77:
+		//77		LD (HL),A		7	2	1
+		ExecLD(&n, a);
+		memory->Write8(hl, n);
+		optime += 7;
 	break;
 
 	case 0x78:
+		//78		LD A,B			4	1	1
+		ExecLD(&a, b);
+		optime += 4;
 	break;
 
 	case 0x79:
+		//79		LD A,C			4	1	1
+		ExecLD(&a, c);
+		optime += 4;
 	break;
 
 	case 0x7a:
+		//7A		LD A,D			4	1	1
+		ExecLD(&a, d);
+		optime += 4;
 	break;
 
 	case 0x7b:
+		//7B		LD A,E			4	1	1
+		ExecLD(&a, e);
+		optime += 4;
 	break;
 
 	case 0x7c:
+		//7C		LD A,H			4	1	1
+		ExecLD(&a, h);
+		optime += 4;
 	break;
 
 	case 0x7d:
+		//7D		LD A,L			4	1	1
+		ExecLD(&a, l);
+		optime += 4;
 	break;
 
 	case 0x7e:
+		//7E		LD A,(HL)		7	2	1
+		n = memory->Read8(hl);
+		ExecLD(&a, n);
+		optime += 7;
 	break;
 
 	case 0x7f:
+		//7F		LD A,A			4	1	1
+		ExecLD(&a, a);
+		optime += 4;
 	break;
 
 
