@@ -41,7 +41,6 @@ class Memory;
 #define INV_H (f ^= (1<<BIT_H))
 #define INV_C (f ^= (1<<BIT_C))
 
-
 class CPU
 {
 public:
@@ -82,17 +81,10 @@ private:
 	int optime;
 	bool halted;
 
+	u8 ReadNext8();
+	u16 ReadNext16();
+
 	int	ExecuteCB();
-
-	/*
-	void AddrImmediate(u8* op1);
-
-	void AddrImmediateExtended(u16* op1);
-	//void AddrImmediateExtended(u8* op1, u8* op2);
-	*/
-
-
-	//Can't these be reduced?  Should never need to use address?  Done by addressing part of opcode?
 
 	void ExecADC(u8* target, u8 value);
 	void ExecADC(u16* target, u16 value);
@@ -116,22 +108,17 @@ private:
 
 	void ExecDEC(u8* target);
 	void ExecDEC(u16* target);
-	//void ExecDEC(u16 address);
 
 	void ExecDI();
-
-	void ExecDJNZ(s8 e);
 
 	void ExecEI();
 
 	void ExecEX(u16* target1, u16* target2);
-	//void ExecEX(u16 address, u16* target2);
 
 	void ExecHALT();
 
 	void ExecINC(u8* target);
 	void ExecINC(u16* target);
-	//void ExecINC(u16 address);
 
 	void ExecJP(u16 address);
 
@@ -139,7 +126,6 @@ private:
 
 	void ExecLD(u8* target, u8 value);
 	void ExecLD(u16* target, u16 value);
-	//void ExecLD(u16 address, u8 value);
 
 	void ExecNOP();
 
@@ -151,27 +137,22 @@ private:
 	void ExecPUSH(u16* target);
 
 	void ExecRES(u8* target, int n);
-	//void ExecRES(u16 address, int n);
 
 	void ExecRET();
 
 	void ExecRL(u8* target);
-	//void ExecRL(u16 address);
 
 	void ExecRLA();
 
 	void ExecRLC(u8* target);
-	//void ExecRLC(u16 address);
 
 	void ExecRLCA();
 
 	void ExecRR(u8* target);
-	//void ExecRR(u16 address);
 
 	void ExecRRA();
 
 	void ExecRRC(u8* target);
-	//void ExecRRC(u16 address);
 
 	void ExecRRCA();
 
@@ -183,25 +164,16 @@ private:
 	void ExecSCF();
 
 	void ExecSET(u8* target, int n);
-	//void ExecSET(u16 address, int n);
 
 	void ExecSLA(u8* target);
-	//void ExecSLA(u16 address);
-
-	//SLL?
-	//void ExecSLL(u8* target);	//value?	//??? this doesn't exist?
 
 	void ExecSRA(u8* target);
-	//void ExecSRA(u16 address);
 
-	//SRL?
-	void ExecSRL(u8* target);	//value?
+	void ExecSRL(u8* target);
 
 	void ExecSUB(u8* target);
-	//void ExecSUB(u16 address);
 
 	void ExecXOR(u8* target);
-	//void ExecXOR(u16 address);
 };
 
 
