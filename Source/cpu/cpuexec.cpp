@@ -906,51 +906,101 @@ int CPU::Execute()
 
 
 	case 0x80:
+		//80		ADD A,B			4	1	1
+		ExecADD(&a, b);
+		optime += 4;
 	break;
 
 	case 0x81:
+		//81		ADD A,C			4	1	1
+		ExecADD(&a, c);
+		optime += 4;
 	break;
 
 	case 0x82:
+		//82		ADD A,D			4	1	1
+		ExecADD(&a, d);
+		optime += 4;
 	break;
 
 	case 0x83:
+		//83		ADD A,E			4	1	1
+		ExecADD(&a, e);
+		optime += 4;
 	break;
 
 	case 0x84:
+		//84		ADD A,H			4	1	1
+		ExecADD(&a, h);
+		optime += 4;
 	break;
 
 	case 0x85:
+		//85		ADD A,L			4	1	1
+		ExecADD(&a, l);
+		optime += 4;
 	break;
 
 	case 0x86:
+		//86		ADD A,(HL)		7	2	1
+		n = memory->Read8(hl);
+		ExecADD(&a, n);
+		optime += 7;
 	break;
 
 	case 0x87:
+		//87		ADD A,A			4	1	1
+		ExecADD(&a, a);
+		optime += 4;
 	break;
 
 	case 0x88:
+		//88		ADC A,B			4	1	1
+		ExecADC(&a, b);
+		optime += 4;
 	break;
 
 	case 0x89:
+		//89		ADC A,C			4	1	1
+		ExecADC(&a, c);
+		optime += 4;
 	break;
 
 	case 0x8a:
+		//8A		ADC A,D			4	1	1
+		ExecADC(&a, d);
+		optime += 4;
 	break;
 
 	case 0x8b:
+		//8B		ADC A,E			4	1	1
+		ExecADC(&a, e);
+		optime += 4;
 	break;
 
 	case 0x8c:
+		//8C		ADC A,H			4	1	1
+		ExecADC(&a, h);
+		optime += 4;
 	break;
 
 	case 0x8d:
+		//8D		ADC A,L			4	1	1
+		ExecADC(&a, l);
+		optime += 4;
 	break;
 
 	case 0x8e:
+		//8E		ADC A,(HL)		7	2	1
+		n = memory->Read8(hl);
+		ExecADC(&a, n);
+		optime += 7;
 	break;
 
 	case 0x8f:
+		//8F		ADC A,A			4	1	1
+		ExecADC(&a, a);
+		optime += 4;
 	break;
 
 
@@ -958,51 +1008,101 @@ int CPU::Execute()
 
 
 	case 0x90:
+		//90		SUB B			4	1	1
+		ExecSUB(&b);
+		optime += 4;
 	break;
 
 	case 0x91:
+		//91		SUB C			4	1	1
+		ExecSUB(&c);
+		optime += 4;
 	break;
 
 	case 0x92:
+		//92		SUB D			4	1	1
+		ExecSUB(&d);
+		optime += 4;
 	break;
 
 	case 0x93:
+		//93		SUB E			4	1	1
+		ExecSUB(&e);
+		optime += 4;
 	break;
 
 	case 0x94:
+		//94		SUB H			4	1	1
+		ExecSUB(&h);
+		optime += 4;
 	break;
 
 	case 0x95:
+		//95		SUB L			4	1	1
+		ExecSUB(&l);
+		optime += 4;
 	break;
 
 	case 0x96:
+		//96		SUB (HL)		7	2	1
+		n = memory->Read8(hl);
+		ExecSUB(&n);
+		optime += 7;
 	break;
 
 	case 0x97:
+		//97		SUB A			4	1	1
+		ExecSUB(&a);
+		optime += 4;
 	break;
 
 	case 0x98:
+		//98		SBC A,B			4	1	1
+		ExecSBC(&a, b);
+		optime += 4;
 	break;
 
 	case 0x99:
+		//99		SBC A,C			4	1	1
+		ExecSBC(&a, c);
+		optime += 4;
 	break;
 
 	case 0x9a:
+		//9A		SBC A,D			4	1	1
+		ExecSBC(&a, d);
+		optime += 4;
 	break;
 
 	case 0x9b:
+		//9B		SBC A,E			4	1	1
+		ExecSBC(&a, e);
+		optime += 4;
 	break;
 
 	case 0x9c:
+		//9C		SBC A,H			4	1	1
+		ExecSBC(&a, h);
+		optime += 4;
 	break;
 
 	case 0x9d:
+		//9D		SBC A,L			4	1	1
+		ExecSBC(&a, l);
+		optime += 4;
 	break;
 
 	case 0x9e:
+		//9E		SBC A,(HL)		7	2	1
+		n = memory->Read8(hl);
+		ExecSBC(&a, n);
+		optime += 7;
 	break;
 
 	case 0x9f:
+		//9F		SBC A,A			4	1	1
+		ExecSBC(&a, a);
+		optime += 4;
 	break;
 
 
