@@ -1087,9 +1087,9 @@ void CPU::ExecSRL(u8* target)
 	//C handled above
 }
 
-void CPU::ExecSUB(u8* target)
+void CPU::ExecSUB(u8 value)
 {
-	int res = a - *target;
+	int res = a - value;
 
 	//Z
 	if(res == 0)
@@ -1101,7 +1101,7 @@ void CPU::ExecSUB(u8* target)
 	SET_N;
 
 	//H
-	if( (a ^ *target ^ res) & 0x10 )
+	if( (a ^ value ^ res) & 0x10 )
 		SET_H;
 	else
 		RES_H;
@@ -1115,9 +1115,9 @@ void CPU::ExecSUB(u8* target)
 	a = (u8)res;
 }
 
-void CPU::ExecXOR(u8* target)
+void CPU::ExecXOR(u8 value)
 {
-	a ^= *target;
+	a ^= value;
 
 	//Z
 	if(a == 0)

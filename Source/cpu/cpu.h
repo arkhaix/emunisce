@@ -171,9 +171,9 @@ private:
 
 	void ExecSRL(u8* target);
 
-	void ExecSUB(u8* target);
+	void ExecSUB(u8 value);
 
-	void ExecXOR(u8* target);
+	void ExecXOR(u8 value);
 };
 
 

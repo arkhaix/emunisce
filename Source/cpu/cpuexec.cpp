@@ -1009,50 +1009,50 @@ int CPU::Execute()
 
 	case 0x90:
 		//90		SUB B			4	1	1
-		ExecSUB(&b);
+		ExecSUB(b);
 		optime += 4;
 	break;
 
 	case 0x91:
 		//91		SUB C			4	1	1
-		ExecSUB(&c);
+		ExecSUB(c);
 		optime += 4;
 	break;
 
 	case 0x92:
 		//92		SUB D			4	1	1
-		ExecSUB(&d);
+		ExecSUB(d);
 		optime += 4;
 	break;
 
 	case 0x93:
 		//93		SUB E			4	1	1
-		ExecSUB(&e);
+		ExecSUB(e);
 		optime += 4;
 	break;
 
 	case 0x94:
 		//94		SUB H			4	1	1
-		ExecSUB(&h);
+		ExecSUB(h);
 		optime += 4;
 	break;
 
 	case 0x95:
 		//95		SUB L			4	1	1
-		ExecSUB(&l);
+		ExecSUB(l);
 		optime += 4;
 	break;
 
 	case 0x96:
 		//96		SUB (HL)		7	2	1
 		n = memory->Read8(hl);
-		ExecSUB(&n);
+		ExecSUB(n);
 		optime += 7;
 	break;
 
 	case 0x97:
 		//97		SUB A			4	1	1
-		ExecSUB(&a);
+		ExecSUB(a);
 		optime += 4;
 	break;
 
@@ -1110,51 +1110,101 @@ int CPU::Execute()
 
 
 	case 0xa0:
+		//A0		AND B			4	1	1
+		ExecAND(b);
+		optime += 4;
 	break;
 
 	case 0xa1:
+		//A1		AND C			4	1	1
+		ExecAND(c);
+		optime += 4;
 	break;
 
 	case 0xa2:
+		//A2		AND D			4	1	1
+		ExecAND(d);
+		optime += 4;
 	break;
 
 	case 0xa3:
+		//A3		AND E			4	1	1
+		ExecAND(e);
+		optime += 4;
 	break;
 
 	case 0xa4:
+		//A4		AND H			4	1	1
+		ExecAND(h);
+		optime += 4;
 	break;
 
 	case 0xa5:
+		//A5		AND L			4	1	1
+		ExecAND(l);
+		optime += 4;
 	break;
 
 	case 0xa6:
+		//A6		AND (HL)		7	2	1
+		n = memory->Read8(hl);
+		ExecAND(n);
+		optime += 7;
 	break;
 
 	case 0xa7:
+		//A7		AND A			4	1	1
+		ExecAND(a);
+		optime += 4;
 	break;
 
 	case 0xa8:
+		//A8		XOR B			4	1	1
+		ExecXOR(b);
+		optime += 4;
 	break;
 
 	case 0xa9:
+		//A9		XOR C			4	1	1
+		ExecXOR(c);
+		optime += 4;
 	break;
 
 	case 0xaa:
+		//AA		XOR D			4	1	1
+		ExecXOR(d);
+		optime += 4;
 	break;
 
 	case 0xab:
+		//AB		XOR E			4	1	1
+		ExecXOR(e);
+		optime += 4;
 	break;
 
 	case 0xac:
+		//AC		XOR H			4	1	1
+		ExecXOR(h);
+		optime += 4;
 	break;
 
 	case 0xad:
+		//AD		XOR L			4	1	1
+		ExecXOR(l);
+		optime += 4;
 	break;
 
 	case 0xae:
+		//AE		XOR (HL)		7	2	1
+		n = memory->Read8(hl);
+		ExecXOR(n);
+		optime += 7;
 	break;
 
 	case 0xaf:
+		//AF		XOR A			4	1	1
+		ExecAND(b);
+		optime += 4;
 	break;
 
 
@@ -1162,51 +1212,101 @@ int CPU::Execute()
 
 
 	case 0xb0:
+		//B0		OR B			4	1	1
+		ExecOR(b);
+		optime += 4;
 	break;
 
 	case 0xb1:
+		//B1		OR C			4	1	1
+		ExecOR(c);
+		optime += 4;
 	break;
 
 	case 0xb2:
+		//B2		OR D			4	1	1
+		ExecOR(d);
+		optime += 4;
 	break;
 
 	case 0xb3:
+		//B3		OR E			4	1	1
+		ExecOR(e);
+		optime += 4;
 	break;
 
 	case 0xb4:
+		//B4		OR H			4	1	1
+		ExecOR(h);
+		optime += 4;
 	break;
 
 	case 0xb5:
+		//B5		OR L			4	1	1
+		ExecOR(l);
+		optime += 4;
 	break;
 
 	case 0xb6:
+		//B6		OR (HL)			7	2	1
+		n = memory->Read8(hl);
+		ExecOR(n);
+		optime += 7;
 	break;
 
 	case 0xb7:
+		//B7		OR A			4	1	1
+		ExecOR(a);
+		optime += 4;
 	break;
 
 	case 0xb8:
+		//B8		CP B			4	1	1
+		ExecCP(b);
+		optime += 4;
 	break;
 
 	case 0xb9:
+		//B9		CP C			4	1	1
+		ExecCP(c);
+		optime += 4;
 	break;
 
 	case 0xba:
+		//BA		CP D			4	1	1
+		ExecCP(d);
+		optime += 4;
 	break;
 
 	case 0xbb:
+		//BB		CP E			4	1	1
+		ExecCP(e);
+		optime += 4;
 	break;
 
 	case 0xbc:
+		//BC		CP H			4	1	1
+		ExecCP(h);
+		optime += 4;
 	break;
 
 	case 0xbd:
+		//BD		CP L			4	1	1
+		ExecCP(l);
+		optime += 4;
 	break;
 
 	case 0xbe:
+		//BE		CP (HL)			7	2	1
+		n = memory->Read8(hl);
+		ExecCP(n);
+		optime += 7;
 	break;
 
 	case 0xbf:
+		//BF		CP A			4	1	1
+		ExecCP(a);
+		optime += 4;
 	break;
 
 
