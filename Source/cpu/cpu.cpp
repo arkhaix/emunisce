@@ -18,11 +18,15 @@ CPU::CPU()
 
 void CPU::Initialize()
 {
+	memory = 0;
+	Reset();
+}
+
+void CPU::Reset()
+{
 	iff1 = false;
 	iff2 = false;
 	delayInterrupts = false;
-
-	memory = 0;
 
 	optime = 0;
 	halted = false;
@@ -38,11 +42,20 @@ void CPU::Initialize()
 	pc = 0x0100;
 }
 
-void CPU::Reset()
+
+u8 CPU::ReadNext8()
 {
-	Initialize();
+	u8 result = memory->Read8(pc);
+	pc++;
+	return result;
 }
 
+u16 CPU::ReadNext16()
+{
+	u16 result = memory->Read16(pc);
+	pc += 2;
+	return result;
+}
 
 
 //////////////////////////////////////////////////////////////////
@@ -442,26 +455,6 @@ void CPU::ExecDI()
 {
 	iff1 = false;
 	iff2 = false;
-
-	//Z unaffected
-
-	//N unaffected
-
-	//H unaffected
-
-	//C unaffected
-}
-
-void CPU::ExecDJNZ(s8 e)
-{
-	b--;
-
-	if(b==0)
-		return;
-
-	pc += e;
-
-	optime += 1;
 
 	//Z unaffected
 
