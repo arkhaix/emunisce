@@ -12,8 +12,53 @@ int CPU::Execute()
 	u16 address;
 
 	u8 opcode;
+
+	bool executeInterrupt = false;
+	u8 interruptFlags = memory->Read8(REG_IF);
+	interruptFlags &= 0x1f;	///<Only bits 0-4 signal valid interrupts.
+	if(ime && delayInterrupts == false && interruptFlags != 0)
+	{
+		u8 interruptEnableFlags = memory->Read8(REG_IE);
+		
+		if( (interruptFlags & IF_VBLANK) && (interruptEnableFlags & IF_VBLANK) )
+		{
+			executeInterrupt = true;
+			ime = false;
+			ExecCALL(0x0040);
+		}
+		else if( (interruptFlags & IF_LCDC) && (interruptEnableFlags & IF_LCDC) )
+		{
+			executeInterrupt = true;
+			ime = false;
+			ExecCALL(0x0048);
+		}
+		else if( (interruptFlags & IF_TIMER) && (interruptEnableFlags & IF_TIMER) )
+		{
+			executeInterrupt = true;
+			ime = false;
+			ExecCALL(0x0050);
+		}
+		else if( (interruptFlags & IF_SERIAL) && (interruptEnableFlags & IF_SERIAL) )
+		{
+			executeInterrupt = true;
+			ime = false;
+			ExecCALL(0x0058);
+		}
+		else if( (interruptFlags & IF_INPUT) && (interruptEnableFlags & IF_INPUT) )
+		{
+			executeInterrupt = true;
+			ime = false;
+			ExecCALL(0x0060);
+		}
+	}
+
+	//Interrupts are delayed for one instruction after EI.
+	if(delayInterrupts == true)
+	{
+		delayInterrupts = false;
+	}
 	
-	if(halted)
+	if(halted && executeInterrupt == false)
 	{
 		opcode = 0x00;	//When halted, we just execute NOPs until an interrupt
 	}

@@ -64,6 +64,12 @@ class Memory;
 #define REG_WX (0xff4b) //Window X position
 #define REG_IE (0xffff) //Interrupt enable flags
 
+#define IF_VBLANK (1<<0) //VBlank flag
+#define IF_LCDC (1<<1) //LCD flag
+#define IF_TIMER (1<<2) //Timer overflow flag
+#define IF_SERIAL (1<<3) //Serial I/O transfer complete flag
+#define IF_INPUT (1<<4)	//"Transition from high to low of pin P10-P13".  Think this triggers on any input.
+
 
 class CPU
 {
@@ -87,7 +93,7 @@ public:
 	u8& l;
 
 	bool ime;	//Interrupt master enable flag
-	bool delayInterrupts;	//??? unneeded?  thinking it should be used after/during DI, EI?
+	bool delayInterrupts;	//Interrupts are not enabled until one instruction after EI completes.
 
 	Memory* memory;
 
