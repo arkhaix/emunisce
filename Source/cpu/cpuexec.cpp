@@ -2240,70 +2240,398 @@ int CPU::ExecuteCB()
 		ExecSRL(&a);
 	break;
 
-//CB40		BIT 0,B			8	2	2
-//CB41		BIT 0,C			8	2	2
-//CB42		BIT 0,D			8	2	2
-//CB43		BIT 0,E			8	2	2
-//CB44	 	BIT 0,H			8	2	2
-//CB45	 	BIT 0,L			8	2	2
-//CB46	 	BIT 0,(HL)		12	3	2
-//CB47	 	BIT 0,A			8	2	2
-//CB48		BIT 1,B			8	2	2
-//CB49	 	BIT 1,C			8	2	2
-//CB4A	 	BIT 1,D			8	2	2
-//CB4B	 	BIT 1,E			8	2	2
-//CB4C	 	BIT 1,H			8	2	2
-//CB4D	 	BIT 1,L			8	2	2
-//CB4E	 	BIT 1,(HL)		12	3	2
-//CB4F	 	BIT 1,A			8	2	2
-//CB50		BIT 2,B			8	2	2
-//CB51	 	BIT 2,C			8	2	2
-//CB52	 	BIT 2,D			8	2	2
-//CB53	 	BIT 2,E			8	2	2
-//CB54	 	BIT 2,H			8	2	2
-//CB55	 	BIT 2,L			8	2	2
-//CB56	 	BIT 2,(HL)		12	3	2
-//CB57	 	BIT 2,A			8	2	2
-//CB58		BIT 3,B			8	2	2
-//CB59	 	BIT 3,C			8	2	2
-//CB5A	 	BIT 3,D			8	2	2
-//CB5B	 	BIT 3,E			8	2	2
-//CB5C	 	BIT 3,H			8	2	2
-//CB5D	 	BIT 3,L			8	2	2
-//CB5E	 	BIT 3,(HL)		12	3	2
-//CB5F	 	BIT 3,A			8	2	2
-//CB60		BIT 4,B			8	2	2
-//CB61	 	BIT 4,C			8	2	2
-//CB62	 	BIT 4,D			8	2	2
-//CB63	 	BIT 4,E			8	2	2
-//CB64	 	BIT 4,H			8	2	2
-//CB65	 	BIT 4,L			8	2	2
-//CB66	 	BIT 4,(HL)		12	3	2
-//CB67	 	BIT 4,A			8	2	2
-//CB68		BIT 5,B			8	2	2
-//CB69	 	BIT 5,C			8	2	2
-//CB6A	 	BIT 5,D			8	2	2
-//CB6B	 	BIT 5,E			8	2	2
-//CB6C	 	BIT 5,H			8	2	2
-//CB6D	 	BIT 5,L			8	2	2
-//CB6E	 	BIT 5,(HL)		12	3	2
-//CB6F	 	BIT 5,A			8	2	2
-//CB70		BIT 6,B			8	2	2
-//CB71	 	BIT 6,C			8	2	2
-//CB72	 	BIT 6,D			8	2	2
-//CB73	 	BIT 6,E			8	2	2
-//CB74	 	BIT 6,H			8	2	2
-//CB75	 	BIT 6,L			8	2	2
-//CB76	 	BIT 6,(HL)		12	3	2
-//CB77	 	BIT 6,A			8	2	2
-//CB78		BIT 7,B			8	2	2
-//CB79	 	BIT 7,C			8	2	2
-//CB7A	 	BIT 7,D			8	2	2
-//CB7B	 	BIT 7,E			8	2	2
-//CB7C	 	BIT 7,H			8	2	2
-//CB7D	 	BIT 7,L			8	2	2
-//CB7E	 	BIT 7,(HL)		12	3	2
-//CB7F	 	BIT 7,A			8	2	2
+	case 0x40:
+		//CB40		BIT 0,B			8	2	2
+		ExecBIT(b,0);
+		optime += 8;
+	break;
+
+	case 0x41:
+		//CB41		BIT 0,C			8	2	2
+		ExecBIT(c,0);
+		optime += 8;
+	break;
+
+	case 0x42:
+		//CB42		BIT 0,D			8	2	2
+		ExecBIT(d,0);
+		optime += 8;
+	break;
+
+	case 0x43:
+		//CB43		BIT 0,E			8	2	2
+		ExecBIT(e,0);
+		optime += 8;
+	break;
+
+	case 0x44:
+		//CB44	 	BIT 0,H			8	2	2
+		ExecBIT(h,0);
+		optime += 8;
+	break;
+
+	case 0x45:
+		//CB45	 	BIT 0,L			8	2	2
+		ExecBIT(l,0);
+		optime += 8;
+	break;
+
+	case 0x46:
+		//CB46	 	BIT 0,(HL)		12	3	2
+		n = memory->Read8(hl);
+		ExecBIT(n,0);
+		optime += 12;
+	break;
+
+	case 0x47:
+		//CB47	 	BIT 0,A			8	2	2
+		ExecBIT(a,0);
+		optime += 8;
+	break;
+
+	case 0x48:
+		//CB48		BIT 1,B			8	2	2
+		ExecBIT(b,1);
+		optime += 8;
+	break;
+
+	case 0x49:
+		//CB49	 	BIT 1,C			8	2	2
+		ExecBIT(c,1);
+		optime += 8;
+	break;
+
+	case 0x4A:
+		//CB4A	 	BIT 1,D			8	2	2
+		ExecBIT(d,1);
+		optime += 8;
+	break;
+
+	case 0x4B:
+		//CB4B	 	BIT 1,E			8	2	2
+		ExecBIT(e,1);
+		optime += 8;
+	break;
+
+	case 0x4C:
+		//CB4C	 	BIT 1,H			8	2	2
+		ExecBIT(h,1);
+		optime += 8;
+	break;
+
+	case 0x4D:
+		//CB4D	 	BIT 1,L			8	2	2
+		ExecBIT(l,1);
+		optime += 8;
+	break;
+
+	case 0x4E:
+		//CB4E	 	BIT 1,(HL)		12	3	2
+		n = memory->Read8(hl);
+		ExecBIT(n,1);
+		optime += 12;
+	break;
+
+	case 0x4F:
+		//CB4F	 	BIT 1,A			8	2	2
+		ExecBIT(a,1);
+		optime += 8;
+	break;
+
+	case 0x50:
+		//CB50		BIT 2,B			8	2	2
+		ExecBIT(b,2);
+		optime += 8;
+	break;
+
+	case 0x51:
+		//CB51	 	BIT 2,C			8	2	2
+		ExecBIT(c,2);
+		optime += 8;
+	break;
+
+	case 0x52:
+		//CB52	 	BIT 2,D			8	2	2
+		ExecBIT(d,2);
+		optime += 8;
+	break;
+
+	case 0x53:
+		//CB53	 	BIT 2,E			8	2	2
+		ExecBIT(e,2);
+		optime += 8;
+	break;
+
+	case 0x54:
+		//CB54	 	BIT 2,H			8	2	2
+		ExecBIT(h,2);
+		optime += 8;
+	break;
+
+	case 0x55:
+		//CB55	 	BIT 2,L			8	2	2
+		ExecBIT(l,2);
+		optime += 8;
+	break;
+
+	case 0x56:
+		//CB56	 	BIT 2,(HL)		12	3	2
+		n = memory->Read8(hl);
+		ExecBIT(n,2);
+		optime += 12;
+	break;
+
+	case 0x57:
+		//CB57	 	BIT 2,A			8	2	2
+		ExecBIT(a,2);
+		optime += 8;
+	break;
+
+	case 0x58:
+		//CB58		BIT 3,B			8	2	2
+		ExecBIT(b,3);
+		optime += 8;
+	break;
+
+	case 0x59:
+		//CB59	 	BIT 3,C			8	2	2
+		ExecBIT(c,3);
+		optime += 8;
+	break;
+
+	case 0x5A:
+		//CB5A	 	BIT 3,D			8	2	2
+		ExecBIT(d,3);
+		optime += 8;
+	break;
+
+	case 0x5B:
+		//CB5B	 	BIT 3,E			8	2	2
+		ExecBIT(e,3);
+		optime += 8;
+	break;
+
+	case 0x5C:
+		//CB5C	 	BIT 3,H			8	2	2
+		ExecBIT(h,3);
+		optime += 8;
+	break;
+
+	case 0x5D:
+		//CB5D	 	BIT 3,L			8	2	2
+		ExecBIT(l,3);
+		optime += 8;
+	break;
+
+	case 0x5E:
+		//CB5E	 	BIT 3,(HL)		12	3	2
+		n = memory->Read8(hl);
+		ExecBIT(n,3);
+		optime += 12;
+	break;
+
+	case 0x5F:
+		//CB5F	 	BIT 3,A			8	2	2
+		ExecBIT(a,3);
+		optime += 8;
+	break;
+
+	case 0x60:
+		//CB60		BIT 4,B			8	2	2
+		ExecBIT(b,4);
+		optime += 8;
+	break;
+
+	case 0x61:
+		//CB61	 	BIT 4,C			8	2	2
+		ExecBIT(c,4);
+		optime += 8;
+	break;
+
+	case 0x62:
+		//CB62	 	BIT 4,D			8	2	2
+		ExecBIT(d,4);
+		optime += 8;
+	break;
+
+	case 0x63:
+		//CB63	 	BIT 4,E			8	2	2
+		ExecBIT(e,4);
+		optime += 8;
+	break;
+
+	case 0x64:
+		//CB64	 	BIT 4,H			8	2	2
+		ExecBIT(h,4);
+		optime += 8;
+	break;
+
+	case 0x65:
+		//CB65	 	BIT 4,L			8	2	2
+		ExecBIT(l,4);
+		optime += 8;
+	break;
+
+	case 0x66:
+		//CB66	 	BIT 4,(HL)		12	3	2
+		n = memory->Read8(hl);
+		ExecBIT(n,4);
+		optime += 12;
+	break;
+
+	case 0x67:
+		//CB67	 	BIT 4,A			8	2	2
+		ExecBIT(a,4);
+		optime += 8;
+	break;
+
+	case 0x68:
+		//CB68		BIT 5,B			8	2	2
+		ExecBIT(b,5);
+		optime += 8;
+	break;
+
+	case 0x69:
+		//CB69	 	BIT 5,C			8	2	2
+		ExecBIT(c,5);
+		optime += 8;
+	break;
+
+	case 0x6A:
+		//CB6A	 	BIT 5,D			8	2	2
+		ExecBIT(d,5);
+		optime += 8;
+	break;
+
+	case 0x6B:
+		//CB6B	 	BIT 5,E			8	2	2
+		ExecBIT(e,5);
+		optime += 8;
+	break;
+
+	case 0x6C:
+		//CB6C	 	BIT 5,H			8	2	2
+		ExecBIT(h,5);
+		optime += 8;
+	break;
+
+	case 0x6D:
+		//CB6D	 	BIT 5,L			8	2	2
+		ExecBIT(l,5);
+		optime += 8;
+	break;
+
+	case 0x6E:
+		//CB6E	 	BIT 5,(HL)		12	3	2
+		n = memory->Read8(hl);
+		ExecBIT(n,5);
+		optime += 12;
+	break;
+
+	case 0x6F:
+		//CB6F	 	BIT 5,A			8	2	2
+		ExecBIT(a,5);
+		optime += 8;
+	break;
+
+	case 0x70:
+		//CB70		BIT 6,B			8	2	2
+		ExecBIT(b,6);
+		optime += 8;
+	break;
+
+	case 0x71:
+		//CB71	 	BIT 6,C			8	2	2
+		ExecBIT(c,6);
+		optime += 8;
+	break;
+
+	case 0x72:
+		//CB72	 	BIT 6,D			8	2	2
+		ExecBIT(d,6);
+		optime += 8;
+	break;
+
+	case 0x73:
+		//CB73	 	BIT 6,E			8	2	2
+		ExecBIT(e,6);
+		optime += 8;
+	break;
+
+	case 0x74:
+		//CB74	 	BIT 6,H			8	2	2
+		ExecBIT(h,6);
+		optime += 8;
+	break;
+
+	case 0x75:
+		//CB75	 	BIT 6,L			8	2	2
+		ExecBIT(l,6);
+		optime += 8;
+	break;
+
+	case 0x76:
+		//CB76	 	BIT 6,(HL)		12	3	2
+		n = memory->Read8(hl);
+		ExecBIT(n,6);
+		optime += 12;
+	break;
+
+	case 0x77:
+		//CB77	 	BIT 6,A			8	2	2
+		ExecBIT(a,6);
+		optime += 8;
+	break;
+
+	case 0x78:
+		//CB78		BIT 7,B			8	2	2
+		ExecBIT(b,7);
+		optime += 8;
+	break;
+
+	case 0x79:
+		//CB79	 	BIT 7,C			8	2	2
+		ExecBIT(c,7);
+		optime += 8;
+	break;
+
+	case 0x7A:
+		//CB7A	 	BIT 7,D			8	2	2
+		ExecBIT(d,7);
+		optime += 8;
+	break;
+
+	case 0x7B:
+		//CB7B	 	BIT 7,E			8	2	2
+		ExecBIT(e,7);
+		optime += 8;
+	break;
+
+	case 0x7C:
+		//CB7C	 	BIT 7,H			8	2	2
+		ExecBIT(h,7);
+		optime += 8;
+	break;
+
+	case 0x7D:
+		//CB7D	 	BIT 7,L			8	2	2
+		ExecBIT(l,7);
+		optime += 8;
+	break;
+
+	case 0x7E:
+		//CB7E	 	BIT 7,(HL)		12	3	2
+		n = memory->Read8(hl);
+		ExecBIT(n,7);
+		optime += 12;
+	break;
+
+	case 0x7F:
+		//CB7F	 	BIT 7,A			8	2	2
+		ExecBIT(a,7);
+		optime += 8;
+	break;
+
 //CB80		RES 0,B			8	2	2
 //CB81		RES 0,C			8	2	2
 //CB82		RES 0,D			8	2	2

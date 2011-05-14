@@ -198,9 +198,9 @@ void CPU::ExecBIT(u8 value, int n)
 {
 	//Z
 	if(value & (1<<n))
-		SET_Z;
-	else
 		RES_Z;
+	else
+		SET_Z;
 
 	//N
 	RES_N;
