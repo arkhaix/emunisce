@@ -8,6 +8,7 @@ using namespace std;
 int main(void)
 {
 	Machine machine;
+	machine._MachineType = MachineType::GameBoy;
 
 	CPU cpu;
 	cpu.SetMachine(&machine);
