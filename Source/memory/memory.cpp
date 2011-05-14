@@ -1,7 +1,21 @@
 #include "memory.h"
 
+//CRT
+#include <ctime>
+
+//STL
+#include <fstream>
+#include <iostream> ///<debug
+using namespace std;
+
+//Project
+#include "romonly.h"
+
+
 Memory::Memory()
 {
+	srand(time(NULL));
+
 	m_cartRom = NULL;
 	m_switchableRom = NULL;
 	m_videoRam = NULL;
@@ -18,7 +32,25 @@ Memory::~Memory()
 
 void Memory::Initialize()
 {
-	//todo: Fill the blocks with random data
+	//Randomize the RAM data
+	for(int i=0;i<0x2000;i++)
+	{
+		int randomNumber = rand();
+		u8 r[4];
+		r[0] = (u8)(randomNumber);
+		r[1] = (u8)(randomNumber >> 8);
+		r[2] = (u8)(randomNumber >> 16);
+		r[3] = (u8)(randomNumber >> 24);
+
+		m_videoRamData[i] = r[0];
+		m_internalRamData[i] = r[1];
+
+		if(i < 0x100)
+			m_spriteRamData[i] = r[2];
+
+		if(i < 0x80)
+			m_stackRamData[i] = r[3];
+	}
 
 	Reset();
 }
@@ -102,16 +134,46 @@ void Memory::Write16(u16 address, u16 value)
 	Write8(address+1, high);
 }
 	
-Memory* Memory::CreateFromFile(Machine* machine, const char* filename)
+Memory* Memory::CreateFromFile(const char* filename)
 {
-	//Open file
+	ifstream ifile(filename, ios::in | ios::binary);
+	
+	if(ifile.fail() || ifile.eof() || !ifile.good())
+		return NULL;
 
-	//Read header
+	u8 header[0x150] = {0};
+	ifile.read((char*)&header[0], 0x150);
+	ifile.close();
 
-	//Close the file
+	//Debug
+	char title[17] = {0};
+	for(int i=0;i<16;i++)
+		title[i] = header[0x134+i];
+	printf("Title: %s\n", title);
+
+	/*
+	0 - ROM ONLY               5 - ROM+MBC2
+	1 - ROM+MBC1               6 - ROM+MBC2+BATTERY
+	2 - ROM+MBC1+RAM           8 - ROM+RAM
+	3 - ROM+MBC1+RAM+BATTERY   9 - ROM+RAM+BATTERY
+	FF - ROM+HuC1+RAM+BATTERY
+	*/
+	printf("Cartridge type: ");
+	u8 cartType = header[0x147];
+	if(cartType == 0) printf("ROM Only\n");
+	else if(cartType == 1) printf("MBC1\n");
+	else if(cartType == 2) printf("MBC1 + RAM\n");
+	else if(cartType == 3) printf("MBC1 + RAM + Battery\n");
+	else if(cartType == 5) printf("MBC2\n");
+	else if(cartType == 6) printf("MBC2 + Battery\n");
+	else if(cartType == 8) printf("ROM + RAM\n");
+	else if(cartType == 9) printf("ROM + RAM + Battery\n");
+	else if(cartType == 0xff) printf("HuC1 + RAM + Battery\n");
 
 	//Instantiate appropriate MBC class from header info
 	Memory* memoryController = NULL;
+	if(cartType == 0 || cartType == 8 || cartType == 9)
+		memoryController = new RomOnly();
 
 	if(memoryController == NULL)
 		return NULL;

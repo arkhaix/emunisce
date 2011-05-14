@@ -19,7 +19,7 @@ public:
 	virtual void Write8(u16 address, u8 value);
 	virtual void Write16(u16 address, u16 value);
 
-	static Memory* CreateFromFile(Machine* machine, const char* filename);
+	static Memory* CreateFromFile(const char* filename);
 
 protected:
 
