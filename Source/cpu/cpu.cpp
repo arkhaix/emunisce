@@ -24,8 +24,7 @@ void CPU::Initialize()
 
 void CPU::Reset()
 {
-	iff1 = false;
-	iff2 = false;
+	ime = false;
 	delayInterrupts = false;
 
 	optime = 0;
@@ -451,8 +450,7 @@ void CPU::ExecDEC(u16* target)
 
 void CPU::ExecDI()
 {
-	iff1 = false;
-	iff2 = false;
+	ime = false;
 
 	//Z unaffected
 
@@ -465,8 +463,7 @@ void CPU::ExecDI()
 
 void CPU::ExecEI()
 {
-	iff1 = true;
-	iff2 = true;
+	ime = true;
 	delayInterrupts = true;
 
 	//Z unaffected

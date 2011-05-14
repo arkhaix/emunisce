@@ -62,8 +62,7 @@ public:
 	u8& h;
 	u8& l;
 
-	bool iff1;
-	bool iff2;
+	bool ime;	//Interrupt master enable flag
 	bool delayInterrupts;	//??? unneeded?  thinking it should be used after/during DI, EI?
 
 	Memory* memory;

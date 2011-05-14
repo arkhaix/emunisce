@@ -1550,7 +1550,8 @@ int CPU::Execute()
 
 	case 0xd9:
 		//D9      EXX             RETI
-		ExecRET();	//?? Does RETI need anything special? Doesn't seem like it.
+		ExecRET();
+		ime = true;
 		optime += 10;	//?? guessing from RET.
 	break;
 
@@ -1739,8 +1740,7 @@ int CPU::Execute()
 
 	case 0xf3:
 		//F3		DI
-		iff1 = false;
-		iff2 = false;
+		ime = false;
 		optime += 4;
 	break;
 
@@ -1793,8 +1793,7 @@ int CPU::Execute()
 
 	case 0xfb:
 		//FB		EI
-		iff1 = true;
-		iff2 = true;
+		ime = true;
 		optime += 4;
 		//?? todo: maskable interrupts still disabled during this instruction and the next
 	break;
