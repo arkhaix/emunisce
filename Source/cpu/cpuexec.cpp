@@ -1838,9 +1838,8 @@ int CPU::Execute()
 
 	case 0xfb:
 		//FB		EI
-		m_interruptsEnabled = true;
+		ExecEI();
 		m_instructionTime += 4;
-		//?? todo: maskable interrupts still disabled during this instruction and the next
 	break;
 
 	case 0xfc:
