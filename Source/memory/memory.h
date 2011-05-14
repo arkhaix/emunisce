@@ -7,7 +7,7 @@ class Memory
 {
 public:
 
-	static Memory* CreateFromFile(const char* filename);
+	static Memory* CreateFromFile(Machine* machine, const char* filename);
 
 	virtual void Initialize() = 0;
 	virtual void Reset() = 0;
@@ -20,7 +20,12 @@ public:
 
 protected:
 
-	virtual void LoadFile(const char* filename);
+	virtual ~Memory();
+
+	u8 ReadRegister(u16 address);
+	void WriteRegister(u16 address, u8 value);
+
+	virtual bool LoadFile(const char* filename) = 0;
 };
 
 #endif

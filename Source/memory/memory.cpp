@@ -1,6 +1,6 @@
 #include "memory.h"
 
-Memory* Memory::CreateFromFile(const char* filename)
+Memory* Memory::CreateFromFile(Machine* machine, const char* filename)
 {
 	//Open file
 
@@ -15,7 +15,24 @@ Memory* Memory::CreateFromFile(const char* filename)
 		return NULL;
 
 	//Have the MBC class load the file
-	mbc->LoadFile(filename);
+	if(mbc->LoadFile(filename) == false)
+	{
+		delete mbc;
+		return NULL;
+	}
 
 	return mbc;
+}
+
+Memory::~Memory()
+{
+}
+
+u8 Memory::ReadRegister(u16 address)
+{
+	return 0;
+}
+
+void Memory::WriteRegister(u16 address, u8 value)
+{
 }

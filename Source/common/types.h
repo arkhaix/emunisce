@@ -13,4 +13,40 @@ typedef signed int s32;
 #define NULL 0
 #endif
 
+
+class CPU;
+class Memory;
+
+
+namespace MachineType
+{
+	typedef int Type;
+
+	enum
+	{
+		GameBoy,
+		GameBoyColor,
+		SuperGameBoy,
+
+		NumMachineTypes
+	};
+
+	static const char* ToString[] =
+	{
+		"GameBoy",
+		"GameBoyColor",
+		"SuperGameBoy",
+
+		"NumMachineTypes"
+	};
+}
+
+struct Machine
+{
+	MachineType::Type _MachineType;
+
+	CPU* _CPU;
+	Memory* _Memory;
+};
+
 #endif
