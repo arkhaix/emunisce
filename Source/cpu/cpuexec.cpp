@@ -2632,134 +2632,806 @@ int CPU::ExecuteCB()
 		optime += 8;
 	break;
 
-//CB80		RES 0,B			8	2	2
-//CB81		RES 0,C			8	2	2
-//CB82		RES 0,D			8	2	2
-//CB83		RES 0,E			8	2	2
-//CB84	 	RES 0,H			8	2	2
-//CB85	 	RES 0,L			8	2	2
-//CB86	 	RES 0,(HL)		15	4	2
-//CB87	 	RES 0,A			8	2	2
-//CB88		RES 1,B			8	2	2
-//CB89	 	RES 1,C			8	2	2
-//CB8A	 	RES 1,D			8	2	2
-//CB8B	 	RES 1,E			8	2	2
-//CB8C	 	RES 1,H			8	2	2
-//CB8D	 	RES 1,L			8	2	2
-//CB8E	 	RES 1,(HL)		15	4	2
-//CB8F	 	RES 1,A			8	2	2
-//CB90		RES 2,B			8	2	2
-//CB91	 	RES 2,C			8	2	2
-//CB92	 	RES 2,D			8	2	2
-//CB93	 	RES 2,E			8	2	2
-//CB94	 	RES 2,H			8	2	2
-//CB95	 	RES 2,L			8	2	2
-//CB96	 	RES 2,(HL)		15	4	2
-//CB97	 	RES 2,A			8	2	2
-//CB98		RES 3,B			8	2	2
-//CB99	 	RES 3,C			8	2	2
-//CB9A	 	RES 3,D			8	2	2
-//CB9B	 	RES 3,E			8	2	2
-//CB9C	 	RES 3,H			8	2	2
-//CB9D	 	RES 3,L			8	2	2
-//CB9E	 	RES 3,(HL)		15	4	2
-//CB9F	 	RES 3,A			8	2	2
-//CBA0		RES 4,B			8	2	2
-//CBA1	 	RES 4,C			8	2	2
-//CBA2	 	RES 4,D			8	2	2
-//CBA3	 	RES 4,E			8	2	2
-//CBA4	 	RES 4,H			8	2	2
-//CBA5	 	RES 4,L			8	2	2
-//CBA6	 	RES 4,(HL)		15	4	2
-//CBA7	 	RES 4,A			8	2	2
-//CBA8		RES 5,B			8	2	2
-//CBA9	 	RES 5,C			8	2	2
-//CBAA	 	RES 5,D			8	2	2
-//CBAB	 	RES 5,E			8	2	2
-//CBAC	 	RES 5,H			8	2	2
-//CBAD	 	RES 5,L			8	2	2
-//CBAE	 	RES 5,(HL)		15	4	2
-//CBAF	 	RES 5,A			8	2	2
-//CBB0		RES 6,B			8	2	2
-//CBB1	 	RES 6,C			8	2	2
-//CBB2	 	RES 6,D			8	2	2
-//CBB3	 	RES 6,E			8	2	2
-//CBB4	 	RES 6,H			8	2	2
-//CBB5	 	RES 6,L			8	2	2
-//CBB6	 	RES 6,(HL)		15	4	2
-//CBB7	 	RES 6,A			8	2	2
-//CBB8		RES 7,B			8	2	2
-//CBB9	 	RES 7,C			8	2	2
-//CBBA	 	RES 7,D			8	2	2
-//CBBB	 	RES 7,E			8	2	2
-//CBBC	 	RES 7,H			8	2	2
-//CBBD	 	RES 7,L			8	2	2
-//CBBE	 	RES 7,(HL)		15	4	2
-//CBBF	 	RES 7,A			8	2	2
-//CBC0		SET 0,B			8	2	2
-//CBC1		SET 0,C			8	2	2
-//CBC2		SET 0,D			8	2	2
-//CBC3		SET 0,E			8	2	2
-//CBC4	 	SET 0,H			8	2	2
-//CBC5	 	SET 0,L			8	2	2
-//CBC6	 	SET 0,(HL)		15	4	2
-//CBC7	 	SET 0,A			8	2	2
-//CBC8		SET 1,B			8	2	2
-//CBC9	 	SET 1,C			8	2	2
-//CBCA	 	SET 1,D			8	2	2
-//CBCB	 	SET 1,E			8	2	2
-//CBCC	 	SET 1,H			8	2	2
-//CBCD	 	SET 1,L			8	2	2
-//CBCE	 	SET 1,(HL)		15	4	2
-//CBCF	 	SET 1,A			8	2	2
-//CBD0		SET 2,B			8	2	2
-//CBD1	 	SET 2,C			8	2	2
-//CBD2	 	SET 2,D			8	2	2
-//CBD3	 	SET 2,E			8	2	2
-//CBD4	 	SET 2,H			8	2	2
-//CBD5	 	SET 2,L			8	2	2
-//CBD6	 	SET 2,(HL)		15	4	2
-//CBD7	 	SET 2,A			8	2	2
-//CBD8		SET 3,B			8	2	2
-//CBD9	 	SET 3,C			8	2	2
-//CBDA	 	SET 3,D			8	2	2
-//CBDB	 	SET 3,E			8	2	2
-//CBDC	 	SET 3,H			8	2	2
-//CBDD	 	SET 3,L			8	2	2
-//CBDE	 	SET 3,(HL)		15	4	2
-//CBDF	 	SET 3,A			8	2	2
-//CBE0		SET 4,B			8	2	2
-//CBE1	 	SET 4,C			8	2	2
-//CBE2	 	SET 4,D			8	2	2
-//CBE3	 	SET 4,E			8	2	2
-//CBE4	 	SET 4,H			8	2	2
-//CBE5	 	SET 4,L			8	2	2
-//CBE6	 	SET 4,(HL)		15	4	2
-//CBE7	 	SET 4,A			8	2	2
-//CBE8		SET 5,B			8	2	2
-//CBE9	 	SET 5,C			8	2	2
-//CBEA	 	SET 5,D			8	2	2
-//CBEB	 	SET 5,E			8	2	2
-//CBEC	 	SET 5,H			8	2	2
-//CBED	 	SET 5,L			8	2	2
-//CBEE	 	SET 5,(HL)		15	4	2
-//CBEF	 	SET 5,A			8	2	2
-//CBF0		SET 6,B			8	2	2
-//CBF1	 	SET 6,C			8	2	2
-//CBF2	 	SET 6,D			8	2	2
-//CBF3	 	SET 6,E			8	2	2
-//CBF4	 	SET 6,H			8	2	2
-//CBF5	 	SET 6,L			8	2	2
-//CBF6	 	SET 6,(HL)		15	4	2
-//CBF7	 	SET 6,A			8	2	2
-//CBF8		SET 7,B			8	2	2
-//CBF9	 	SET 7,C			8	2	2
-//CBFA	 	SET 7,D			8	2	2
-//CBFB	 	SET 7,E			8	2	2
-//CBFC	 	SET 7,H			8	2	2
-//CBFD	 	SET 7,L			8	2	2
-//CBFE	 	SET 7,(HL)		15	4	2
-//CBFF	 	SET 7,A			8	2	2
+	case 0x80:
+		//CB80		RES 0,B			8	2	2
+		ExecRES(&b,0);
+		optime += 8;
+	break;
+
+	case 0x81:
+		//CB81		RES 0,C			8	2	2
+		ExecRES(&c,0);
+		optime += 8;
+	break;
+
+	case 0x82:
+		//CB82		RES 0,D			8	2	2
+		ExecRES(&d,0);
+		optime += 8;
+	break;
+
+	case 0x83:
+		//CB83		RES 0,E			8	2	2
+		ExecRES(&e,0);
+		optime += 8;
+	break;
+
+	case 0x84:
+		//CB84	 	RES 0,H			8	2	2
+		ExecRES(&h,0);
+		optime += 8;
+	break;
+
+	case 0x85:
+		//CB85	 	RES 0,L			8	2	2
+		ExecRES(&l,0);
+		optime += 8;
+	break;
+
+	case 0x86:
+		//CB86	 	RES 0,(HL)		15	4	2
+		n = memory->Read8(hl);
+		ExecRES(&n,0);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0x87:
+		//CB87	 	RES 0,A			8	2	2
+		ExecRES(&a,0);
+		optime += 8;
+	break;
+
+	case 0x88:
+		//CB88		RES 1,B			8	2	2
+		ExecRES(&b,1);
+		optime += 8;
+	break;
+
+	case 0x89:
+		//CB89	 	RES 1,C			8	2	2
+		ExecRES(&c,1);
+		optime += 8;
+	break;
+
+	case 0x8A:
+		//CB8A	 	RES 1,D			8	2	2
+		ExecRES(&d,1);
+		optime += 8;
+	break;
+
+	case 0x8B:
+		//CB8B	 	RES 1,E			8	2	2
+		ExecRES(&e,1);
+		optime += 8;
+	break;
+
+	case 0x8C:
+		//CB8C	 	RES 1,H			8	2	2
+		ExecRES(&h,1);
+		optime += 8;
+	break;
+
+	case 0x8D:
+		//CB8D	 	RES 1,L			8	2	2
+		ExecRES(&l,1);
+		optime += 8;
+	break;
+
+	case 0x8E:
+		//CB8E	 	RES 1,(HL)		15	4	2
+		n = memory->Read8(hl);
+		ExecRES(&n,1);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0x8F:
+		//CB8F	 	RES 1,A			8	2	2
+		ExecRES(&a,1);
+		optime += 8;
+	break;
+
+	case 0x90:
+		//CB90		RES 2,B			8	2	2
+		ExecRES(&b,2);
+		optime += 8;
+	break;
+
+	case 0x91:
+		//CB91	 	RES 2,C			8	2	2
+		ExecRES(&c,2);
+		optime += 8;
+	break;
+
+	case 0x92:
+		//CB92	 	RES 2,D			8	2	2
+		ExecRES(&d,2);
+		optime += 8;
+	break;
+
+	case 0x93:
+		//CB93	 	RES 2,E			8	2	2
+		ExecRES(&e,2);
+		optime += 8;
+	break;
+
+	case 0x94:
+		//CB94	 	RES 2,H			8	2	2
+		ExecRES(&h,2);
+		optime += 8;
+	break;
+
+	case 0x95:
+		//CB95	 	RES 2,L			8	2	2
+		ExecRES(&l,2);
+		optime += 8;
+	break;
+
+	case 0x96:
+		//CB96	 	RES 2,(HL)		15	4	2
+		n = memory->Read8(hl);
+		ExecRES(&n,2);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0x97:
+		//CB97	 	RES 2,A			8	2	2
+		ExecRES(&a,2);
+		optime += 8;
+	break;
+
+	case 0x98:
+		//CB98		RES 3,B			8	2	2
+		ExecRES(&b,3);
+		optime += 8;
+	break;
+
+	case 0x99:
+		//CB99	 	RES 3,C			8	2	2
+		ExecRES(&c,3);
+		optime += 8;
+	break;
+
+	case 0x9A:
+		//CB9A	 	RES 3,D			8	2	2
+		ExecRES(&d,3);
+		optime += 8;
+	break;
+
+	case 0x9B:
+		//CB9B	 	RES 3,E			8	2	2
+		ExecRES(&e,3);
+		optime += 8;
+	break;
+
+	case 0x9C:
+		//CB9C	 	RES 3,H			8	2	2
+		ExecRES(&h,3);
+		optime += 8;
+	break;
+
+	case 0x9D:
+		//CB9D	 	RES 3,L			8	2	2
+		ExecRES(&l,3);
+		optime += 8;
+	break;
+
+	case 0x9E:
+		//CB9E	 	RES 3,(HL)		15	4	2
+		n = memory->Read8(hl);
+		ExecRES(&n,3);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0x9F:
+		//CB9F	 	RES 3,A			8	2	2
+		ExecRES(&a,3);
+		optime += 8;
+	break;
+
+	case 0xA0:
+		//CBA0		RES 4,B			8	2	2
+		ExecRES(&b,4);
+		optime += 8;
+	break;
+
+	case 0xA1:
+		//CBA1	 	RES 4,C			8	2	2
+		ExecRES(&c,4);
+		optime += 8;
+	break;
+
+	case 0xA2:
+		//CBA2	 	RES 4,D			8	2	2
+		ExecRES(&d,4);
+		optime += 8;
+	break;
+
+	case 0xA3:
+		//CBA3	 	RES 4,E			8	2	2
+		ExecRES(&e,4);
+		optime += 8;
+	break;
+
+	case 0xA4:
+		//CBA4	 	RES 4,H			8	2	2
+		ExecRES(&h,4);
+		optime += 8;
+	break;
+
+	case 0xA5:
+		//CBA5	 	RES 4,L			8	2	2
+		ExecRES(&l,4);
+		optime += 8;
+	break;
+
+	case 0xA6:
+		//CBA6	 	RES 4,(HL)		15	4	2
+		n = memory->Read8(hl);
+		ExecRES(&n,4);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0xA7:
+		//CBA7	 	RES 4,A			8	2	2
+		ExecRES(&a,4);
+		optime += 8;
+	break;
+
+	case 0xA8:
+		//CBA8		RES 5,B			8	2	2
+		ExecRES(&b,5);
+		optime += 8;
+	break;
+
+	case 0xA9:
+		//CBA9	 	RES 5,C			8	2	2
+		ExecRES(&c,5);
+		optime += 8;
+	break;
+
+	case 0xAA:
+		//CBAA	 	RES 5,D			8	2	2
+		ExecRES(&d,5);
+		optime += 8;
+	break;
+
+	case 0xAB:
+		//CBAB	 	RES 5,E			8	2	2
+		ExecRES(&e,5);
+		optime += 8;
+	break;
+
+	case 0xAC:
+		//CBAC	 	RES 5,H			8	2	2
+		ExecRES(&h,5);
+		optime += 8;
+	break;
+
+	case 0xAD:
+		//CBAD	 	RES 5,L			8	2	2
+		ExecRES(&l,5);
+		optime += 8;
+	break;
+
+	case 0xAE:
+		//CBAE	 	RES 5,(HL)		15	4	2
+		n = memory->Read8(hl);
+		ExecRES(&n,5);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0xAF:
+		//CBAF	 	RES 5,A			8	2	2
+		ExecRES(&a,5);
+		optime += 8;
+	break;
+
+	case 0xB0:
+		//CBB0		RES 6,B			8	2	2
+		ExecRES(&b,6);
+		optime += 8;
+	break;
+
+	case 0xB1:
+		//CBB1	 	RES 6,C			8	2	2
+		ExecRES(&c,6);
+		optime += 8;
+	break;
+
+	case 0xB2:
+		//CBB2	 	RES 6,D			8	2	2
+		ExecRES(&d,6);
+		optime += 8;
+	break;
+
+	case 0xB3:
+		//CBB3	 	RES 6,E			8	2	2
+		ExecRES(&e,6);
+		optime += 8;
+	break;
+
+	case 0xB4:
+		//CBB4	 	RES 6,H			8	2	2
+		ExecRES(&h,6);
+		optime += 8;
+	break;
+
+	case 0xB5:
+		//CBB5	 	RES 6,L			8	2	2
+		ExecRES(&l,6);
+		optime += 8;
+	break;
+
+	case 0xB6:
+		//CBB6	 	RES 6,(HL)		15	4	2
+		n = memory->Read8(hl);
+		ExecRES(&n,6);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0xB7:
+		//CBB7	 	RES 6,A			8	2	2
+		ExecRES(&a,6);
+		optime += 8;
+	break;
+
+	case 0xB8:
+		//CBB8		RES 7,B			8	2	2
+		ExecRES(&b,7);
+		optime += 8;
+	break;
+
+	case 0xB9:
+		//CBB9	 	RES 7,C			8	2	2
+		ExecRES(&c,7);
+		optime += 8;
+	break;
+
+	case 0xBA:
+		//CBBA	 	RES 7,D			8	2	2
+		ExecRES(&d,7);
+		optime += 8;
+	break;
+
+	case 0xBB:
+		//CBBB	 	RES 7,E			8	2	2
+		ExecRES(&e,7);
+		optime += 8;
+	break;
+
+	case 0xBC:
+		//CBBC	 	RES 7,H			8	2	2
+		ExecRES(&h,7);
+		optime += 8;
+	break;
+
+	case 0xBD:
+		//CBBD	 	RES 7,L			8	2	2
+		ExecRES(&l,7);
+		optime += 8;
+	break;
+
+	case 0xBE:
+		//CBBE	 	RES 7,(HL)		15	4	2
+		n = memory->Read8(hl);
+		ExecRES(&n,7);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0xBF:
+		//CBBF	 	RES 7,A			8	2	2
+		ExecRES(&a,7);
+		optime += 8;
+	break;
+
+	case 0xC0:
+		//CBC0		SET 0,B			8	2	2
+		ExecSET(&b,0);
+		optime += 8;
+	break;
+
+	case 0xC1:
+		//CBC1		SET 0,C			8	2	2
+		ExecSET(&c,0);
+		optime += 8;
+	break;
+
+	case 0xC2:
+		//CBC2		SET 0,D			8	2	2
+		ExecSET(&d,0);
+		optime += 8;
+	break;
+
+	case 0xC3:
+		//CBC3		SET 0,E			8	2	2
+		ExecSET(&e,0);
+		optime += 8;
+	break;
+
+	case 0xC4:
+		//CBC4	 	SET 0,H			8	2	2
+		ExecSET(&h,0);
+		optime += 8;
+	break;
+
+	case 0xC5:
+		//CBC5	 	SET 0,L			8	2	2
+		ExecSET(&l,0);
+		optime += 8;
+	break;
+
+	case 0xC6:
+		//CBC6	 	SET 0,(HL)		15	4	2
+		n = memory->Read8(hl);
+		ExecSET(&n,0);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0xC7:
+		//CBC7	 	SET 0,A			8	2	2
+		ExecSET(&a,0);
+		optime += 8;
+	break;
+
+	case 0xC8:
+		//CBC8		SET 1,B			8	2	2
+		ExecSET(&b,1);
+		optime += 8;
+	break;
+
+	case 0xC9:
+		//CBC9	 	SET 1,C			8	2	2
+		ExecSET(&c,1);
+		optime += 8;
+	break;
+
+	case 0xCA:
+		//CBCA	 	SET 1,D			8	2	2
+		ExecSET(&d,1);
+		optime += 8;
+	break;
+
+	case 0xCB:
+		//CBCB	 	SET 1,E			8	2	2
+		ExecSET(&e,1);
+		optime += 8;
+	break;
+
+	case 0xCC:
+		//CBCC	 	SET 1,H			8	2	2
+		ExecSET(&h,1);
+		optime += 8;
+	break;
+
+	case 0xCD:
+		//CBCD	 	SET 1,L			8	2	2
+		ExecSET(&l,1);
+		optime += 8;
+	break;
+
+	case 0xCE:
+		//CBCE	 	SET 1,(HL)		15	4	2
+		n = memory->Read8(hl);
+		ExecSET(&n,1);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0xCF:
+		//CBCF	 	SET 1,A			8	2	2
+		ExecSET(&a,1);
+		optime += 8;
+	break;
+
+	case 0xD0:
+		//CBD0		SET 2,B			8	2	2
+		ExecSET(&b,2);
+		optime += 8;
+	break;
+
+	case 0xD1:
+		//CBD1	 	SET 2,C			8	2	2
+		ExecSET(&c,2);
+		optime += 8;
+	break;
+
+	case 0xD2:
+		//CBD2	 	SET 2,D			8	2	2
+		ExecSET(&d,2);
+		optime += 8;
+	break;
+
+	case 0xD3:
+		//CBD3	 	SET 2,E			8	2	2
+		ExecSET(&e,2);
+		optime += 8;
+	break;
+
+	case 0xD4:
+		//CBD4	 	SET 2,H			8	2	2
+		ExecSET(&h,2);
+		optime += 8;
+	break;
+
+	case 0xD5:
+		//CBD5	 	SET 2,L			8	2	2
+		ExecSET(&l,2);
+		optime += 8;
+	break;
+
+	case 0xD6:
+		//CBD6	 	SET 2,(HL)		15	4	2
+		n = memory->Read8(hl);
+		ExecSET(&n,2);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0xD7:
+		//CBD7	 	SET 2,A			8	2	2
+		ExecSET(&a,2);
+		optime += 8;
+	break;
+
+	case 0xD8:
+		//CBD8		SET 3,B			8	2	2
+		ExecSET(&b,3);
+		optime += 8;
+	break;
+
+	case 0xD9:
+		//CBD9	 	SET 3,C			8	2	2
+		ExecSET(&c,3);
+		optime += 8;
+	break;
+
+	case 0xDA:
+		//CBDA	 	SET 3,D			8	2	2
+		ExecSET(&d,3);
+		optime += 8;
+	break;
+
+	case 0xDB:
+		//CBDB	 	SET 3,E			8	2	2
+		ExecSET(&e,3);
+		optime += 8;
+	break;
+
+	case 0xDC:
+		//CBDC	 	SET 3,H			8	2	2
+		ExecSET(&h,3);
+		optime += 8;
+	break;
+
+	case 0xDD:
+		//CBDD	 	SET 3,L			8	2	2
+		ExecSET(&l,3);
+		optime += 8;
+	break;
+
+	case 0xDE:
+		//CBDE	 	SET 3,(HL)		15	4	2
+		n = memory->Read8(hl);
+		ExecSET(&n,3);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0xDF:
+		//CBDF	 	SET 3,A			8	2	2
+		ExecSET(&a,3);
+		optime += 8;
+	break;
+
+	case 0xE0:
+		//CBE0		SET 4,B			8	2	2
+		ExecSET(&b,4);
+		optime += 8;
+	break;
+
+	case 0xE1:
+		//CBE1	 	SET 4,C			8	2	2
+		ExecSET(&c,4);
+		optime += 8;
+	break;
+
+	case 0xE2:
+		//CBE2	 	SET 4,D			8	2	2
+		ExecSET(&d,4);
+		optime += 8;
+	break;
+
+	case 0xE3:
+		//CBE3	 	SET 4,E			8	2	2
+		ExecSET(&e,4);
+		optime += 8;
+	break;
+
+	case 0xE4:
+		//CBE4	 	SET 4,H			8	2	2
+		ExecSET(&h,4);
+		optime += 8;
+	break;
+
+	case 0xE5:
+		//CBE5	 	SET 4,L			8	2	2
+		ExecSET(&l,4);
+		optime += 8;
+	break;
+
+	case 0xE6:
+		//CBE6	 	SET 4,(HL)		15	4	2
+		n = memory->Read8(hl);
+		ExecSET(&n,4);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0xE7:
+		//CBE7	 	SET 4,A			8	2	2
+		ExecSET(&a,4);
+		optime += 8;
+	break;
+
+	case 0xE8:
+		//CBE8		SET 5,B			8	2	2
+		ExecSET(&b,5);
+		optime += 8;
+	break;
+
+	case 0xE9:
+		//CBE9	 	SET 5,C			8	2	2
+		ExecSET(&c,5);
+		optime += 8;
+	break;
+
+	case 0xEA:
+		//CBEA	 	SET 5,D			8	2	2
+		ExecSET(&d,5);
+		optime += 8;
+	break;
+
+	case 0xEB:
+		//CBEB	 	SET 5,E			8	2	2
+		ExecSET(&e,5);
+		optime += 8;
+	break;
+
+	case 0xEC:
+		//CBEC	 	SET 5,H			8	2	2
+		ExecSET(&h,5);
+		optime += 8;
+	break;
+
+	case 0xED:
+		//CBED	 	SET 5,L			8	2	2
+		ExecSET(&l,5);
+		optime += 8;
+	break;
+
+	case 0xEE:
+		//CBEE	 	SET 5,(HL)		15	4	2
+		n = memory->Read8(hl);
+		ExecSET(&n,5);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0xEF:
+		//CBEF	 	SET 5,A			8	2	2
+		ExecSET(&a,5);
+		optime += 8;
+	break;
+
+	case 0xF0:
+		//CBF0		SET 6,B			8	2	2
+		ExecSET(&b,6);
+		optime += 8;
+	break;
+
+	case 0xF1:
+		//CBF1	 	SET 6,C			8	2	2
+		ExecSET(&c,6);
+		optime += 8;
+	break;
+
+	case 0xF2:
+		//CBF2	 	SET 6,D			8	2	2
+		ExecSET(&d,6);
+		optime += 8;
+	break;
+
+	case 0xF3:
+		//CBF3	 	SET 6,E			8	2	2
+		ExecSET(&e,6);
+		optime += 8;
+	break;
+
+	case 0xF4:
+		//CBF4	 	SET 6,H			8	2	2
+		ExecSET(&h,6);
+		optime += 8;
+	break;
+
+	case 0xF5:
+		//CBF5	 	SET 6,L			8	2	2
+		ExecSET(&l,6);
+		optime += 8;
+	break;
+
+	case 0xF6:
+		//CBF6	 	SET 6,(HL)		15	4	2
+		n = memory->Read8(hl);
+		ExecSET(&n,6);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0xF7:
+		//CBF7	 	SET 6,A			8	2	2
+		ExecSET(&a,6);
+		optime += 8;
+	break;
+
+	case 0xF8:
+		//CBF8		SET 7,B			8	2	2
+		ExecSET(&b,7);
+		optime += 8;
+	break;
+
+	case 0xF9:
+		//CBF9	 	SET 7,C			8	2	2
+		ExecSET(&c,7);
+		optime += 8;
+	break;
+
+	case 0xFA:
+		//CBFA	 	SET 7,D			8	2	2
+		ExecSET(&d,7);
+		optime += 8;
+	break;
+
+	case 0xFB:
+		//CBFB	 	SET 7,E			8	2	2
+		ExecSET(&e,7);
+		optime += 8;
+	break;
+
+	case 0xFC:
+		//CBFC	 	SET 7,H			8	2	2
+		ExecSET(&h,7);
+		optime += 8;
+	break;
+
+	case 0xFD:
+		//CBFD	 	SET 7,L			8	2	2
+		ExecSET(&l,7);
+		optime += 8;
+	break;
+
+	case 0xFE:
+		//CBFE	 	SET 7,(HL)		15	4	2
+		n = memory->Read8(hl);
+		ExecSET(&n,7);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0xFF:
+		//CBFF	 	SET 7,A			8	2	2
+		ExecSET(&a,7);
+		optime += 8;
+	break;
+
 	default:
 	break;
 	}
@@ -2773,8 +3445,4 @@ Opcode  Z80             GMB
 ---------------------------------------
 CB3X    SLL  r/(HL)     SWAP r/(HL)
 Note: The unused (-) opcodes will lock-up the gameboy CPU when used.
-*/
-
-
-/*
 */
