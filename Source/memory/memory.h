@@ -7,14 +7,20 @@ class Memory
 {
 public:
 
-	static void Initialize();
-	static void Reset();
+	static Memory* CreateFromFile(const char* filename);
 
-	static u8 Read8(u16 address);
-	static u16 Read16(u16 address);
+	virtual void Initialize() = 0;
+	virtual void Reset() = 0;
 
-	static void Write8(u16 address, u8 value);
-	static void Write16(u16 address, u16 value);
+	virtual u8 Read8(u16 address) = 0;
+	virtual u16 Read16(u16 address) = 0;
+
+	virtual void Write8(u16 address, u8 value) = 0;
+	virtual void Write16(u16 address, u16 value) = 0;
+
+protected:
+
+	virtual void LoadFile(const char* filename);
 };
 
 #endif

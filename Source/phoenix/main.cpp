@@ -7,8 +7,6 @@ using namespace std;
 
 int main(void)
 {
-	Memory::Initialize();
-
 	CPU cpu;
 
 	cpu.af = 0x0102;
