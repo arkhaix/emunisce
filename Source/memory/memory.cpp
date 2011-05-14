@@ -1,30 +1,21 @@
 #include "memory.h"
 
-void Memory::Initialize()
+Memory* Memory::CreateFromFile(const char* filename)
 {
+	//Open file
+
+	//Read header
+
+	//Close the file
+
+	//Instantiate appropriate MBC class from header info
+	Memory* mbc = NULL;
+
+	if(mbc == NULL)
+		return NULL;
+
+	//Have the MBC class load the file
+	mbc->LoadFile(filename);
+
+	return mbc;
 }
-
-void Memory::Reset()
-{
-}
-
-
-u8 Memory::Read8(u16 address)
-{
-	return 0;
-}
-
-u16 Memory::Read16(u16 address)
-{
-	return 0;
-}
-
-
-void Memory::Write8(u16 address, u8 value)
-{
-}
-
-void Memory::Write16(u16 address, u16 value)
-{
-}
-
