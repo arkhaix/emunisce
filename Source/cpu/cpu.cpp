@@ -1032,6 +1032,11 @@ void CPU::ExecSLA(u8* target)
 	//C handled above
 }
 
+void CPU::ExecSLL(u8* target)
+{
+	//?? todo. This isn't in the z80 manual.  Guessing it's the left version of srl?
+}
+
 void CPU::ExecSRA(u8* target)
 {
 	int bit7 = (*target & 0x80);
