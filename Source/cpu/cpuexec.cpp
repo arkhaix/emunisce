@@ -2142,52 +2142,52 @@ int CPU::ExecuteCB()
 	break;
 
 	case 0x30:
-		//CB30		SLL B*			8	2	2
-		ExecSLL(&b);
+		//CB30		SLL B*		SWAP B			8	2	2
+		ExecSWAP(&b);
 		optime += 8;
 	break;
 
 	case 0x31:
-		//CB31		SLL C*			8	2	2
-		ExecSLL(&c);
+		//CB31		SLL C*		SWAP C			8	2	2
+		ExecSWAP(&c);
 		optime += 8;
 	break;
 
 	case 0x32:
-		//CB32		SLL D*			8	2	2
-		ExecSLL(&d);
+		//CB32		SLL D*		SWAP D			8	2	2
+		ExecSWAP(&d);
 		optime += 8;
 	break;
 
 	case 0x33:
-		//CB33		SLL E*			8	2	2
-		ExecSLL(&e);
+		//CB33		SLL E*		SWAP E			8	2	2
+		ExecSWAP(&e);
 		optime += 8;
 	break;
 
 	case 0x34:
-		//CB34		SLL H*			8	2	2
-		ExecSLL(&h);
+		//CB34		SLL H*		SWAP H			8	2	2
+		ExecSWAP(&h);
 		optime += 8;
 	break;
 
 	case 0x35:
-		//CB35		SLL L*			8	2	2
-		ExecSLL(&l);
+		//CB35		SLL L*		SWAP L			8	2	2
+		ExecSWAP(&l);
 		optime += 8;
 	break;
 
 	case 0x36:
-		//CB36		SLL (HL)*		15	4	2
+		//CB36		SLL (HL)*	SWAP (HL)		15	4	2
 		n = memory->Read8(hl);
-		ExecSLL(&n);
+		ExecSWAP(&n);
 		memory->Write8(hl, n);
 		optime += 15;
 	break;
 
 	case 0x37:
-		//CB37		SLL A*			8	2	2
-		ExecSLL(&a);
+		//CB37		SLL A*		SWAP A			8	2	2
+		ExecSWAP(&a);
 		optime += 8;
 	break;
 
@@ -3438,11 +3438,3 @@ int CPU::ExecuteCB()
 
 	return optime;
 }
-
-/*
-Moved, Removed, and Added Opcodes
-Opcode  Z80             GMB
----------------------------------------
-CB3X    SLL  r/(HL)     SWAP r/(HL)
-Note: The unused (-) opcodes will lock-up the gameboy CPU when used.
-*/
