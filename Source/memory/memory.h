@@ -46,7 +46,7 @@ protected:
 							//0xfea0 - 0xfeff = unusable
 	/* todo */				//0xff00 - 0xff4b = i/o ports (handled by default)
 							//0xff4c - 0xff7f = unusable
-	u8* m_zeroPage;			//0xff80 - 0xfffe = internal ram (handled by default)
+	u8* m_stackRam;			//0xff80 - 0xfffe = internal ram (handled by default)
 	/* todo */				//0xffff		  = interrupt enable register (handled by default)
 
 
@@ -55,7 +55,7 @@ protected:
 	u8 m_videoRamData[0x2000];
 	u8 m_internalRamData[0x2000];
 	u8 m_spriteRamData[0x100];
-	u8 m_zeroPageData[0x80];
+	u8 m_stackRamData[0x80];
 };
 
 #endif

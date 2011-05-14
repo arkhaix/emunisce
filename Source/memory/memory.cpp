@@ -9,7 +9,7 @@ Memory::Memory()
 	m_internalRam = NULL;
 	m_internalRamEcho = NULL;
 	m_spriteRam = NULL;
-	m_zeroPage = NULL;
+	m_stackRam = NULL;
 }
 
 Memory::~Memory()
@@ -29,7 +29,7 @@ void Memory::Reset()
 	m_internalRam = m_internalRamData;
 	m_internalRamEcho = m_internalRamData;
 	m_spriteRam = m_spriteRamData;
-	m_zeroPage = m_zeroPageData;
+	m_stackRam = m_stackRamData;
 }
 
 void Memory::SetMachine(Machine* machine)
@@ -206,7 +206,7 @@ void Memory::MapMemoryFromAddress(u16 address, u8** resultBlock, u16* offset, bo
 	}
 	else if(address <= 0xfffe)
 	{
-		*resultBlock = m_zeroPage;
+		*resultBlock = m_stackRam;
 		*offset = 0xff80;
 	}
 	else if(address <= 0xffff)
