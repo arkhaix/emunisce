@@ -167,6 +167,8 @@ private:
 
 	void ExecSLA(u8* target);
 
+	void ExecSLL(u8* target);
+
 	void ExecSRA(u8* target);
 
 	void ExecSRL(u8* target);

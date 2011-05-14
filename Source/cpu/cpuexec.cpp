@@ -1834,8 +1834,609 @@ int CPU::Execute()
 
 int CPU::ExecuteCB()
 {
+	u8 n,t;
+	u16 nn,tt;
+	u16 address;
+
 	u8 opcode = memory->Read8(pc++);
-	return 0;
+
+	switch(opcode)
+	{
+	case 0x00:
+		//CB00		RLC B			8	2	2
+		ExecRLC(&b);
+		optime += 8;
+	break;
+
+	case 0x01:
+		//CB01		RLC C			8	2	2
+		ExecRLC(&c);
+		optime += 8;
+	break;
+
+	case 0x02:
+		//CB02		RLC D			8	2	2
+		ExecRLC(&d);
+		optime += 8;
+	break;
+
+	case 0x03:
+		//CB03		RLC E			8	2	2
+		ExecRLC(&e);
+		optime += 8;
+	break;
+
+	case 0x04:
+		//CB04		RLC H			8	2	2
+		ExecRLC(&h);
+		optime += 8;
+	break;
+
+	case 0x05:
+		//CB05		RLC L			8	2	2
+		ExecRLC(&l);
+	break;
+
+	case 0x06:
+		//CB06		RLC (HL)		15	4	2
+		n = memory->Read8(hl);
+		ExecRLC(&n);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0x07:
+		//CB07		RLC A			8	2	2
+		ExecRLC(&a);
+		optime += 8;
+	break;
+
+	case 0x08:
+		//CB08		RRC B			8	2	2
+		ExecRRC(&b);
+		optime += 8;
+	break;
+
+	case 0x09:
+		//CB09		RRC C			8	2	2
+		ExecRRC(&c);
+		optime += 8;
+	break;
+
+	case 0x0A:
+		//CB0A		RRC D			8	2	2
+		ExecRRC(&d);
+		optime += 8;
+	break;
+
+	case 0x0B:
+		//CB0B		RRC E			8	2	2
+		ExecRRC(&e);
+		optime += 8;
+	break;
+
+	case 0x0C:
+		//CB0C		RRC H			8	2	2
+		ExecRRC(&h);
+		optime += 8;
+	break;
+
+	case 0x0D:
+		//CB0D		RRC L			8	2	2
+		ExecRRC(&l);
+		optime += 8;
+	break;
+
+	case 0x0E:
+		//CB0E		RRC (HL)		15	4	2
+		n = memory->Read8(hl);
+		ExecRRC(&n);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0x0F:
+		//CB0F		RRC A			8	2	2
+		ExecRRC(&a);
+		optime += 8;
+	break;
+
+	case 0x10:
+		//CB10		RL B			8	2	2
+		ExecRL(&b);
+		optime += 8;
+	break;
+
+	case 0x11:
+		//CB11		RL C			8	2	2
+		ExecRL(&c);
+		optime += 8;
+	break;
+
+	case 0x12:
+		//CB12		RL D			8	2	2
+		ExecRL(&d);
+		optime += 8;
+	break;
+
+	case 0x13:
+		//CB13		RL E			8	2	2
+		ExecRL(&e);
+		optime += 8;
+	break;
+
+	case 0x14:
+		//CB14		RL H			8	2	2
+		ExecRL(&h);
+		optime += 8;
+	break;
+
+	case 0x15:
+		//CB15		RL L			8	2	2
+		ExecRL(&l);
+		optime += 8;
+	break;
+
+	case 0x16:
+		//CB16		RL (HL)			15	4	2
+		n = memory->Read8(hl);
+		ExecRL(&n);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0x17:
+		//CB17		RL A			8	2	2
+		ExecRL(&a);
+		optime += 8;
+	break;
+
+	case 0x18:
+		//CB18		RR B			8	2	2
+		ExecRR(&b);
+		optime += 8;
+	break;
+
+	case 0x19:
+		//CB19		RR C			8	2	2
+		ExecRR(&c);
+		optime += 8;
+	break;
+
+	case 0x1A:
+		//CB1A		RR D			8	2	2
+		ExecRR(&d);
+		optime += 8;
+	break;
+
+	case 0x1B:
+		//CB1B		RR E			8	2	2
+		ExecRR(&e);
+		optime += 8;
+	break;
+
+	case 0x1C:
+		//CB1C		RR H			8	2	2
+		ExecRR(&h);
+		optime += 8;
+	break;
+
+	case 0x1D:
+		//CB1D		RR L			8	2	2
+		ExecRR(&l);
+		optime += 8;
+	break;
+
+	case 0x1E:
+		//CB1E		RR (HL)			15	4	2
+		n = memory->Read8(hl);
+		ExecRR(&n);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0x1F:
+		//CB1F		RR A			8	2	2
+		ExecRR(&a);
+		optime += 8;
+	break;
+
+	case 0x20:
+		//CB20		SLA B			8	2	2
+		ExecSLA(&b);
+		optime += 8;
+	break;
+
+	case 0x21:
+		//CB21		SLA C			8	2	2
+		ExecSLA(&c);
+		optime += 8;
+	break;
+
+	case 0x22:
+		//CB22		SLA D			8	2	2
+		ExecSLA(&d);
+		optime += 8;
+	break;
+
+	case 0x23:
+		//CB23		SLA E			8	2	2
+		ExecSLA(&e);
+		optime += 8;
+	break;
+
+	case 0x24:
+		//CB24		SLA H			8	2	2
+		ExecSLA(&h);
+		optime += 8;
+	break;
+
+	case 0x25:
+		//CB25		SLA L			8	2	2
+		ExecSLA(&l);
+		optime += 8;
+	break;
+
+	case 0x26:
+		//CB26		SLA (HL)		15	4	2
+		n = memory->Read8(hl);
+		ExecSLA(&n);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0x27:
+		//CB27		SLA A			8	2	2
+		ExecSLA(&a);
+		optime += 8;
+	break;
+
+	case 0x28:
+		//CB28		SRA B			8	2	2
+		ExecSRA(&b);
+		optime += 8;
+	break;
+
+	case 0x29:
+		//CB29		SRA C			8	2	2
+		ExecSRA(&c);
+		optime += 8;
+	break;
+
+	case 0x2A:
+		//CB2A		SRA D			8	2	2
+		ExecSRA(&d);
+		optime += 8;
+	break;
+
+	case 0x2B:
+		//CB2B		SRA E			8	2	2
+		ExecSRA(&e);
+		optime += 8;
+	break;
+
+	case 0x2C:
+		//CB2C		SRA H			8	2	2
+		ExecSRA(&h);
+		optime += 8;
+	break;
+
+	case 0x2D:
+		//CB2D		SRA L			8	2	2
+		ExecSRA(&l);
+		optime += 8;
+	break;
+
+	case 0x2E:
+		//CB2E		SRA (HL)		15	4	2
+		n = memory->Read8(hl);
+		ExecSRA(&n);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0x2F:
+		//CB2F		SRA A			8	2	2
+		ExecSRA(&a);
+		optime += 8;
+	break;
+
+	case 0x30:
+		//CB30		SLL B*			8	2	2
+		ExecSLL(&b);
+		optime += 8;
+	break;
+
+	case 0x31:
+		//CB31		SLL C*			8	2	2
+		ExecSLL(&c);
+		optime += 8;
+	break;
+
+	case 0x32:
+		//CB32		SLL D*			8	2	2
+		ExecSLL(&d);
+		optime += 8;
+	break;
+
+	case 0x33:
+		//CB33		SLL E*			8	2	2
+		ExecSLL(&e);
+		optime += 8;
+	break;
+
+	case 0x34:
+		//CB34		SLL H*			8	2	2
+		ExecSLL(&h);
+		optime += 8;
+	break;
+
+	case 0x35:
+		//CB35		SLL L*			8	2	2
+		ExecSLL(&l);
+		optime += 8;
+	break;
+
+	case 0x36:
+		//CB36		SLL (HL)*		15	4	2
+		n = memory->Read8(hl);
+		ExecSLL(&n);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0x37:
+		//CB37		SLL A*			8	2	2
+		ExecSLL(&a);
+		optime += 8;
+	break;
+
+	case 0x38:
+		//CB38		SRL B			8	2	2
+		ExecSRL(&b);
+		optime += 8;
+	break;
+
+	case 0x39:
+		//CB39		SRL C			8	2	2
+		ExecSRL(&c);
+		optime += 8;
+	break;
+
+	case 0x3A:
+		//CB3A		SRL D			8	2	2
+		ExecSRL(&d);
+		optime += 8;
+	break;
+
+	case 0x3B:
+		//CB3B		SRL E			8	2	2
+		ExecSRL(&e);
+		optime += 8;
+	break;
+
+	case 0x3C:
+		//CB3C		SRL H			8	2	2
+		ExecSRL(&h);
+		optime += 8;
+	break;
+
+	case 0x3D:
+		//CB3D		SRL L			8	2	2
+		ExecSRL(&l);
+		optime += 8;
+	break;
+
+	case 0x3E:
+		//CB3E		SRL (HL)		15	4	2
+		n = memory->Read8(hl);
+		ExecSRL(&n);
+		memory->Write8(hl, n);
+		optime += 15;
+	break;
+
+	case 0x3F:
+		//CB3F		SRL A			8	2	2
+		ExecSRL(&a);
+	break;
+
+//CB40		BIT 0,B			8	2	2
+//CB41		BIT 0,C			8	2	2
+//CB42		BIT 0,D			8	2	2
+//CB43		BIT 0,E			8	2	2
+//CB44	 	BIT 0,H			8	2	2
+//CB45	 	BIT 0,L			8	2	2
+//CB46	 	BIT 0,(HL)		12	3	2
+//CB47	 	BIT 0,A			8	2	2
+//CB48		BIT 1,B			8	2	2
+//CB49	 	BIT 1,C			8	2	2
+//CB4A	 	BIT 1,D			8	2	2
+//CB4B	 	BIT 1,E			8	2	2
+//CB4C	 	BIT 1,H			8	2	2
+//CB4D	 	BIT 1,L			8	2	2
+//CB4E	 	BIT 1,(HL)		12	3	2
+//CB4F	 	BIT 1,A			8	2	2
+//CB50		BIT 2,B			8	2	2
+//CB51	 	BIT 2,C			8	2	2
+//CB52	 	BIT 2,D			8	2	2
+//CB53	 	BIT 2,E			8	2	2
+//CB54	 	BIT 2,H			8	2	2
+//CB55	 	BIT 2,L			8	2	2
+//CB56	 	BIT 2,(HL)		12	3	2
+//CB57	 	BIT 2,A			8	2	2
+//CB58		BIT 3,B			8	2	2
+//CB59	 	BIT 3,C			8	2	2
+//CB5A	 	BIT 3,D			8	2	2
+//CB5B	 	BIT 3,E			8	2	2
+//CB5C	 	BIT 3,H			8	2	2
+//CB5D	 	BIT 3,L			8	2	2
+//CB5E	 	BIT 3,(HL)		12	3	2
+//CB5F	 	BIT 3,A			8	2	2
+//CB60		BIT 4,B			8	2	2
+//CB61	 	BIT 4,C			8	2	2
+//CB62	 	BIT 4,D			8	2	2
+//CB63	 	BIT 4,E			8	2	2
+//CB64	 	BIT 4,H			8	2	2
+//CB65	 	BIT 4,L			8	2	2
+//CB66	 	BIT 4,(HL)		12	3	2
+//CB67	 	BIT 4,A			8	2	2
+//CB68		BIT 5,B			8	2	2
+//CB69	 	BIT 5,C			8	2	2
+//CB6A	 	BIT 5,D			8	2	2
+//CB6B	 	BIT 5,E			8	2	2
+//CB6C	 	BIT 5,H			8	2	2
+//CB6D	 	BIT 5,L			8	2	2
+//CB6E	 	BIT 5,(HL)		12	3	2
+//CB6F	 	BIT 5,A			8	2	2
+//CB70		BIT 6,B			8	2	2
+//CB71	 	BIT 6,C			8	2	2
+//CB72	 	BIT 6,D			8	2	2
+//CB73	 	BIT 6,E			8	2	2
+//CB74	 	BIT 6,H			8	2	2
+//CB75	 	BIT 6,L			8	2	2
+//CB76	 	BIT 6,(HL)		12	3	2
+//CB77	 	BIT 6,A			8	2	2
+//CB78		BIT 7,B			8	2	2
+//CB79	 	BIT 7,C			8	2	2
+//CB7A	 	BIT 7,D			8	2	2
+//CB7B	 	BIT 7,E			8	2	2
+//CB7C	 	BIT 7,H			8	2	2
+//CB7D	 	BIT 7,L			8	2	2
+//CB7E	 	BIT 7,(HL)		12	3	2
+//CB7F	 	BIT 7,A			8	2	2
+//CB80		RES 0,B			8	2	2
+//CB81		RES 0,C			8	2	2
+//CB82		RES 0,D			8	2	2
+//CB83		RES 0,E			8	2	2
+//CB84	 	RES 0,H			8	2	2
+//CB85	 	RES 0,L			8	2	2
+//CB86	 	RES 0,(HL)		15	4	2
+//CB87	 	RES 0,A			8	2	2
+//CB88		RES 1,B			8	2	2
+//CB89	 	RES 1,C			8	2	2
+//CB8A	 	RES 1,D			8	2	2
+//CB8B	 	RES 1,E			8	2	2
+//CB8C	 	RES 1,H			8	2	2
+//CB8D	 	RES 1,L			8	2	2
+//CB8E	 	RES 1,(HL)		15	4	2
+//CB8F	 	RES 1,A			8	2	2
+//CB90		RES 2,B			8	2	2
+//CB91	 	RES 2,C			8	2	2
+//CB92	 	RES 2,D			8	2	2
+//CB93	 	RES 2,E			8	2	2
+//CB94	 	RES 2,H			8	2	2
+//CB95	 	RES 2,L			8	2	2
+//CB96	 	RES 2,(HL)		15	4	2
+//CB97	 	RES 2,A			8	2	2
+//CB98		RES 3,B			8	2	2
+//CB99	 	RES 3,C			8	2	2
+//CB9A	 	RES 3,D			8	2	2
+//CB9B	 	RES 3,E			8	2	2
+//CB9C	 	RES 3,H			8	2	2
+//CB9D	 	RES 3,L			8	2	2
+//CB9E	 	RES 3,(HL)		15	4	2
+//CB9F	 	RES 3,A			8	2	2
+//CBA0		RES 4,B			8	2	2
+//CBA1	 	RES 4,C			8	2	2
+//CBA2	 	RES 4,D			8	2	2
+//CBA3	 	RES 4,E			8	2	2
+//CBA4	 	RES 4,H			8	2	2
+//CBA5	 	RES 4,L			8	2	2
+//CBA6	 	RES 4,(HL)		15	4	2
+//CBA7	 	RES 4,A			8	2	2
+//CBA8		RES 5,B			8	2	2
+//CBA9	 	RES 5,C			8	2	2
+//CBAA	 	RES 5,D			8	2	2
+//CBAB	 	RES 5,E			8	2	2
+//CBAC	 	RES 5,H			8	2	2
+//CBAD	 	RES 5,L			8	2	2
+//CBAE	 	RES 5,(HL)		15	4	2
+//CBAF	 	RES 5,A			8	2	2
+//CBB0		RES 6,B			8	2	2
+//CBB1	 	RES 6,C			8	2	2
+//CBB2	 	RES 6,D			8	2	2
+//CBB3	 	RES 6,E			8	2	2
+//CBB4	 	RES 6,H			8	2	2
+//CBB5	 	RES 6,L			8	2	2
+//CBB6	 	RES 6,(HL)		15	4	2
+//CBB7	 	RES 6,A			8	2	2
+//CBB8		RES 7,B			8	2	2
+//CBB9	 	RES 7,C			8	2	2
+//CBBA	 	RES 7,D			8	2	2
+//CBBB	 	RES 7,E			8	2	2
+//CBBC	 	RES 7,H			8	2	2
+//CBBD	 	RES 7,L			8	2	2
+//CBBE	 	RES 7,(HL)		15	4	2
+//CBBF	 	RES 7,A			8	2	2
+//CBC0		SET 0,B			8	2	2
+//CBC1		SET 0,C			8	2	2
+//CBC2		SET 0,D			8	2	2
+//CBC3		SET 0,E			8	2	2
+//CBC4	 	SET 0,H			8	2	2
+//CBC5	 	SET 0,L			8	2	2
+//CBC6	 	SET 0,(HL)		15	4	2
+//CBC7	 	SET 0,A			8	2	2
+//CBC8		SET 1,B			8	2	2
+//CBC9	 	SET 1,C			8	2	2
+//CBCA	 	SET 1,D			8	2	2
+//CBCB	 	SET 1,E			8	2	2
+//CBCC	 	SET 1,H			8	2	2
+//CBCD	 	SET 1,L			8	2	2
+//CBCE	 	SET 1,(HL)		15	4	2
+//CBCF	 	SET 1,A			8	2	2
+//CBD0		SET 2,B			8	2	2
+//CBD1	 	SET 2,C			8	2	2
+//CBD2	 	SET 2,D			8	2	2
+//CBD3	 	SET 2,E			8	2	2
+//CBD4	 	SET 2,H			8	2	2
+//CBD5	 	SET 2,L			8	2	2
+//CBD6	 	SET 2,(HL)		15	4	2
+//CBD7	 	SET 2,A			8	2	2
+//CBD8		SET 3,B			8	2	2
+//CBD9	 	SET 3,C			8	2	2
+//CBDA	 	SET 3,D			8	2	2
+//CBDB	 	SET 3,E			8	2	2
+//CBDC	 	SET 3,H			8	2	2
+//CBDD	 	SET 3,L			8	2	2
+//CBDE	 	SET 3,(HL)		15	4	2
+//CBDF	 	SET 3,A			8	2	2
+//CBE0		SET 4,B			8	2	2
+//CBE1	 	SET 4,C			8	2	2
+//CBE2	 	SET 4,D			8	2	2
+//CBE3	 	SET 4,E			8	2	2
+//CBE4	 	SET 4,H			8	2	2
+//CBE5	 	SET 4,L			8	2	2
+//CBE6	 	SET 4,(HL)		15	4	2
+//CBE7	 	SET 4,A			8	2	2
+//CBE8		SET 5,B			8	2	2
+//CBE9	 	SET 5,C			8	2	2
+//CBEA	 	SET 5,D			8	2	2
+//CBEB	 	SET 5,E			8	2	2
+//CBEC	 	SET 5,H			8	2	2
+//CBED	 	SET 5,L			8	2	2
+//CBEE	 	SET 5,(HL)		15	4	2
+//CBEF	 	SET 5,A			8	2	2
+//CBF0		SET 6,B			8	2	2
+//CBF1	 	SET 6,C			8	2	2
+//CBF2	 	SET 6,D			8	2	2
+//CBF3	 	SET 6,E			8	2	2
+//CBF4	 	SET 6,H			8	2	2
+//CBF5	 	SET 6,L			8	2	2
+//CBF6	 	SET 6,(HL)		15	4	2
+//CBF7	 	SET 6,A			8	2	2
+//CBF8		SET 7,B			8	2	2
+//CBF9	 	SET 7,C			8	2	2
+//CBFA	 	SET 7,D			8	2	2
+//CBFB	 	SET 7,E			8	2	2
+//CBFC	 	SET 7,H			8	2	2
+//CBFD	 	SET 7,L			8	2	2
+//CBFE	 	SET 7,(HL)		15	4	2
+//CBFF	 	SET 7,A			8	2	2
+	default:
+	break;
+	}
+
+	return optime;
 }
 
 /*
@@ -1848,260 +2449,4 @@ Note: The unused (-) opcodes will lock-up the gameboy CPU when used.
 
 
 /*
-CB00		RLC B			8	2	2
-CB01		RLC C			8	2	2
-CB02		RLC D			8	2	2
-CB03		RLC E			8	2	2
-CB04		RLC H			8	2	2
-CB05		RLC L			8	2	2
-CB06		RLC (HL)		15	4	2
-CB07		RLC A			8	2	2
-CB08		RRC B			8	2	2
-CB09		RRC C			8	2	2
-CB0A		RRC D			8	2	2
-CB0B		RRC E			8	2	2
-CB0C		RRC H			8	2	2
-CB0D		RRC L			8	2	2
-CB0E		RRC (HL)		15	4	2
-CB0F		RRC A			8	2	2
-CB10		RL B			8	2	2
-CB11		RL C			8	2	2
-CB12		RL D			8	2	2
-CB13		RL E			8	2	2
-CB14		RL H			8	2	2
-CB15		RL L			8	2	2
-CB16		RL (HL)			15	4	2
-CB17		RL A			8	2	2
-CB18		RR B			8	2	2
-CB19		RR C			8	2	2
-CB1A		RR D			8	2	2
-CB1B		RR E			8	2	2
-CB1C		RR H			8	2	2
-CB1D		RR L			8	2	2
-CB1E		RR (HL)			15	4	2
-CB1F		RR A			8	2	2
-CB20		SLA B			8	2	2
-CB21		SLA C			8	2	2
-CB22		SLA D			8	2	2
-CB23		SLA E			8	2	2
-CB24		SLA H			8	2	2
-CB25		SLA L			8	2	2
-CB26		SLA (HL)		15	4	2
-CB27		SLA A			8	2	2
-CB28		SRA B			8	2	2
-CB29		SRA C			8	2	2
-CB2A		SRA D			8	2	2
-CB2B		SRA E			8	2	2
-CB2C		SRA H			8	2	2
-CB2D		SRA L			8	2	2
-CB2E		SRA (HL)		15	4	2
-CB2F		SRA A			8	2	2
-CB30		SLL B*			8	2	2
-CB31		SLL C*			8	2	2
-CB32		SLL D*			8	2	2
-CB33		SLL E*			8	2	2
-CB34		SLL H*			8	2	2
-CB35		SLL L*			8	2	2
-CB36		SLL (HL)*		15	4	2
-CB37		SLL A*			8	2	2
-CB38		SRL B			8	2	2
-CB39		SRL C			8	2	2
-CB3A		SRL D			8	2	2
-CB3B		SRL E			8	2	2
-CB3C		SRL H			8	2	2
-CB3D		SRL L			8	2	2
-CB3E		SRL (HL)		15	4	2
-CB3F		SRL A			8	2	2
-CB40		BIT 0,B			8	2	2
-CB41		BIT 0,C			8	2	2
-CB42		BIT 0,D			8	2	2
-CB43		BIT 0,E			8	2	2
-CB44	 	BIT 0,H			8	2	2
-CB45	 	BIT 0,L			8	2	2
-CB46	 	BIT 0,(HL)		12	3	2
-CB47	 	BIT 0,A			8	2	2
-CB48		BIT 1,B			8	2	2
-CB49	 	BIT 1,C			8	2	2
-CB4A	 	BIT 1,D			8	2	2
-CB4B	 	BIT 1,E			8	2	2
-CB4C	 	BIT 1,H			8	2	2
-CB4D	 	BIT 1,L			8	2	2
-CB4E	 	BIT 1,(HL)		12	3	2
-CB4F	 	BIT 1,A			8	2	2
-CB50		BIT 2,B			8	2	2
-CB51	 	BIT 2,C			8	2	2
-CB52	 	BIT 2,D			8	2	2
-CB53	 	BIT 2,E			8	2	2
-CB54	 	BIT 2,H			8	2	2
-CB55	 	BIT 2,L			8	2	2
-CB56	 	BIT 2,(HL)		12	3	2
-CB57	 	BIT 2,A			8	2	2
-CB58		BIT 3,B			8	2	2
-CB59	 	BIT 3,C			8	2	2
-CB5A	 	BIT 3,D			8	2	2
-CB5B	 	BIT 3,E			8	2	2
-CB5C	 	BIT 3,H			8	2	2
-CB5D	 	BIT 3,L			8	2	2
-CB5E	 	BIT 3,(HL)		12	3	2
-CB5F	 	BIT 3,A			8	2	2
-CB60		BIT 4,B			8	2	2
-CB61	 	BIT 4,C			8	2	2
-CB62	 	BIT 4,D			8	2	2
-CB63	 	BIT 4,E			8	2	2
-CB64	 	BIT 4,H			8	2	2
-CB65	 	BIT 4,L			8	2	2
-CB66	 	BIT 4,(HL)		12	3	2
-CB67	 	BIT 4,A			8	2	2
-CB68		BIT 5,B			8	2	2
-CB69	 	BIT 5,C			8	2	2
-CB6A	 	BIT 5,D			8	2	2
-CB6B	 	BIT 5,E			8	2	2
-CB6C	 	BIT 5,H			8	2	2
-CB6D	 	BIT 5,L			8	2	2
-CB6E	 	BIT 5,(HL)		12	3	2
-CB6F	 	BIT 5,A			8	2	2
-CB70		BIT 6,B			8	2	2
-CB71	 	BIT 6,C			8	2	2
-CB72	 	BIT 6,D			8	2	2
-CB73	 	BIT 6,E			8	2	2
-CB74	 	BIT 6,H			8	2	2
-CB75	 	BIT 6,L			8	2	2
-CB76	 	BIT 6,(HL)		12	3	2
-CB77	 	BIT 6,A			8	2	2
-CB78		BIT 7,B			8	2	2
-CB79	 	BIT 7,C			8	2	2
-CB7A	 	BIT 7,D			8	2	2
-CB7B	 	BIT 7,E			8	2	2
-CB7C	 	BIT 7,H			8	2	2
-CB7D	 	BIT 7,L			8	2	2
-CB7E	 	BIT 7,(HL)		12	3	2
-CB7F	 	BIT 7,A			8	2	2
-CB80		RES 0,B			8	2	2
-CB81		RES 0,C			8	2	2
-CB82		RES 0,D			8	2	2
-CB83		RES 0,E			8	2	2
-CB84	 	RES 0,H			8	2	2
-CB85	 	RES 0,L			8	2	2
-CB86	 	RES 0,(HL)		15	4	2
-CB87	 	RES 0,A			8	2	2
-CB88		RES 1,B			8	2	2
-CB89	 	RES 1,C			8	2	2
-CB8A	 	RES 1,D			8	2	2
-CB8B	 	RES 1,E			8	2	2
-CB8C	 	RES 1,H			8	2	2
-CB8D	 	RES 1,L			8	2	2
-CB8E	 	RES 1,(HL)		15	4	2
-CB8F	 	RES 1,A			8	2	2
-CB90		RES 2,B			8	2	2
-CB91	 	RES 2,C			8	2	2
-CB92	 	RES 2,D			8	2	2
-CB93	 	RES 2,E			8	2	2
-CB94	 	RES 2,H			8	2	2
-CB95	 	RES 2,L			8	2	2
-CB96	 	RES 2,(HL)		15	4	2
-CB97	 	RES 2,A			8	2	2
-CB98		RES 3,B			8	2	2
-CB99	 	RES 3,C			8	2	2
-CB9A	 	RES 3,D			8	2	2
-CB9B	 	RES 3,E			8	2	2
-CB9C	 	RES 3,H			8	2	2
-CB9D	 	RES 3,L			8	2	2
-CB9E	 	RES 3,(HL)		15	4	2
-CB9F	 	RES 3,A			8	2	2
-CBA0		RES 4,B			8	2	2
-CBA1	 	RES 4,C			8	2	2
-CBA2	 	RES 4,D			8	2	2
-CBA3	 	RES 4,E			8	2	2
-CBA4	 	RES 4,H			8	2	2
-CBA5	 	RES 4,L			8	2	2
-CBA6	 	RES 4,(HL)		15	4	2
-CBA7	 	RES 4,A			8	2	2
-CBA8		RES 5,B			8	2	2
-CBA9	 	RES 5,C			8	2	2
-CBAA	 	RES 5,D			8	2	2
-CBAB	 	RES 5,E			8	2	2
-CBAC	 	RES 5,H			8	2	2
-CBAD	 	RES 5,L			8	2	2
-CBAE	 	RES 5,(HL)		15	4	2
-CBAF	 	RES 5,A			8	2	2
-CBB0		RES 6,B			8	2	2
-CBB1	 	RES 6,C			8	2	2
-CBB2	 	RES 6,D			8	2	2
-CBB3	 	RES 6,E			8	2	2
-CBB4	 	RES 6,H			8	2	2
-CBB5	 	RES 6,L			8	2	2
-CBB6	 	RES 6,(HL)		15	4	2
-CBB7	 	RES 6,A			8	2	2
-CBB8		RES 7,B			8	2	2
-CBB9	 	RES 7,C			8	2	2
-CBBA	 	RES 7,D			8	2	2
-CBBB	 	RES 7,E			8	2	2
-CBBC	 	RES 7,H			8	2	2
-CBBD	 	RES 7,L			8	2	2
-CBBE	 	RES 7,(HL)		15	4	2
-CBBF	 	RES 7,A			8	2	2
-CBC0		SET 0,B			8	2	2
-CBC1		SET 0,C			8	2	2
-CBC2		SET 0,D			8	2	2
-CBC3		SET 0,E			8	2	2
-CBC4	 	SET 0,H			8	2	2
-CBC5	 	SET 0,L			8	2	2
-CBC6	 	SET 0,(HL)		15	4	2
-CBC7	 	SET 0,A			8	2	2
-CBC8		SET 1,B			8	2	2
-CBC9	 	SET 1,C			8	2	2
-CBCA	 	SET 1,D			8	2	2
-CBCB	 	SET 1,E			8	2	2
-CBCC	 	SET 1,H			8	2	2
-CBCD	 	SET 1,L			8	2	2
-CBCE	 	SET 1,(HL)		15	4	2
-CBCF	 	SET 1,A			8	2	2
-CBD0		SET 2,B			8	2	2
-CBD1	 	SET 2,C			8	2	2
-CBD2	 	SET 2,D			8	2	2
-CBD3	 	SET 2,E			8	2	2
-CBD4	 	SET 2,H			8	2	2
-CBD5	 	SET 2,L			8	2	2
-CBD6	 	SET 2,(HL)		15	4	2
-CBD7	 	SET 2,A			8	2	2
-CBD8		SET 3,B			8	2	2
-CBD9	 	SET 3,C			8	2	2
-CBDA	 	SET 3,D			8	2	2
-CBDB	 	SET 3,E			8	2	2
-CBDC	 	SET 3,H			8	2	2
-CBDD	 	SET 3,L			8	2	2
-CBDE	 	SET 3,(HL)		15	4	2
-CBDF	 	SET 3,A			8	2	2
-CBE0		SET 4,B			8	2	2
-CBE1	 	SET 4,C			8	2	2
-CBE2	 	SET 4,D			8	2	2
-CBE3	 	SET 4,E			8	2	2
-CBE4	 	SET 4,H			8	2	2
-CBE5	 	SET 4,L			8	2	2
-CBE6	 	SET 4,(HL)		15	4	2
-CBE7	 	SET 4,A			8	2	2
-CBE8		SET 5,B			8	2	2
-CBE9	 	SET 5,C			8	2	2
-CBEA	 	SET 5,D			8	2	2
-CBEB	 	SET 5,E			8	2	2
-CBEC	 	SET 5,H			8	2	2
-CBED	 	SET 5,L			8	2	2
-CBEE	 	SET 5,(HL)		15	4	2
-CBEF	 	SET 5,A			8	2	2
-CBF0		SET 6,B			8	2	2
-CBF1	 	SET 6,C			8	2	2
-CBF2	 	SET 6,D			8	2	2
-CBF3	 	SET 6,E			8	2	2
-CBF4	 	SET 6,H			8	2	2
-CBF5	 	SET 6,L			8	2	2
-CBF6	 	SET 6,(HL)		15	4	2
-CBF7	 	SET 6,A			8	2	2
-CBF8		SET 7,B			8	2	2
-CBF9	 	SET 7,C			8	2	2
-CBFA	 	SET 7,D			8	2	2
-CBFB	 	SET 7,E			8	2	2
-CBFC	 	SET 7,H			8	2	2
-CBFD	 	SET 7,L			8	2	2
-CBFE	 	SET 7,(HL)		15	4	2
-CBFF	 	SET 7,A			8	2	2
 */
