@@ -3,37 +3,19 @@
 
 void RomOnly::Initialize()
 {
+	//todo: Fill up the cart ram with random data
+
+	Memory::Initialize();	///<Calls Reset()
 }
 
 void RomOnly::Reset()
 {
+	m_cartRom = m_cartRomData;
+	m_switchableRom = &m_cartRomData[0x4000];
+	m_switchableRam = m_cartRamData;
+
+	Memory::Reset();
 }
-
-
-u8 RomOnly::Read8(u16 address)
-{
-	return 0;
-}
-
-u16 RomOnly::Read16(u16 address)
-{
-	return 0;
-}
-
-
-void RomOnly::Write8(u16 address, u8 value)
-{
-	if(address < 0x8000)
-		return;
-}
-
-void RomOnly::Write16(u16 address, u16 value)
-{
-	if(address < 0x8000)
-		return;
-}
-
-
 
 bool RomOnly::LoadFile(const char* filename)
 {

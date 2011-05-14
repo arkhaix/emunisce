@@ -16,7 +16,7 @@ int CPU::Execute()
 	bool executeInterrupt = false;
 	u8 interruptFlags = m_memory->Read8(REG_IF);
 	interruptFlags &= 0x1f;	///<Only bits 0-4 signal valid interrupts.
-	if(m_interruptsEnabled && m_delayNextInterrupt == false && interruptFlags != 0)
+	if( (m_interruptsEnabled || m_halted) && m_delayNextInterrupt == false && interruptFlags != 0)
 	{
 		u8 interruptEnableFlags = m_memory->Read8(REG_IE);
 		
