@@ -92,12 +92,10 @@ public:
 	u8& h;
 	u8& l;
 
-	bool ime;	//Interrupt master enable flag
-	bool delayInterrupts;	//Interrupts are not enabled until one instruction after EI completes.
-
-	Memory* memory;
-
+	
 	CPU();
+
+	void SetMachine(Machine* machine);
 
 	void Initialize();
 	void Reset();
@@ -107,8 +105,14 @@ public:
 
 private:
 
-	int optime;
-	bool halted;
+	Machine* m_machine;
+	Memory* m_memory;
+
+	bool m_interruptsEnabled;	//Interrupt master enable flag (IME)
+	bool m_delayNextInterrupt;	//Interrupts are not enabled until one instruction after EI completes.
+
+	int m_instructionTime;
+	bool m_halted;
 
 	u8 ReadNext8();
 	u16 ReadNext16();

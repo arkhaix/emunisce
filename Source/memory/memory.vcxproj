@@ -60,9 +60,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="memory.cpp" />
+    <ClCompile Include="RomOnly.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="memory.h" />
+    <ClInclude Include="RomOnly.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

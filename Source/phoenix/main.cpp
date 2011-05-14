@@ -7,12 +7,16 @@ using namespace std;
 
 int main(void)
 {
+	Machine machine;
+
 	CPU cpu;
+	cpu.SetMachine(&machine);
+	cpu.Initialize();
 
-	cpu.af = 0x0102;
+	cpu.bc = 0x0102;
 
-	printf("%02x%02x\n", cpu.a, cpu.f);
-	printf("%04x\n", cpu.af);
+	printf("%02x%02x\n", cpu.b, cpu.c);
+	printf("%04x\n", cpu.bc);
 
 	system("pause");
 	return 0;

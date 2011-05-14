@@ -13,22 +13,35 @@ CPU::CPU()
 , h(*(((u8*)&hl)+1))
 , l(*(((u8*)&hl)+0))
 {
+	m_machine = NULL;
+	m_memory = NULL;
+
 	Initialize();
+}
+
+void CPU::SetMachine(Machine* machine)
+{
+	m_machine = machine;
+
+	if(machine)
+	{
+		machine->_CPU = this;
+		m_memory = machine->_Memory;
+	}
 }
 
 void CPU::Initialize()
 {
-	memory = 0;
 	Reset();
 }
 
 void CPU::Reset()
 {
-	ime = false;
-	delayInterrupts = false;
+	m_interruptsEnabled = false;
+	m_delayNextInterrupt = false;
 
-	optime = 0;
-	halted = false;
+	m_instructionTime = 0;
+	m_halted = false;
 
 
 	af = 0x01b0;
@@ -38,20 +51,20 @@ void CPU::Reset()
 
 	sp = 0xfffe;
 
-	pc = 0x0100;
+	pc = 0x0150;
 }
 
 
 u8 CPU::ReadNext8()
 {
-	u8 result = memory->Read8(pc);
+	u8 result = m_memory->Read8(pc);
 	pc++;
 	return result;
 }
 
 u16 CPU::ReadNext16()
 {
-	u16 result = memory->Read16(pc);
+	u16 result = m_memory->Read16(pc);
 	pc += 2;
 	return result;
 }
@@ -214,11 +227,11 @@ void CPU::ExecCALL(u16 address)
 {
 	//(SP-1)<-PCH
 	sp--;
-	memory->Write8(sp, (u8)((pc & 0xff00) >> 8));
+	m_memory->Write8(sp, (u8)((pc & 0xff00) >> 8));
 
 	//(SP-2)<-PCL
 	sp--;
-	memory->Write8(sp, (u8)(pc & 0x00ff));
+	m_memory->Write8(sp, (u8)(pc & 0x00ff));
 
 	//PC<-nn
 	pc = address;
@@ -450,7 +463,7 @@ void CPU::ExecDEC(u16* target)
 
 void CPU::ExecDI()
 {
-	ime = false;
+	m_interruptsEnabled = false;
 
 	//Z unaffected
 
@@ -463,8 +476,8 @@ void CPU::ExecDI()
 
 void CPU::ExecEI()
 {
-	ime = true;
-	delayInterrupts = true;
+	m_interruptsEnabled = true;
+	m_delayNextInterrupt = true;
 
 	//Z unaffected
 
@@ -492,7 +505,7 @@ void CPU::ExecEX(u16* target1, u16* target2)
 
 void CPU::ExecHALT()
 {
-	halted = true;
+	m_halted = true;
 
 	//Z unaffected
 
@@ -649,11 +662,11 @@ void CPU::ExecOR(u8 value)
 void CPU::ExecPOP(u16* target)
 {
 	//L<-(SP)
-	*target = memory->Read8(sp);
+	*target = m_memory->Read8(sp);
 
 	//H<-(SP+1)
 	sp++;
-	*target |= (memory->Read8(sp) << 8);
+	*target |= (m_memory->Read8(sp) << 8);
 
 	sp++;
 
@@ -671,11 +684,11 @@ void CPU::ExecPUSH(u16* target)
 {
 	//(SP-1)<-H
 	sp--;
-	memory->Write8(sp, (u8)(*target >> 8));
+	m_memory->Write8(sp, (u8)(*target >> 8));
 
 	//(SP-2)<-L
 	sp--;
-	memory->Write8(sp, (u8)(*target & 0x00ff));
+	m_memory->Write8(sp, (u8)(*target & 0x00ff));
 
 
 	//Z unaffected
@@ -703,11 +716,11 @@ void CPU::ExecRES(u8* target, int n)
 void CPU::ExecRET()
 {
 	//PCL<-(SP)
-	pc = memory->Read8(sp);
+	pc = m_memory->Read8(sp);
 
 	//PCH<-(SP+1)
 	sp++;
-	pc |= (memory->Read8(sp) << 8);
+	pc |= (m_memory->Read8(sp) << 8);
 
 	sp++;
 
