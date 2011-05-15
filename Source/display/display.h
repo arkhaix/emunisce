@@ -22,13 +22,18 @@ public:
 
 	Display();
 
+
 	//Component
 	void SetMachine(Machine* machine);
 	void Initialize();
 	void Reset();
 
+	void Run(int ticks);
+
+
 	//External
 	ScreenBuffer* GetStableScreenBuffer();
+
 
 	//Gameboy registers
 
@@ -77,6 +82,31 @@ public:
 	void SetWindowX(u8 value);
 
 private:
+
+	struct DisplayState	///<Can't declare a namespace inside a class, so I'm cheating.
+	{
+		typedef int Type;
+
+		enum
+		{
+			HBlank = 0,
+			VBlank,
+			SpritesLocked,
+			VideoRamLocked
+		};
+	};
+
+	void Begin_HBlank();
+	void Begin_VBlank();
+	void Begin_SpritesLocked();
+	void Begin_VideoRamLocked();
+
+	void Run_VBlank(int ticks);
+
+	DisplayState::Type m_currentState;
+	int m_stateTicksRemaining;
+	int m_vblankScanlineTicksRemaining;
+
 
 	Memory* m_memory;
 

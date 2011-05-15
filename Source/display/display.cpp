@@ -46,6 +46,31 @@ void Display::Reset()
 
 	m_windowX = 0; //??
 	m_windowY = 0; //??
+
+	//Start everything off at 0,0
+	m_currentScanline = 153;
+	m_stateTicksRemaining = 0;
+	m_vblankScanlineTicksRemaining = 0;
+	Begin_SpritesLocked();
+}
+
+void Display::Run(int ticks)
+{
+	if(m_currentState == DisplayState::VBlank)
+		Run_VBlank(ticks);
+
+	m_stateTicksRemaining -= ticks;
+	if(m_stateTicksRemaining <= 0)
+	{
+		if(m_currentState == DisplayState::VBlank)
+			Begin_SpritesLocked();
+		else if(m_currentState == DisplayState::SpritesLocked)
+			Begin_VideoRamLocked();
+		else if(m_currentState == DisplayState::VideoRamLocked)
+			Begin_HBlank();
+		else //m_currentState == DisplayState::HBlank
+			Begin_SpritesLocked();	///<This will trigger VBlank when appropriate
+	}
 }
 
 ScreenBuffer* Display::GetStableScreenBuffer()
@@ -176,4 +201,82 @@ u8 Display::GetWindowX()
 void Display::SetWindowX(u8 value)
 {
 	m_windowX = value;
+}
+
+void Display::Begin_HBlank()
+{
+	m_currentState = DisplayState::HBlank;
+	m_stateTicksRemaining += 204;
+
+	//Set mode 00
+	m_lcdStatus &= ~(0x03);
+
+	//todo: interrupt
+}
+
+void Display::Begin_VBlank()
+{
+	m_currentState = DisplayState::VBlank;
+	m_stateTicksRemaining += 4560;
+
+	m_currentScanline = 144;
+	//todo: coincident flag
+	//todo: interrupt
+
+	m_vblankScanlineTicksRemaining = m_stateTicksRemaining % 456;
+
+	//Set mode 01
+	m_lcdStatus &= ~(0x03);
+	m_lcdStatus |= 0x01;
+
+	//todo: interrupt
+}
+
+void Display::Begin_SpritesLocked()
+{
+	if(m_currentScanline == 143)
+	{
+		Begin_VBlank();
+		return;
+	}
+
+	m_currentState = DisplayState::SpritesLocked;
+	m_stateTicksRemaining += 80;
+
+	m_currentScanline++;
+	if(m_currentScanline >= 144)	///<After a VBlank, this will be 153.  If we've reached this point, then we've started a new frame.
+		m_currentScanline = 0;
+
+	//todo: coincident flag
+	//todo: interrupt
+
+	//Set mode 10
+	m_lcdStatus &= ~(0x03);
+	m_lcdStatus |= 0x02;
+
+	//todo: interrupt
+}
+
+void Display::Begin_VideoRamLocked()
+{
+	m_currentState = DisplayState::VideoRamLocked;
+	m_stateTicksRemaining += 172;
+
+	//Set mode 11
+	m_lcdStatus |= 0x03;
+
+	//todo: interrupt
+}
+
+void Display::Run_VBlank(int ticks)
+{
+	m_vblankScanlineTicksRemaining -= ticks;
+	if(m_vblankScanlineTicksRemaining <= 0)
+	{
+		m_currentScanline++;
+		m_vblankScanlineTicksRemaining += 456;
+
+		//todo: coincident flag
+		//todo: interrupt
+	}
 }
