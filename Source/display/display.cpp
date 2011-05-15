@@ -1,3 +1,5 @@
+#include "windows.h"	///<For critical sections.  We need to lock the screen buffer.
+
 #include "display.h"
 
 //70224 t-states per frame (59.7fps)
@@ -7,10 +9,45 @@
 //172 (169-175) t-states per line in mode 11 (oam + vram in use)
 //204 (201-207) t-states per line in mode 00 (h-blank)
 
+
+//Bit defines for LCDC (0xff40)
+#define LCDC_Background	(1<<0)
+#define LCDC_Sprites	(1<<1)
+#define LCDC_SpriteSize	(1<<2)
+#define LCDC_BackgroundTileMap	(1<<3)
+#define LCDC_TileData	(1<<4)
+#define LCDC_Window		(1<<5)
+#define LCDC_WindowTileMap	(1<<6)
+#define LCDC_Control	(1<<7)
+
+//Bit defines for STAT (0xff41)
+#define STAT_Mode	(3<<0)
+#define STAT_Coincidence	(1<<2)
+#define STAT_Interrupt_HBlank	(1<<3)
+#define STAT_Interrupt_VBlank	(1<<4)
+#define STAT_Interrupt_SpriteLock	(1<<5)
+#define STAT_Interrupt_Coincidence	(1<<6)
+
+//Values for STAT_Mode
+#define Mode_HBlank	(0)
+#define Mode_VBlank	(1)
+#define Mode_SpriteLock	(2)
+#define Mode_VideoRamLock	(3)
+
+
 Display::Display()
 {
 	m_activeScreenBuffer = &m_screenBuffer;
 	m_stableScreenBuffer = &m_screenBuffer2;
+
+	m_screenBufferLock = (void*)(new CRITICAL_SECTION());
+	InitializeCriticalSection((LPCRITICAL_SECTION)m_screenBufferLock);
+}
+
+Display::~Display()
+{
+	DeleteCriticalSection((LPCRITICAL_SECTION)m_screenBufferLock);
+	delete (LPCRITICAL_SECTION)m_screenBufferLock;
 }
 
 void Display::SetMachine(Machine* machine)
@@ -73,9 +110,13 @@ void Display::Run(int ticks)
 	}
 }
 
-ScreenBuffer* Display::GetStableScreenBuffer()
+ScreenBuffer Display::GetStableScreenBuffer()
 {
-	return m_stableScreenBuffer;
+	EnterCriticalSection( (LPCRITICAL_SECTION)m_screenBufferLock );
+		ScreenBuffer result = *m_stableScreenBuffer;
+	LeaveCriticalSection( (LPCRITICAL_SECTION)m_screenBufferLock );
+
+	return result;
 }
 
 //0xff40 - LCDC
@@ -97,8 +138,8 @@ u8 Display::GetLcdStatus()
 
 void Display::SetLcdStatus(u8 value)
 {
-	value &= 0xfc;
-	m_lcdStatus &= 0x03;
+	value &= ~(STAT_Mode);		//Erase incoming STAT_Mode
+	m_lcdStatus &= STAT_Mode;	//Preserve only the existing STAT_Mode
 	m_lcdStatus |= value;
 }
 
@@ -208,8 +249,11 @@ void Display::Begin_HBlank()
 	m_currentState = DisplayState::HBlank;
 	m_stateTicksRemaining += 204;
 
+	RenderScanline();
+
 	//Set mode 00
-	m_lcdStatus &= ~(0x03);
+	m_lcdStatus &= ~(STAT_Mode);
+	m_lcdStatus |= Mode_HBlank;
 
 	//todo: interrupt
 }
@@ -226,8 +270,8 @@ void Display::Begin_VBlank()
 	m_vblankScanlineTicksRemaining = m_stateTicksRemaining % 456;
 
 	//Set mode 01
-	m_lcdStatus &= ~(0x03);
-	m_lcdStatus |= 0x01;
+	m_lcdStatus &= ~(STAT_Mode);
+	m_lcdStatus |= Mode_VBlank;
 
 	//todo: interrupt
 }
@@ -251,8 +295,8 @@ void Display::Begin_SpritesLocked()
 	//todo: interrupt
 
 	//Set mode 10
-	m_lcdStatus &= ~(0x03);
-	m_lcdStatus |= 0x02;
+	m_lcdStatus &= ~(STAT_Mode);
+	m_lcdStatus |= Mode_SpriteLock;
 
 	//todo: interrupt
 }
@@ -263,13 +307,15 @@ void Display::Begin_VideoRamLocked()
 	m_stateTicksRemaining += 172;
 
 	//Set mode 11
-	m_lcdStatus |= 0x03;
+	m_lcdStatus &= ~(STAT_Mode);
+	m_lcdStatus |= Mode_VideoRamLock;
 
 	//todo: interrupt
 }
 
 void Display::Run_VBlank(int ticks)
 {
+	//Update LY
 	m_vblankScanlineTicksRemaining -= ticks;
 	if(m_vblankScanlineTicksRemaining <= 0)
 	{
@@ -279,4 +325,29 @@ void Display::Run_VBlank(int ticks)
 		//todo: coincident flag
 		//todo: interrupt
 	}
+
+	//Swap buffers at the end of VBlank
+	if(m_stateTicksRemaining <= ticks)
+	{
+		EnterCriticalSection( (LPCRITICAL_SECTION)m_screenBufferLock );
+			ScreenBuffer* temp = m_stableScreenBuffer;
+			m_stableScreenBuffer = m_activeScreenBuffer;
+			m_activeScreenBuffer = temp;
+		LeaveCriticalSection( (LPCRITICAL_SECTION)m_screenBufferLock );
+	}
+}
+
+void Display::RenderScanline()
+{
+	//todo: LCDC:7 = LCD Controller on/off
+
+	//Render background
+	if(m_lcdControl & LCDC_Background)
+	{
+
+	}
+
+	//Render sprites
+
+	//?? Render window
 }

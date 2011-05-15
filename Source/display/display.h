@@ -5,10 +5,7 @@
 
 struct DisplayPixel
 {
-	u8 r;
-	u8 g;
-	u8 b;
-	u8 _unused;	///<unused.
+	u8 Value;
 };
 
 struct ScreenBuffer
@@ -21,6 +18,7 @@ class Display
 public:
 
 	Display();
+	~Display();
 
 
 	//Component
@@ -32,7 +30,7 @@ public:
 
 
 	//External
-	ScreenBuffer* GetStableScreenBuffer();
+	ScreenBuffer GetStableScreenBuffer();
 
 
 	//Gameboy registers
@@ -107,6 +105,8 @@ private:
 	int m_stateTicksRemaining;
 	int m_vblankScanlineTicksRemaining;
 
+	void RenderScanline();
+
 
 	Memory* m_memory;
 
@@ -114,6 +114,7 @@ private:
 	ScreenBuffer m_screenBuffer2;
 	ScreenBuffer* m_activeScreenBuffer;	///<The screen buffer currently being rendered to by the gameboy
 	ScreenBuffer* m_stableScreenBuffer;	///<The screen buffer ready to be displayed on the pc
+	void* m_screenBufferLock;
 
 	u8 m_lcdControl;
 	u8 m_lcdStatus;
