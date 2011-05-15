@@ -10,10 +10,17 @@ using namespace std;
 //Project
 #include "romonly.h"
 
+//Solution
+#include "../cpu/cpu.h"
+#include "../display/display.h"
+
 
 Memory::Memory()
 {
 	srand(time(NULL));
+
+	m_cpu = NULL;
+	m_display = NULL;
 
 	m_cartRom = NULL;
 	m_switchableRom = NULL;
@@ -27,6 +34,15 @@ Memory::Memory()
 
 Memory::~Memory()
 {
+}
+
+void Memory::SetMachine(Machine* machine)
+{
+	if(machine)
+	{
+		m_cpu = machine->_CPU;
+		m_display = machine->_Display;
+	}
 }
 
 void Memory::Initialize()
@@ -61,14 +77,6 @@ void Memory::Reset()
 	m_internalRamEcho = m_internalRamData;
 	m_spriteRam = m_spriteRamData;
 	m_stackRam = m_stackRamData;
-}
-
-void Memory::SetMachine(Machine* machine)
-{
-	if(machine)
-	{
-		machine->_Memory = this;
-	}
 }
 
 u8 Memory::Read8(u16 address)
@@ -169,11 +177,40 @@ Memory* Memory::CreateFromFile(const char* filename)
 
 u8 Memory::ReadRegister(u16 address)
 {
+	switch(address)
+	{
+	case 0xff40: if(m_display) { return m_display->GetLcdControl(); } break;
+	case 0xff41: if(m_display) { return m_display->GetLcdStatus(); } break;
+	case 0xff42: if(m_display) { return m_display->GetScrollY(); } break;
+	case 0xff43: if(m_display) { return m_display->GetScrollX(); } break;
+	case 0xff44: if(m_display) { return m_display->GetCurrentScanline(); } break;
+	case 0xff45: if(m_display) { return m_display->GetScanlineCompare(); } break;
+	case 0xff47: if(m_display) { return m_display->GetBackgroundPalette(); } break;
+	case 0xff48: if(m_display) { return m_display->GetSpritePalette0(); } break;
+	case 0xff49: if(m_display) { return m_display->GetSpritePalette1(); } break;
+	case 0xff4a: if(m_display) { return m_display->GetWindowY(); } break;
+	case 0xff4b: if(m_display) { return m_display->GetWindowX(); } break;
+	}
+
 	return 0;
 }
 
 void Memory::WriteRegister(u16 address, u8 value)
 {
+	switch(address)
+	{
+	case 0xff40: if(m_display) { m_display->SetLcdControl(value); } break;
+	case 0xff41: if(m_display) { m_display->SetLcdStatus(value); } break;
+	case 0xff42: if(m_display) { m_display->SetScrollY(value); } break;
+	case 0xff43: if(m_display) { m_display->SetScrollX(value); } break;
+	case 0xff44: if(m_display) { m_display->SetCurrentScanline(value); } break;
+	case 0xff45: if(m_display) { m_display->SetScanlineCompare(value); } break;
+	case 0xff47: if(m_display) { m_display->SetBackgroundPalette(value); } break;
+	case 0xff48: if(m_display) { m_display->SetSpritePalette0(value); } break;
+	case 0xff49: if(m_display) { m_display->SetSpritePalette1(value); } break;
+	case 0xff4a: if(m_display) { m_display->SetWindowY(value); } break;
+	case 0xff4b: if(m_display) { m_display->SetWindowX(value); } break;
+	}
 }
 
 void Memory::MapMemoryFromAddress(u16 address, u8** resultBlock, u16* offset, bool* blockIsWriteable)

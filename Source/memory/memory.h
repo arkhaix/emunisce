@@ -34,6 +34,12 @@ protected:
 	bool IsRegisterAddress(u16 address);
 
 
+	//Component pointers for handling registers.
+
+	CPU* m_cpu;
+	Display* m_display;
+
+
 	//Block pointers.  Set these as necessary.
 
 	u8* m_cartRom;			//0x0000 - 0x3fff = cart rom
