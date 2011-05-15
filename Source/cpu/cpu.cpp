@@ -25,7 +25,6 @@ void CPU::SetMachine(Machine* machine)
 
 	if(machine)
 	{
-		machine->_CPU = this;
 		m_memory = machine->_Memory;
 	}
 }
