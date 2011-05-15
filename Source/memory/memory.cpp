@@ -5,7 +5,6 @@
 
 //STL
 #include <fstream>
-#include <iostream> ///<debug
 using namespace std;
 
 //Project
@@ -136,6 +135,7 @@ void Memory::Write16(u16 address, u16 value)
 	
 Memory* Memory::CreateFromFile(const char* filename)
 {
+	//Read the gb cart header out of the file
 	ifstream ifile(filename, ios::in | ios::binary);
 	
 	if(ifile.fail() || ifile.eof() || !ifile.good())
@@ -145,38 +145,17 @@ Memory* Memory::CreateFromFile(const char* filename)
 	ifile.read((char*)&header[0], 0x150);
 	ifile.close();
 
-	//Debug
-	char title[17] = {0};
-	for(int i=0;i<16;i++)
-		title[i] = header[0x134+i];
-	printf("Title: %s\n", title);
-
-	/*
-	0 - ROM ONLY               5 - ROM+MBC2
-	1 - ROM+MBC1               6 - ROM+MBC2+BATTERY
-	2 - ROM+MBC1+RAM           8 - ROM+RAM
-	3 - ROM+MBC1+RAM+BATTERY   9 - ROM+RAM+BATTERY
-	FF - ROM+HuC1+RAM+BATTERY
-	*/
-	printf("Cartridge type: ");
-	u8 cartType = header[0x147];
-	if(cartType == 0) printf("ROM Only\n");
-	else if(cartType == 1) printf("MBC1\n");
-	else if(cartType == 2) printf("MBC1 + RAM\n");
-	else if(cartType == 3) printf("MBC1 + RAM + Battery\n");
-	else if(cartType == 5) printf("MBC2\n");
-	else if(cartType == 6) printf("MBC2 + Battery\n");
-	else if(cartType == 8) printf("ROM + RAM\n");
-	else if(cartType == 9) printf("ROM + RAM + Battery\n");
-	else if(cartType == 0xff) printf("HuC1 + RAM + Battery\n");
-
-	//Instantiate appropriate MBC class from header info
+	
+	//Instantiate the appropriate MBC class from the header info
 	Memory* memoryController = NULL;
+	u8 cartType = header[0x147];
+
 	if(cartType == 0 || cartType == 8 || cartType == 9)
 		memoryController = new RomOnly();
 
 	if(memoryController == NULL)
 		return NULL;
+
 
 	//Have the MBC class load the file
 	if(memoryController->LoadFile(filename) == false)
