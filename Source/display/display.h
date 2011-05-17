@@ -11,6 +11,11 @@ struct DisplayPixel
 struct ScreenBuffer
 {
 	DisplayPixel Pixels[160*144];
+
+	DisplayPixel& operator()(int x, int y)
+	{
+		return Pixels[y*160+x];
+	}
 };
 
 class Display
@@ -105,6 +110,7 @@ private:
 	int m_stateTicksRemaining;
 	int m_vblankScanlineTicksRemaining;
 
+	void RenderPixel(int screenX, int screenY);
 	void RenderScanline();
 
 
