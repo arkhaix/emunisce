@@ -2,6 +2,9 @@
 
 #include "display.h"
 
+#include "../memory/memory.h"
+
+
 //70224 t-states per frame (59.7fps)
 //4560 t-states per v-blank (mode 01)
 
@@ -337,17 +340,69 @@ void Display::Run_VBlank(int ticks)
 	}
 }
 
-void Display::RenderScanline()
+void Display::RenderPixel(int screenX, int screenY)
 {
-	//todo: LCDC:7 = LCD Controller on/off
-
 	//Render background
 	if(m_lcdControl & LCDC_Background)
 	{
+		//Which tile map?
+		u16 bgTileMapAddress = 0x9800;
+		if(m_lcdControl & LCDC_BackgroundTileMap)
+			bgTileMapAddress = 0x9c00;
 
+		//Convert screen pixel coordinates to background pixel coordinates
+		u8 bgPixelX = (screenX + m_scrollX) % 160;
+		u8 bgPixelY = (screenY + m_scrollY) % 144;
+
+		//Convert background pixel coordinates to background tile coordinates
+		u8 bgTileX = bgPixelX / 8;
+		u8 bgTileY = bgPixelY / 8;
+		u16 bgTileIndex = (bgTileY * 8) + bgTileX;
+
+		//Get the tile value
+		u8 bgTileValue = m_memory->Read8(bgTileMapAddress + bgTileIndex);
+
+		//Which tile data?
+		u16 bgTileAddress = (u16)0x8000 + bgTileValue;
+		if( !(m_lcdControl & LCDC_TileData) )
+		{
+			s8 signedBgTileValue = (s8)bgTileValue;
+			bgTileAddress = (u16)0x9000 + signedBgTileValue;
+		}
+		
+		//Adjust the background pixel coordinates to sub-tile coordinates (each tile is 8x8, and we need to know which of those we need)
+		u8 bgTilePixelX = bgPixelX % 8;
+		u8 bgTilePixelY = bgPixelY % 8;
+		u8 bgTilePixel = (bgTilePixelY * 8) + bgTilePixelX;
+
+		//Use the pixel location to find the byte we need
+		u8 bgTileByteOffset = bgTilePixel / 4;	///<2 bits per pixel, 4 pixels per byte
+		u16 bgTileByteAddress = bgTileAddress + bgTileByteOffset;
+		u8 bgTileByte = m_memory->Read8(bgTileByteAddress);
+
+		//Almost there... now we need figure out which of the 4 pixels in this byte is the one we want
+		u8 bgTilePixelOffset = bgTilePixelX % 4;	///<Which pixel
+		u8 bgTileBitOffset = bgTilePixelOffset * 2;	///<Which bits
+		u8 bgPixelTileValue = bgTileByte & (0x03 << bgTileBitOffset);	//<Holy shit we finally got a value
+
+		//Ok...so we have our pixel.  Now we still have to look it up in the palette.
+		u8 bgPixelPaletteValue = m_backgroundPalette & (0x03 << bgPixelTileValue);
+
+		//Done
+		(*m_activeScreenBuffer)(screenX, screenY).Value = bgPixelPaletteValue;
 	}
 
 	//Render sprites
 
 	//?? Render window
+}
+
+void Display::RenderScanline()
+{
+	//todo: LCDC:7 = LCD Controller on/off
+
+	for(int x=0;x<160;x++)
+	{
+		RenderPixel(x, m_currentScanline);
+	}
 }
