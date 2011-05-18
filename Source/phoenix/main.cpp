@@ -25,7 +25,7 @@ DWORD WINAPI EmulationThread(LPVOID param)
 	Display display;
 	g_machine._Display = &display;
 
-	Memory* memory = Memory::CreateFromFile("C:/hg/Phoenix/Roms/clown1.gb");
+	Memory* memory = Memory::CreateFromFile("C:/hg/Phoenix/Roms/test.gb");
 	if(memory == NULL)
 	{
 		printf("Unsupported memory controller\n");
@@ -68,10 +68,10 @@ public:
 	{
 		m_machine = machine;
 
-		m_palette[0] = new Color(0, 0, 0);
-		m_palette[1] = new Color(75, 75, 75);
-		m_palette[2] = new Color(150, 150, 150);
-		m_palette[3] = new Color(255, 255, 255);
+		m_palette[3] = new Color(0, 0, 0);
+		m_palette[2] = new Color(75, 75, 75);
+		m_palette[1] = new Color(150, 150, 150);
+		m_palette[0] = new Color(255, 255, 255);
 
 		m_bitmap = new Bitmap(160, 144, PixelFormat24bppRGB);
 	}
