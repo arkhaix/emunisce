@@ -374,7 +374,6 @@ void Display::RenderPixel(int screenX, int screenY)
 		//Adjust the background pixel coordinates to sub-tile coordinates (each tile is 8x8, and we need to know which of those we need)
 		u8 bgTilePixelX = bgPixelX % 8;
 		u8 bgTilePixelY = bgPixelY % 8;
-		u8 bgTilePixel = (bgTilePixelY * 8) + bgTilePixelX;
 
 		//Use the pixel location to find the bytes we need
 		u8 bgTileByteOffset = bgTilePixelY * 2;	///<2 bytes per line
@@ -385,12 +384,14 @@ void Display::RenderPixel(int screenX, int screenY)
 		u8 bgTileByteHigh = m_memory->Read8(bgTileByteAddress+1);
 
 		//We now have the 2 bytes representing the line.  Now pull out the pixel bit we want from those two bytes.
-		u8 bgPixelValue = (bgTileByteLow & (1<<bgTilePixelX)) ? 0x01 : 0x00;
-		if(bgTileByteHigh & (1<<bgTilePixelX))
+		u8 bgTilePixelBitOffset = 7 - bgTilePixelX;	///<At x=0, we want bit 7.
+		u8 bgPixelValue = (bgTileByteLow & (1<<bgTilePixelBitOffset)) ? 0x01 : 0x00;
+		if(bgTileByteHigh & (1<<bgTilePixelBitOffset))
 			bgPixelValue |= 0x02;
 
 		//Ok...so we have our pixel.  Now we still have to look it up in the palette.
-		u8 bgPixelPaletteValue = (m_backgroundPalette & (0x03 << bgPixelValue)) >> bgPixelValue;
+		u8 bgPixelPaletteShift = bgPixelValue * 2;	///<2 bits per entry
+		u8 bgPixelPaletteValue = (m_backgroundPalette & (0x03 << bgPixelPaletteShift)) >> bgPixelPaletteShift;
 
 		//Done
 		(*m_activeScreenBuffer)(screenX, screenY).Value = bgPixelPaletteValue;

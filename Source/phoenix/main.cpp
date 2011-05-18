@@ -37,7 +37,7 @@ int main(void)
 	Display display;
 	machine._Display = &display;
 
-	Memory* memory = Memory::CreateFromFile("C:/hg/Phoenix/Roms/testh.gb");
+	Memory* memory = Memory::CreateFromFile("C:/hg/Phoenix/Roms/test.gb");
 	if(memory == NULL)
 	{
 		printf("Unsupported memory controller\n");
