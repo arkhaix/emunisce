@@ -357,17 +357,18 @@ void Display::RenderPixel(int screenX, int screenY)
 		//Convert background pixel coordinates to background tile coordinates
 		u8 bgTileX = bgPixelX / 8;
 		u8 bgTileY = bgPixelY / 8;
-		u16 bgTileIndex = (bgTileY * 8) + bgTileX;
+		u16 bgTileIndex = (bgTileY * 32) + bgTileX;	///<BG map is 32x32
 
 		//Get the tile value
 		u8 bgTileValue = m_memory->Read8(bgTileMapAddress + bgTileIndex);
 
 		//Which tile data?
-		u16 bgTileAddress = (u16)0x8000 + bgTileValue;
+		s8 bytesPerTile = 16;
+		u16 bgTileAddress = (u16)0x8000 + (bgTileValue * bytesPerTile);
 		if( !(m_lcdControl & LCDC_TileData) )
 		{
 			s8 signedBgTileValue = (s8)bgTileValue;
-			bgTileAddress = (u16)0x9000 + signedBgTileValue;
+			bgTileAddress = (u16)0x9000 + (signedBgTileValue * bytesPerTile);
 		}
 		
 		//Adjust the background pixel coordinates to sub-tile coordinates (each tile is 8x8, and we need to know which of those we need)
@@ -375,18 +376,21 @@ void Display::RenderPixel(int screenX, int screenY)
 		u8 bgTilePixelY = bgPixelY % 8;
 		u8 bgTilePixel = (bgTilePixelY * 8) + bgTilePixelX;
 
-		//Use the pixel location to find the byte we need
-		u8 bgTileByteOffset = bgTilePixel / 4;	///<2 bits per pixel, 4 pixels per byte
+		//Use the pixel location to find the bytes we need
+		u8 bgTileByteOffset = bgTilePixelY * 2;	///<2 bytes per line
 		u16 bgTileByteAddress = bgTileAddress + bgTileByteOffset;
-		u8 bgTileByte = m_memory->Read8(bgTileByteAddress);
 
-		//Almost there... now we need figure out which of the 4 pixels in this byte is the one we want
-		u8 bgTilePixelOffset = bgTilePixelX % 4;	///<Which pixel
-		u8 bgTileBitOffset = bgTilePixelOffset * 2;	///<Which bits
-		u8 bgPixelTileValue = bgTileByte & (0x03 << bgTileBitOffset);	//<Holy shit we finally got a value
+		//2 bytes combine to represent a line.  Each byte has 1 bit from each of the 8 pixels in that line.
+		u8 bgTileByteLow = m_memory->Read8(bgTileByteAddress);
+		u8 bgTileByteHigh = m_memory->Read8(bgTileByteAddress+1);
+
+		//We now have the 2 bytes representing the line.  Now pull out the pixel bit we want from those two bytes.
+		u8 bgPixelValue = (bgTileByteLow & (1<<bgTilePixelX)) ? 0x01 : 0x00;
+		if(bgTileByteHigh & (1<<bgTilePixelX))
+			bgPixelValue |= 0x02;
 
 		//Ok...so we have our pixel.  Now we still have to look it up in the palette.
-		u8 bgPixelPaletteValue = m_backgroundPalette & (0x03 << bgPixelTileValue);
+		u8 bgPixelPaletteValue = (m_backgroundPalette & (0x03 << bgPixelValue)) >> bgPixelValue;
 
 		//Done
 		(*m_activeScreenBuffer)(screenX, screenY).Value = bgPixelPaletteValue;

@@ -1247,7 +1247,7 @@ int CPU::Execute()
 
 	case 0xaf:
 		//AF		XOR A			4	1	1
-		ExecAND(b);
+		ExecXOR(a);
 		m_instructionTime += 4;
 	break;
 
@@ -1452,10 +1452,9 @@ int CPU::Execute()
 	case 0xca:
 		//CA n n		JP Z,(nn)		10	3	1	(always same)
 		nn = ReadNext16();
-		tt = m_memory->Read16(nn);
 		if(TST_Z)
 		{
-			ExecJP(tt);
+			ExecJP(nn);
 			m_instructionTime += 10;
 		}
 		else
@@ -1471,10 +1470,9 @@ int CPU::Execute()
 	case 0xcc:
 		//CC n n		CALL Z,(nn)		17/10	5/3	1/1	(met/not met)
 		nn = ReadNext16();
-		tt = m_memory->Read16(nn);
 		if(TST_Z)
 		{
-			ExecCALL(tt);
+			ExecCALL(nn);
 			m_instructionTime += 17;
 		}
 		else
@@ -1486,8 +1484,7 @@ int CPU::Execute()
 	case 0xcd:
 		//CD n n		CALL (nn)		17	5	1
 		nn = ReadNext16();
-		tt = m_memory->Read16(nn);
-		ExecCALL(tt);
+		ExecCALL(nn);
 		m_instructionTime += 17;
 	break;
 
@@ -1549,14 +1546,13 @@ int CPU::Execute()
 	case 0xd4:
 		//D4 n n		CALL NC,(nn)		17/10	5/3	1/1	(met/not met)
 		nn = ReadNext16();
-		tt = m_memory->Read16(nn);
 		if(TST_C)
 		{
 			m_instructionTime += 10;
 		}
 		else
 		{
-			ExecCALL(tt);
+			ExecCALL(nn);
 			m_instructionTime += 17;
 		}
 	break;
@@ -1603,10 +1599,9 @@ int CPU::Execute()
 	case 0xda:
 		//DA n n		JP C,(nn)		10	3	1	(met or not)
 		nn = ReadNext16();
-		tt = m_memory->Read16(nn);
 		if(TST_C)
 		{
-			ExecJP(tt);
+			ExecJP(nn);
 			m_instructionTime += 10;
 		}
 		else
@@ -1623,10 +1618,9 @@ int CPU::Execute()
 	case 0xdc:
 		//DC n n		CALL C,(nn)		17/10	5/3	1
 		nn = ReadNext16();
-		tt = m_memory->Read16(nn);
 		if(TST_C)
 		{
-			ExecCALL(tt);
+			ExecCALL(nn);
 			m_instructionTime += 17;
 		}
 		else
