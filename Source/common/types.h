@@ -75,9 +75,21 @@ struct Machine
 {
 	MachineType::Type _MachineType;
 
+	unsigned int _FrameCount;
+
 	CPU* _CPU;
 	Memory* _Memory;
 	Display* _Display;
+
+	Machine()
+	{
+		_MachineType = MachineType::GameBoy;
+		_FrameCount = 0;
+
+		_CPU = NULL;
+		_Memory = NULL;
+		_Display = NULL;
+	}
 };
 
 #endif
