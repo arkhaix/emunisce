@@ -45,6 +45,9 @@ Display::Display()
 
 	m_screenBufferLock = (void*)(new CRITICAL_SECTION());
 	InitializeCriticalSection((LPCRITICAL_SECTION)m_screenBufferLock);
+
+	m_vramOffset = 0x8000;
+	m_oamOffset = 0xfe00;
 }
 
 Display::~Display()
@@ -111,6 +114,16 @@ void Display::Run(int ticks)
 		else //m_currentState == DisplayState::HBlank
 			Begin_SpritesLocked();	///<This will trigger VBlank when appropriate
 	}
+}
+
+void Display::WriteVram(u16 address, u8 value)
+{
+	m_vramCache[address - m_vramOffset] = value;
+}
+
+void Display::WriteOam(u16 address, u8 value)
+{
+	m_oamCache[address - m_oamOffset] = value;
 }
 
 ScreenBuffer Display::GetStableScreenBuffer()
@@ -378,7 +391,7 @@ void Display::RenderPixel(int screenX, int screenY)
 		u16 bgTileIndex = (bgTileY * 32) + bgTileX;	///<BG map is 32x32
 
 		//Get the tile value
-		u8 bgTileValue = m_memory->Read8(bgTileMapAddress + bgTileIndex);
+		u8 bgTileValue = m_vramCache[bgTileMapAddress + bgTileIndex - m_vramOffset];
 
 		//Which tile data?
 		s8 bytesPerTile = 16;
@@ -398,8 +411,8 @@ void Display::RenderPixel(int screenX, int screenY)
 		u16 bgTileByteAddress = bgTileAddress + bgTileByteOffset;
 
 		//2 bytes combine to represent a line.  Each byte has 1 bit from each of the 8 pixels in that line.
-		u8 bgTileByteLow = m_memory->Read8(bgTileByteAddress);
-		u8 bgTileByteHigh = m_memory->Read8(bgTileByteAddress+1);
+		u8 bgTileByteLow = m_vramCache[bgTileByteAddress - m_vramOffset];
+		u8 bgTileByteHigh = m_vramCache[bgTileByteAddress+1 - m_vramOffset];
 
 		//We now have the 2 bytes representing the line.  Now pull out the pixel bit we want from those two bytes.
 		u8 bgTilePixelBitOffset = 7 - bgTilePixelX;	///<At x=0, we want bit 7.
@@ -433,8 +446,8 @@ void Display::RenderPixel(int screenX, int screenY)
 		{
 			u16 spriteDataAddress = 0xfe00 + (i*4);	///<4 bytes per sprite entry
 
-			u8 spriteY = m_memory->Read8(spriteDataAddress);
-			u8 spriteX = m_memory->Read8(spriteDataAddress+1);
+			u8 spriteY = m_oamCache[spriteDataAddress - m_oamOffset];
+			u8 spriteX = m_oamCache[spriteDataAddress+1 - m_oamOffset];
 
 			//Sprite coordinates are offset, so sprite[8,16] = screen[0,0].
 			spriteX -= 8;
@@ -446,8 +459,8 @@ void Display::RenderPixel(int screenX, int screenY)
 				continue;
 
 			//It's relevant, so get the rest of the data
-			u8 spriteTileValue = m_memory->Read8(spriteDataAddress+2);
-			u8 spriteFlags = m_memory->Read8(spriteDataAddress+3);
+			u8 spriteTileValue = m_oamCache[spriteDataAddress+2 - m_oamOffset];
+			u8 spriteFlags = m_oamCache[spriteDataAddress+3 - m_oamOffset];
 
 			//Is it visible?  (priority vs background and window)
 			if(spriteFlags & (1<<7))	///<Lower priority if set, higher priority otherwise
@@ -467,8 +480,8 @@ void Display::RenderPixel(int screenX, int screenY)
 			u16 tileLineAddress = tileDataAddress + (targetTileLine * 2);
 
 			//Read the two bytes for this line of the tile
-			u8 tileLineLow = m_memory->Read8(tileLineAddress);
-			u8 tileLineHigh = m_memory->Read8(tileLineAddress+1);
+			u8 tileLineLow = m_vramCache[tileLineAddress - m_vramOffset];
+			u8 tileLineHigh = m_vramCache[tileLineAddress+1 - m_vramOffset];
 
 			//Determine the bit offset for the X value
 			u8 bitOffset = screenX - spriteX;
