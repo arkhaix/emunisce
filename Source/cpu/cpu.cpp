@@ -36,8 +36,11 @@ void CPU::Initialize()
 
 void CPU::Reset()
 {
-	m_interruptsEnabled = false;
+	m_masterInterruptsEnabled = false;
 	m_delayNextInterrupt = false;
+
+	m_interruptsEnabled = 0;
+	m_interruptFlags = 0;
 
 	m_instructionTime = 0;
 	m_halted = false;
@@ -51,6 +54,29 @@ void CPU::Reset()
 	sp = 0xfffe;
 
 	pc = 0x0100;
+}
+
+
+//0xff0f - Interrupt Flag
+u8 CPU::GetInterruptFlags()
+{
+	return m_interruptFlags;
+}
+
+void CPU::SetInterruptFlags(u8 flags)
+{
+	m_interruptFlags = flags;
+}
+
+//0xffff - Interrupt Enable
+u8 CPU::GetInterruptsEnabled()
+{
+	return m_interruptsEnabled;
+}
+
+void CPU::SetInterruptsEnabled(u8 flags)
+{
+	m_interruptsEnabled = flags;
 }
 
 
@@ -462,7 +488,7 @@ void CPU::ExecDEC(u16* target)
 
 void CPU::ExecDI()
 {
-	m_interruptsEnabled = false;
+	m_masterInterruptsEnabled = false;
 
 	//Z unaffected
 
@@ -475,7 +501,7 @@ void CPU::ExecDI()
 
 void CPU::ExecEI()
 {
-	m_interruptsEnabled = true;
+	m_masterInterruptsEnabled = true;
 	m_delayNextInterrupt = true;
 
 	//Z unaffected

@@ -71,7 +71,16 @@ public:
 	void Initialize();
 	void Reset();
 
-	int Execute();
+	int Step();
+
+
+	//0xff0f - Interrupt Flag
+	u8 GetInterruptFlags();
+	void SetInterruptFlags(u8 flags);
+
+	//0xffff - Interrupt Enable
+	u8 GetInterruptsEnabled();
+	void SetInterruptsEnabled(u8 flags);
 
 
 private:
@@ -79,8 +88,11 @@ private:
 	Machine* m_machine;
 	Memory* m_memory;
 
-	bool m_interruptsEnabled;	//Interrupt master enable flag (IME)
-	bool m_delayNextInterrupt;	//Interrupts are not enabled until one instruction after EI completes.
+	bool m_masterInterruptsEnabled;	///<Interrupt master enable flag (IME)
+	bool m_delayNextInterrupt;	///<Interrupts are not enabled until one instruction after EI completes.
+
+	u8 m_interruptsEnabled;	///<Which interrupts are currently enabled.  Slaves to the IME flag.
+	u8 m_interruptFlags;		///<Which interrupts are currently set.
 
 	int m_instructionTime;
 	bool m_halted;
