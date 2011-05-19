@@ -113,6 +113,8 @@ private:
 	void RenderPixel(int screenX, int screenY);
 	void RenderScanline();
 
+	void CheckCoincidence();
+
 
 	Memory* m_memory;
 

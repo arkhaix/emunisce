@@ -46,7 +46,7 @@ DWORD WINAPI EmulationThread(LPVOID param)
 
 	while(g_shutdownRequested == false)
 	{
-		int ticks = cpu.Execute();
+		int ticks = cpu.Step();
 		display.Run(ticks);
 
 		frameTime -= ticks;

@@ -258,7 +258,13 @@ void Display::Begin_HBlank()
 	m_lcdStatus &= ~(STAT_Mode);
 	m_lcdStatus |= Mode_HBlank;
 
-	//todo: interrupt
+	//LCDC interrupt
+	if(m_lcdStatus & STAT_Interrupt_HBlank)
+	{
+		u8 interrupts = m_memory->Read8(REG_IF);
+		interrupts |= IF_LCDC;
+		m_memory->Write8(REG_IF, interrupts);
+	}
 }
 
 void Display::Begin_VBlank()
@@ -267,8 +273,7 @@ void Display::Begin_VBlank()
 	m_stateTicksRemaining += 4560;
 
 	m_currentScanline = 144;
-	//todo: coincident flag
-	//todo: interrupt
+	CheckCoincidence();
 
 	m_vblankScanlineTicksRemaining = m_stateTicksRemaining % 456;
 
@@ -276,7 +281,17 @@ void Display::Begin_VBlank()
 	m_lcdStatus &= ~(STAT_Mode);
 	m_lcdStatus |= Mode_VBlank;
 
-	//todo: interrupt
+	//VBlank interrupt
+	u8 interrupts = m_memory->Read8(REG_IF);
+	interrupts |= IF_VBLANK;
+	m_memory->Write8(REG_IF, interrupts);
+
+	//LCDC interrupt
+	if(m_lcdStatus & STAT_Interrupt_VBlank)
+	{
+		interrupts |= IF_LCDC;
+		m_memory->Write8(REG_IF, interrupts);
+	}
 }
 
 void Display::Begin_SpritesLocked()
@@ -294,14 +309,19 @@ void Display::Begin_SpritesLocked()
 	if(m_currentScanline >= 144)	///<After a VBlank, this will be 153.  If we've reached this point, then we've started a new frame.
 		m_currentScanline = 0;
 
-	//todo: coincident flag
-	//todo: interrupt
+	CheckCoincidence();
 
 	//Set mode 10
 	m_lcdStatus &= ~(STAT_Mode);
 	m_lcdStatus |= Mode_SpriteLock;
 
-	//todo: interrupt
+	//LCDC interrupt
+	if(m_lcdStatus & STAT_Interrupt_SpriteLock)
+	{
+		u8 interrupts = m_memory->Read8(REG_IF);
+		interrupts |= IF_LCDC;
+		m_memory->Write8(REG_IF, interrupts);
+	}
 }
 
 void Display::Begin_VideoRamLocked()
@@ -313,7 +333,7 @@ void Display::Begin_VideoRamLocked()
 	m_lcdStatus &= ~(STAT_Mode);
 	m_lcdStatus |= Mode_VideoRamLock;
 
-	//todo: interrupt
+	//No interrupts for this mode
 }
 
 void Display::Run_VBlank(int ticks)
@@ -325,8 +345,7 @@ void Display::Run_VBlank(int ticks)
 		m_currentScanline++;
 		m_vblankScanlineTicksRemaining += 456;
 
-		//todo: coincident flag
-		//todo: interrupt
+		CheckCoincidence();
 	}
 
 	//Swap buffers at the end of VBlank
@@ -409,5 +428,27 @@ void Display::RenderScanline()
 	for(int x=0;x<160;x++)
 	{
 		RenderPixel(x, m_currentScanline);
+	}
+}
+
+void Display::CheckCoincidence()
+{
+	if(m_currentScanline == m_scanlineCompare)
+	{
+		//LYC=LY flag
+		m_lcdStatus |= STAT_Coincidence;
+
+		//LCDC interrupt
+		if(m_lcdStatus & STAT_Interrupt_Coincidence)
+		{
+			u8 interrupts = m_memory->Read8(REG_IF);
+			interrupts |= IF_LCDC;
+			m_memory->Write8(REG_IF, interrupts);
+		}
+	}
+	else
+	{
+		//LYC=LY flag
+		m_lcdStatus &= ~(STAT_Coincidence);
 	}
 }

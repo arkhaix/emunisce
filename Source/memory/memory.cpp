@@ -179,6 +179,7 @@ u8 Memory::ReadRegister(u16 address)
 {
 	switch(address)
 	{
+	case 0xff0f: if(m_cpu) { return m_cpu->GetInterruptFlags(); } break;
 	case 0xff40: if(m_display) { return m_display->GetLcdControl(); } break;
 	case 0xff41: if(m_display) { return m_display->GetLcdStatus(); } break;
 	case 0xff42: if(m_display) { return m_display->GetScrollY(); } break;
@@ -190,6 +191,7 @@ u8 Memory::ReadRegister(u16 address)
 	case 0xff49: if(m_display) { return m_display->GetSpritePalette1(); } break;
 	case 0xff4a: if(m_display) { return m_display->GetWindowY(); } break;
 	case 0xff4b: if(m_display) { return m_display->GetWindowX(); } break;
+	case 0xffff: if(m_cpu) { return m_cpu->GetInterruptsEnabled(); } break;
 	}
 
 	return 0;
@@ -199,6 +201,7 @@ void Memory::WriteRegister(u16 address, u8 value)
 {
 	switch(address)
 	{
+	case 0xff0f: if(m_cpu) { m_cpu->SetInterruptFlags(value); } break;
 	case 0xff40: if(m_display) { m_display->SetLcdControl(value); } break;
 	case 0xff41: if(m_display) { m_display->SetLcdStatus(value); } break;
 	case 0xff42: if(m_display) { m_display->SetScrollY(value); } break;
@@ -210,6 +213,7 @@ void Memory::WriteRegister(u16 address, u8 value)
 	case 0xff49: if(m_display) { m_display->SetSpritePalette1(value); } break;
 	case 0xff4a: if(m_display) { m_display->SetWindowY(value); } break;
 	case 0xff4b: if(m_display) { m_display->SetWindowX(value); } break;
+	case 0xffff: if(m_cpu) { m_cpu->SetInterruptsEnabled(value); } break;
 	}
 }
 

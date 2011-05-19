@@ -3,7 +3,7 @@
 #include "../memory/memory.h"
 
 
-int CPU::Execute()
+int CPU::Step()
 {
 	m_instructionTime = 0;
 
@@ -16,38 +16,58 @@ int CPU::Execute()
 	bool executeInterrupt = false;
 	u8 interruptFlags = m_memory->Read8(REG_IF);
 	interruptFlags &= 0x1f;	///<Only bits 0-4 signal valid interrupts.
-	if( (m_interruptsEnabled || m_halted) && m_delayNextInterrupt == false && interruptFlags != 0)
+	if( (m_masterInterruptsEnabled || m_halted) && m_delayNextInterrupt == false && interruptFlags != 0)
 	{
 		u8 interruptEnableFlags = m_memory->Read8(REG_IE);
 		
 		if( (interruptFlags & IF_VBLANK) && (interruptEnableFlags & IF_VBLANK) )
 		{
 			executeInterrupt = true;
-			m_interruptsEnabled = false;
+			m_masterInterruptsEnabled = false;
+
+			interruptFlags &= ~(IF_VBLANK);
+			m_memory->Write8(REG_IF, interruptFlags);
+
 			ExecCALL(0x0040);
 		}
 		else if( (interruptFlags & IF_LCDC) && (interruptEnableFlags & IF_LCDC) )
 		{
 			executeInterrupt = true;
-			m_interruptsEnabled = false;
+			m_masterInterruptsEnabled = false;
+
+			interruptFlags &= ~(IF_LCDC);
+			m_memory->Write8(REG_IF, interruptFlags);
+
 			ExecCALL(0x0048);
 		}
 		else if( (interruptFlags & IF_TIMER) && (interruptEnableFlags & IF_TIMER) )
 		{
 			executeInterrupt = true;
-			m_interruptsEnabled = false;
+			m_masterInterruptsEnabled = false;
+
+			interruptFlags &= ~(IF_TIMER);
+			m_memory->Write8(REG_IF, interruptFlags);
+
 			ExecCALL(0x0050);
 		}
 		else if( (interruptFlags & IF_SERIAL) && (interruptEnableFlags & IF_SERIAL) )
 		{
 			executeInterrupt = true;
-			m_interruptsEnabled = false;
+			m_masterInterruptsEnabled = false;
+
+			interruptFlags &= ~(IF_SERIAL);
+			m_memory->Write8(REG_IF, interruptFlags);
+
 			ExecCALL(0x0058);
 		}
 		else if( (interruptFlags & IF_INPUT) && (interruptEnableFlags & IF_INPUT) )
 		{
 			executeInterrupt = true;
-			m_interruptsEnabled = false;
+			m_masterInterruptsEnabled = false;
+
+			interruptFlags &= ~(IF_INPUT);
+			m_memory->Write8(REG_IF, interruptFlags);
+
 			ExecCALL(0x0060);
 		}
 	}
@@ -1592,7 +1612,7 @@ int CPU::Execute()
 	case 0xd9:
 		//D9      EXX             RETI
 		ExecRET();
-		m_interruptsEnabled = true;
+		m_masterInterruptsEnabled = true;
 		m_instructionTime += 10;	//?? guessing from RET.
 	break;
 
@@ -1779,7 +1799,7 @@ int CPU::Execute()
 
 	case 0xf3:
 		//F3		DI
-		m_interruptsEnabled = false;
+		m_masterInterruptsEnabled = false;
 		m_instructionTime += 4;
 	break;
 
