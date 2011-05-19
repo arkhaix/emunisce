@@ -3,6 +3,8 @@
 
 #include "../common/types.h"
 
+#define PIXEL_NOT_CACHED ((u8)-1)
+
 struct ScreenBuffer
 {
 	u8 Pixels[160*144];
@@ -137,6 +139,21 @@ private:
 
 	u8 m_oamCache[0xa0];
 	u16 m_oamOffset;
+
+
+	// Background data
+
+	ScreenBuffer m_frameBackgroundData;
+
+
+	// Window data
+
+	ScreenBuffer m_frameWindowData;
+
+
+	// Sprite data
+
+	ScreenBuffer m_frameSpriteData;
 
 
 	// Tile data

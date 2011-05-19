@@ -48,6 +48,16 @@ Display::Display()
 
 	m_vramOffset = 0x8000;
 	m_oamOffset = 0xfe00;
+
+	for(int y=0;y<144;y++)
+	{
+		for(int x=0;x<160;x++)
+		{
+			m_frameBackgroundData.SetPixel(x, y, PIXEL_NOT_CACHED);
+			m_frameWindowData.SetPixel(x, y, PIXEL_NOT_CACHED);
+			m_frameSpriteData.SetPixel(x, y, PIXEL_NOT_CACHED);
+		}
+	}
 }
 
 Display::~Display()
@@ -365,14 +375,26 @@ void Display::Run_VBlank(int ticks)
 		CheckCoincidence();
 	}
 
-	//Swap buffers at the end of VBlank
+	//End of VBlank
 	if(m_stateTicksRemaining <= ticks)
 	{
+		//Swap buffers
 		EnterCriticalSection( (LPCRITICAL_SECTION)m_screenBufferLock );
 			ScreenBuffer* temp = m_stableScreenBuffer;
 			m_stableScreenBuffer = m_activeScreenBuffer;
 			m_activeScreenBuffer = temp;
 		LeaveCriticalSection( (LPCRITICAL_SECTION)m_screenBufferLock );
+
+		//Clear caches
+		for(int y=0;y<144;y++)
+		{
+			for(int x=0;x<160;x++)
+			{
+				m_frameBackgroundData.SetPixel(x, y, PIXEL_NOT_CACHED);
+				m_frameWindowData.SetPixel(x, y, PIXEL_NOT_CACHED);
+				m_frameSpriteData.SetPixel(x, y, PIXEL_NOT_CACHED);
+			}
+		}
 	}
 }
 
@@ -381,49 +403,88 @@ void Display::RenderPixel(int screenX, int screenY)
 	//Render background
 	if(m_lcdControl & LCDC_Background)
 	{
-		//Which tile map?
-		u16 bgTileMapAddress = 0x9800;
-		if(m_lcdControl & LCDC_BackgroundTileMap)
-			bgTileMapAddress = 0x9c00;
-
-		//Convert screen pixel coordinates to background pixel coordinates
-		u8 bgPixelX = (screenX + m_scrollX) % 256;
-		u8 bgPixelY = (screenY + m_scrollY) % 256;
-
-		//Convert background pixel coordinates to background tile coordinates
-		u8 bgTileX = bgPixelX / 8;
-		u8 bgTileY = bgPixelY / 8;
-		u16 bgTileIndex = (bgTileY * 32) + bgTileX;	///<BG map is 32x32
-
-		//Get the tile value
-		u8 bgTileValue = m_vramCache[bgTileMapAddress + bgTileIndex - m_vramOffset];
-
-		//Which tile data?
-		s8 bytesPerTile = 16;
-		u16 bgTileAddress = (u16)0x8000 + (bgTileValue * bytesPerTile);
-		if( !(m_lcdControl & LCDC_TileData) )
+		//Cached?
+		u8 cachedValue = m_frameBackgroundData.GetPixel(screenX, screenY);
+		if(cachedValue != PIXEL_NOT_CACHED)
 		{
-			s8 signedBgTileValue = (s8)bgTileValue;
-			bgTileAddress = (u16)0x9000 + (signedBgTileValue * bytesPerTile);
+			m_activeScreenBuffer->SetPixel(screenX, screenY, cachedValue);
 		}
-		
-		//Get the tile index
-		int tileIndex = (bgTileAddress - 0x8000) / 16;
+		else
+		{
 
-		//Find the tile in the tile data cache
-		int cacheTileAddress = tileIndex * 64;
+			//Which tile map?
+			u16 bgTileMapAddress = 0x9800;
+			if(m_lcdControl & LCDC_BackgroundTileMap)
+				bgTileMapAddress = 0x9c00;
 
-		//Get the pixel we need
-		int tilePixelX = bgPixelX % 8;
-		int tilePixelY = bgPixelY % 8;
-		u8 bgPixelValue = m_tileData[ cacheTileAddress + (tilePixelY * 8) + tilePixelX ];
+			//Convert screen pixel coordinates to background pixel coordinates
+			u8 bgPixelX = (screenX + m_scrollX) % 256;
+			u8 bgPixelY = (screenY + m_scrollY) % 256;
 
-		//Ok...so we have our pixel.  Now we still have to look it up in the palette.
-		int bgPixelPaletteShift = bgPixelValue * 2;	///<2 bits per entry
-		u8 bgPixelPaletteValue = (m_backgroundPalette & (0x03 << bgPixelPaletteShift)) >> bgPixelPaletteShift;
+			//Convert background pixel coordinates to background tile coordinates
+			u8 bgTileX = bgPixelX / 8;
+			u8 bgTileY = bgPixelY / 8;
+			u16 bgTileIndex = (bgTileY * 32) + bgTileX;	///<BG map is 32x32
 
-		//Done
-		m_activeScreenBuffer->SetPixel(screenX, screenY, bgPixelPaletteValue);
+			//Get the tile value
+			u8 bgTileValue = m_vramCache[bgTileMapAddress + bgTileIndex - m_vramOffset];
+
+			//Which tile data?
+			s8 bytesPerTile = 16;
+			u16 bgTileAddress = (u16)0x8000 + (bgTileValue * bytesPerTile);
+			if( !(m_lcdControl & LCDC_TileData) )
+			{
+				s8 signedBgTileValue = (s8)bgTileValue;
+				bgTileAddress = (u16)0x9000 + (signedBgTileValue * bytesPerTile);
+			}
+			
+			//Get the tile index
+			int tileIndex = (bgTileAddress - 0x8000) / 16;
+
+			//Find the tile in the tile data cache
+			int cacheTileAddress = tileIndex * 64;
+
+			//Get the pixel we need
+			int tilePixelX = bgPixelX % 8;
+			int tilePixelY = bgPixelY % 8;
+			u8 bgPixelValue = m_tileData[ cacheTileAddress + (tilePixelY * 8) + tilePixelX ];
+
+			//Ok...so we have our pixel.  Now we still have to look it up in the palette.
+			int bgPixelPaletteShift = bgPixelValue * 2;	///<2 bits per entry
+			u8 bgPixelPaletteValue = (m_backgroundPalette & (0x03 << bgPixelPaletteShift)) >> bgPixelPaletteShift;
+
+			//Done
+			m_activeScreenBuffer->SetPixel(screenX, screenY, bgPixelPaletteValue);
+
+			//Cache the rest of the tile
+			int cacheScreenX = screenX;
+			int cacheScreenY = screenY;
+
+			while(tilePixelY != 7)
+			{
+				while(tilePixelX != 7)
+				{
+					tilePixelX++;
+					cacheScreenX++;
+
+					u8 bgPixelValue = m_tileData[ cacheTileAddress + (tilePixelY * 8) + tilePixelX ];
+
+					//Ok...so we have our pixel.  Now we still have to look it up in the palette.
+					int bgPixelPaletteShift = bgPixelValue * 2;	///<2 bits per entry
+					u8 bgPixelPaletteValue = (m_backgroundPalette & (0x03 << bgPixelPaletteShift)) >> bgPixelPaletteShift;
+
+					//Done
+					m_frameBackgroundData.SetPixel(cacheScreenX, cacheScreenY, bgPixelPaletteValue);
+				}
+
+				tilePixelY++;
+				cacheScreenY++;
+
+				tilePixelX = 0;
+				cacheScreenX -= 7;
+			}
+
+		}
 	}
 
 	//?? Render window
