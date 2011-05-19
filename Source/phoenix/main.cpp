@@ -93,7 +93,7 @@ public:
 
 		for(int y=0;y<144;y++)
 			for(int x=0;x<160;x++)
-				m_bitmap->SetPixel(x, y, *m_palette[ screen(x,y).Value ]);
+				m_bitmap->SetPixel(x, y, *m_palette[ screen.GetPixel(x,y) ]);
 	}
 
 	Bitmap* GetBitmap()

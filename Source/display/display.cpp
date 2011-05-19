@@ -423,7 +423,7 @@ void Display::RenderPixel(int screenX, int screenY)
 		u8 bgPixelPaletteValue = (m_backgroundPalette & (0x03 << bgPixelPaletteShift)) >> bgPixelPaletteShift;
 
 		//Done
-		(*m_activeScreenBuffer)(screenX, screenY).Value = bgPixelPaletteValue;
+		m_activeScreenBuffer->SetPixel(screenX, screenY, bgPixelPaletteValue);
 	}
 
 	//?? Render window
@@ -464,7 +464,7 @@ void Display::RenderPixel(int screenX, int screenY)
 			if(spriteFlags & (1<<7))	///<Lower priority if set, higher priority otherwise
 			{
 				//Lower priority means the sprite is hidden behind any value except 0
-				if( (*m_activeScreenBuffer)(screenX, screenY).Value != 0 )
+				if( m_activeScreenBuffer->GetPixel(screenX, screenY) != 0 )
 					continue;
 			}
 
@@ -501,7 +501,7 @@ void Display::RenderPixel(int screenX, int screenY)
 				pixelPaletteValue = (m_spritePalette1 & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
 
 			//Done
-			(*m_activeScreenBuffer)(screenX, screenY).Value = pixelPaletteValue;
+			m_activeScreenBuffer->SetPixel(screenX, screenY, pixelPaletteValue);
 		}
 	}
 }
