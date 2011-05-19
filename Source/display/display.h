@@ -143,7 +143,7 @@ private:
 
 	void UpdateTileData(u16 address, u8 value);
 
-	u8 m_tileData[8*8 * 0x1800];	///<0x8000 - 0x97ff
+	u8 m_tileData[(8*8) * (0x1800/16)];	///<0x8000 - 0x97ff
 
 
 	// Registers

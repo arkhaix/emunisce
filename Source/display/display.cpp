@@ -407,16 +407,19 @@ void Display::RenderPixel(int screenX, int screenY)
 			bgTileAddress = (u16)0x9000 + (signedBgTileValue * bytesPerTile);
 		}
 		
-		//Adjust the background pixel coordinates to sub-tile coordinates (each tile is 8x8, and we need to know which of those we need)
-		u8 bgTilePixelX = bgPixelX % 8;
-		u8 bgTilePixelY = bgPixelY % 8;
+		//Get the tile index
+		int tileIndex = (bgTileAddress - 0x8000) / 16;
 
-		//Use the pixel location to find the bytes we need
-		int cacheTileSize = 8*8;
-		u8 bgPixelValue = m_tileData[ ((bgTileAddress - 0x8000) * cacheTileSize) + (bgTilePixelY * 8) + bgTilePixelX ];
+		//Find the tile in the tile data cache
+		int cacheTileAddress = tileIndex * 64;
+
+		//Get the pixel we need
+		int tilePixelX = bgPixelX % 8;
+		int tilePixelY = bgPixelY % 8;
+		u8 bgPixelValue = m_tileData[ cacheTileAddress + (tilePixelY * 8) + tilePixelX ];
 
 		//Ok...so we have our pixel.  Now we still have to look it up in the palette.
-		u8 bgPixelPaletteShift = bgPixelValue * 2;	///<2 bits per entry
+		int bgPixelPaletteShift = bgPixelValue * 2;	///<2 bits per entry
 		u8 bgPixelPaletteValue = (m_backgroundPalette & (0x03 << bgPixelPaletteShift)) >> bgPixelPaletteShift;
 
 		//Done
@@ -552,7 +555,7 @@ void Display::UpdateTileData(u16 address, u8 data)
 
 	//In the local tiledata cache, each tile is 8 lines tall with 8 bytes per line, so each tile is 64 bytes
 	int cacheTileAddress = tileIndex * 64;
-	int changedLine = (baseVramAddress % 16) / 2;	///<16 bytes per tile, 2 bytes per line
+	int changedLine = (lineAddress % 16) / 2;	///<16 bytes per tile, 2 bytes per line
 	int cacheLineAddress = cacheTileAddress + (changedLine * 8);	///<Starting address of the line within the cache
 	
 	//Update the cache
