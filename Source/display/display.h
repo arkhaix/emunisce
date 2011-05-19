@@ -34,6 +34,11 @@ public:
 	void Run(int ticks);
 
 
+	//Notifications
+	void WriteVram(u16 address, u8 value);
+	void WriteOam(u16 address, u8 value);
+
+
 	//External
 	ScreenBuffer GetStableScreenBuffer();
 
@@ -123,6 +128,12 @@ private:
 	ScreenBuffer* m_activeScreenBuffer;	///<The screen buffer currently being rendered to by the gameboy
 	ScreenBuffer* m_stableScreenBuffer;	///<The screen buffer ready to be displayed on the pc
 	void* m_screenBufferLock;
+
+	u8 m_vramCache[0x2000];
+	u16 m_vramOffset;
+
+	u8 m_oamCache[0xa0];
+	u16 m_oamOffset;
 
 	u8 m_lcdControl;
 	u8 m_lcdStatus;
