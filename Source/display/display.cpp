@@ -188,8 +188,7 @@ u8 Display::GetScanlineCompare()
 void Display::SetScanlineCompare(u8 value)
 {
 	m_scanlineCompare = value;
-	//todo: coincident flag
-	//todo: interrupt
+	CheckCoincidence(); ///<Not sure if this is supposed to be here
 }
 
 //0xff47 - BGP
@@ -370,8 +369,8 @@ void Display::RenderPixel(int screenX, int screenY)
 			bgTileMapAddress = 0x9c00;
 
 		//Convert screen pixel coordinates to background pixel coordinates
-		u8 bgPixelX = (screenX + m_scrollX) % 160;
-		u8 bgPixelY = (screenY + m_scrollY) % 144;
+		u8 bgPixelX = (screenX + m_scrollX) % 256;
+		u8 bgPixelY = (screenY + m_scrollY) % 256;
 
 		//Convert background pixel coordinates to background tile coordinates
 		u8 bgTileX = bgPixelX / 8;
@@ -416,9 +415,84 @@ void Display::RenderPixel(int screenX, int screenY)
 		(*m_activeScreenBuffer)(screenX, screenY).Value = bgPixelPaletteValue;
 	}
 
-	//Render sprites
-
 	//?? Render window
+
+	//Render sprites
+	if(m_lcdControl & LCDC_Sprites)
+	{
+		//Sprites can be 8x8 or 8x16
+		u8 spriteWidth = 8;
+		u8 spriteHeight = 8;
+		if(m_lcdControl & LCDC_SpriteSize)
+			spriteHeight = 16;
+
+		u8 spriteTileSize = spriteHeight * 2;
+
+		//Iterate over all sprite entries in the table
+		for(int i=0;i<40;i++)
+		{
+			u16 spriteDataAddress = 0xfe00 + (i*4);	///<4 bytes per sprite entry
+
+			u8 spriteY = m_memory->Read8(spriteDataAddress);
+			u8 spriteX = m_memory->Read8(spriteDataAddress+1);
+
+			//Sprite coordinates are offset, so sprite[8,16] = screen[0,0].
+			spriteX -= 8;
+			spriteY -= 16;
+
+			//Is the sprite relevant to this pixel?
+			if(!(spriteX <= screenX && spriteX+spriteWidth > screenX &&
+				spriteY <= screenY && spriteY+spriteHeight > screenY) )
+				continue;
+
+			//It's relevant, so get the rest of the data
+			u8 spriteTileValue = m_memory->Read8(spriteDataAddress+2);
+			u8 spriteFlags = m_memory->Read8(spriteDataAddress+3);
+
+			//Is it visible?  (priority vs background and window)
+			if(spriteFlags & (1<<7))	///<Lower priority if set, higher priority otherwise
+			{
+				//Lower priority means the sprite is hidden behind any value except 0
+				if( (*m_activeScreenBuffer)(screenX, screenY).Value != 0 )
+					continue;
+			}
+
+			//Figure out which line we need
+			u8 targetTileLine = screenY - spriteY;
+			if(spriteFlags & (1<<6))	///<Flip Y if set
+				targetTileLine = (spriteHeight-1) - targetTileLine;
+
+			//Figure out where to get the bytes that correspond to this line of the tile
+			u16 tileDataAddress = 0x8000 + (spriteTileValue * spriteTileSize);
+			u16 tileLineAddress = tileDataAddress + (targetTileLine * 2);
+
+			//Read the two bytes for this line of the tile
+			u8 tileLineLow = m_memory->Read8(tileLineAddress);
+			u8 tileLineHigh = m_memory->Read8(tileLineAddress+1);
+
+			//Determine the bit offset for the X value
+			u8 bitOffset = screenX - spriteX;
+			if(spriteFlags & (1<<5))	///<Flip X if set
+				bitOffset = 7 - bitOffset;
+
+			//At bit7, we get the value for x=0.  We need to reverse it to get a shift value.
+			bitOffset = 7 - bitOffset;
+
+			//Get the value for the pixel
+			u8 pixelValue = (tileLineLow & (1<<bitOffset)) ? 1 : 0;
+			if(tileLineHigh & (1<<bitOffset))
+				pixelValue |= 0x02;
+
+			//Now look it up in the palette
+			u8 pixelPaletteShift = pixelValue * 2;	///<2 bits per palette entry
+			u8 pixelPaletteValue = (m_spritePalette0 & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
+			if(spriteFlags & (1<<4))	///<Use sprite palette 1 if set
+				pixelPaletteValue = (m_spritePalette1 & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
+
+			//Done
+			(*m_activeScreenBuffer)(screenX, screenY).Value = pixelPaletteValue;
+		}
+	}
 }
 
 void Display::RenderScanline()
