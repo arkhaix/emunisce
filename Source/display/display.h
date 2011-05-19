@@ -3,18 +3,18 @@
 
 #include "../common/types.h"
 
-struct DisplayPixel
-{
-	u8 Value;
-};
-
 struct ScreenBuffer
 {
-	DisplayPixel Pixels[160*144];
+	u8 Pixels[160*144];
 
-	DisplayPixel& operator()(int x, int y)
+	u8 GetPixel(int x, int y)
 	{
 		return Pixels[y*160+x];
+	}
+
+	void SetPixel(int x, int y, u8 value)
+	{
+		Pixels[y*160+x] = value;
 	}
 };
 
