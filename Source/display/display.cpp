@@ -118,7 +118,12 @@ void Display::Run(int ticks)
 
 void Display::WriteVram(u16 address, u8 value)
 {
+	//Update cache
 	m_vramCache[address - m_vramOffset] = value;
+
+	//Update tile data
+	if(address >= 0x8000 && address < 0x9800)
+		UpdateTileData(address, value);
 }
 
 void Display::WriteOam(u16 address, u8 value)
@@ -407,18 +412,8 @@ void Display::RenderPixel(int screenX, int screenY)
 		u8 bgTilePixelY = bgPixelY % 8;
 
 		//Use the pixel location to find the bytes we need
-		u8 bgTileByteOffset = bgTilePixelY * 2;	///<2 bytes per line
-		u16 bgTileByteAddress = bgTileAddress + bgTileByteOffset;
-
-		//2 bytes combine to represent a line.  Each byte has 1 bit from each of the 8 pixels in that line.
-		u8 bgTileByteLow = m_vramCache[bgTileByteAddress - m_vramOffset];
-		u8 bgTileByteHigh = m_vramCache[bgTileByteAddress+1 - m_vramOffset];
-
-		//We now have the 2 bytes representing the line.  Now pull out the pixel bit we want from those two bytes.
-		u8 bgTilePixelBitOffset = 7 - bgTilePixelX;	///<At x=0, we want bit 7.
-		u8 bgPixelValue = (bgTileByteLow & (1<<bgTilePixelBitOffset)) ? 0x01 : 0x00;
-		if(bgTileByteHigh & (1<<bgTilePixelBitOffset))
-			bgPixelValue |= 0x02;
+		int cacheTileSize = 8*8;
+		u8 bgPixelValue = m_tileData[ ((bgTileAddress - 0x8000) * cacheTileSize) + (bgTilePixelY * 8) + bgTilePixelX ];
 
 		//Ok...so we have our pixel.  Now we still have to look it up in the palette.
 		u8 bgPixelPaletteShift = bgPixelValue * 2;	///<2 bits per entry
@@ -537,5 +532,34 @@ void Display::CheckCoincidence()
 	{
 		//LYC=LY flag
 		m_lcdStatus &= ~(STAT_Coincidence);
+	}
+}
+
+void Display::UpdateTileData(u16 address, u8 data)
+{
+	int baseVramAddress = address - 0x8000;
+
+	//Get both bytes corresponding to the line
+	int lineAddress = baseVramAddress;
+	if(baseVramAddress & 1)	///<Bytes 0 and 1 of the line will always start on an even boundary.  If baseVramAddress is odd, then we're modifying the high byte and the low byte is baseVramAddress-1.
+		lineAddress--;
+
+	u8 tileDataLow = m_vramCache[lineAddress];
+	u8 tileDataHigh = m_vramCache[lineAddress+1];
+
+	//In vram, each tile is 8 lines tall with 2 bytes per line, so each tile is 16 bytes.
+	int tileIndex = baseVramAddress / 16;
+
+	//In the local tiledata cache, each tile is 8 lines tall with 8 bytes per line, so each tile is 64 bytes
+	int cacheTileAddress = tileIndex * 64;
+	int changedLine = (baseVramAddress % 16) / 2;	///<16 bytes per tile, 2 bytes per line
+	int cacheLineAddress = cacheTileAddress + (changedLine * 8);	///<Starting address of the line within the cache
+	
+	//Update the cache
+	for(int x=0;x<8;x++)
+	{
+		m_tileData[cacheLineAddress + x] = (tileDataLow & (1<<(7-x))) ? 1 : 0;
+		if(tileDataHigh & (1<<(7-x)))
+			m_tileData[cacheLineAddress + x] |= 0x02;
 	}
 }
