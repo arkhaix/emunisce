@@ -140,6 +140,20 @@ void Memory::Write16(u16 address, u16 value)
 	u8 high = (u8)(value >> 8);
 	Write8(address+1, high);
 }
+
+void Memory::SetDmaStartLocation(u8 value)
+{
+	u16 startAddress = value * 0x0100;
+
+	for(int i=0;i<0xa0;i++)
+	{
+		u16 sourceAddress = startAddress + i;
+		u16 targetAddress = 0xfe00 + i;
+
+		u8 value = Read8(sourceAddress);
+		Write8(targetAddress, value);
+	}
+}
 	
 Memory* Memory::CreateFromFile(const char* filename)
 {
@@ -186,6 +200,7 @@ u8 Memory::ReadRegister(u16 address)
 	case 0xff43: if(m_display) { return m_display->GetScrollX(); } break;
 	case 0xff44: if(m_display) { return m_display->GetCurrentScanline(); } break;
 	case 0xff45: if(m_display) { return m_display->GetScanlineCompare(); } break;
+	//case 0xff46: DMA, write-only
 	case 0xff47: if(m_display) { return m_display->GetBackgroundPalette(); } break;
 	case 0xff48: if(m_display) { return m_display->GetSpritePalette0(); } break;
 	case 0xff49: if(m_display) { return m_display->GetSpritePalette1(); } break;
@@ -208,6 +223,7 @@ void Memory::WriteRegister(u16 address, u8 value)
 	case 0xff43: if(m_display) { m_display->SetScrollX(value); } break;
 	case 0xff44: if(m_display) { m_display->SetCurrentScanline(value); } break;
 	case 0xff45: if(m_display) { m_display->SetScanlineCompare(value); } break;
+	case 0xff46: SetDmaStartLocation(value); break;
 	case 0xff47: if(m_display) { m_display->SetBackgroundPalette(value); } break;
 	case 0xff48: if(m_display) { m_display->SetSpritePalette0(value); } break;
 	case 0xff49: if(m_display) { m_display->SetSpritePalette1(value); } break;
