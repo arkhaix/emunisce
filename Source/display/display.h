@@ -129,11 +129,24 @@ private:
 	ScreenBuffer* m_stableScreenBuffer;	///<The screen buffer ready to be displayed on the pc
 	void* m_screenBufferLock;
 
+
+	// Caches
+
 	u8 m_vramCache[0x2000];
 	u16 m_vramOffset;
 
 	u8 m_oamCache[0xa0];
 	u16 m_oamOffset;
+
+
+	// Tile data
+
+	void UpdateTileData(u16 address, u8 value);
+
+	u8 m_tileData[8*8 * 0x1800];	///<0x8000 - 0x97ff
+
+
+	// Registers
 
 	u8 m_lcdControl;
 	u8 m_lcdStatus;
