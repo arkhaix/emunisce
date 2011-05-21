@@ -30,6 +30,90 @@ Memory::Memory()
 	m_internalRamEcho = NULL;
 	m_spriteRam = NULL;
 	m_stackRam = NULL;
+
+	for(int i=0;i<0x10000;i++)
+		m_writeRegisterFunctions[i] = NULL;
+
+	//0x0000 - 0x3fff = cart rom
+	for(int i=0x0000;i<=0x3fff;i++)
+	{
+		m_memoryBlockMap[i] = &m_cartRom;
+		m_memoryBlockMapOffsets[i] = 0x0000;
+	}
+
+	//0x4000 - 0x7fff = switchable cart rom
+	for(int i=0x4000;i<=0x7fff;i++)
+	{
+		m_memoryBlockMap[i] = &m_switchableRom;
+		m_memoryBlockMapOffsets[i] = 0x4000;
+	}
+
+	//0x8000 - 0x9fff = video ram (handled by default)
+	for(int i=0x8000;i<=0x9fff;i++)
+	{
+		m_memoryBlockMap[i] = &m_videoRam;
+		m_memoryBlockMapOffsets[i] = 0x8000;
+	}
+
+	//0xa000 - 0xbfff = switchable cart ram
+	for(int i=0xa000;i<=0xbfff;i++)
+	{
+		m_memoryBlockMap[i] = &m_switchableRam;
+		m_memoryBlockMapOffsets[i] = 0xa000;
+	}
+
+	//0xc000 - 0xdfff = internal ram (handled by default)
+	for(int i=0xc000;i<=0xdfff;i++)
+	{
+		m_memoryBlockMap[i] = &m_internalRam;
+		m_memoryBlockMapOffsets[i] = 0xc000;
+	}
+
+	//0xe000 - 0xfdff = echo of 0xc000 - 0xddff (handled by default)
+	for(int i=0xe000;i<=0xfdff;i++)
+	{
+		m_memoryBlockMap[i] = &m_internalRamEcho;
+		m_memoryBlockMapOffsets[i] = 0xe000;
+	}
+
+	//0xfe00 - 0xfe9f = sprite oam ram (handled by default)
+	for(int i=0xfe00;i<=0xfe9f;i++)
+	{
+		m_memoryBlockMap[i] = &m_spriteRam;
+		m_memoryBlockMapOffsets[i] = 0xfe00;
+	}
+
+	//0xfea0 - 0xfeff = unusable
+	for(int i=0xfea0;i<=0xfeff;i++)
+	{
+		m_memoryBlockMap[i] = NULL;
+		m_memoryBlockMapOffsets[i] = 0xfea0;
+	}
+
+	//0xff00 - 0xff4b = i/o ports (handled by default)
+	for(int i=0xff00;i<=0xff4b;i++)
+	{
+		m_memoryBlockMap[i] = NULL;
+		m_memoryBlockMapOffsets[i] = 0xff00;
+	}
+
+	//0xff4c - 0xff7f = unusable
+	for(int i=0xff4c;i<=0xff7f;i++)
+	{
+		m_memoryBlockMap[i] = NULL;
+		m_memoryBlockMapOffsets[i] = 0xff4c;
+	}
+
+	//0xff80 - 0xfffe = internal ram (handled by default)
+	for(int i=0xff80;i<=0xfffe;i++)
+	{
+		m_memoryBlockMap[i] = &m_stackRam;
+		m_memoryBlockMapOffsets[i] = 0xff80;
+	}
+
+	//0xffff		  = interrupt enable register (handled by default)
+	m_memoryBlockMap[0xffff] = NULL;
+	m_memoryBlockMapOffsets[0xffff] = 0xffff;
 }
 
 Memory::~Memory()
@@ -79,26 +163,27 @@ void Memory::Reset()
 	m_stackRam = m_stackRamData;
 }
 
+void Memory::SetRegisterData(u16 address, u8* pRegister)
+{
+}
+
+void Memory::SetRegisterFunction(u16 address, TSetRegisterValue function)
+{
+}
+
 u8 Memory::Read8(u16 address)
 {
-	u8* block = NULL;
-	u16 offset = 0;
-
-	MapMemoryFromAddress(address, &block, &offset);
-	if(block == NULL)
+	if(m_memoryBlockMap[address] != NULL && *m_memoryBlockMap[address] != NULL)
 	{
-		if(IsRegisterAddress(address))
-		{
-			return ReadRegister(address);
-		}
-		else
-		{
-			return 0;
-		}
+		u8* block = *(m_memoryBlockMap[address]);
+		int offset = m_memoryBlockMapOffsets[address];
+		return block[address - offset];
 	}
 
-	u16 adjustedAddress = address - offset;
-	return block[adjustedAddress];
+	if(IsRegisterAddress(address))
+		return ReadRegister(address);
+
+	return 0;
 }
 
 u16 Memory::Read16(u16 address)
@@ -112,16 +197,14 @@ u16 Memory::Read16(u16 address)
 
 void Memory::Write8(u16 address, u8 value)
 {
-	u8* block = NULL;
-	u16 offset = 0;
-	bool writeable = false;
+	//Read-only addresses
+	if(address < 0x8000)
+		return;
 
-	MapMemoryFromAddress(address, &block, &offset, &writeable);
-	if(block == NULL)
+	//Registers
+	if(IsRegisterAddress(address))
 	{
-		if(IsRegisterAddress(address))
-			WriteRegister(address, value);
-
+		WriteRegister(address, value);
 		return;
 	}
 
@@ -131,11 +214,13 @@ void Memory::Write8(u16 address, u8 value)
 	else if(address >= 0xfe00 && address < 0xfea0 && m_display)
 		m_display->WriteOam(address, value);
 
-	if(writeable == false)
-		return;
-
-	u16 adjustedAddress = address - offset;
-	block[adjustedAddress] = value;
+	//Write it
+	if(m_memoryBlockMap[address] != NULL && *m_memoryBlockMap[address] != NULL)
+	{
+		u8* block = *(m_memoryBlockMap[address]);
+		int offset = m_memoryBlockMapOffsets[address];
+		block[address - offset] = value;
+	}
 }
 
 void Memory::Write16(u16 address, u16 value)
@@ -236,100 +321,6 @@ void Memory::WriteRegister(u16 address, u8 value)
 	case 0xff4a: if(m_display) { m_display->SetWindowY(value); } break;
 	case 0xff4b: if(m_display) { m_display->SetWindowX(value); } break;
 	case 0xffff: if(m_cpu) { m_cpu->SetInterruptsEnabled(value); } break;
-	}
-}
-
-void Memory::MapMemoryFromAddress(u16 address, u8** resultBlock, u16* offset, bool* blockIsWriteable)
-{
-	if(resultBlock == NULL || offset == NULL)
-		return;
-
-	if(blockIsWriteable != NULL)
-		*blockIsWriteable = true;
-
-	if(address <= 0x3fff)
-	{
-		*resultBlock = m_cartRom;
-		*offset = 0;
-		if(blockIsWriteable != NULL)
-			*blockIsWriteable = false;
-	}
-	else if(address <= 0x7fff)
-	{
-		*resultBlock = m_switchableRom;
-		*offset = 0x4000;
-		if(blockIsWriteable != NULL)
-			*blockIsWriteable = false;
-	}
-	else if(address <= 0x9fff)
-	{
-		*resultBlock = m_videoRam;
-		*offset = 0x8000;
-	}
-	else if(address <= 0xbfff)
-	{
-		*resultBlock = m_switchableRam;
-		*offset = 0xa000;
-	}
-	else if(address <= 0xdfff)
-	{
-		*resultBlock = m_internalRam;
-		*offset = 0xc000;
-	}
-	else if(address <= 0xfdff)
-	{
-		*resultBlock = m_internalRamEcho;
-		*offset = 0xe000;
-	}
-	else if(address <= 0xfe9f)
-	{
-		*resultBlock = m_spriteRam;
-		*offset = 0xfe00;
-	}
-	else if(address <= 0xfeff)
-	{
-		//unusable
-		*resultBlock = NULL;
-		*offset = 0xfea0;
-		if(blockIsWriteable != NULL)
-			*blockIsWriteable = false;
-	}
-	else if(address <= 0xff4b)
-	{
-		//todo: i/o ports
-		*resultBlock = NULL;
-		*offset = 0xff00;
-	}
-	else if(address <= 0xff7f)
-	{
-		//unusable
-		*resultBlock = NULL;
-		*offset = 0xff4c;
-		if(blockIsWriteable != NULL)
-			*blockIsWriteable = false;
-	}
-	else if(address <= 0xfffe)
-	{
-		*resultBlock = m_stackRam;
-		*offset = 0xff80;
-	}
-	else if(address <= 0xffff)
-	{
-		//todo: interrupt enable register
-		*resultBlock = NULL;
-		*offset = 0xffff;
-	}
-	else
-	{
-		//Missed a spot
-
-		*resultBlock = NULL;
-		*offset = 0;
-		if(blockIsWriteable != NULL)
-			*blockIsWriteable = false;
-
-		volatile int x = 13;
-		x /= 0;
 	}
 }
 

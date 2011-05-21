@@ -42,6 +42,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir)../Import/gtest/Export/Inc</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -55,7 +56,6 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>$(SolutionDir)../Import/gtest/Export/Inc</AdditionalIncludeDirectories>
     </ClCompile>
@@ -74,6 +74,9 @@
   <ItemGroup>
     <ProjectReference Include="..\cpu\cpu.vcxproj">
       <Project>{15a4af88-4429-4720-aef7-700335cf8cf1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\display\display.vcxproj">
+      <Project>{e913fab3-3258-423d-ae0a-3c23b2ca31b5}</Project>
     </ProjectReference>
     <ProjectReference Include="..\memory\memory.vcxproj">
       <Project>{316e1001-8c02-460f-ad90-ebb6a9fa5744}</Project>
