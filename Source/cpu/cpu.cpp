@@ -170,11 +170,7 @@ void CPU::ExecADD(u16* target, u16 value)
 {
 	int res = *target + value;
 
-	//Z
-	if((res & 0xffff) == 0) 
-		SET_Z;
-	else 
-		RES_Z;
+	//Z unaffected
 
 	//N
 	RES_N;
@@ -827,11 +823,7 @@ void CPU::ExecRLCA()
 	a <<= 1;
 	a |= TST_C;
 
-	//Z
-	if(a == 0)
-		SET_Z;
-	else
-		RES_Z;
+	//Z unaffected
 
 	//N
 	RES_N;
