@@ -14,9 +14,12 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="consoledebugger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cart.h">
+    <ClInclude Include="consoledebugger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

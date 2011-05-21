@@ -11,52 +11,17 @@ using namespace std;
 #include "../display/display.h"
 #include "../memory/memory.h"
 
+#include "consoledebugger.h"
+
 bool g_shutdownRequested = false;
 
 Machine g_machine;
 
 DWORD WINAPI EmulationThread(LPVOID param)
 {
-	g_machine._MachineType = MachineType::GameBoy;
-
-	CPU cpu;
-	g_machine._CPU = &cpu;
-
-	Display display;
-	g_machine._Display = &display;
-
-	Memory* memory = Memory::CreateFromFile("C:/hg/Phoenix/Roms/sqrxz.gb");
-	if(memory == NULL)
-	{
-		printf("Unsupported memory controller\n");
-		return 1;
-	}
-	g_machine._Memory = memory;
-
-	memory->SetMachine(&g_machine);
-	cpu.SetMachine(&g_machine);
-	display.SetMachine(&g_machine);
-
-	memory->Initialize();
-	cpu.Initialize();
-	display.Initialize();
-
-	int ticksPerFrame = 4194304;
-	int frameTime = ticksPerFrame;
-
-	while(g_shutdownRequested == false)
-	{
-		int ticks = cpu.Step();
-		display.Run(ticks);
-
-		frameTime -= ticks;
-		if(frameTime <= 0)
-		{
-			g_machine._FrameCount++;
-			frameTime += ticksPerFrame;
-		}
-	}
-
+	ConsoleDebugger debugger;
+	debugger.Run(&g_machine);
+	ExitProcess(0);
 	return 0;
 }
 
