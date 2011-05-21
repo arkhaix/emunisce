@@ -25,7 +25,7 @@ DWORD WINAPI EmulationThread(LPVOID param)
 	Display display;
 	g_machine._Display = &display;
 
-	Memory* memory = Memory::CreateFromFile("C:/hg/Phoenix/Roms/sprite.gb");
+	Memory* memory = Memory::CreateFromFile("C:/hg/Phoenix/Roms/sqrxz.gb");
 	if(memory == NULL)
 	{
 		printf("Unsupported memory controller\n");
