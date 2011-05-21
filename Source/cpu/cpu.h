@@ -74,15 +74,6 @@ public:
 	int Step();
 
 
-	//0xff0f - Interrupt Flag
-	u8 GetInterruptFlags();
-	void SetInterruptFlags(u8 flags);
-
-	//0xffff - Interrupt Enable
-	u8 GetInterruptsEnabled();
-	void SetInterruptsEnabled(u8 flags);
-
-
 private:
 
 	Machine* m_machine;
@@ -91,11 +82,12 @@ private:
 	bool m_masterInterruptsEnabled;	///<Interrupt master enable flag (IME)
 	bool m_delayNextInterrupt;	///<Interrupts are not enabled until one instruction after EI completes.
 
-	u8 m_interruptsEnabled;	///<Which interrupts are currently enabled.  Slaves to the IME flag.
-	u8 m_interruptFlags;		///<Which interrupts are currently set.
-
 	int m_instructionTime;
 	bool m_halted;
+
+	//Registers
+	u8 m_interruptsEnabled;		///<0xffff - Interrupt Enable.  Which interrupts are currently enabled.  Slaves to the IME flag.
+	u8 m_interruptFlags;		///<0xff0f - Interrupt Flag.  Which interrupts are currently set.
 
 	u8 ReadNext8();
 	u16 ReadNext16();

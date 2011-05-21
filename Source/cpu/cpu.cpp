@@ -27,6 +27,12 @@ void CPU::SetMachine(Machine* machine)
 	{
 		m_memory = machine->_Memory;
 	}
+
+	if(m_memory)
+	{
+		m_memory->SetRegisterLocation(0x0f, &m_interruptFlags, true);
+		m_memory->SetRegisterLocation(0xff, &m_interruptsEnabled, true);
+	}
 }
 
 void CPU::Initialize()
@@ -54,29 +60,6 @@ void CPU::Reset()
 	sp = 0xfffe;
 
 	pc = 0x0100;
-}
-
-
-//0xff0f - Interrupt Flag
-u8 CPU::GetInterruptFlags()
-{
-	return m_interruptFlags;
-}
-
-void CPU::SetInterruptFlags(u8 flags)
-{
-	m_interruptFlags = flags;
-}
-
-//0xffff - Interrupt Enable
-u8 CPU::GetInterruptsEnabled()
-{
-	return m_interruptsEnabled;
-}
-
-void CPU::SetInterruptsEnabled(u8 flags)
-{
-	m_interruptsEnabled = flags;
 }
 
 

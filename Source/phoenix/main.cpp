@@ -33,9 +33,9 @@ DWORD WINAPI EmulationThread(LPVOID param)
 	}
 	g_machine._Memory = memory;
 
+	memory->SetMachine(&g_machine);
 	cpu.SetMachine(&g_machine);
 	display.SetMachine(&g_machine);
-	memory->SetMachine(&g_machine);
 
 	memory->Initialize();
 	cpu.Initialize();
