@@ -13,13 +13,18 @@ public:
 	virtual void Initialize();	///<Be sure to call the super if you override this
 	virtual void Reset();	///<Be sure to call the super if you override this
 
-	virtual u8 Read8(u16 address);
-	virtual u16 Read16(u16 address);
+	void SetRegisterData(u16 address, u8* pRegister);	///<address is not offset (so use 0xff00-0xffff).
+
+	typedef void (*TSetRegisterValue)(u16 address, u8 value);
+	void SetRegisterFunction(u16 address, TSetRegisterValue function);	///<address is not offset (so use 0xff00-0xffff).
+
+	u8 Read8(u16 address);
+	u16 Read16(u16 address);
 
 	virtual void Write8(u16 address, u8 value);
-	virtual void Write16(u16 address, u16 value);
+	void Write16(u16 address, u16 value);
 
-	virtual void SetDmaStartLocation(u8 value);
+	void SetDmaStartLocation(u8 value);
 
 	static Memory* CreateFromFile(const char* filename);
 
@@ -32,7 +37,6 @@ protected:
 	u8 ReadRegister(u16 address);
 	void WriteRegister(u16 address, u8 value);
 
-	void MapMemoryFromAddress(u16 address, u8** resultBlock, u16* offset, bool* blockIsWriteable = NULL);
 	bool IsRegisterAddress(u16 address);
 
 
@@ -47,7 +51,7 @@ protected:
 	u8* m_cartRom;			//0x0000 - 0x3fff = cart rom
 	u8* m_switchableRom;	//0x4000 - 0x7fff = switchable cart rom
 	u8* m_videoRam;			//0x8000 - 0x9fff = video ram (handled by default)
-	u8* m_switchableRam;	//0xa000 - 0xbfff = cart ram
+	u8* m_switchableRam;	//0xa000 - 0xbfff = switchable cart ram
 	u8* m_internalRam;		//0xc000 - 0xdfff = internal ram (handled by default)
 	u8* m_internalRamEcho;	//0xe000 - 0xfdff = echo of 0xc000 - 0xddff (handled by default)
 	u8* m_spriteRam;		//0xfe00 - 0xfe9f = sprite oam ram (handled by default)
@@ -64,6 +68,13 @@ protected:
 	u8 m_internalRamData[0x2000];
 	u8 m_spriteRamData[0x100];
 	u8 m_stackRamData[0x80];
+
+
+	//Memory map arrays (for fast lookups)
+
+	u8** m_memoryBlockMap[0x10000];
+	int m_memoryBlockMapOffsets[0x10000];
+	TSetRegisterValue m_writeRegisterFunctions[0x10000];
 };
 
 #endif

@@ -134,10 +134,8 @@ VOID OnPaint(HWND hwnd)
 	Graphics graphics(hdc);
 
 	RECT windowRect;
-	//GetWindowRect(hwnd, &windowRect);
 	GetClientRect(hwnd, &windowRect);
 	graphics.DrawImage(bitmap, 0, 0, windowRect.right - windowRect.left, windowRect.bottom - windowRect.top);
-	//graphics.DrawImage(bitmap, 0, 0, 320, 288);
 
 	WCHAR strFrameCount[20];
 	wsprintfW(strFrameCount, L"%d", lastFrameRendered);
@@ -145,8 +143,6 @@ VOID OnPaint(HWND hwnd)
 	Gdiplus::FontFamily someFontFamily(L"Consolas");
 	Gdiplus::Font someFont(&someFontFamily, 16);
 	Gdiplus::PointF someOrigin(0, 0);
-	//Gdiplus::SolidBrush someBrush(Color(255, 0, 0));
-	//graphics.DrawString(strFrameCount, -1, &someFont, someOrigin, &someBrush);
 
 	graphics.SetSmoothingMode(SmoothingModeAntiAlias);
 	graphics.SetInterpolationMode(InterpolationModeHighQualityBicubic);
@@ -246,6 +242,39 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, PSTR, INT iCmdShow)
 	GdiplusShutdown(gdiplusToken);
 	return msg.wParam;
 }  // WinMain
+
+int TestMemory(void)
+{
+	CPU cpu;
+	Display display;
+	Memory* memory = Memory::CreateFromFile("C:/hg/Phoenix/Roms/test.gb");
+
+	Machine machine;
+	machine._CPU = &cpu;
+	machine._Display = &display;
+	machine._Memory = memory;
+
+	cpu.SetMachine(&machine);
+	display.SetMachine(&machine);
+	memory->SetMachine(&machine);
+
+	volatile u8 data;
+	printf("Going...\n");
+
+	int startTime = GetTickCount();
+	for(int i=0;i<10000;i++)
+	{
+		for(u16 address=0;address<0xffff;address++)
+		{
+			data = memory->Read8(address);
+		}
+	}
+	int endTime = GetTickCount();
+
+	printf("Time: %d\n", endTime - startTime);
+	system("pause");
+	return 0;
+}
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, 
 	WPARAM wParam, LPARAM lParam)
