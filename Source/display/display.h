@@ -47,49 +47,9 @@ public:
 
 	//Gameboy registers
 
-	//0xff40 - LCDC
-	u8 GetLcdControl();
-	void SetLcdControl(u8 value);
-
-	//0xff41 - STAT
-	u8 GetLcdStatus();
-	void SetLcdStatus(u8 value);
-
-	//0xff42 - SCY
-	u8 GetScrollY();
-	void SetScrollY(u8 value);
-
-	//0xff43 - SCX
-	u8 GetScrollX();
-	void SetScrollX(u8 value);
-
-	//0xff44 - LY
-	u8 GetCurrentScanline();
 	void SetCurrentScanline(u8 value);
-
-	//0xff45 - LYC
-	u8 GetScanlineCompare();
 	void SetScanlineCompare(u8 value);
 
-	//0xff47 - BGP
-	u8 GetBackgroundPalette();
-	void SetBackgroundPalette(u8 value);
-
-	//0xff48 - OBP0
-	u8 GetSpritePalette0();
-	void SetSpritePalette0(u8 value);
-
-	//0xff49 - OBP1
-	u8 GetSpritePalette1();
-	void SetSpritePalette1(u8 value);
-
-	//0xff4a - WY
-	u8 GetWindowY();
-	void SetWindowY(u8 value);
-
-	//0xff4b - WX
-	u8 GetWindowX();
-	void SetWindowX(u8 value);
 
 private:
 

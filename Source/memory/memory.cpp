@@ -22,98 +22,11 @@ Memory::Memory()
 	m_cpu = NULL;
 	m_display = NULL;
 
-	m_cartRom = NULL;
-	m_switchableRom = NULL;
-	m_videoRam = NULL;
-	m_switchableRam = NULL;
-	m_internalRam = NULL;
-	m_internalRamEcho = NULL;
-	m_spriteRam = NULL;
-	m_stackRam = NULL;
-
-	for(int i=0;i<0x10000;i++)
-		m_writeRegisterFunctions[i] = NULL;
-
-	//0x0000 - 0x3fff = cart rom
-	for(int i=0x0000;i<=0x3fff;i++)
+	for(int i=0;i<0x100;i++)
 	{
-		m_memoryBlockMap[i] = &m_cartRom;
-		m_memoryBlockMapOffsets[i] = 0x0000;
+		m_registerLocation[i] = NULL;
+		m_callWriteRegister[i] = false;
 	}
-
-	//0x4000 - 0x7fff = switchable cart rom
-	for(int i=0x4000;i<=0x7fff;i++)
-	{
-		m_memoryBlockMap[i] = &m_switchableRom;
-		m_memoryBlockMapOffsets[i] = 0x4000;
-	}
-
-	//0x8000 - 0x9fff = video ram (handled by default)
-	for(int i=0x8000;i<=0x9fff;i++)
-	{
-		m_memoryBlockMap[i] = &m_videoRam;
-		m_memoryBlockMapOffsets[i] = 0x8000;
-	}
-
-	//0xa000 - 0xbfff = switchable cart ram
-	for(int i=0xa000;i<=0xbfff;i++)
-	{
-		m_memoryBlockMap[i] = &m_switchableRam;
-		m_memoryBlockMapOffsets[i] = 0xa000;
-	}
-
-	//0xc000 - 0xdfff = internal ram (handled by default)
-	for(int i=0xc000;i<=0xdfff;i++)
-	{
-		m_memoryBlockMap[i] = &m_internalRam;
-		m_memoryBlockMapOffsets[i] = 0xc000;
-	}
-
-	//0xe000 - 0xfdff = echo of 0xc000 - 0xddff (handled by default)
-	for(int i=0xe000;i<=0xfdff;i++)
-	{
-		m_memoryBlockMap[i] = &m_internalRamEcho;
-		m_memoryBlockMapOffsets[i] = 0xe000;
-	}
-
-	//0xfe00 - 0xfe9f = sprite oam ram (handled by default)
-	for(int i=0xfe00;i<=0xfe9f;i++)
-	{
-		m_memoryBlockMap[i] = &m_spriteRam;
-		m_memoryBlockMapOffsets[i] = 0xfe00;
-	}
-
-	//0xfea0 - 0xfeff = unusable
-	for(int i=0xfea0;i<=0xfeff;i++)
-	{
-		m_memoryBlockMap[i] = NULL;
-		m_memoryBlockMapOffsets[i] = 0xfea0;
-	}
-
-	//0xff00 - 0xff4b = i/o ports (handled by default)
-	for(int i=0xff00;i<=0xff4b;i++)
-	{
-		m_memoryBlockMap[i] = NULL;
-		m_memoryBlockMapOffsets[i] = 0xff00;
-	}
-
-	//0xff4c - 0xff7f = unusable
-	for(int i=0xff4c;i<=0xff7f;i++)
-	{
-		m_memoryBlockMap[i] = NULL;
-		m_memoryBlockMapOffsets[i] = 0xff4c;
-	}
-
-	//0xff80 - 0xfffe = internal ram (handled by default)
-	for(int i=0xff80;i<=0xfffe;i++)
-	{
-		m_memoryBlockMap[i] = &m_stackRam;
-		m_memoryBlockMapOffsets[i] = 0xff80;
-	}
-
-	//0xffff		  = interrupt enable register (handled by default)
-	m_memoryBlockMap[0xffff] = NULL;
-	m_memoryBlockMapOffsets[0xffff] = 0xffff;
 }
 
 Memory::~Memory()
@@ -122,68 +35,66 @@ Memory::~Memory()
 
 void Memory::SetMachine(Machine* machine)
 {
+	//Reset machine-dependent values
+	for(int i=0;i<0x100;i++)
+	{
+		m_registerLocation[i] = NULL;
+		m_callWriteRegister[i] = false;
+	}
+
+	//Update component pointers
 	if(machine)
 	{
 		m_cpu = machine->_CPU;
 		m_display = machine->_Display;
 	}
+
+	//Update register info
+
+	m_callWriteRegister[0x46] = true;
+
+	if(m_display)
+	{
+		m_callWriteRegister[0x40] = true;
+		m_callWriteRegister[0x41] = true;
+		m_callWriteRegister[0x42] = true;
+		m_callWriteRegister[0x43] = true;
+		m_callWriteRegister[0x44] = true;
+		m_callWriteRegister[0x45] = true;
+		m_callWriteRegister[0x47] = true;
+		m_callWriteRegister[0x48] = true;
+		m_callWriteRegister[0x49] = true;
+		m_callWriteRegister[0x4a] = true;
+		m_callWriteRegister[0x4b] = true;
+	}
 }
 
 void Memory::Initialize()
 {
-	//Randomize the RAM data
-	for(int i=0;i<0x2000;i++)
-	{
-		int randomNumber = rand();
-		u8 r[4];
-		r[0] = (u8)(randomNumber);
-		r[1] = (u8)(randomNumber >> 8);
-		r[2] = (u8)(randomNumber >> 16);
-		r[3] = (u8)(randomNumber >> 24);
-
-		m_videoRamData[i] = r[0];
-		m_internalRamData[i] = r[1];
-
-		if(i < 0x100)
-			m_spriteRamData[i] = r[2];
-
-		if(i < 0x80)
-			m_stackRamData[i] = r[3];
-	}
-
 	Reset();
 }
 
 void Memory::Reset()
 {
-	m_videoRam = m_videoRamData;
-	m_internalRam = m_internalRamData;
-	m_internalRamEcho = m_internalRamData;
-	m_spriteRam = m_spriteRamData;
-	m_stackRam = m_stackRamData;
 }
 
-void Memory::SetRegisterData(u16 address, u8* pRegister)
+void Memory::SetRegisterLocation(u8 registerOffset, u8* pRegister, bool writeable)
 {
-}
-
-void Memory::SetRegisterFunction(u16 address, TSetRegisterValue function)
-{
+	m_registerLocation[registerOffset] = pRegister;
+	m_registerWriteable[registerOffset] = writeable;
 }
 
 u8 Memory::Read8(u16 address)
 {
-	if(m_memoryBlockMap[address] != NULL && *m_memoryBlockMap[address] != NULL)
+	if(address >= 0xff00)
 	{
-		u8* block = *(m_memoryBlockMap[address]);
-		int offset = m_memoryBlockMapOffsets[address];
-		return block[address - offset];
+		u8 offset = (u8)(address & 0x00ff);
+		u8* pRegister = m_registerLocation[offset];
+		if(pRegister != NULL)
+			return *pRegister;
 	}
 
-	if(IsRegisterAddress(address))
-		return ReadRegister(address);
-
-	return 0;
+	return m_memoryData[address];
 }
 
 u16 Memory::Read16(u16 address)
@@ -202,10 +113,18 @@ void Memory::Write8(u16 address, u8 value)
 		return;
 
 	//Registers
-	if(IsRegisterAddress(address))
+	if(address >= 0xff00)
 	{
-		WriteRegister(address, value);
-		return;
+		u8 offset = (u8)(address & 0x00ff);
+
+		if(m_callWriteRegister[offset])
+			WriteRegister(address, value);
+
+		if(m_registerWriteable[offset] && m_registerLocation[offset] != NULL)
+		{
+			*(m_registerLocation[offset]) = value;
+			return;
+		}
 	}
 
 	//Send notifications when applicable
@@ -215,12 +134,7 @@ void Memory::Write8(u16 address, u8 value)
 		m_display->WriteOam(address, value);
 
 	//Write it
-	if(m_memoryBlockMap[address] != NULL && *m_memoryBlockMap[address] != NULL)
-	{
-		u8* block = *(m_memoryBlockMap[address]);
-		int offset = m_memoryBlockMapOffsets[address];
-		block[address - offset] = value;
-	}
+	m_memoryData[address] = value;
 }
 
 void Memory::Write16(u16 address, u16 value)
@@ -280,57 +194,13 @@ Memory* Memory::CreateFromFile(const char* filename)
 	return memoryController;
 }
 
-u8 Memory::ReadRegister(u16 address)
-{
-	switch(address)
-	{
-	case 0xff0f: if(m_cpu) { return m_cpu->GetInterruptFlags(); } break;
-	case 0xff40: if(m_display) { return m_display->GetLcdControl(); } break;
-	case 0xff41: if(m_display) { return m_display->GetLcdStatus(); } break;
-	case 0xff42: if(m_display) { return m_display->GetScrollY(); } break;
-	case 0xff43: if(m_display) { return m_display->GetScrollX(); } break;
-	case 0xff44: if(m_display) { return m_display->GetCurrentScanline(); } break;
-	case 0xff45: if(m_display) { return m_display->GetScanlineCompare(); } break;
-	//case 0xff46: DMA, write-only
-	case 0xff47: if(m_display) { return m_display->GetBackgroundPalette(); } break;
-	case 0xff48: if(m_display) { return m_display->GetSpritePalette0(); } break;
-	case 0xff49: if(m_display) { return m_display->GetSpritePalette1(); } break;
-	case 0xff4a: if(m_display) { return m_display->GetWindowY(); } break;
-	case 0xff4b: if(m_display) { return m_display->GetWindowX(); } break;
-	case 0xffff: if(m_cpu) { return m_cpu->GetInterruptsEnabled(); } break;
-	}
-
-	return 0;
-}
-
 void Memory::WriteRegister(u16 address, u8 value)
 {
 	switch(address)
 	{
-	case 0xff0f: if(m_cpu) { m_cpu->SetInterruptFlags(value); } break;
-	case 0xff40: if(m_display) { m_display->SetLcdControl(value); } break;
-	case 0xff41: if(m_display) { m_display->SetLcdStatus(value); } break;
-	case 0xff42: if(m_display) { m_display->SetScrollY(value); } break;
-	case 0xff43: if(m_display) { m_display->SetScrollX(value); } break;
 	case 0xff44: if(m_display) { m_display->SetCurrentScanline(value); } break;
 	case 0xff45: if(m_display) { m_display->SetScanlineCompare(value); } break;
 	case 0xff46: SetDmaStartLocation(value); break;
-	case 0xff47: if(m_display) { m_display->SetBackgroundPalette(value); } break;
-	case 0xff48: if(m_display) { m_display->SetSpritePalette0(value); } break;
-	case 0xff49: if(m_display) { m_display->SetSpritePalette1(value); } break;
-	case 0xff4a: if(m_display) { m_display->SetWindowY(value); } break;
-	case 0xff4b: if(m_display) { m_display->SetWindowX(value); } break;
-	case 0xffff: if(m_cpu) { m_cpu->SetInterruptsEnabled(value); } break;
 	}
 }
 
-bool Memory::IsRegisterAddress(u16 address)
-{
-	if(address >= 0xff00 && address <= 0xff4b)
-		return true;
-
-	if(address == 0xffff)
-		return true;
-
-	return false;
-}
