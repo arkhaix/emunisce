@@ -501,9 +501,17 @@ int CPU::Step()
 	break;
 
 	case 0x38:
-		//3B		DEC SP			6	1	1
-		ExecDEC(&sp);
-		m_instructionTime += 6;
+		//38 e		JR C,(PC+e)		12/7	3/2	1/1	(met/not met)
+		n = ReadNext8();
+		if(TST_C)
+		{
+			ExecJR((s8)n);
+			m_instructionTime += 12;
+		}
+		else
+		{
+			m_instructionTime += 7;
+		}
 	break;
 
 	case 0x39:
