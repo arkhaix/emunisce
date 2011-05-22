@@ -5,6 +5,7 @@ using namespace Gdiplus;
 #include <conio.h>
 
 #include <iostream>
+#include <map>
 using namespace std;
 
 #include "../cpu/cpu.h"
@@ -26,6 +27,71 @@ DWORD WINAPI EmulationThread(LPVOID param)
 
 	return 0;
 }
+
+class KeyboardInput
+{
+public:
+
+	void Initialize(Machine* machine)
+	{
+		m_machine = machine;
+
+		m_keyMap[VK_UP] = Buttons::Up;
+		m_keyMap[VK_DOWN] = Buttons::Down;
+		m_keyMap[VK_LEFT] = Buttons::Left;
+		m_keyMap[VK_RIGHT] = Buttons::Right;
+
+		m_keyMap['Q'] = Buttons::B;
+		m_keyMap['A'] = Buttons::B;
+		m_keyMap['Z'] = Buttons::B;
+
+		m_keyMap['W'] = Buttons::A;
+		m_keyMap['S'] = Buttons::A;
+		m_keyMap['X'] = Buttons::A;
+
+		m_keyMap['V'] = Buttons::Select;
+		m_keyMap['B'] = Buttons::Start;
+
+		m_keyMap[VK_LSHIFT] = Buttons::Select;
+		m_keyMap[VK_RSHIFT] = Buttons::Select;
+		m_keyMap[VK_RETURN] = Buttons::Start;
+
+		m_keyMap[VK_OEM_4] = Buttons::Select;
+		m_keyMap[VK_OEM_6] = Buttons::Start;
+	}
+
+	void KeyDown(int key)
+	{
+		if(m_machine == NULL || m_machine->_Input == NULL)
+			return;
+
+		auto keyIter = m_keyMap.find(key);
+		if(keyIter == m_keyMap.end())
+			return;
+
+		m_machine->_Input->ButtonDown(keyIter->second);
+	}
+
+	void KeyUp(int key)
+	{
+		if(m_machine == NULL || m_machine->_Input == NULL)
+			return;
+
+		auto keyIter = m_keyMap.find(key);
+		if(keyIter == m_keyMap.end())
+			return;
+
+		m_machine->_Input->ButtonUp(keyIter->second);
+	}
+
+private:
+
+	Machine* m_machine;
+
+	map<int, Buttons::Type> m_keyMap;
+};
+
+KeyboardInput* g_keyboardInput = NULL;
 
 class GdiPlusRenderer
 {
@@ -192,6 +258,9 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, PSTR, INT iCmdShow)
 	g_renderer = new GdiPlusRenderer();
 	g_renderer->Initialize(&g_machine);
 
+	g_keyboardInput = new KeyboardInput();
+	g_keyboardInput->Initialize(&g_machine);
+
 
 	HANDLE emulationThreadHandle = CreateThread(NULL, 0, EmulationThread, NULL, 0, NULL);
 	
@@ -275,6 +344,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message,
 		OnPaint(hWnd);
 		return 0;
 	case WM_ERASEBKGND:
+		return 0;
+	case WM_KEYDOWN:
+		if(g_keyboardInput)
+			g_keyboardInput->KeyDown(wParam);
+		return 0;
+	case WM_KEYUP:
+		if(g_keyboardInput)
+			g_keyboardInput->KeyUp(wParam);
 		return 0;
 	case WM_CLOSE:
 	case WM_DESTROY:
