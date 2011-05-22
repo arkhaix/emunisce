@@ -21,7 +21,9 @@ DWORD WINAPI EmulationThread(LPVOID param)
 {
 	ConsoleDebugger debugger;
 	debugger.Run(&g_machine);
-	ExitProcess(0);
+
+	g_shutdownRequested = true;
+
 	return 0;
 }
 
@@ -39,6 +41,8 @@ public:
 		m_palette[0] = new Color(255, 255, 255);
 
 		m_bitmap = new Bitmap(160, 144, PixelFormat24bppRGB);
+
+		m_lastFrameRendered = -1;
 	}
 
 	void Shutdown()
@@ -54,7 +58,12 @@ public:
 		if(m_machine == NULL || m_machine->_Display == NULL)
 			return;
 
+		if(m_machine->_FrameCount == m_lastFrameRendered)
+			return;
+
 		ScreenBuffer screen = g_machine._Display->GetStableScreenBuffer();
+
+		m_lastFrameRendered = g_machine._FrameCount;
 
 		for(int y=0;y<144;y++)
 			for(int x=0;x<160;x++)
@@ -66,10 +75,17 @@ public:
 		return m_bitmap;
 	}
 
+	int GetLastFrameRendered()
+	{
+		return m_lastFrameRendered;
+	}
+
 private:
 
 	Bitmap* m_bitmap;
 	Color* m_palette[4];
+
+	int m_lastFrameRendered;
 
 	Machine* m_machine;
 };
@@ -78,20 +94,23 @@ GdiPlusRenderer* g_renderer = NULL;
 
 VOID OnPaint(HWND hwnd)
 {
-	static int lastFrameRendered = -1;
+	//Check conditions
 
 	if(g_renderer == NULL)
 		return;
 
-	if(lastFrameRendered == g_machine._FrameCount)
+	if(g_renderer->GetLastFrameRendered() == g_machine._FrameCount)
 		return;
+
+
+	//Render the frame
 
 	g_renderer->Render();
 
-	lastFrameRendered = g_machine._FrameCount;
-
 	Bitmap* bitmap = g_renderer->GetBitmap();
 
+
+	//Paint the rendered frame to the window
 
 	PAINTSTRUCT paintStruct;
 	HDC hdc = BeginPaint(hwnd, &paintStruct);
@@ -102,8 +121,11 @@ VOID OnPaint(HWND hwnd)
 	GetClientRect(hwnd, &windowRect);
 	graphics.DrawImage(bitmap, 0, 0, windowRect.right - windowRect.left, windowRect.bottom - windowRect.top);
 
+
+	//Draw the frame counter
+
 	WCHAR strFrameCount[20];
-	wsprintfW(strFrameCount, L"%d", lastFrameRendered);
+	wsprintfW(strFrameCount, L"%d", g_renderer->GetLastFrameRendered());
 
 	Gdiplus::FontFamily someFontFamily(L"Consolas");
 	Gdiplus::Font someFont(&someFontFamily, 16);
@@ -190,10 +212,13 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, PSTR, INT iCmdShow)
 			}
 		}
 
-		RECT clientRect;
-		GetClientRect(hWnd, &clientRect);
-		InvalidateRect(hWnd, &clientRect, true);
-		UpdateWindow(hWnd);
+		if(g_renderer && g_renderer->GetLastFrameRendered() != g_machine._FrameCount)
+		{
+			RECT clientRect;
+			GetClientRect(hWnd, &clientRect);
+			InvalidateRect(hWnd, &clientRect, true);
+			UpdateWindow(hWnd);
+		}
 
 		Sleep(10);
 	}
