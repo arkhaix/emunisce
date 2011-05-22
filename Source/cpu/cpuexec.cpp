@@ -24,6 +24,7 @@ int CPU::Step()
 		{
 			executeInterrupt = true;
 			m_masterInterruptsEnabled = false;
+			m_halted = false;
 
 			interruptFlags &= ~(IF_VBLANK);
 			m_memory->Write8(REG_IF, interruptFlags);
@@ -34,6 +35,7 @@ int CPU::Step()
 		{
 			executeInterrupt = true;
 			m_masterInterruptsEnabled = false;
+			m_halted = false;
 
 			interruptFlags &= ~(IF_LCDC);
 			m_memory->Write8(REG_IF, interruptFlags);
@@ -44,6 +46,7 @@ int CPU::Step()
 		{
 			executeInterrupt = true;
 			m_masterInterruptsEnabled = false;
+			m_halted = false;
 
 			interruptFlags &= ~(IF_TIMER);
 			m_memory->Write8(REG_IF, interruptFlags);
@@ -54,6 +57,7 @@ int CPU::Step()
 		{
 			executeInterrupt = true;
 			m_masterInterruptsEnabled = false;
+			m_halted = false;
 
 			interruptFlags &= ~(IF_SERIAL);
 			m_memory->Write8(REG_IF, interruptFlags);
@@ -64,6 +68,7 @@ int CPU::Step()
 		{
 			executeInterrupt = true;
 			m_masterInterruptsEnabled = false;
+			m_halted = false;
 
 			interruptFlags &= ~(IF_INPUT);
 			m_memory->Write8(REG_IF, interruptFlags);
