@@ -190,6 +190,37 @@ void CPU::ExecADD(u16* target, u16 value)
 	*target = (u16)res;
 }
 
+void CPU::ExecADD(u16* target, s8 value)
+{
+	int res = *target + value;
+
+	//Z
+	//??? don't know if this should be like ADD8, ADD16, or something else (guessing ADD8 with 0xffff)
+	if((res & 0xffff) == 0) 
+		SET_Z;
+	else 
+		RES_Z;
+
+	//N
+	RES_N;
+
+	//H
+	//??? don't know if this should be like ADD8, ADD16, or something else (guessing ADD8)
+	if( (*target ^ value ^ res) & 0x10 )
+		SET_H;
+	else
+		RES_H;
+
+	//C
+	//??? (don't know if this should be like ADD8, ADD16, or something else (guessing ADD16-ish)
+	if(res & 0x10000 || res < 0)
+		SET_C;
+	else 
+		RES_C;
+
+	*target = (u16)res;
+}
+
 void CPU::ExecAND(u8 value)
 {
 	a = a & value;

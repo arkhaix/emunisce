@@ -99,6 +99,7 @@ private:
 
 	void ExecADD(u8* target, u8 value);
 	void ExecADD(u16* target, u16 value);
+	void ExecADD(u16* target, s8 value);
 
 	void ExecAND(u8 value);
 
