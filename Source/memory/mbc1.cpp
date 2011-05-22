@@ -83,6 +83,8 @@ bool MBC1::LoadFile(const char* filename)
 			romBank++;
 
 		ifile.read((char*)&m_romBanks[romBank][0], 0x4000);
+
+		romBank++;
 	}
 
 	ifile.close();
