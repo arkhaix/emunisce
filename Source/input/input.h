@@ -74,6 +74,9 @@ public:
 private:
 
 	void UpdateRegister();
+	void Interrupt();
+
+	Machine* m_machine;
 
 	RegisterMode::Type m_currentMode;
 

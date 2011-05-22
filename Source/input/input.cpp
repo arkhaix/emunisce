@@ -11,6 +11,7 @@ void Input::SetMachine(Machine* machine)
 {
 	if(machine && machine->_Memory)
 	{
+		m_machine = machine;
 		machine->_Memory->SetRegisterLocation(0x00, &m_joypadRegister, false);
 	}
 }
@@ -31,15 +32,19 @@ void Input::Reset()
 //External
 void Input::ButtonDown(Buttons::Type button)
 {
-	m_buttonStates |= (1<<button);
+	u8 oldButtonStates = m_buttonStates;
+	m_buttonStates &= ~(1<<button);
 
 	if(m_currentMode == RegisterMode::P14 || m_currentMode == RegisterMode::P15)
 		UpdateRegister();
+
+	if(m_buttonStates != oldButtonStates)
+		Interrupt();
 }
 
 void Input::ButtonUp(Buttons::Type button)
 {
-	m_buttonStates &= ~(1<<button);
+	m_buttonStates |= 1<<button;
 
 	if(m_currentMode == RegisterMode::P14 || m_currentMode == RegisterMode::P15)
 		UpdateRegister();
@@ -71,5 +76,15 @@ void Input::UpdateRegister()
 	else //(m_currentMode == RegisterMode::MachineType)
 	{
 		m_joypadRegister = 0xff;
+	}
+}
+
+void Input::Interrupt()
+{
+	if(m_machine && m_machine->_Memory)
+	{
+		u8 interrupts = m_machine->_Memory->Read8(REG_IF);
+		interrupts |= IF_INPUT;
+		m_machine->_Memory->Write8(REG_IF, interrupts);
 	}
 }
