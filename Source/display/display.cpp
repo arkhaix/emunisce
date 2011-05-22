@@ -404,7 +404,7 @@ void Display::RenderPixel(int screenX, int screenY)
 		if(m_lcdControl & LCDC_SpriteSize)
 			spriteHeight = 16;
 
-		u8 spriteTileSize = spriteHeight * 2;
+		u8 spriteTileSize = 16;
 
 		//Iterate over all sprite entries in the table
 		for(int i=0;i<40;i++)
@@ -426,6 +426,10 @@ void Display::RenderPixel(int screenX, int screenY)
 			//It's relevant, so get the rest of the data
 			u8 spriteTileValue = m_oamCache[spriteDataAddress+2 - m_oamOffset];
 			u8 spriteFlags = m_oamCache[spriteDataAddress+3 - m_oamOffset];
+
+			//In 8x16 mode, the least significant bit of the tile value is ignored
+			if(m_lcdControl & LCDC_SpriteSize)
+				spriteTileValue &= ~(0x01);
 
 			//Is it visible?  (priority vs background and window)
 			if(spriteFlags & (1<<7))	///<Lower priority if set, higher priority otherwise
@@ -468,7 +472,8 @@ void Display::RenderPixel(int screenX, int screenY)
 				pixelPaletteValue = (m_spritePalette1 & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
 
 			//Done
-			m_activeScreenBuffer->SetPixel(screenX, screenY, pixelPaletteValue);
+			if(pixelPaletteValue != 0)	///<0 is transparent for sprites
+				m_activeScreenBuffer->SetPixel(screenX, screenY, pixelPaletteValue);
 		}
 	}
 }
