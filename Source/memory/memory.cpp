@@ -77,6 +77,9 @@ void Memory::Initialize()
 
 void Memory::Reset()
 {
+	//Randomize the active RAM
+	for(int i=0;i<0x2000;i++)
+		m_memoryData[0xa000+i] = (u8)rand();
 }
 
 void Memory::SetRegisterLocation(u8 registerOffset, u8* pRegister, bool writeable)

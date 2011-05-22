@@ -66,12 +66,17 @@ public:
 	
 	CPU();
 
+	//Component
 	void SetMachine(Machine* machine);
-
 	void Initialize();
 	void Reset();
 
+	//External
 	int Step();
+
+	bool IsStopped();
+
+
 
 
 private:
@@ -84,6 +89,7 @@ private:
 
 	int m_instructionTime;
 	bool m_halted;
+	bool m_stopped;
 
 	//Registers
 	u8 m_interruptsEnabled;		///<0xffff - Interrupt Enable.  Which interrupts are currently enabled.  Slaves to the IME flag.
