@@ -1731,10 +1731,8 @@ int CPU::Step()
 	case 0xe8:
 	{
 		//E8      RET  PE         ADD  SP,dd
-		//?? No idea if this method will handle flags correctly
 		s8 sn = (s8)ReadNext8();
-		s16 operand = sn;
-		ExecADD(&sp, (u16)operand);
+		ExecADD(&sp, sn);
 		m_instructionTime += 14;	//?? guessing based on ADD HL, ss (11) + 3 for memory read
 	}
 	break;
