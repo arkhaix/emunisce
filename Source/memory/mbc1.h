@@ -7,6 +7,8 @@ class MBC1 : public Memory
 {
 public:
 
+	MBC1();
+
 	virtual void Write8(u16 address, u8 value);
 
 protected:
@@ -22,6 +24,8 @@ protected:
 	int m_selectedRomBank;
 	int m_selectedRamBank;
 	int m_modeSelect;	///<0 = ROM banking, 1 = RAM banking
+
+	bool m_fiveBitBankCheck;	///<Always true for MBC1.  Disables loading into banks 0x20, 0x40, and 0x60 during LoadFile.
 };
 
 #endif

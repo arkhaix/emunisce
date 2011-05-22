@@ -10,6 +10,7 @@ using namespace std;
 //Project
 #include "romonly.h"
 #include "mbc1.h"
+#include "mbc3.h"
 
 //Solution
 #include "../cpu/cpu.h"
@@ -179,8 +180,10 @@ Memory* Memory::CreateFromFile(const char* filename)
 
 	if(cartType == 0 || cartType == 8 || cartType == 9)
 		memoryController = new RomOnly();
-	else if(cartType == 1 || cartType == 2 || cartType == 3)
+	else if(cartType >= 1 && cartType <= 3)
 		memoryController = new MBC1();
+	else if(cartType >= 0x0f && cartType <= 0x13)
+		memoryController = new MBC3();
 
 	if(memoryController == NULL)
 		return NULL;

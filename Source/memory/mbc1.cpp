@@ -3,6 +3,11 @@
 #include <fstream>
 using namespace std;
 
+MBC1::MBC1()
+{
+	m_fiveBitBankCheck = true;
+}
+
 void MBC1::Write8(u16 address, u8 value)
 {
 	//RAM Enable/Disable
@@ -79,7 +84,7 @@ bool MBC1::LoadFile(const char* filename)
 	int romBank = 0;
 	while(romBank < 0x80 && ifile.good() && !ifile.eof() && !ifile.fail())
 	{
-		if(romBank == 0x20 || romBank == 0x40 || romBank == 0x60)
+		if(m_fiveBitBankCheck && (romBank == 0x20 || romBank == 0x40 || romBank == 0x60))
 			romBank++;
 
 		ifile.read((char*)&m_romBanks[romBank][0], 0x4000);

@@ -61,11 +61,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="mbc1.cpp" />
+    <ClCompile Include="mbc3.cpp" />
     <ClCompile Include="memory.cpp" />
     <ClCompile Include="romonly.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mbc1.h" />
+    <ClInclude Include="mbc3.h" />
     <ClInclude Include="memory.h" />
     <ClInclude Include="romonly.h" />
   </ItemGroup>
