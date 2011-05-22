@@ -20,6 +20,9 @@
     <ClCompile Include="mbc1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="mbc3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="memory.h">
@@ -29,6 +32,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="mbc1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mbc3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
