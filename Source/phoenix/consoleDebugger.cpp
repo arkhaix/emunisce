@@ -261,20 +261,29 @@ void ConsoleDebugger::RunMachine()
 
 	printf("Press any key to pause execution...\n");
 
-	LARGE_INTEGER performanceFrequency;
-	LARGE_INTEGER countsPerFrame;
-	QueryPerformanceFrequency(&performanceFrequency);
-	countsPerFrame.QuadPart = performanceFrequency.QuadPart / (LONGLONG)60;
+	int syncsPerSecond = 30;
 
+	LARGE_INTEGER performanceFrequency;
+	LARGE_INTEGER countsPerSync;
+	QueryPerformanceFrequency(&performanceFrequency);
+	countsPerSync.QuadPart = performanceFrequency.QuadPart / (LONGLONG)syncsPerSecond;
+
+	double countsPerMillisecond = performanceFrequency.QuadPart / 1000.0;
+	double millisecondsPerCount = 1.0 / countsPerMillisecond;
+
+	int ticksPerSecond = 4194304;
+	int ticksPerSync = ticksPerSecond / syncsPerSecond;
+
+	int ticksUntilSync = ticksPerSync;
+
+	LARGE_INTEGER syncPeriodStartCount;
+	QueryPerformanceCounter(&syncPeriodStartCount);
 
 
 	bool keepGoing = true;
 	while(keepGoing)
 	{
-		LARGE_INTEGER frameStartCount;
 		LARGE_INTEGER curCount;
-
-		QueryPerformanceCounter(&frameStartCount);
 
 		int curFrame = m_machine->_FrameCount;
 
@@ -286,13 +295,23 @@ void ConsoleDebugger::RunMachine()
 				keepGoing = false;
 				break;
 			}
+		}
 
-			QueryPerformanceCounter(&curCount);
-			while(curCount.QuadPart - frameStartCount.QuadPart < countsPerFrame.QuadPart)
+		ticksUntilSync -= 69905;	///<ish
+		if(ticksUntilSync <= 0)
+		{
+			do
 			{
-				Sleep(1);
 				QueryPerformanceCounter(&curCount);
-			}
+				LONGLONG countsTooFast = countsPerSync.QuadPart - (curCount.QuadPart - syncPeriodStartCount.QuadPart);
+				if(countsTooFast <= 0)
+					break;
+				double millisecondsTooFast = millisecondsPerCount * countsTooFast;
+				Sleep((DWORD)millisecondsTooFast);
+			} while(curCount.QuadPart - syncPeriodStartCount.QuadPart < countsPerSync.QuadPart);
+
+			syncPeriodStartCount.QuadPart = curCount.QuadPart;
+			ticksUntilSync += ticksPerSync;
 		}
 
 		if(_kbhit())
