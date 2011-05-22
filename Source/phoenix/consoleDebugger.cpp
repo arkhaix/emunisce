@@ -196,14 +196,17 @@ void ConsoleDebugger::LoadROM(const char* filename)
 	m_machine->_Memory = memory;
 	m_machine->_CPU = new CPU();
 	m_machine->_Display = new Display();
+	m_machine->_Input = new Input();
 
 	m_machine->_Memory->SetMachine(m_machine);
 	m_machine->_CPU->SetMachine(m_machine);
 	m_machine->_Display->SetMachine(m_machine);
+	m_machine->_Input->SetMachine(m_machine);
 
 	m_machine->_Memory->Initialize();
 	m_machine->_CPU->Initialize();
 	m_machine->_Display->Initialize();
+	m_machine->_Input->Initialize();
 
 	m_machine->_FrameCount = 0;
 	m_frameTicksRemaining = 4194304;
@@ -211,7 +214,7 @@ void ConsoleDebugger::LoadROM(const char* filename)
 	m_lastFileLoaded = filename;
 
 	printf("Success\n");
-	Sleep(1000);
+	Sleep(500);
 }
 
 void ConsoleDebugger::Reset()

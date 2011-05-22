@@ -14,6 +14,7 @@ using namespace std;
 //Solution
 #include "../cpu/cpu.h"
 #include "../display/display.h"
+#include "../input/input.h"
 
 
 Memory::Memory()
@@ -22,6 +23,7 @@ Memory::Memory()
 
 	m_cpu = NULL;
 	m_display = NULL;
+	m_input = NULL;
 
 	for(int i=0;i<0x100;i++)
 	{
@@ -48,6 +50,7 @@ void Memory::SetMachine(Machine* machine)
 	{
 		m_cpu = machine->_CPU;
 		m_display = machine->_Display;
+		m_input = machine->_Input;
 	}
 
 	//Update register info
@@ -56,17 +59,13 @@ void Memory::SetMachine(Machine* machine)
 
 	if(m_display)
 	{
-		m_callWriteRegister[0x40] = true;
-		m_callWriteRegister[0x41] = true;
-		m_callWriteRegister[0x42] = true;
-		m_callWriteRegister[0x43] = true;
 		m_callWriteRegister[0x44] = true;
 		m_callWriteRegister[0x45] = true;
-		m_callWriteRegister[0x47] = true;
-		m_callWriteRegister[0x48] = true;
-		m_callWriteRegister[0x49] = true;
-		m_callWriteRegister[0x4a] = true;
-		m_callWriteRegister[0x4b] = true;
+	}
+
+	if(m_input)
+	{
+		m_callWriteRegister[0x00] = true;
 	}
 }
 
@@ -201,6 +200,7 @@ void Memory::WriteRegister(u16 address, u8 value)
 {
 	switch(address)
 	{
+	case 0xff00: if(m_input) { m_input->SetJoypadMode(value); } break;
 	case 0xff44: if(m_display) { m_display->SetCurrentScanline(value); } break;
 	case 0xff45: if(m_display) { m_display->SetScanlineCompare(value); } break;
 	case 0xff46: SetDmaStartLocation(value); break;

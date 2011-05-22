@@ -48,6 +48,7 @@ typedef signed int s32;
 class CPU;
 class Memory;
 class Display;
+class Input;
 
 
 namespace MachineType
@@ -80,6 +81,7 @@ struct Machine
 	CPU* _CPU;
 	Memory* _Memory;
 	Display* _Display;
+	Input* _Input;
 
 	Machine()
 	{
@@ -89,6 +91,7 @@ struct Machine
 		_CPU = NULL;
 		_Memory = NULL;
 		_Display = NULL;
+		_Input = NULL;
 	}
 };
 
