@@ -11,6 +11,7 @@ using namespace std;
 #include "../cpu/cpu.h"
 #include "../display/display.h"
 #include "../memory/memory.h"
+#include "../input/input.h"
 
 class ConsoleDebugger
 {

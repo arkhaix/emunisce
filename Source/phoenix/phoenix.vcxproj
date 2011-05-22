@@ -84,6 +84,9 @@
     <ProjectReference Include="..\display\display.vcxproj">
       <Project>{e913fab3-3258-423d-ae0a-3c23b2ca31b5}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\input\input.vcxproj">
+      <Project>{132a61d1-1ba2-4581-b4f9-0740feb37572}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\memory\memory.vcxproj">
       <Project>{316e1001-8c02-460f-ad90-ebb6a9fa5744}</Project>
     </ProjectReference>

@@ -38,6 +38,7 @@ protected:
 
 	CPU* m_cpu;
 	Display* m_display;
+	Input* m_input;
 
 	
 	//Memory
