@@ -101,10 +101,10 @@ void ConsoleDebugger::FetchCommand()
 	COMMAND0("exit", m_requestingExit = true)
 	COMMAND0("x", m_requestingExit = true)
 
-	COMMAND1("load", LoadROM(args[1].c_str()))
-	COMMAND1("l", LoadROM(args[1].c_str()))
-	COMMAND1("open", LoadROM(args[1].c_str()))
-	COMMAND1("o", LoadROM(args[1].c_str()))
+	COMMAND1("load", LoadROM(line.substr(args[0].size()+1).c_str()))
+	COMMAND1("l", LoadROM(line.substr(args[0].size()+1).c_str()))
+	COMMAND1("open", LoadROM(line.substr(args[0].size()+1).c_str()))
+	COMMAND1("o", LoadROM(line.substr(args[0].size()+1).c_str()))
 
 	COMMAND0("reset", Reset())
 
@@ -243,7 +243,8 @@ void ConsoleDebugger::StepInto()
 	//printf("%s\n", __FUNCTION__);
 
 	int ticks = m_machine->_CPU->Step();
-	m_machine->_Display->Run(ticks);
+	if(m_machine->_CPU->IsStopped() == false)
+		m_machine->_Display->Run(ticks);
 
 	m_frameTicksRemaining -= ticks;
 	if(m_frameTicksRemaining<= 0)

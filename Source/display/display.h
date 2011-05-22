@@ -4,6 +4,7 @@
 #include "../common/types.h"
 
 #define PIXEL_NOT_CACHED ((u8)-1)
+#define PIXEL_TRANSPARENT ((u8)-2)
 
 struct ScreenBuffer
 {
@@ -76,6 +77,10 @@ private:
 	DisplayState::Type m_currentState;
 	int m_stateTicksRemaining;
 	int m_vblankScanlineTicksRemaining;
+
+	void RenderBackgroundPixel(int screenX, int screenY);
+	void RenderSpritePixel(int screenX, int screenY);
+	void RenderWindowPixel(int screenX, int screenY);
 
 	void RenderPixel(int screenX, int screenY);
 	void RenderScanline();

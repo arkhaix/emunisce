@@ -76,10 +76,15 @@ void MBC1::Write8(u16 address, u8 value)
 
 bool MBC1::LoadFile(const char* filename)
 {
+	//Open the file
+
 	ifstream ifile(filename, ios::in | ios::binary);
 
 	if(ifile.fail() || ifile.eof() || !ifile.good())
 		return false;
+
+
+	//Load all the banks
 
 	int romBank = 0;
 	while(romBank < 0x80 && ifile.good() && !ifile.eof() && !ifile.fail())
@@ -94,8 +99,36 @@ bool MBC1::LoadFile(const char* filename)
 
 	ifile.close();
 
+
+	//Copy the first two ROM banks to active memory
+
 	memcpy_s((void*)(&m_memoryData[0x0000]), 0x10000, (void*)(&m_romBanks[0][0]), 0x4000);
-	memcpy_s((void*)(&m_memoryData[0x4000]), (0x10000 - 0x4000), (void*)(&m_romBanks[1][0]), 0x4000);
+
+	m_selectedRomBank = 1;
+	SwitchROM();
+
+
+	//Randomize the RAM banks
+
+	for(u16 address=0;address<0x2000;address++)
+	{
+		int randomNumber = rand();
+		u8 randomByte[4] = { (u8)(randomNumber>>24), (u8)(randomNumber>>16), (u8)(randomNumber>>8), (u8)randomNumber };
+
+		m_ramBanks[0][address] = randomByte[0];
+		m_ramBanks[1][address] = randomByte[1];
+		m_ramBanks[2][address] = randomByte[2];
+		m_ramBanks[3][address] = randomByte[3];
+	}
+
+
+	//Copy the first RAM bank to active memory
+
+	m_selectedRamBank = 0;
+	SwitchRAM();
+
+
+	//Done
 
 	return true;
 }

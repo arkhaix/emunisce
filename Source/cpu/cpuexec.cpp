@@ -13,16 +13,14 @@ int CPU::Step()
 
 	u8 opcode;
 
-	bool executeInterrupt = false;
 	u8 interruptFlags = m_memory->Read8(REG_IF);
 	interruptFlags &= 0x1f;	///<Only bits 0-4 signal valid interrupts.
-	if( (m_masterInterruptsEnabled || m_halted) && m_delayNextInterrupt == false && interruptFlags != 0)
+	if( (m_masterInterruptsEnabled || m_halted || m_stopped) && m_delayNextInterrupt == false && interruptFlags != 0)
 	{
 		u8 interruptEnableFlags = m_memory->Read8(REG_IE);
 		
-		if( (interruptFlags & IF_VBLANK) && (interruptEnableFlags & IF_VBLANK) )
+		if( (interruptFlags & IF_VBLANK) && (interruptEnableFlags & IF_VBLANK) && !m_stopped )
 		{
-			executeInterrupt = true;
 			m_masterInterruptsEnabled = false;
 			m_halted = false;
 
@@ -31,9 +29,8 @@ int CPU::Step()
 
 			ExecCALL(0x0040);
 		}
-		else if( (interruptFlags & IF_LCDC) && (interruptEnableFlags & IF_LCDC) )
+		else if( (interruptFlags & IF_LCDC) && (interruptEnableFlags & IF_LCDC) && !m_stopped )
 		{
-			executeInterrupt = true;
 			m_masterInterruptsEnabled = false;
 			m_halted = false;
 
@@ -42,9 +39,8 @@ int CPU::Step()
 
 			ExecCALL(0x0048);
 		}
-		else if( (interruptFlags & IF_TIMER) && (interruptEnableFlags & IF_TIMER) )
+		else if( (interruptFlags & IF_TIMER) && (interruptEnableFlags & IF_TIMER) && !m_stopped )
 		{
-			executeInterrupt = true;
 			m_masterInterruptsEnabled = false;
 			m_halted = false;
 
@@ -53,9 +49,8 @@ int CPU::Step()
 
 			ExecCALL(0x0050);
 		}
-		else if( (interruptFlags & IF_SERIAL) && (interruptEnableFlags & IF_SERIAL) )
+		else if( (interruptFlags & IF_SERIAL) && (interruptEnableFlags & IF_SERIAL) && !m_stopped )
 		{
-			executeInterrupt = true;
 			m_masterInterruptsEnabled = false;
 			m_halted = false;
 
@@ -66,9 +61,9 @@ int CPU::Step()
 		}
 		else if( (interruptFlags & IF_INPUT) && (interruptEnableFlags & IF_INPUT) )
 		{
-			executeInterrupt = true;
 			m_masterInterruptsEnabled = false;
 			m_halted = false;
+			m_stopped = false;
 
 			interruptFlags &= ~(IF_INPUT);
 			m_memory->Write8(REG_IF, interruptFlags);
@@ -83,7 +78,7 @@ int CPU::Step()
 		m_delayNextInterrupt = false;
 	}
 	
-	if(m_halted && executeInterrupt == false)
+	if(m_halted || m_stopped)
 	{
 		opcode = 0x00;	//When halted, we just execute NOPs until an interrupt
 	}
@@ -214,7 +209,8 @@ int CPU::Step()
 
 	case 0x10:
 		//10      DJNZ PC+dd      STOP
-		//?? Todo. Need to stop the screen and cpu until button press.
+		m_stopped = true;
+		m_instructionTime += 4;
 	break;
 
 	case 0x11:

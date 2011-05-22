@@ -50,6 +50,7 @@ void CPU::Reset()
 
 	m_instructionTime = 0;
 	m_halted = false;
+	m_stopped = false;
 
 
 	af = 0x01b0;
@@ -62,6 +63,11 @@ void CPU::Reset()
 	pc = 0x0100;
 }
 
+
+bool CPU::IsStopped()
+{
+	return m_stopped;
+}
 
 u8 CPU::ReadNext8()
 {
