@@ -209,7 +209,7 @@ void ConsoleDebugger::LoadROM(const char* filename)
 	m_machine->_Input->Initialize();
 
 	m_machine->_FrameCount = 0;
-	m_frameTicksRemaining = 4194304;
+	m_frameTicksRemaining = 69905;
 
 	m_lastFileLoaded = filename;
 
@@ -245,7 +245,7 @@ void ConsoleDebugger::StepInto()
 	if(m_frameTicksRemaining<= 0)
 	{
 		m_machine->_FrameCount++;
-		m_frameTicksRemaining += 4194304;
+		m_frameTicksRemaining += 69905;
 	}
 }
 
@@ -261,10 +261,23 @@ void ConsoleDebugger::RunMachine()
 
 	printf("Press any key to pause execution...\n");
 
+	LARGE_INTEGER performanceFrequency;
+	LARGE_INTEGER countsPerFrame;
+	QueryPerformanceFrequency(&performanceFrequency);
+	countsPerFrame.QuadPart = performanceFrequency.QuadPart / (LONGLONG)60;
+
+
+
 	bool keepGoing = true;
 	while(keepGoing)
 	{
+		LARGE_INTEGER frameStartCount;
+		LARGE_INTEGER curCount;
+
+		QueryPerformanceCounter(&frameStartCount);
+
 		int curFrame = m_machine->_FrameCount;
+
 		while(m_machine->_FrameCount == curFrame)
 		{
 			StepInto();
@@ -272,6 +285,13 @@ void ConsoleDebugger::RunMachine()
 			{
 				keepGoing = false;
 				break;
+			}
+
+			QueryPerformanceCounter(&curCount);
+			while(curCount.QuadPart - frameStartCount.QuadPart < countsPerFrame.QuadPart)
+			{
+				Sleep(1);
+				QueryPerformanceCounter(&curCount);
 			}
 		}
 
