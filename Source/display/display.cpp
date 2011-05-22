@@ -207,6 +207,8 @@ void Display::Begin_VBlank()
 	CheckCoincidence();
 
 	m_vblankScanlineTicksRemaining = m_stateTicksRemaining % 456;
+	if(m_vblankScanlineTicksRemaining == 0)
+		m_vblankScanlineTicksRemaining += 456;
 
 	//Set mode 01
 	m_lcdStatus &= ~(STAT_Mode);

@@ -102,6 +102,9 @@ void ConsoleDebugger::FetchCommand()
 	COMMAND0("x", m_requestingExit = true)
 
 	COMMAND1("load", LoadROM(args[1].c_str()))
+	COMMAND1("l", LoadROM(args[1].c_str()))
+	COMMAND1("open", LoadROM(args[1].c_str()))
+	COMMAND1("o", LoadROM(args[1].c_str()))
 
 	COMMAND0("reset", Reset())
 
@@ -183,9 +186,10 @@ void ConsoleDebugger::LoadROM(const char* filename)
 		return;
 
 	string sFilename = string("C:/hg/Phoenix/Roms/") + string(filename);
-	filename = sFilename.c_str();
+	if(sFilename.find(".gb") == string::npos && sFilename.find(".GB") == string::npos)
+		sFilename += string(".gb");
 
-	Memory* memory = Memory::CreateFromFile(filename);
+	Memory* memory = Memory::CreateFromFile(sFilename.c_str());
 	if(memory == NULL)
 	{
 		printf("Failed to load the ROM\n");
