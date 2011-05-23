@@ -1794,6 +1794,7 @@ int CPU::Step()
 	case 0xf1:
 		//F1		POP AF
 		ExecPOP(&af);
+		f &= 0xf0;
 		m_instructionTime += 10;
 	break;
 
@@ -3499,6 +3500,8 @@ int CPU::ExecuteCB()
 	default:
 	break;
 	}
+
+	UpdateTimer(m_instructionTime);
 
 	return m_instructionTime;
 }
