@@ -107,6 +107,8 @@ void CPU::SetTimerControl(u8 value)
 	else //(clockSelect == 3)
 		m_ticksPerCounterIncrement = 256;	///<16384 Hz
 
+	m_ticksUntilCounterIncrement = m_ticksPerCounterIncrement;
+
 
 	//TAC[2] Timer Enable
 	m_timerEnabled = false;

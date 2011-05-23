@@ -15,7 +15,11 @@ int CPU::Step()
 
 	u8 interruptFlags = m_memory->Read8(REG_IF);
 	interruptFlags &= 0x1f;	///<Only bits 0-4 signal valid interrupts.
-	if( (m_masterInterruptsEnabled || m_halted || m_stopped) && m_delayNextInterrupt == false && interruptFlags != 0)
+
+	if(interruptFlags != 0)
+		m_halted = false;
+
+	if( m_masterInterruptsEnabled && m_delayNextInterrupt == false && interruptFlags != 0)
 	{
 		u8 interruptEnableFlags = m_memory->Read8(REG_IE);
 		
@@ -1893,6 +1897,7 @@ int CPU::Step()
 	break;
 	}
 
+	UpdateTimer(m_instructionTime);
 
 	return m_instructionTime;
 }
