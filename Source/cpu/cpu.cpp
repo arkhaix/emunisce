@@ -32,6 +32,11 @@ void CPU::SetMachine(Machine* machine)
 	{
 		m_memory->SetRegisterLocation(0x0f, &m_interruptFlags, true);
 		m_memory->SetRegisterLocation(0xff, &m_interruptsEnabled, true);
+
+		m_memory->SetRegisterLocation(0x04, &m_timerDivider, false);
+		m_memory->SetRegisterLocation(0x05, &m_timerCounter, true);
+		m_memory->SetRegisterLocation(0x06, &m_timerModulo, true);
+		m_memory->SetRegisterLocation(0x07, &m_timerControl, false);
 	}
 }
 
@@ -47,6 +52,19 @@ void CPU::Reset()
 
 	m_interruptsEnabled = 0;
 	m_interruptFlags = 0;
+
+	u8 m_interruptsEnabled;		///<0xffff - Interrupt Enable.  Which interrupts are currently enabled.  Slaves to the IME flag.
+	u8 m_interruptFlags;		///<0xff0f - Interrupt Flag.  Which interrupts are currently set.
+
+	m_timerDivider = 0;	///<0xff04 - Timer Divider.
+	m_ticksUntilDividerIncrement = 256;	///<The timer divider increments once every 256 ticks.
+
+	m_timerModulo = 0;	///<0xff06 - Timer Modulo.  This value gets loaded into the timer counter when it overflows.
+
+	m_timerCounter = 0;	///<0xff05 - Timer Counter.
+
+	SetTimerControl(0);
+	m_ticksUntilCounterIncrement = m_ticksPerCounterIncrement;
 
 	m_instructionTime = 0;
 	m_halted = false;
@@ -67,6 +85,70 @@ void CPU::Reset()
 bool CPU::IsStopped()
 {
 	return m_stopped;
+}
+
+void CPU::SetTimerDivider(u8 value)
+{
+	m_timerDivider = 0;
+}
+
+void CPU::SetTimerControl(u8 value)
+{
+	m_timerControl = value & 0x07;
+
+	//TAC[1:0] Input Clock Select
+	int clockSelect = value & 0x03;
+	if(clockSelect == 0)
+		m_ticksPerCounterIncrement = 1024;	///<4096 Hz
+	else if(clockSelect == 1)
+		m_ticksPerCounterIncrement = 16;	///<262144 Hz
+	else if(clockSelect == 2)
+		m_ticksPerCounterIncrement = 64;	///<65536 Hz
+	else //(clockSelect == 3)
+		m_ticksPerCounterIncrement = 256;	///<16384 Hz
+
+
+	//TAC[2] Timer Enable
+	m_timerEnabled = false;
+	if(value & 0x04)
+	{
+		m_timerEnabled = true;
+	}
+
+	UpdateTimer(0);
+}
+
+void CPU::UpdateTimer(int ticks)
+{
+	if(m_timerEnabled == false)
+		return;
+
+	//Divider
+	m_ticksUntilDividerIncrement -= ticks;
+	if(m_ticksUntilDividerIncrement <= 0)
+	{
+		m_ticksUntilDividerIncrement += 256;
+
+		m_timerDivider++;
+	}
+
+	//Counter
+	m_ticksUntilCounterIncrement -= ticks;
+	if(m_ticksUntilCounterIncrement <= 0)
+	{
+		m_ticksUntilCounterIncrement += m_ticksPerCounterIncrement;
+
+		m_timerCounter++;
+		if(m_timerCounter == 0)
+		{
+			m_timerCounter = m_timerModulo;
+
+			//interrupt on overflow
+			u8 interrupts = m_memory->Read8(REG_IF);
+			interrupts |= IF_TIMER;
+			m_memory->Write8(REG_IF, interrupts);
+		}
+	}
 }
 
 u8 CPU::ReadNext8()

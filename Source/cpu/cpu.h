@@ -76,8 +76,9 @@ public:
 
 	bool IsStopped();
 
-
-
+	//Registers
+	void SetTimerDivider(u8 value);
+	void SetTimerControl(u8 value);
 
 private:
 
@@ -94,6 +95,20 @@ private:
 	//Registers
 	u8 m_interruptsEnabled;		///<0xffff - Interrupt Enable.  Which interrupts are currently enabled.  Slaves to the IME flag.
 	u8 m_interruptFlags;		///<0xff0f - Interrupt Flag.  Which interrupts are currently set.
+
+	u8 m_timerDivider;	///<0xff04 - Timer Divider.
+	int m_ticksUntilDividerIncrement;	///<The timer divider increments once every 256 ticks.
+
+	u8 m_timerModulo;	///<0xff06 - Timer Modulo.  This value gets loaded into the timer counter when it overflows.
+
+	u8 m_timerCounter;	///<0xff05 - Timer Counter.
+	int m_ticksPerCounterIncrement;
+	int m_ticksUntilCounterIncrement;
+
+	u8 m_timerControl;	///<0xff07 - Timer Control.
+	bool m_timerEnabled;
+
+	void UpdateTimer(int ticks);
 
 	u8 ReadNext8();
 	u16 ReadNext16();
