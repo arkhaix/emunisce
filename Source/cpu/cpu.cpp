@@ -644,7 +644,7 @@ void CPU::ExecINC(u8* target)
 	u8 res = *target + 1;
 
 	//Z
-	if(*target == 0)
+	if(res == 0)
 		SET_Z;
 	else
 		RES_Z;
