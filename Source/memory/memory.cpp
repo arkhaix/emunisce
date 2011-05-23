@@ -56,17 +56,23 @@ void Memory::SetMachine(Machine* machine)
 
 	//Update register info
 
-	m_callWriteRegister[0x46] = true;
+	m_callWriteRegister[0x46] = true;		//Memory::SetDmaStartLocation
+
+	if(m_cpu)
+	{
+		m_callWriteRegister[0x04] = true;	//CPU::SetTimerDivider
+		m_callWriteRegister[0x07] = true;	//CPU::SetTimerControl
+	}
 
 	if(m_display)
 	{
-		m_callWriteRegister[0x44] = true;
-		m_callWriteRegister[0x45] = true;
+		m_callWriteRegister[0x44] = true;	//Display::SetCurrentScanline
+		m_callWriteRegister[0x45] = true;	//Display::SetScanlineCompare
 	}
 
 	if(m_input)
 	{
-		m_callWriteRegister[0x00] = true;
+		m_callWriteRegister[0x00] = true;	//Input::SetJoypadMode
 	}
 }
 
@@ -207,6 +213,8 @@ void Memory::WriteRegister(u16 address, u8 value)
 	switch(address)
 	{
 	case 0xff00: if(m_input) { m_input->SetJoypadMode(value); } break;
+	case 0xff04: if(m_cpu) { m_cpu->SetTimerDivider(value); } break;
+	case 0xff07: if(m_cpu) { m_cpu->SetTimerControl(value); } break;
 	case 0xff44: if(m_display) { m_display->SetCurrentScanline(value); } break;
 	case 0xff45: if(m_display) { m_display->SetScanlineCompare(value); } break;
 	case 0xff46: SetDmaStartLocation(value); break;
