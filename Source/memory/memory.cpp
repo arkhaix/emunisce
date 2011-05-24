@@ -31,6 +31,8 @@ Memory::Memory()
 		m_registerLocation[i] = NULL;
 		m_callWriteRegister[i] = false;
 	}
+
+	m_bootRomEnabled = false;
 }
 
 Memory::~Memory()
@@ -57,6 +59,7 @@ void Memory::SetMachine(Machine* machine)
 	//Update register info
 
 	m_callWriteRegister[0x46] = true;		//Memory::SetDmaStartLocation
+	m_callWriteRegister[0x50] = true;		//Memory::DisableBootRom
 
 	if(m_cpu)
 	{
@@ -79,6 +82,8 @@ void Memory::SetMachine(Machine* machine)
 void Memory::Initialize()
 {
 	Reset();
+
+	LoadBootRom();
 }
 
 void Memory::Reset()
@@ -86,6 +91,10 @@ void Memory::Reset()
 	//Randomize the active RAM
 	for(int i=0;i<0x2000;i++)
 		m_memoryData[0xa000+i] = (u8)rand();
+
+	//Tell the cpu to skip the bootrom if there isn't one loaded
+	if(m_bootRomEnabled == false && m_cpu)
+		m_cpu->pc = 0x100;
 }
 
 void Memory::SetRegisterLocation(u8 registerOffset, u8* pRegister, bool writeable)
@@ -103,6 +112,9 @@ u8 Memory::Read8(u16 address)
 		if(pRegister != NULL)
 			return *pRegister;
 	}
+
+	if(address < 0x100 && m_bootRomEnabled == true)
+		return m_bootRom[address];
 
 	return m_memoryData[address];
 }
@@ -169,6 +181,17 @@ void Memory::SetDmaStartLocation(u8 value)
 		Write8(targetAddress, value);
 	}
 }
+
+void Memory::DisableBootRom(u8 value)
+{
+	if(m_bootRomEnabled == false)
+		return;
+
+	if(value != 0x01)
+		return;
+
+	m_bootRomEnabled = false;
+}
 	
 Memory* Memory::CreateFromFile(const char* filename)
 {
@@ -208,6 +231,39 @@ Memory* Memory::CreateFromFile(const char* filename)
 	return memoryController;
 }
 
+void Memory::LoadBootRom(const char* filename)
+{
+	m_bootRomEnabled = false;
+
+	ifstream bootRom;
+	bootRom.open(filename, ios::in | ios::binary);
+
+	if(bootRom.eof() || bootRom.fail() || !bootRom.good())
+	{
+		//Use default boot rom
+		u8 defaultBootRom[] = 
+		{
+			0x3e, 0x01,			//LD A, $01
+			0xe0, 0x50,			//LD ($FF50), A
+		};
+
+		memset((void*)&m_bootRom[0], 0x00, 0x100);	///<Fill it with NOPs
+
+		//Copy the default boot rom to the end of the boot rom space (so that it finishes at 0x100 where the cart starts)
+		int beginAddress = 0x100 - sizeof(defaultBootRom);
+		memcpy_s((void*)(&m_bootRom[beginAddress]), 0x100-beginAddress, (void*)(&defaultBootRom[0]), sizeof(defaultBootRom));
+
+		m_bootRomEnabled = true;
+		return;
+	}
+
+	//Use the real boot rom
+	bootRom.read((char*)(&m_bootRom[0]), 0x100);
+	bootRom.close();
+
+	m_bootRomEnabled = true;
+}
+
 void Memory::WriteRegister(u16 address, u8 value)
 {
 	switch(address)
@@ -218,6 +274,7 @@ void Memory::WriteRegister(u16 address, u8 value)
 	case 0xff44: if(m_display) { m_display->SetCurrentScanline(value); } break;
 	case 0xff45: if(m_display) { m_display->SetScanlineCompare(value); } break;
 	case 0xff46: SetDmaStartLocation(value); break;
+	case 0xff50: DisableBootRom(value); break;
 	}
 }
 

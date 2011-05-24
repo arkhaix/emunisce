@@ -22,6 +22,7 @@ public:
 	void Write16(u16 address, u16 value);
 
 	void SetDmaStartLocation(u8 value);
+	void DisableBootRom(u8 value);
 
 	static Memory* CreateFromFile(const char* filename);
 
@@ -29,6 +30,7 @@ protected:
 
 	Memory();
 
+	virtual void LoadBootRom(const char* filename = "dmg_rom.bin");	///<Automatically called by Initialize
 	virtual bool LoadFile(const char* filename) = 0;
 
 	void WriteRegister(u16 address, u8 value);
@@ -40,7 +42,13 @@ protected:
 	Display* m_display;
 	Input* m_input;
 
-	
+
+	//Boot ROM
+
+	u8 m_bootRom[0x100];
+	bool m_bootRomEnabled;
+
+
 	//Memory
 
 	u8 m_memoryData[0x10000];
