@@ -188,7 +188,7 @@ private:
 
 	void ExecRST(u16 address);
 
-	void ExecSBC(u8* target, u8 value);
+	void ExecSBC(u8 value);
 
 	void ExecSCF();
 

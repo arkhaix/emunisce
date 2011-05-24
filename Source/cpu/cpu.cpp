@@ -1042,12 +1042,12 @@ void CPU::ExecRST(u16 address)
 	ExecCALL(address);
 }
 
-void CPU::ExecSBC(u8* target, u8 value)
+void CPU::ExecSBC(u8 value)
 {
-	int res = *target - value - TST_C;
+	int res = a - value - TST_C;
 
 	//Z
-	if(res == 0)
+	if((res & 0xff) == 0)
 		SET_Z;
 	else
 		RES_Z;
@@ -1056,9 +1056,7 @@ void CPU::ExecSBC(u8* target, u8 value)
 	SET_N;
 
 	//H
-	if( (*target ^ value ^ res) & 0x10 )
-	//if( (*target & 0x0f) < ((value & 0x0f)+TST_C) )
-	//if( (*target & 0x0f) < (value & 0x0f) )
+	if( (a ^ value ^ res) & 0x10 )
 		SET_H;
 	else
 		RES_H;
@@ -1069,7 +1067,7 @@ void CPU::ExecSBC(u8* target, u8 value)
 	else
 		RES_C;
 
-	*target = (u8)res;
+	a = (u8)res;
 }
 
 void CPU::ExecSCF()
