@@ -30,10 +30,10 @@ class Memory;
 #define VAL_C ((u8)(f & 0x10))
 
 //Return 1 if flag is set, 0 otherwise
-#define TST_Z (u8)(VAL_Z >> BIT_Z)
-#define TST_N (u8)(VAL_N >> BIT_N)
-#define TST_H (u8)(VAL_H >> BIT_H)
-#define TST_C (u8)(VAL_C >> BIT_C)
+#define TST_Z ((u8)(VAL_Z >> BIT_Z))
+#define TST_N ((u8)(VAL_N >> BIT_N))
+#define TST_H ((u8)(VAL_H >> BIT_H))
+#define TST_C ((u8)(VAL_C >> BIT_C))
 
 //Invert flag
 #define INV_Z (f ^= (1<<BIT_Z))

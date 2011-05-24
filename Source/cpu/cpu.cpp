@@ -418,98 +418,29 @@ void CPU::ExecDAA()
 {
 	if(TST_N)
 	{
-		if(TST_C)
-		{
-			if(TST_H)
-			{
-				a += 0x9a;
-				SET_C;
-			}
-			else
-			{
-				a += 0xa0;
-				SET_C;
-			}
-		}
-		else
-		{
-			if(TST_H)
-			{
-				a += 0xfa;
-				RES_C;
-			}
-			else
-			{
-				RES_C;
-			}
-		}
+		if(TST_C && TST_H)
+			a += 0x9a;
+		else if(TST_C)
+			a += 0xa0;
+		else if(TST_H)
+			a += 0xfa;
 	}
 	else
 	{
-		if(TST_C)
+		if(a >= 0x9a)
 		{
-			if(TST_H)
-			{
-				a += 0x66;
-				SET_C;
-			}
-			else
-			{
-				if((a & 0x0f) >= 0x0a)
-				{
-					a += 0x66;
-					SET_C;
-				}
-				else
-				{
-					a += 0x60;
-					SET_C;
-				}
-			}
+			a += 0x60;
+			SET_C;
+
+			if(TST_H || ((a & 0x0f) >= 0x0a))
+				a += 0x06;
 		}
 		else
 		{
-			if(TST_H)
-			{
-				if((a & 0xf0) >= 0xa0)
-				{
-					a += 0x66;
-					SET_C;
-				}
-				else
-				{
-					a += 0x06;
-					RES_C;
-				}
-			}
-			else
-			{
-				if((a & 0x0f) >= 0x0a)
-				{
-					if((a & 0xf0) >= 0x90)
-					{
-						a += 0x66;
-						SET_C;
-					}
-					else
-					{
-						a += 0x06;
-						RES_C;
-					}
-				}
-				else
-				{
-					if((a & 0xf0) >= 0x0a)
-					{
-						a += 0x60;
-						SET_C;
-					}
-					else
-					{
-						RES_C;
-					}
-				}
-			}
+			if(TST_C)
+				a += 0x60;
+			if(TST_H || ((a & 0x0f) >= 0x0a))
+				a += 0x06;
 		}
 	}
 
@@ -525,7 +456,7 @@ void CPU::ExecDAA()
 	//H
 	RES_H;
 
-	//C set above
+	//C handled above
 }
 
 void CPU::ExecDEC(u8* target)
