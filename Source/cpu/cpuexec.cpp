@@ -19,6 +19,9 @@ int CPU::Step()
 	if(interruptFlags != 0)
 		m_halted = false;
 
+	if(interruptFlags & IF_INPUT)
+		m_stopped = false;
+
 	if( m_masterInterruptsEnabled && m_delayNextInterrupt == false && interruptFlags != 0)
 	{
 		u8 interruptEnableFlags = m_memory->Read8(REG_IE);
@@ -213,7 +216,7 @@ int CPU::Step()
 
 	case 0x10:
 		//10      DJNZ PC+dd      STOP
-		m_stopped = true;
+		//m_stopped = true;
 		m_instructionTime += 4;
 	break;
 
