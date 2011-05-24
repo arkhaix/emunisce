@@ -321,8 +321,8 @@ void Display::RenderBackgroundPixel(int screenX, int screenY)
 		bgTileMapAddress = 0x9c00;
 
 	//Convert screen pixel coordinates to background pixel coordinates
-	u8 bgPixelX = (screenX + m_scrollX) % 256;
-	u8 bgPixelY = (screenY + m_scrollY) % 256;
+	u8 bgPixelX = (u8)(screenX + m_scrollX);
+	u8 bgPixelY = (u8)(screenY + m_scrollY);
 
 	//Convert background pixel coordinates to background tile coordinates
 	u8 bgTileX = bgPixelX / 8;
@@ -341,11 +341,11 @@ void Display::RenderBackgroundPixel(int screenX, int screenY)
 		bgTileAddress = (u16)0x9000 + (signedBgTileValue * bytesPerTile);
 	}
 
-	//Get the tile index
-	int tileIndex = (bgTileAddress - 0x8000) / 16;
+	//Get the tile data index
+	int tileDataIndex = (bgTileAddress - 0x8000) / 16;
 
 	//Find the tile in the tile data cache
-	int cacheTileAddress = tileIndex * 64;
+	int cacheTileAddress = tileDataIndex * 64;
 
 	//Get the pixel we need
 	int tilePixelX = bgPixelX % 8;
@@ -366,6 +366,9 @@ void Display::RenderBackgroundPixel(int screenX, int screenY)
 
 		tilePixelX++;
 		cacheScreenX++;
+
+		//Temporarily disabled caching until I can figure out what's wrong with it (artifacts when scrolling)
+		break;
 	}
 
 	//Write this pixel out of the cache
@@ -494,6 +497,75 @@ void Display::RenderSpritePixel(int screenX, int screenY)
 
 void Display::RenderWindowPixel(int screenX, int screenY)
 {
+	//Visible?
+	if(screenX + 7 < m_windowX || screenY < m_windowY)
+		return;
+	
+	//Cached?
+	u8 cachedValue = m_frameWindowData.GetPixel(screenX, screenY);
+	if(cachedValue != PIXEL_NOT_CACHED)
+	{
+		m_activeScreenBuffer->SetPixel(screenX, screenY, cachedValue);
+		return;
+	}
+
+	//Which tile map?
+	u16 tileMapAddress = 0x9800;
+	if(m_lcdControl & LCDC_WindowTileMap)
+		tileMapAddress = 0x9c00;
+
+	//Convert screen pixel coordinates to window pixel coordinates
+	u8 windowPixelX = screenX - (m_windowX - 7);
+	u8 windowPixelY = screenY - m_windowY;
+
+	//Convert window pixel coordinates to tile coordinates
+	u8 tileX = windowPixelX / 8;
+	u8 tileY = windowPixelY / 8;
+	u16 tilePositionIndex = (tileY * 32) + tileX;	///<BG map is 32x32
+
+	//Get the tile value
+	u8 tileValue = m_vramCache[tileMapAddress + tilePositionIndex - m_vramOffset];
+
+	//Which tile data?
+	s8 bytesPerTile = 16;
+	u16 tileAddress = (u16)0x8000 + (tileValue * bytesPerTile);
+	if( !(m_lcdControl & LCDC_TileData) )
+	{
+		s8 signedTileValue = (s8)tileValue;
+		tileAddress = (u16)0x9000 + (signedTileValue * bytesPerTile);
+	}
+
+	//Get the tile index
+	int tileIndex = (tileAddress - 0x8000) / 16;
+
+	//Find the tile in the tile data cache
+	int cacheTileAddress = tileIndex * 64;
+
+	//Get the pixel we need
+	int tilePixelX = windowPixelX % 8;
+	int tilePixelY = windowPixelY % 8;
+
+	//Write all the tile pixels on this line to the cache
+	int cacheScreenX = screenX;
+	while(tilePixelX <= 7)
+	{
+		u8 pixelValue = m_tileData[ cacheTileAddress + (tilePixelY * 8) + tilePixelX ];
+
+		//Ok...so we have our pixel.  Now we still have to look it up in the palette.
+		int pixelPaletteShift = pixelValue * 2;	///<2 bits per entry
+		u8 pixelPaletteValue = (m_backgroundPalette & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
+
+		//Done
+		m_frameWindowData.SetPixel(cacheScreenX, screenY, pixelPaletteValue);
+
+		tilePixelX++;
+		cacheScreenX++;
+	}
+
+	//Write this pixel out of the cache
+	cachedValue = m_frameWindowData.GetPixel(screenX, screenY);
+	if(cachedValue != PIXEL_NOT_CACHED)
+		m_activeScreenBuffer->SetPixel(screenX, screenY, cachedValue);
 }
 
 void Display::RenderScanline()
