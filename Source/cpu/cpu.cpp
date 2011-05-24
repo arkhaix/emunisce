@@ -78,7 +78,7 @@ void CPU::Reset()
 
 	sp = 0xfffe;
 
-	pc = 0x0100;
+	pc = 0x0000;
 }
 
 
