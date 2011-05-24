@@ -1843,6 +1843,14 @@ int CPU::Step()
 		//F8      RET  M          LD   HL,SP+dd
 		s8 offset = (s8)ReadNext8();
 		address = sp + offset;
+
+		//special flag handling
+		t = (u8)sp;
+		n = (u8)offset;
+		ExecADD(&t, n);
+		RES_Z;
+		RES_N;
+
 		ExecLD(&hl, address);
 		m_instructionTime += 13;	//?? wild guess
 	}
