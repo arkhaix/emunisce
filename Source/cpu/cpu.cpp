@@ -559,8 +559,7 @@ void CPU::ExecDEC(u8* target)
 	SET_N;
 
 	//H
-	//??? VBA disagrees
-	if( (*target & 0x10) && !(res & 0x10) )
+	if( (*target & 0x0f) == 0 )
 		SET_H;
 	else
 		RES_H;
@@ -655,7 +654,7 @@ void CPU::ExecINC(u8* target)
 	RES_N;
 
 	//H
-	if( !(*target & 0x10) && (res & 0x10) )
+	if( (*target & 0x0f) == 0x0f )
 		SET_H;
 	else
 		RES_H;
