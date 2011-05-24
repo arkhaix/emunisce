@@ -284,29 +284,16 @@ void CPU::ExecADD(u16* target, s8 value)
 {
 	int res = *target + value;
 
+	//H,C handled the same as ADD8
+	u8 tempA = (u8)(*target);
+	u8 tempB = (u8)value;
+	ExecADD(&tempA, tempB);
+
 	//Z
-	//??? don't know if this should be like ADD8, ADD16, or something else (guessing ADD8 with 0xffff)
-	if((res & 0xffff) == 0) 
-		SET_Z;
-	else 
-		RES_Z;
+	RES_Z;
 
 	//N
 	RES_N;
-
-	//H
-	//??? don't know if this should be like ADD8, ADD16, or something else (guessing ADD8)
-	if( (*target ^ value ^ res) & 0x10 )
-		SET_H;
-	else
-		RES_H;
-
-	//C
-	//??? (don't know if this should be like ADD8, ADD16, or something else (guessing ADD16-ish)
-	if(res & 0x10000 || res < 0)
-		SET_C;
-	else 
-		RES_C;
 
 	*target = (u16)res;
 }
@@ -536,8 +523,7 @@ void CPU::ExecDAA()
 	//N unaffected
 
 	//H
-	//???
-	//unaffected?
+	RES_H;
 
 	//C set above
 }
@@ -894,7 +880,8 @@ void CPU::ExecRLA()
 	a <<= 1;
 	a |= oldC;
 
-	//Z unaffected
+	//Z
+	RES_Z;
 
 	//N
 	RES_N;
@@ -940,7 +927,8 @@ void CPU::ExecRLCA()
 	a <<= 1;
 	a |= TST_C;
 
-	//Z unaffected
+	//Z
+	RES_Z;
 
 	//N
 	RES_N;
@@ -990,7 +978,8 @@ void CPU::ExecRRA()
 	a >>= 1;
 	a |= (oldC << 7);
 
-	//Z unaffected
+	//Z
+	RES_Z;
 
 	//N
 	RES_N;
@@ -1036,7 +1025,8 @@ void CPU::ExecRRCA()
 	a >>= 1;
 	a |= (TST_C << 7);
 
-	//Z unaffected
+	//Z
+	RES_Z;
 
 	//N
 	RES_N;
@@ -1067,34 +1057,8 @@ void CPU::ExecSBC(u8* target, u8 value)
 
 	//H
 	if( (*target ^ value ^ res) & 0x10 )
-		SET_H;
-	else
-		RES_H;
-
-	//C
-	if(res < 0)
-		SET_C;
-	else
-		RES_C;
-
-	*target = (u8)res;
-}
-
-void CPU::ExecSBC(u16* target, u16 value)
-{
-	int res = *target - value - TST_C;
-
-	//Z
-	if(res == 0)
-		SET_Z;
-	else
-		RES_Z;
-
-	//N
-	SET_N;
-
-	//H
-	if( (*target ^ value ^ res) & 0x1000 )
+	//if( (*target & 0x0f) < ((value & 0x0f)+TST_C) )
+	//if( (*target & 0x0f) < (value & 0x0f) )
 		SET_H;
 	else
 		RES_H;
@@ -1245,16 +1209,19 @@ void CPU::ExecSWAP(u8* target)
 	*target |= (low<<4);
 
 	//Z
-	//??
+	if(*target == 0)
+		SET_Z;
+	else
+		RES_Z;
 
 	//N
-	//??
+	RES_N;
 
 	//H
-	//??
+	RES_H;
 
 	//C
-	//??
+	RES_C;
 }
 
 void CPU::ExecXOR(u8 value)
