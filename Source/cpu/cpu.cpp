@@ -378,13 +378,10 @@ void CPU::ExecCCF()
 	RES_N;
 
 	//H
-	if(TST_C)
-		SET_H;
-	else
-		RES_H;
+	RES_H;
 	
 	//C
-	INV_C;	
+	INV_C;
 }
 
 void CPU::ExecCP(u8 value)
