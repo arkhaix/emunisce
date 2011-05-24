@@ -1135,50 +1135,50 @@ int CPU::Step()
 
 	case 0x98:
 		//98		SBC A,B			4	1	1
-		ExecSBC(&a, b);
+		ExecSBC(b);
 		m_instructionTime += 4;
 	break;
 
 	case 0x99:
 		//99		SBC A,C			4	1	1
-		ExecSBC(&a, c);
+		ExecSBC(c);
 		m_instructionTime += 4;
 	break;
 
 	case 0x9a:
 		//9A		SBC A,D			4	1	1
-		ExecSBC(&a, d);
+		ExecSBC(d);
 		m_instructionTime += 4;
 	break;
 
 	case 0x9b:
 		//9B		SBC A,E			4	1	1
-		ExecSBC(&a, e);
+		ExecSBC(e);
 		m_instructionTime += 4;
 	break;
 
 	case 0x9c:
 		//9C		SBC A,H			4	1	1
-		ExecSBC(&a, h);
+		ExecSBC(h);
 		m_instructionTime += 4;
 	break;
 
 	case 0x9d:
 		//9D		SBC A,L			4	1	1
-		ExecSBC(&a, l);
+		ExecSBC(l);
 		m_instructionTime += 4;
 	break;
 
 	case 0x9e:
 		//9E		SBC A,(HL)		7	2	1
 		n = m_memory->Read8(hl);
-		ExecSBC(&a, n);
+		ExecSBC(n);
 		m_instructionTime += 7;
 	break;
 
 	case 0x9f:
 		//9F		SBC A,A			4	1	1
-		ExecSBC(&a, a);
+		ExecSBC(a);
 		m_instructionTime += 4;
 	break;
 
@@ -1670,7 +1670,7 @@ int CPU::Step()
 	case 0xde:
 		//DE n		SBC A,n
 		n = ReadNext8();
-		ExecSBC(&a, n);
+		ExecSBC(n);
 		m_instructionTime += 7;
 	break;
 
