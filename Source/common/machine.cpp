@@ -16,25 +16,25 @@ Machine* Machine::Create(const char* filename)
 
 	Machine* result = new Machine();
 
-	result->m_cpu = new Cpu();
 	result->m_memory = memory;
+	result->m_cpu = new Cpu();
 	result->m_display = new Display();
 	result->m_input = new Input();
 	result->m_sound = new Sound();
 
-	result->m_cpu->SetMachine(result);
+	result->Initialize();
+
 	result->m_memory->SetMachine(result);
+	result->m_cpu->SetMachine(result);
 	result->m_display->SetMachine(result);
 	result->m_input->SetMachine(result);
 	result->m_sound->SetMachine(result);
 
-	result->m_cpu->Initialize();
 	result->m_memory->Initialize();
+	result->m_cpu->Initialize();
 	result->m_display->Initialize();
 	result->m_input->Initialize();
 	result->m_sound->Initialize();
-
-	result->Initialize();
 
 	return result;
 }
@@ -58,8 +58,8 @@ Machine::Machine()
 	m_machineType = MachineType::GameBoy;
 	m_frameCount = 0;
 
-	m_cpu = NULL;
 	m_memory = NULL;
+	m_cpu = NULL;
 	m_display = NULL;
 	m_input = NULL;
 	m_sound = NULL;
@@ -87,7 +87,7 @@ unsigned int Machine::GetFrameCount()
 
 unsigned int Machine::GetTicksPerSecond()
 {
-	return m_ticksPerSecond;;
+	return m_ticksPerSecond;
 }
 
 
