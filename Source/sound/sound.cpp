@@ -9,6 +9,7 @@ Sound::Sound()
 {
 	m_activeAudioBuffer = &m_audioBuffer[0];
 	m_stableAudioBuffer = &m_audioBuffer[1];
+	m_nextSampleIndex = 0;
 
 	m_audioBufferLock = (void*)new CRITICAL_SECTION();
 	InitializeCriticalSection((LPCRITICAL_SECTION)m_audioBufferLock);
@@ -22,42 +23,6 @@ Sound::~Sound()
 
 void Sound::Initialize()
 {
-}
-
-void Sound::Run(int ticks)
-{
-	m_ticksSinceLastSample += ticks;
-	m_ticksUntilNextSample -= ticks;
-
-	if(m_ticksUntilNextSample <= 0)
-	{
-		m_ticksUntilNextSample += m_ticksPerSample;
-		
-		float secondsSinceLastSample = (float)m_ticksSinceLastSample / (float)m_machine->GetTicksPerSecond();
-		m_ticksSinceLastSample = 0;
-
-		//Update the generators
-
-		//Get the samples
-
-		//Mix the samples
-
-		//Output the final sample
-
-		//Update the index
-		m_nextSampleIndex++;
-		if(m_nextSampleIndex >= m_activeAudioBuffer->BufferSize)
-		{
-			//Reached the end of the buffer.  Swap them.
-			EnterCriticalSection((LPCRITICAL_SECTION)m_audioBufferLock);
-				AudioBuffer* temp = m_stableAudioBuffer;
-				m_stableAudioBuffer = m_activeAudioBuffer;
-				m_activeAudioBuffer = temp;
-			LeaveCriticalSection((LPCRITICAL_SECTION)m_audioBufferLock);
-
-			m_nextSampleIndex = 0;
-		}
-	}
 }
 
 void Sound::SetMachine(Machine* machine)
@@ -95,4 +60,66 @@ void Sound::SetMachine(Machine* machine)
 	m_memory->SetRegisterLocation(0x24, &m_soundOutputLevels, true);
 	m_memory->SetRegisterLocation(0x25, &m_soundOutputTerminals, true);
 	m_memory->SetRegisterLocation(0x26, &m_soundEnable, true);
+}
+
+void Sound::Run(int ticks)
+{
+	m_ticksSinceLastSample += ticks;
+	m_ticksUntilNextSample -= ticks;
+
+	if(m_ticksUntilNextSample <= 0)
+	{
+		m_ticksUntilNextSample += m_ticksPerSample;
+		
+		float secondsSinceLastSample = (float)m_ticksSinceLastSample / (float)m_machine->GetTicksPerSecond();
+		m_ticksSinceLastSample = 0;
+
+		//Update the generators
+
+		//Get the samples
+
+		//Mix the samples
+
+		//Output the final sample
+		static float totalSeconds = 0.f;
+		totalSeconds += secondsSinceLastSample;
+		while(totalSeconds >= 1.f)
+			totalSeconds -= 1.f;
+
+		float go = totalSeconds * 100.f;
+		float fractionalPart = go - (int)go;
+		if(fractionalPart >= .5f)
+		{
+			m_activeAudioBuffer->Samples[0][m_nextSampleIndex] = (u8)200;
+			m_activeAudioBuffer->Samples[1][m_nextSampleIndex] = (u8)200;
+		}
+		else
+		{
+			m_activeAudioBuffer->Samples[0][m_nextSampleIndex] = (u8)55;
+			m_activeAudioBuffer->Samples[1][m_nextSampleIndex] = (u8)55;
+		}
+
+		//Update the index
+		m_nextSampleIndex++;
+		if(m_nextSampleIndex >= AudioBuffer::BufferSize)
+		{
+			//Reached the end of the buffer.  Swap them.
+			EnterCriticalSection((LPCRITICAL_SECTION)m_audioBufferLock);
+				AudioBuffer* temp = m_stableAudioBuffer;
+				m_stableAudioBuffer = m_activeAudioBuffer;
+				m_activeAudioBuffer = temp;
+			LeaveCriticalSection((LPCRITICAL_SECTION)m_audioBufferLock);
+
+			m_nextSampleIndex = 0;
+		}
+	}
+}
+
+AudioBuffer Sound::GetStableAudioBuffer()
+{
+	EnterCriticalSection((LPCRITICAL_SECTION)m_audioBufferLock);
+		AudioBuffer result = *m_stableAudioBuffer;
+	LeaveCriticalSection((LPCRITICAL_SECTION)m_audioBufferLock);
+
+	return result;
 }

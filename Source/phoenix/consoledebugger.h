@@ -55,6 +55,8 @@ private:
 
 	void PrintMemory(int address, int length);
 
+	void ToggleMute();
+
 
 	//Properties
 
@@ -69,6 +71,8 @@ private:
 	int m_frameTicksRemaining;
 
 	set<u16> m_breakpoints;
+
+	bool m_muteSound;
 };
 
 #endif

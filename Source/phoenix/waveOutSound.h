@@ -8,10 +8,15 @@ class WaveOutSound
 {
 public:
 
+	WaveOutSound();
+	~WaveOutSound();
+
 	void Initialize(Phoenix* phoenix);
 	void Shutdown();
 
 	void SetMachine(Machine* machine);
+
+	void SetMute(bool mute);
 
 private:
 

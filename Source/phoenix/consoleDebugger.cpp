@@ -17,6 +17,7 @@ using namespace std;
 
 //Project
 #include "phoenix.h"
+#include "waveOutSound.h"
 
 
 ConsoleDebugger::ConsoleDebugger()
@@ -25,11 +26,14 @@ ConsoleDebugger::ConsoleDebugger()
 	m_cpu = NULL;
 	m_display = NULL;
 	m_memory = NULL;
+
+	m_muteSound = true;
 }
 
 void ConsoleDebugger::Initialize(Phoenix* phoenix)
 {
 	m_phoenix = phoenix;
+	phoenix->GetSound()->SetMute(m_muteSound);
 }
 
 void ConsoleDebugger::Shutdown()
@@ -173,6 +177,10 @@ void ConsoleDebugger::FetchCommand()
 	COMMAND0("memory", PrintMemory(m_cpu->pc, 16))
 	COMMAND0("mem", PrintMemory(m_cpu->pc, 16))
 	COMMAND0("m", PrintMemory(m_cpu->pc, 16))
+
+	COMMAND0("audio", ToggleMute())
+	COMMAND0("mute", ToggleMute())
+	COMMAND0("sound", ToggleMute())
 
 	else
 	{
@@ -410,3 +418,10 @@ void ConsoleDebugger::PrintMemory(int address, int length)
 	system("pause");
 }
 
+void ConsoleDebugger::ToggleMute()
+{
+	printf("%s\n", __FUNCTION__);
+
+	m_muteSound = !m_muteSound;
+	m_phoenix->GetSound()->SetMute(m_muteSound);
+}
