@@ -32,7 +32,6 @@ public:
 	//Component
 	void SetMachine(Machine* machine);
 	void Initialize();
-	void Reset();
 
 	void Run(int ticks);
 

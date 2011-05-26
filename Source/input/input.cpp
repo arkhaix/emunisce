@@ -1,5 +1,6 @@
 #include "input.h"
 
+#include "../common/machine.h"
 #include "../memory/memory.h"
 
 Input::Input()
@@ -9,19 +10,11 @@ Input::Input()
 //Component
 void Input::SetMachine(Machine* machine)
 {
-	if(machine && machine->_Memory)
-	{
-		m_machine = machine;
-		machine->_Memory->SetRegisterLocation(0x00, &m_joypadRegister, false);
-	}
+	m_machine = machine;
+	machine->GetMemory()->SetRegisterLocation(0x00, &m_joypadRegister, false);
 }
 
 void Input::Initialize()
-{
-	Reset();
-}
-
-void Input::Reset()
 {
 	m_buttonStates = 0xff;
 
@@ -81,10 +74,7 @@ void Input::UpdateRegister()
 
 void Input::Interrupt()
 {
-	if(m_machine && m_machine->_Memory)
-	{
-		u8 interrupts = m_machine->_Memory->Read8(REG_IF);
-		interrupts |= IF_INPUT;
-		m_machine->_Memory->Write8(REG_IF, interrupts);
-	}
+	u8 interrupts = m_machine->GetMemory()->Read8(REG_IF);
+	interrupts |= IF_INPUT;
+	m_machine->GetMemory()->Write8(REG_IF, interrupts);
 }

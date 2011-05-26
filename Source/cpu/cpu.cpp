@@ -1,9 +1,10 @@
 #include "cpu.h"
 
+#include "../common/machine.h"
 #include "../memory/memory.h"
 
 
-CPU::CPU()
+Cpu::Cpu()
 : a(*(((u8*)&af)+1))
 , f(*(((u8*)&af)+0))
 , b(*(((u8*)&bc)+1))
@@ -19,33 +20,22 @@ CPU::CPU()
 	Initialize();
 }
 
-void CPU::SetMachine(Machine* machine)
+void Cpu::SetMachine(Machine* machine)
 {
 	m_machine = machine;
 
-	if(machine)
-	{
-		m_memory = machine->_Memory;
-	}
+	m_memory = machine->GetMemory();
 
-	if(m_memory)
-	{
-		m_memory->SetRegisterLocation(0x0f, &m_interruptFlags, true);
-		m_memory->SetRegisterLocation(0xff, &m_interruptsEnabled, true);
+	m_memory->SetRegisterLocation(0x0f, &m_interruptFlags, true);
+	m_memory->SetRegisterLocation(0xff, &m_interruptsEnabled, true);
 
-		m_memory->SetRegisterLocation(0x04, &m_timerDivider, false);
-		m_memory->SetRegisterLocation(0x05, &m_timerCounter, true);
-		m_memory->SetRegisterLocation(0x06, &m_timerModulo, true);
-		m_memory->SetRegisterLocation(0x07, &m_timerControl, false);
-	}
+	m_memory->SetRegisterLocation(0x04, &m_timerDivider, false);
+	m_memory->SetRegisterLocation(0x05, &m_timerCounter, true);
+	m_memory->SetRegisterLocation(0x06, &m_timerModulo, true);
+	m_memory->SetRegisterLocation(0x07, &m_timerControl, false);
 }
 
-void CPU::Initialize()
-{
-	Reset();
-}
-
-void CPU::Reset()
+void Cpu::Initialize()
 {
 	m_masterInterruptsEnabled = false;
 	m_delayNextInterrupt = false;
@@ -82,17 +72,17 @@ void CPU::Reset()
 }
 
 
-bool CPU::IsStopped()
+bool Cpu::IsStopped()
 {
 	return m_stopped;
 }
 
-void CPU::SetTimerDivider(u8 value)
+void Cpu::SetTimerDivider(u8 value)
 {
 	m_timerDivider = 0;
 }
 
-void CPU::SetTimerControl(u8 value)
+void Cpu::SetTimerControl(u8 value)
 {
 	m_timerControl = value & 0x07;
 
@@ -120,7 +110,7 @@ void CPU::SetTimerControl(u8 value)
 	UpdateTimer(0);
 }
 
-void CPU::UpdateTimer(int ticks)
+void Cpu::UpdateTimer(int ticks)
 {
 	if(m_timerEnabled == false)
 		return;
@@ -153,14 +143,14 @@ void CPU::UpdateTimer(int ticks)
 	}
 }
 
-u8 CPU::ReadNext8()
+u8 Cpu::ReadNext8()
 {
 	u8 result = m_memory->Read8(pc);
 	pc++;
 	return result;
 }
 
-u16 CPU::ReadNext16()
+u16 Cpu::ReadNext16()
 {
 	u16 result = m_memory->Read16(pc);
 	pc += 2;
@@ -172,7 +162,7 @@ u16 CPU::ReadNext16()
 
 
 
-void CPU::ExecADC(u8* target, u8 value)
+void Cpu::ExecADC(u8* target, u8 value)
 {
 	int res = *target + value + TST_C;
 	
@@ -200,7 +190,7 @@ void CPU::ExecADC(u8* target, u8 value)
 	*target = (u8)res;
 }
 
-void CPU::ExecADC(u16* target, u16 value)
+void Cpu::ExecADC(u16* target, u16 value)
 {
 	int res = *target + value + TST_C;
 
@@ -228,7 +218,7 @@ void CPU::ExecADC(u16* target, u16 value)
 	*target = (u16)res;
 }
 
-void CPU::ExecADD(u8* target, u8 value)
+void Cpu::ExecADD(u8* target, u8 value)
 {
 	int res = *target + value;
 	
@@ -256,7 +246,7 @@ void CPU::ExecADD(u8* target, u8 value)
 	*target = (u8)res;
 }
 
-void CPU::ExecADD(u16* target, u16 value)
+void Cpu::ExecADD(u16* target, u16 value)
 {
 	int res = *target + value;
 
@@ -280,7 +270,7 @@ void CPU::ExecADD(u16* target, u16 value)
 	*target = (u16)res;
 }
 
-void CPU::ExecADD(u16* target, s8 value)
+void Cpu::ExecADD(u16* target, s8 value)
 {
 	int res = *target + value;
 
@@ -298,7 +288,7 @@ void CPU::ExecADD(u16* target, s8 value)
 	*target = (u16)res;
 }
 
-void CPU::ExecAND(u8 value)
+void Cpu::ExecAND(u8 value)
 {
 	a = a & value;
 
@@ -318,7 +308,7 @@ void CPU::ExecAND(u8 value)
 	RES_C;
 }
 
-void CPU::ExecBIT(u8 value, int n)
+void Cpu::ExecBIT(u8 value, int n)
 {
 	//Z
 	if(value & (1<<n))
@@ -335,7 +325,7 @@ void CPU::ExecBIT(u8 value, int n)
 	//C unaffected
 }
 
-void CPU::ExecCALL(u16 address)
+void Cpu::ExecCALL(u16 address)
 {
 	//(SP-1)<-PCH
 	sp--;
@@ -357,7 +347,7 @@ void CPU::ExecCALL(u16 address)
 	//C unaffected
 }
 
-void CPU::ExecCCF()
+void Cpu::ExecCCF()
 {
 	//Z unaffected
 
@@ -371,7 +361,7 @@ void CPU::ExecCCF()
 	INV_C;
 }
 
-void CPU::ExecCP(u8 value)
+void Cpu::ExecCP(u8 value)
 {
 	int res = a - value;
 
@@ -399,7 +389,7 @@ void CPU::ExecCP(u8 value)
 		RES_C;
 }
 
-void CPU::ExecCPL()
+void Cpu::ExecCPL()
 {
 	a ^= 0xff;
 
@@ -414,7 +404,7 @@ void CPU::ExecCPL()
 	//C unaffected
 }
 
-void CPU::ExecDAA()
+void Cpu::ExecDAA()
 {
 	if(TST_N)
 	{
@@ -459,7 +449,7 @@ void CPU::ExecDAA()
 	//C handled above
 }
 
-void CPU::ExecDEC(u8* target)
+void Cpu::ExecDEC(u8* target)
 {
 	u8 res = (*target) - 1;
 
@@ -483,7 +473,7 @@ void CPU::ExecDEC(u8* target)
 	*target = res;
 }
 
-void CPU::ExecDEC(u16* target)
+void Cpu::ExecDEC(u16* target)
 {
 	*target = (*target) - 1;
 
@@ -499,7 +489,7 @@ void CPU::ExecDEC(u16* target)
 	//C unaffected
 }
 
-void CPU::ExecDI()
+void Cpu::ExecDI()
 {
 	m_masterInterruptsEnabled = false;
 
@@ -512,7 +502,7 @@ void CPU::ExecDI()
 	//C unaffected
 }
 
-void CPU::ExecEI()
+void Cpu::ExecEI()
 {
 	m_masterInterruptsEnabled = true;
 	m_delayNextInterrupt = true;
@@ -526,7 +516,7 @@ void CPU::ExecEI()
 	//C unaffected
 }
 
-void CPU::ExecEX(u16* target1, u16* target2)
+void Cpu::ExecEX(u16* target1, u16* target2)
 {
 	u16 tmp = *target1;
 	*target1 = *target2;
@@ -541,7 +531,7 @@ void CPU::ExecEX(u16* target1, u16* target2)
 	//C unaffected
 }
 
-void CPU::ExecHALT()
+void Cpu::ExecHALT()
 {
 	m_halted = true;
 
@@ -554,7 +544,7 @@ void CPU::ExecHALT()
 	//C unaffected
 }
 
-void CPU::ExecINC(u8* target)
+void Cpu::ExecINC(u8* target)
 {
 	u8 res = *target + 1;
 
@@ -578,7 +568,7 @@ void CPU::ExecINC(u8* target)
 	*target = res;
 }
 
-void CPU::ExecINC(u16* target)
+void Cpu::ExecINC(u16* target)
 {
 	*target = (*target) + 1;
 
@@ -594,7 +584,7 @@ void CPU::ExecINC(u16* target)
 	//C unaffected
 }
 
-void CPU::ExecJP(u16 address)
+void Cpu::ExecJP(u16 address)
 {
 	pc = address;
 	
@@ -607,7 +597,7 @@ void CPU::ExecJP(u16 address)
 	//C unaffected
 }
 
-void CPU::ExecJR(s8 value)
+void Cpu::ExecJR(s8 value)
 {
 	pc += value;
 
@@ -620,7 +610,7 @@ void CPU::ExecJR(s8 value)
 	//C unaffected
 }
 
-void CPU::ExecLD(u8* target, u8 value)
+void Cpu::ExecLD(u8* target, u8 value)
 {
 	*target = value;
 
@@ -633,7 +623,7 @@ void CPU::ExecLD(u8* target, u8 value)
 	//C unaffected
 }
 
-void CPU::ExecLD(u16* target, u16 value)
+void Cpu::ExecLD(u16* target, u16 value)
 {
 	*target = value;
 
@@ -646,7 +636,7 @@ void CPU::ExecLD(u16* target, u16 value)
 	//C unaffected
 }
 
-void CPU::ExecNOP()
+void Cpu::ExecNOP()
 {
 	//Z unaffected
 
@@ -657,7 +647,7 @@ void CPU::ExecNOP()
 	//C unaffected
 }
 
-void CPU::ExecOR(u8* target)
+void Cpu::ExecOR(u8* target)
 {
 	a |= *target;
 
@@ -677,7 +667,7 @@ void CPU::ExecOR(u8* target)
 	RES_C;
 }
 
-void CPU::ExecOR(u8 value)
+void Cpu::ExecOR(u8 value)
 {
 	a |= value;
 
@@ -697,7 +687,7 @@ void CPU::ExecOR(u8 value)
 	RES_C;
 }
 
-void CPU::ExecPOP(u16* target)
+void Cpu::ExecPOP(u16* target)
 {
 	//L<-(SP)
 	*target = m_memory->Read8(sp);
@@ -718,7 +708,7 @@ void CPU::ExecPOP(u16* target)
 	//C unaffected
 }
 
-void CPU::ExecPUSH(u16* target)
+void Cpu::ExecPUSH(u16* target)
 {
 	//(SP-1)<-H
 	sp--;
@@ -738,7 +728,7 @@ void CPU::ExecPUSH(u16* target)
 	//C unaffected
 }
 
-void CPU::ExecRES(u8* target, int n)
+void Cpu::ExecRES(u8* target, int n)
 {
 	*target &= ~(1<<n);
 
@@ -751,7 +741,7 @@ void CPU::ExecRES(u8* target, int n)
 	//C unaffected
 }
 
-void CPU::ExecRET()
+void Cpu::ExecRET()
 {
 	//PCL<-(SP)
 	pc = m_memory->Read8(sp);
@@ -772,7 +762,7 @@ void CPU::ExecRET()
 	//C unaffected
 }
 
-void CPU::ExecRL(u8* target)
+void Cpu::ExecRL(u8* target)
 {
 	int oldC = TST_C;
 
@@ -799,7 +789,7 @@ void CPU::ExecRL(u8* target)
 	//C handled above
 }
 
-void CPU::ExecRLA()
+void Cpu::ExecRLA()
 {
 	int oldC = TST_C;
 
@@ -823,7 +813,7 @@ void CPU::ExecRLA()
 	//C handled above
 }
 
-void CPU::ExecRLC(u8* target)
+void Cpu::ExecRLC(u8* target)
 {
 	if(*target & 0x80)
 		SET_C;
@@ -848,7 +838,7 @@ void CPU::ExecRLC(u8* target)
 	//C handled above
 }
 
-void CPU::ExecRLCA()
+void Cpu::ExecRLCA()
 {
 	if(a & 0x80)
 		SET_C;
@@ -870,7 +860,7 @@ void CPU::ExecRLCA()
 	//C handled above
 }
 
-void CPU::ExecRR(u8* target)
+void Cpu::ExecRR(u8* target)
 {
 	int oldC = TST_C;
 
@@ -897,7 +887,7 @@ void CPU::ExecRR(u8* target)
 	//C handled above
 }
 
-void CPU::ExecRRA()
+void Cpu::ExecRRA()
 {
 	int oldC = TST_C;
 
@@ -921,7 +911,7 @@ void CPU::ExecRRA()
 	//C handled above
 }
 
-void CPU::ExecRRC(u8* target)
+void Cpu::ExecRRC(u8* target)
 {
 	if(*target & 0x01)
 		SET_C;
@@ -946,7 +936,7 @@ void CPU::ExecRRC(u8* target)
 	//C handled above
 }
 
-void CPU::ExecRRCA()
+void Cpu::ExecRRCA()
 {
 	if(a & 0x01)
 		SET_C;
@@ -968,12 +958,12 @@ void CPU::ExecRRCA()
 	//C handled above
 }
 
-void CPU::ExecRST(u16 address)
+void Cpu::ExecRST(u16 address)
 {
 	ExecCALL(address);
 }
 
-void CPU::ExecSBC(u8 value)
+void Cpu::ExecSBC(u8 value)
 {
 	int res = a - value - TST_C;
 
@@ -1001,7 +991,7 @@ void CPU::ExecSBC(u8 value)
 	a = (u8)res;
 }
 
-void CPU::ExecSCF()
+void Cpu::ExecSCF()
 {
 	//Z unaffected
 
@@ -1015,7 +1005,7 @@ void CPU::ExecSCF()
 	SET_C;
 }
 
-void CPU::ExecSET(u8* target, int n)
+void Cpu::ExecSET(u8* target, int n)
 {
 	*target |= (1<<n);
 
@@ -1028,7 +1018,7 @@ void CPU::ExecSET(u8* target, int n)
 	//C unaffected
 }
 
-void CPU::ExecSLA(u8* target)
+void Cpu::ExecSLA(u8* target)
 {
 	if(*target & 0x80)
 		SET_C;
@@ -1052,7 +1042,7 @@ void CPU::ExecSLA(u8* target)
 	//C handled above
 }
 
-void CPU::ExecSRA(u8* target)
+void Cpu::ExecSRA(u8* target)
 {
 	int bit7 = (*target & 0x80);
 
@@ -1079,7 +1069,7 @@ void CPU::ExecSRA(u8* target)
 	//C handled above
 }
 
-void CPU::ExecSRL(u8* target)
+void Cpu::ExecSRL(u8* target)
 {
 	if(*target & 0x01)
 		SET_C;
@@ -1103,7 +1093,7 @@ void CPU::ExecSRL(u8* target)
 	//C handled above
 }
 
-void CPU::ExecSUB(u8 value)
+void Cpu::ExecSUB(u8 value)
 {
 	int res = a - value;
 
@@ -1131,7 +1121,7 @@ void CPU::ExecSUB(u8 value)
 	a = (u8)res;
 }
 
-void CPU::ExecSWAP(u8* target)
+void Cpu::ExecSWAP(u8* target)
 {
 	u8 low = (*target) & 0x0f;
 	*target >>= 4;
@@ -1153,7 +1143,7 @@ void CPU::ExecSWAP(u8* target)
 	RES_C;
 }
 
-void CPU::ExecXOR(u8 value)
+void Cpu::ExecXOR(u8 value)
 {
 	a ^= value;
 

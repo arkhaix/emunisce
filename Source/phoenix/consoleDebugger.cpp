@@ -1,30 +1,55 @@
 #include "consoledebugger.h"
 
+//Windows
 #include "windows.h"
 
+//STL
+#include <iostream>
+using namespace std;
+
+//CRT
 #include <conio.h>
 #include <fcntl.h>
 #include <io.h>
 
-#include <iostream>
-using namespace std;
+//Solution
+#include "../common/machine.h"
+
+//Project
+#include "phoenix.h"
+
 
 ConsoleDebugger::ConsoleDebugger()
 {
-	m_requestingExit = false;
+	m_machine = NULL;
+	m_cpu = NULL;
+	m_display = NULL;
+	m_memory = NULL;
 }
 
-void ConsoleDebugger::Run(Machine* machine)
+void ConsoleDebugger::Initialize(Phoenix* phoenix)
+{
+	m_phoenix = phoenix;
+}
+
+void ConsoleDebugger::Shutdown()
+{
+}
+
+void ConsoleDebugger::SetMachine(Machine* machine)
+{
+	m_machine = machine;
+
+	m_cpu = machine->GetCpu();
+	m_display = machine->GetDisplay();
+	m_memory = machine->GetMemory();
+}
+
+void ConsoleDebugger::Run()
 {
 	SetupConsole();
 
-	if(machine)
-		m_machine = machine;
-	else
-		m_machine = new Machine();
-
-	m_machine->_Memory = NULL;
-	while(m_machine->_Memory == NULL)
+	while(m_machine == NULL)
 	{
 		printf("\nFile: ");
 		string filename = "";
@@ -33,8 +58,7 @@ void ConsoleDebugger::Run(Machine* machine)
 		LoadROM(filename.c_str());
 	}
 
-	m_requestingExit = false;
-	while(m_requestingExit == false)
+	while(m_phoenix->ShutdownRequested() == false)
 	{
 		UpdateDisplay();
 		FetchCommand();
@@ -59,19 +83,19 @@ void ConsoleDebugger::UpdateDisplay()
 	position.X = position.Y = 0;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), position);
 
-	printf("AF: %04X\n", m_machine->_CPU->af);
-	printf("BC: %04X\n", m_machine->_CPU->bc);
-	printf("DE: %04X\n", m_machine->_CPU->de);
-	printf("HL: %04X\n", m_machine->_CPU->hl);
+	printf("AF: %04X\n", m_cpu->af);
+	printf("BC: %04X\n", m_cpu->bc);
+	printf("DE: %04X\n", m_cpu->de);
+	printf("HL: %04X\n", m_cpu->hl);
 	printf("\n");
-	printf("PC: %04X\n", m_machine->_CPU->pc);
-	printf("SP: %04X\n", m_machine->_CPU->sp);
+	printf("PC: %04X\n", m_cpu->pc);
+	printf("SP: %04X\n", m_cpu->sp);
 	printf("\n");
 
 	printf("Current opcode: ");
-	u16 address = m_machine->_CPU->pc;
+	u16 address = m_cpu->pc;
 	for(int i=0;i<5;i++)
-		printf("%02X ", m_machine->_Memory->Read8(address++));
+		printf("%02X ", m_memory->Read8(address++));
 	printf("\n");
 
 	printf("\n");
@@ -96,10 +120,10 @@ void ConsoleDebugger::FetchCommand()
 
 	if(false) { }
 
-	COMMAND0("quit", m_requestingExit = true)
-	COMMAND0("q", m_requestingExit = true)
-	COMMAND0("exit", m_requestingExit = true)
-	COMMAND0("x", m_requestingExit = true)
+	COMMAND0("quit", m_phoenix->RequestShutdown())
+	COMMAND0("q", m_phoenix->RequestShutdown())
+	COMMAND0("exit", m_phoenix->RequestShutdown())
+	COMMAND0("x", m_phoenix->RequestShutdown())
 
 	COMMAND1("load", LoadROM(line.substr(args[0].size()+1).c_str()))
 	COMMAND1("l", LoadROM(line.substr(args[0].size()+1).c_str()))
@@ -146,9 +170,9 @@ void ConsoleDebugger::FetchCommand()
 	COMMAND1("mem", PrintMemory(strtol(args[1].c_str(), NULL, 16), 16))
 	COMMAND1("m", PrintMemory(strtol(args[1].c_str(), NULL, 16), 16))
 
-	COMMAND0("memory", PrintMemory(m_machine->_CPU->pc, 16))
-	COMMAND0("mem", PrintMemory(m_machine->_CPU->pc, 16))
-	COMMAND0("m", PrintMemory(m_machine->_CPU->pc, 16))
+	COMMAND0("memory", PrintMemory(m_cpu->pc, 16))
+	COMMAND0("mem", PrintMemory(m_cpu->pc, 16))
+	COMMAND0("m", PrintMemory(m_cpu->pc, 16))
 
 	else
 	{
@@ -189,33 +213,25 @@ void ConsoleDebugger::LoadROM(const char* filename)
 	if(sFilename.find(".gb") == string::npos && sFilename.find(".GB") == string::npos)
 		sFilename += string(".gb");
 
-	Memory* memory = Memory::CreateFromFile(sFilename.c_str());
-	if(memory == NULL)
+	Machine* machine = Machine::Create(sFilename.c_str());
+	if(machine == NULL)
 	{
 		printf("Failed to load the ROM\n");
 		system("pause");
 		return;
 	}
 
-	m_machine->_Memory = memory;
-	m_machine->_CPU = new CPU();
-	m_machine->_Display = new Display();
-	m_machine->_Input = new Input();
+	//Successfully created a new machine
+	Machine* oldMachine = m_machine;
 
-	m_machine->_Memory->SetMachine(m_machine);
-	m_machine->_CPU->SetMachine(m_machine);
-	m_machine->_Display->SetMachine(m_machine);
-	m_machine->_Input->SetMachine(m_machine);
-
-	m_machine->_Memory->Initialize();
-	m_machine->_CPU->Initialize();
-	m_machine->_Display->Initialize();
-	m_machine->_Input->Initialize();
-
-	m_machine->_FrameCount = 0;
-	m_frameTicksRemaining = 69905;
+	//Let everyone (including this class) know that the old one is going away
+	m_phoenix->NotifyMachineChanged(machine);
 
 	m_lastFileLoaded = filename;
+
+	//Release the old one
+	if(oldMachine != NULL)
+		Machine::Release(oldMachine);
 
 	printf("Success\n");
 	Sleep(500);
@@ -225,15 +241,6 @@ void ConsoleDebugger::Reset()
 {
 	printf("%s\n", __FUNCTION__);
 
-	if(m_machine->_Memory)
-		delete m_machine->_Memory;
-
-	if(m_machine->_CPU)
-		delete m_machine->_CPU;
-
-	if(m_machine->_Display)
-		delete m_machine->_Display;
-
 	LoadROM(m_lastFileLoaded.c_str());
 }
 
@@ -242,16 +249,7 @@ void ConsoleDebugger::StepInto()
 {
 	//printf("%s\n", __FUNCTION__);
 
-	int ticks = m_machine->_CPU->Step();
-	if(m_machine->_CPU->IsStopped() == false)
-		m_machine->_Display->Run(ticks);
-
-	m_frameTicksRemaining -= ticks;
-	if(m_frameTicksRemaining<= 0)
-	{
-		m_machine->_FrameCount++;
-		m_frameTicksRemaining += 69905;
-	}
+	m_machine->Step();
 }
 
 void ConsoleDebugger::StepOver()
@@ -290,12 +288,12 @@ void ConsoleDebugger::RunMachine()
 	{
 		LARGE_INTEGER curCount;
 
-		int curFrame = m_machine->_FrameCount;
+		int curFrame = m_machine->GetFrameCount();
 
-		while(m_machine->_FrameCount == curFrame)
+		while(m_machine->GetFrameCount() == curFrame)
 		{
 			StepInto();
-			if(m_breakpoints.find( m_machine->_CPU->pc ) != m_breakpoints.end())
+			if(m_breakpoints.find( m_cpu->pc ) != m_breakpoints.end())
 			{
 				keepGoing = false;
 				break;
@@ -404,7 +402,7 @@ void ConsoleDebugger::PrintMemory(int address, int length)
 		else if( i%8 == 0 )
 			printf("\t");
 
-		printf("%02X ", m_machine->_Memory->Read8((u16)address));
+		printf("%02X ", m_memory->Read8((u16)address));
 		address++;
 	}
 	printf("\n");

@@ -13,6 +13,7 @@ using namespace std;
 #include "mbc3.h"
 
 //Solution
+#include "../common/machine.h"
 #include "../cpu/cpu.h"
 #include "../display/display.h"
 #include "../input/input.h"
@@ -49,44 +50,25 @@ void Memory::SetMachine(Machine* machine)
 	}
 
 	//Update component pointers
-	if(machine)
-	{
-		m_cpu = machine->_CPU;
-		m_display = machine->_Display;
-		m_input = machine->_Input;
-	}
+	m_cpu = machine->GetCpu();
+	m_display = machine->GetDisplay();
+	m_input = machine->GetInput();
 
 	//Update register info
 
-	m_callWriteRegister[0x46] = true;		//Memory::SetDmaStartLocation
-	m_callWriteRegister[0x50] = true;		//Memory::DisableBootRom
+	m_callWriteRegister[0x46] = true;	//Memory::SetDmaStartLocation
+	m_callWriteRegister[0x50] = true;	//Memory::DisableBootRom
 
-	if(m_cpu)
-	{
-		m_callWriteRegister[0x04] = true;	//CPU::SetTimerDivider
-		m_callWriteRegister[0x07] = true;	//CPU::SetTimerControl
-	}
+	m_callWriteRegister[0x04] = true;	//CPU::SetTimerDivider
+	m_callWriteRegister[0x07] = true;	//CPU::SetTimerControl
 
-	if(m_display)
-	{
-		m_callWriteRegister[0x44] = true;	//Display::SetCurrentScanline
-		m_callWriteRegister[0x45] = true;	//Display::SetScanlineCompare
-	}
+	m_callWriteRegister[0x44] = true;	//Display::SetCurrentScanline
+	m_callWriteRegister[0x45] = true;	//Display::SetScanlineCompare
 
-	if(m_input)
-	{
-		m_callWriteRegister[0x00] = true;	//Input::SetJoypadMode
-	}
+	m_callWriteRegister[0x00] = true;	//Input::SetJoypadMode
 }
 
 void Memory::Initialize()
-{
-	Reset();
-
-	LoadBootRom();
-}
-
-void Memory::Reset()
 {
 	//Randomize the active RAM
 	for(int i=0;i<0x2000;i++)
@@ -95,6 +77,8 @@ void Memory::Reset()
 	//Tell the cpu to skip the bootrom if there isn't one loaded
 	if(m_bootRomEnabled == false && m_cpu)
 		m_cpu->pc = 0x100;
+
+	LoadBootRom();
 }
 
 void Memory::SetRegisterLocation(u8 registerOffset, u8* pRegister, bool writeable)

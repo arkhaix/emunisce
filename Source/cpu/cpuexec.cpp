@@ -1,9 +1,10 @@
 #include "cpu.h"
 
+#include "../common/machine.h"
 #include "../memory/memory.h"
 
 
-int CPU::Step()
+int Cpu::Step()
 {
 	m_instructionTime = 0;
 
@@ -1913,7 +1914,7 @@ int CPU::Step()
 	return m_instructionTime;
 }
 
-int CPU::ExecuteCB()
+int Cpu::ExecuteCB()
 {
 	u8 n,t;
 	u16 nn,tt;
