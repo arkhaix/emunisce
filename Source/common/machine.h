@@ -5,6 +5,7 @@ class Cpu;
 class Memory;
 class Display;
 class Input;
+class Sound;
 
 namespace MachineType
 {
@@ -44,6 +45,7 @@ public:
 	Memory* GetMemory();
 	Display* GetDisplay();
 	Input* GetInput();
+	Sound* GetSound();
 
 	//Execution
 	void Step();
@@ -70,6 +72,7 @@ protected:
 	Memory* m_memory;
 	Display* m_display;
 	Input* m_input;
+	Sound* m_sound;
 
 	unsigned int m_frameCount;
 
