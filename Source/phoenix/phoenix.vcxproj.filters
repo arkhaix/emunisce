@@ -17,9 +17,27 @@
     <ClCompile Include="consoledebugger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gdiPlusRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="phoenix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="keyboardInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="consoledebugger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gdiPlusRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="phoenix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="keyboardInput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -13,13 +13,21 @@ using namespace std;
 #include "../memory/memory.h"
 #include "../input/input.h"
 
+class Phoenix;
+class Machine;
+
 class ConsoleDebugger
 {
 public:
 
 	ConsoleDebugger();
 
-	void Run(Machine* machine);
+	void Initialize(Phoenix* phoenix);
+	void Shutdown();
+
+	void SetMachine(Machine* machine);
+
+	void Run();
 
 private:
 
@@ -50,12 +58,15 @@ private:
 
 	//Properties
 
+	Phoenix* m_phoenix;
+
 	Machine* m_machine;
+	Cpu* m_cpu;
+	Display* m_display;
+	Memory* m_memory;
 
 	string m_lastFileLoaded;
 	int m_frameTicksRemaining;
-
-	bool m_requestingExit;
 
 	set<u16> m_breakpoints;
 };

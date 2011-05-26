@@ -6,7 +6,7 @@ class CPUTest : public ::testing::Test
 {
 protected:
 
-	CPU cpu;
+	Cpu cpu;
 };
 
 TEST_F(CPUTest, RegisterMapping)

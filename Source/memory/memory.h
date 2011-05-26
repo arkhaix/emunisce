@@ -11,7 +11,6 @@ public:
 
 	virtual void SetMachine(Machine* machine);
 	virtual void Initialize();	///<Be sure to call the super if you override this
-	virtual void Reset();	///<Be sure to call the super if you override this
 
 	void SetRegisterLocation(u8 registerOffset, u8* pRegister, bool writeable=false);	///<registerOffset is the offset from 0xff00 (so register = 0x7e is address 0xff7e).
 
@@ -38,7 +37,7 @@ protected:
 
 	//Component pointers for handling registers.
 
-	CPU* m_cpu;
+	Cpu* m_cpu;
 	Display* m_display;
 	Input* m_input;
 

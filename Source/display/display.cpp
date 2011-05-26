@@ -2,6 +2,7 @@
 
 #include "display.h"
 
+#include "../common/machine.h"
 #include "../memory/memory.h"
 
 
@@ -68,34 +69,23 @@ Display::~Display()
 
 void Display::SetMachine(Machine* machine)
 {
-	if(machine)
-	{
-		m_memory = machine->_Memory;
-	}
+	m_memory = machine->GetMemory();
 
 	//Registers
-	if(m_memory)
-	{
-		m_memory->SetRegisterLocation(0x40, &m_lcdControl, true);
-		m_memory->SetRegisterLocation(0x41, &m_lcdStatus, true);
-		m_memory->SetRegisterLocation(0x42, &m_scrollY, true);
-		m_memory->SetRegisterLocation(0x43, &m_scrollX, true);
-		m_memory->SetRegisterLocation(0x44, &m_currentScanline, false);
-		m_memory->SetRegisterLocation(0x45, &m_scanlineCompare, false);
-		m_memory->SetRegisterLocation(0x47, &m_backgroundPalette, true);
-		m_memory->SetRegisterLocation(0x48, &m_spritePalette0, true);
-		m_memory->SetRegisterLocation(0x49, &m_spritePalette1, true);
-		m_memory->SetRegisterLocation(0x4a, &m_windowY, true);
-		m_memory->SetRegisterLocation(0x4b, &m_windowX, true);
-	}
+	m_memory->SetRegisterLocation(0x40, &m_lcdControl, true);
+	m_memory->SetRegisterLocation(0x41, &m_lcdStatus, true);
+	m_memory->SetRegisterLocation(0x42, &m_scrollY, true);
+	m_memory->SetRegisterLocation(0x43, &m_scrollX, true);
+	m_memory->SetRegisterLocation(0x44, &m_currentScanline, false);
+	m_memory->SetRegisterLocation(0x45, &m_scanlineCompare, false);
+	m_memory->SetRegisterLocation(0x47, &m_backgroundPalette, true);
+	m_memory->SetRegisterLocation(0x48, &m_spritePalette0, true);
+	m_memory->SetRegisterLocation(0x49, &m_spritePalette1, true);
+	m_memory->SetRegisterLocation(0x4a, &m_windowY, true);
+	m_memory->SetRegisterLocation(0x4b, &m_windowX, true);
 }
 
 void Display::Initialize()
-{
-	Reset();
-}
-
-void Display::Reset()
 {
 	m_activeScreenBuffer = &m_screenBuffer;
 	m_stableScreenBuffer = &m_screenBuffer2;

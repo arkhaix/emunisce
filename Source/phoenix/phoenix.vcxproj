@@ -78,6 +78,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ProjectReference Include="..\common\common.vcxproj">
+      <Project>{5320668f-eda7-49eb-90ff-eec79cabc957}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\cpu\cpu.vcxproj">
       <Project>{15a4af88-4429-4720-aef7-700335cf8cf1}</Project>
     </ProjectReference>
@@ -93,10 +96,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="consoledebugger.cpp" />
+    <ClCompile Include="gdiPlusRenderer.cpp" />
+    <ClCompile Include="keyboardInput.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="phoenix.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="consoledebugger.h" />
+    <ClInclude Include="gdiPlusRenderer.h" />
+    <ClInclude Include="keyboardInput.h" />
+    <ClInclude Include="phoenix.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

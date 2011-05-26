@@ -13,6 +13,12 @@ typedef signed int s32;
 #define NULL 0
 #endif
 
+//Component forward-declarations
+class Machine;
+class Cpu;
+class Display;
+class Input;
+class Memory;
 
 //Registers
 #define REG_P1 (0xff00) //Joypad info and system type
@@ -42,57 +48,5 @@ typedef signed int s32;
 #define IF_TIMER (1<<2) //Timer overflow flag
 #define IF_SERIAL (1<<3) //Serial I/O transfer complete flag
 #define IF_INPUT (1<<4)	//"Transition from high to low of pin P10-P13".  Think this triggers on any input.
-
-
-
-class CPU;
-class Memory;
-class Display;
-class Input;
-
-
-namespace MachineType
-{
-	typedef int Type;
-
-	enum
-	{
-		GameBoy,
-		GameBoyColor,
-
-		NumMachineTypes
-	};
-
-	static const char* ToString[] =
-	{
-		"GameBoy",
-		"GameBoyColor",
-
-		"NumMachineTypes"
-	};
-}
-
-struct Machine
-{
-	MachineType::Type _MachineType;
-
-	unsigned int _FrameCount;
-
-	CPU* _CPU;
-	Memory* _Memory;
-	Display* _Display;
-	Input* _Input;
-
-	Machine()
-	{
-		_MachineType = MachineType::GameBoy;
-		_FrameCount = 0;
-
-		_CPU = NULL;
-		_Memory = NULL;
-		_Display = NULL;
-		_Input = NULL;
-	}
-};
 
 #endif

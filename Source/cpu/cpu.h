@@ -42,7 +42,7 @@ class Memory;
 #define INV_C (f ^= (1<<BIT_C))
 
 
-class CPU
+class Cpu
 {
 public:
 
@@ -64,12 +64,11 @@ public:
 	u8& l;
 
 	
-	CPU();
+	Cpu();
 
 	//Component
 	void SetMachine(Machine* machine);
 	void Initialize();
-	void Reset();
 
 	//External
 	int Step();
