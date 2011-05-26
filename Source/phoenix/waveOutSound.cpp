@@ -14,6 +14,7 @@ public:
 	Phoenix* _Phoenix;
 
 	Machine* _Machine;
+	unsigned int _LastFramePlayed;
 
 	bool _Mute;
 
@@ -22,6 +23,8 @@ public:
 	HWAVEOUT _WaveOut;
 	WAVEHDR _WaveHeader[_NumOutputBuffers];
 	HANDLE _BufferFinishedEvent;
+
+	AudioBuffer _Silence;
 
 	AudioBuffer _AudioBuffer[_NumOutputBuffers];
 	int _NextBufferIndex;
@@ -35,9 +38,17 @@ public:
 		_Phoenix = NULL;
 		_Machine = NULL;
 
+		_LastFramePlayed = 0;
+
 		_Mute = false;
 
 		_NextBufferIndex = 0;
+
+		for(int i=0;i<AudioBuffer::BufferSize;i++)
+		{
+			_Silence.Samples[0][i] = (u8)128;
+			_Silence.Samples[1][i] = (u8)128;
+		}
 	}
 
 	void Initialize()
@@ -89,39 +100,35 @@ public:
 
 		for(int i=0;i<_NumOutputBuffers;i++)
 		{
-			unsigned int currentFrame = _Machine->GetFrameCount();
-			while(_Machine->GetFrameCount() == currentFrame)
-				Sleep(15);
-
-			_AudioBuffer[i] = _Machine->GetSound()->GetStableAudioBuffer();
+			_AudioBuffer[i] = _Silence;
 			InterleaveAudioBuffer(i);
 		}
 
 		for(int i=0;i<_NumOutputBuffers;i++)
 			PlayAudioBuffer(i);
 
+
 		_NextBufferIndex = 0;
 
 		while(_Phoenix->ShutdownRequested() == false)
 		{
-			if(_Mute)
-			{
-				Sleep(100);
-				continue;
-			}
-
 			DWORD waitResult = WaitForSingleObject(_BufferFinishedEvent, 1000);
 			if(waitResult == WAIT_ABANDONED)
 				continue;
 
 			waveOutUnprepareHeader(_WaveOut, &_WaveHeader[_NextBufferIndex], sizeof(WAVEHDR));
 
-			if(_Machine != NULL)
+			if(_Mute == false && _Machine != NULL && _Machine->GetFrameCount() > _LastFramePlayed)
 			{
 				_AudioBuffer[_NextBufferIndex] = _Machine->GetSound()->GetStableAudioBuffer();
-				InterleaveAudioBuffer(_NextBufferIndex);
+				_LastFramePlayed = _Machine->GetFrameCount();
+			}
+			else
+			{
+				_AudioBuffer[_NextBufferIndex] = _Silence;
 			}
 
+			InterleaveAudioBuffer(_NextBufferIndex);
 			PlayAudioBuffer(_NextBufferIndex);
 
 			IncrementBufferIndex();
