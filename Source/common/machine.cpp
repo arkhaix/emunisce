@@ -69,6 +69,7 @@ void Machine::Initialize()
 {
 	m_frameCount = 0;
 
+	m_ticksPerSecond = 4194304;
 	m_ticksPerFrame = 69905;	///<4194304 / 60
 	m_frameTicksRemaining = m_ticksPerFrame;
 }
@@ -82,6 +83,11 @@ MachineType::Type Machine::GetMachineType()
 unsigned int Machine::GetFrameCount()
 {
 	return m_frameCount;
+}
+
+unsigned int Machine::GetTicksPerSecond()
+{
+	return m_ticksPerSecond;;
 }
 
 

@@ -39,6 +39,7 @@ public:
 	//Information
 	MachineType::Type GetMachineType();
 	unsigned int GetFrameCount();
+	unsigned int GetTicksPerSecond();
 
 	//Components
 	Cpu* GetCpu();
@@ -76,7 +77,8 @@ protected:
 
 	unsigned int m_frameCount;
 
-	int m_ticksPerFrame;
+	unsigned int m_ticksPerSecond;
+	unsigned int m_ticksPerFrame;
 	int m_frameTicksRemaining;
 };
 

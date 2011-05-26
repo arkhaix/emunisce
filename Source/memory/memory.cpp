@@ -74,11 +74,11 @@ void Memory::Initialize()
 	for(int i=0;i<0x2000;i++)
 		m_memoryData[0xa000+i] = (u8)rand();
 
+	LoadBootRom("dmg_rom.bin");
+
 	//Tell the cpu to skip the bootrom if there isn't one loaded
 	if(m_bootRomEnabled == false && m_cpu)
 		m_cpu->pc = 0x100;
-
-	LoadBootRom();
 }
 
 void Memory::SetRegisterLocation(u8 registerOffset, u8* pRegister, bool writeable)
