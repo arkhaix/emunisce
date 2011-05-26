@@ -5,7 +5,8 @@
 
 struct AudioBuffer
 {
-	static const unsigned int BufferSize = 735;	///<44100Hz / 60fps
+	//static const unsigned int BufferSize = 735;	///<44100Hz / 60fps
+	static const unsigned int BufferSize = 2205;	///<44100Hz / 20fps
 
 	u8 Samples[2][BufferSize];	///<2 channels
 };
