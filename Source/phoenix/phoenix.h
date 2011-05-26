@@ -4,6 +4,7 @@
 class ConsoleDebugger;
 class GdiPlusRenderer;
 class KeyboardInput;
+class WaveOutSound;
 
 class Machine;
 
@@ -16,12 +17,15 @@ public:
 
 	void NotifyMachineChanged(Machine* newMachine);
 
+	Machine* GetMachine();
+
 	bool ShutdownRequested();
 	void RequestShutdown();
 
 	ConsoleDebugger* GetDebugger();
 	GdiPlusRenderer* GetRenderer();
 	KeyboardInput* GetInput();
+	WaveOutSound* GetSound();
 
 private:
 

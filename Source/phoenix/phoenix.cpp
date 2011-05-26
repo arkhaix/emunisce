@@ -1,16 +1,22 @@
 #include "Phoenix.h"
 
+#include "../common/machine.h"
+
 #include "consoledebugger.h"
 #include "gdiPlusRenderer.h"
 #include "keyboardInput.h"
+#include "waveOutSound.h"
 
 class Phoenix_Private
 {
 public:
 
+	Machine* _Machine;
+
 	ConsoleDebugger* _Debugger;
 	GdiPlusRenderer* _Renderer;
 	KeyboardInput* _Input;
+	WaveOutSound* _Sound;
 
 	bool _ShutdownRequested;
 
@@ -18,22 +24,32 @@ public:
 	{
 		_ShutdownRequested = false;
 
+		_Machine = NULL;
+
 		_Debugger = new ConsoleDebugger();
 		_Renderer = new GdiPlusRenderer();
 		_Input = new KeyboardInput();
+		_Sound = new WaveOutSound();
 	}
 
 	~Phoenix_Private()
 	{
 		_ShutdownRequested = true;
 
+		_Sound->Shutdown();
 		_Input->Shutdown();
 		_Renderer->Shutdown();
 		_Debugger->Shutdown();
 
+		delete _Sound;
 		delete _Input;
 		delete _Renderer;
 		delete _Debugger;
+
+		if(_Machine)
+		{
+			Machine::Release(_Machine);
+		}
 	}
 };
 
@@ -44,6 +60,7 @@ Phoenix::Phoenix()
 	m_private->_Debugger->Initialize(this);
 	m_private->_Renderer->Initialize(this);
 	m_private->_Input->Initialize(this);
+	m_private->_Sound->Initialize(this);
 }
 
 Phoenix::~Phoenix()
@@ -53,9 +70,12 @@ Phoenix::~Phoenix()
 
 void Phoenix::NotifyMachineChanged(Machine* newMachine)
 {
+	m_private->_Machine = newMachine;
+
 	m_private->_Debugger->SetMachine(newMachine);
 	m_private->_Renderer->SetMachine(newMachine);
 	m_private->_Input->SetMachine(newMachine);
+	m_private->_Sound->SetMachine(newMachine);
 }
 
 bool Phoenix::ShutdownRequested()
@@ -81,4 +101,9 @@ GdiPlusRenderer* Phoenix::GetRenderer()
 KeyboardInput* Phoenix::GetInput()
 {
 	return m_private->_Input;
+}
+
+WaveOutSound* Phoenix::GetSound()
+{
+	return m_private->_Sound;
 }
