@@ -45,6 +45,9 @@ private:
 
 	unsigned int m_nextSampleIndex;
 
+	float m_totalSeconds;	///<Total time elapsed in seconds
+	float m_fractionalSeconds;	///<Fractional part of m_totalSeconds
+
 
 	//Registers
 
@@ -73,6 +76,34 @@ private:
 	u8 m_soundOutputLevels;		///<NR50, ff24
 	u8 m_soundOutputTerminals;	///<NR51, ff25
 	u8 m_soundEnable;			///<NR52, ff26
+
+
+	//Useful things
+
+	bool m_sound1Enabled;
+	bool m_sound1Playing;
+	bool m_sound1Continuous;
+
+	float m_sound1StartTimeSeconds;
+	float m_sound1LengthSeconds;
+
+	
+	float m_sound1DutyCycles;	///<[0,1]
+
+	int m_sound1Frequency;
+	bool m_sweepEnabled;
+	float m_lastSweepUpdateTimeSeconds;
+	float m_sweepStepTimeSeconds;
+	int m_sweepShift;
+	bool m_sweepIncreasing;
+
+	bool m_envelope1Enabled;
+	float m_lastEnvelope1UpdateTimeSeconds;
+	float m_envelope1StepTimeSeconds;
+	bool m_envelope1Increasing;
+	int m_envelope1Value;
 };
+
+
 
 #endif
