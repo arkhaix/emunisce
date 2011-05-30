@@ -28,6 +28,7 @@ void Sound::Initialize()
 	m_fractionalSeconds = 0.f;
 
 	m_lastSweepUpdateTimeSeconds = 0.f;
+	m_sound1Frequency = 0;
 }
 
 void Sound::SetMachine(Machine* machine)
@@ -107,7 +108,7 @@ void Sound::Run(int ticks)
 				}
 
 				//Update sweep
-				if(m_sweepEnabled && m_totalSeconds - m_lastSweepUpdateTimeSeconds >= m_sweepStepTimeSeconds)
+				if(m_sweepShift > 0 && m_totalSeconds - m_lastSweepUpdateTimeSeconds >= m_sweepStepTimeSeconds)
 				{
 					m_lastSweepUpdateTimeSeconds += m_totalSeconds - m_lastSweepUpdateTimeSeconds;
 
@@ -139,6 +140,12 @@ void Sound::Run(int ticks)
 				{
 					float actualFrequency = 4194304.f / (float)((2048 - m_sound1Frequency) << 5);
 					float actualAmplitude = (float)m_envelope1Value / (float)0x0f;
+
+					//static float lastActualFrequency = 0.f;
+					//float test = actualFrequency - lastActualFrequency;
+					//if(test < -1e-5 || test > 1e-5)
+					//	printf("New frequency: %0.02f \t from: %d (0x%04X)\n", actualFrequency, m_sound1Frequency, m_sound1Frequency);
+					//lastActualFrequency = actualFrequency;
 
 					float waveX = m_fractionalSeconds * actualFrequency;
 					waveX -= (int)waveX;
@@ -247,7 +254,7 @@ void Sound::SetNR12(u8 value)
 
 void Sound::SetNR13(u8 value)
 {
-	m_sound1Frequency &= ~(0xff);
+	m_sound1Frequency &= 0x700;
 	m_sound1Frequency |= value;
 
 	m_nr13 = 0xff;
@@ -255,7 +262,7 @@ void Sound::SetNR13(u8 value)
 
 void Sound::SetNR14(u8 value)
 {
-	m_sound1Frequency &= ~(0x70);
+	m_sound1Frequency &= 0x0ff;
 	m_sound1Frequency |= (value & 0x07) << 8;
 
 	if(value & 0x40)

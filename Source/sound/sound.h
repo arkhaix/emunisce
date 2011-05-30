@@ -99,7 +99,6 @@ private:
 	float m_sound1DutyCycles;	///<[0,1]
 
 	int m_sound1Frequency;
-	bool m_sweepEnabled;
 	float m_lastSweepUpdateTimeSeconds;
 	float m_sweepStepTimeSeconds;
 	int m_sweepShift;
