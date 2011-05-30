@@ -18,6 +18,7 @@ using namespace std;
 #include "../cpu/cpu.h"
 #include "../display/display.h"
 #include "../input/input.h"
+#include "../sound/sound.h"
 
 
 Memory::Memory()
@@ -27,6 +28,7 @@ Memory::Memory()
 	m_cpu = NULL;
 	m_display = NULL;
 	m_input = NULL;
+	m_sound = NULL;
 
 	for(int i=0;i<0x100;i++)
 	{
@@ -54,6 +56,7 @@ void Memory::SetMachine(Machine* machine)
 	m_cpu = machine->GetCpu();
 	m_display = machine->GetDisplay();
 	m_input = machine->GetInput();
+	m_sound = machine->GetSound();
 
 	//Update register info
 
@@ -67,6 +70,12 @@ void Memory::SetMachine(Machine* machine)
 	m_callWriteRegister[0x45] = true;	//Display::SetScanlineCompare
 
 	m_callWriteRegister[0x00] = true;	//Input::SetJoypadMode
+
+	m_callWriteRegister[0x10] = true;	//Sound::SetNR10
+	m_callWriteRegister[0x11] = true;	//Sound::SetNR11
+	m_callWriteRegister[0x12] = true;	//Sound::SetNR12
+	m_callWriteRegister[0x13] = true;	//Sound::SetNR13
+	m_callWriteRegister[0x14] = true;	//Sound::SetNR14
 }
 
 void Memory::Initialize()
@@ -260,11 +269,16 @@ void Memory::WriteRegister(u16 address, u8 value)
 {
 	switch(address)
 	{
-	case 0xff00: if(m_input) { m_input->SetJoypadMode(value); } break;
-	case 0xff04: if(m_cpu) { m_cpu->SetTimerDivider(value); } break;
-	case 0xff07: if(m_cpu) { m_cpu->SetTimerControl(value); } break;
-	case 0xff44: if(m_display) { m_display->SetCurrentScanline(value); } break;
-	case 0xff45: if(m_display) { m_display->SetScanlineCompare(value); } break;
+	case 0xff00: m_input->SetJoypadMode(value); break;
+	case 0xff04: m_cpu->SetTimerDivider(value); break;
+	case 0xff07: m_cpu->SetTimerControl(value); break;
+	case 0xff10: m_sound->SetNR10(value); break;
+	case 0xff11: m_sound->SetNR11(value); break;
+	case 0xff12: m_sound->SetNR12(value); break;
+	case 0xff13: m_sound->SetNR13(value); break;
+	case 0xff14: m_sound->SetNR14(value); break;
+	case 0xff44: m_display->SetCurrentScanline(value); break;
+	case 0xff45: m_display->SetScanlineCompare(value); break;
 	case 0xff46: SetDmaStartLocation(value); break;
 	case 0xff50: DisableBootRom(value); break;
 	}

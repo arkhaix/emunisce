@@ -19,6 +19,7 @@ class Cpu;
 class Display;
 class Input;
 class Memory;
+class Sound;
 
 //Registers
 #define REG_P1 (0xff00) //Joypad info and system type

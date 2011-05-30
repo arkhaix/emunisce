@@ -27,7 +27,7 @@ ConsoleDebugger::ConsoleDebugger()
 	m_display = NULL;
 	m_memory = NULL;
 
-	m_muteSound = true;
+	m_muteSound = false;
 }
 
 void ConsoleDebugger::Initialize(Phoenix* phoenix)
@@ -272,7 +272,7 @@ void ConsoleDebugger::RunMachine()
 
 	printf("Press any key to pause execution...\n");
 
-	int syncsPerSecond = 30;
+	int syncsPerSecond = 20;
 
 	LARGE_INTEGER performanceFrequency;
 	LARGE_INTEGER countsPerSync;
