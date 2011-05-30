@@ -7,6 +7,7 @@ struct AudioBuffer
 {
 	//static const unsigned int BufferSize = 735;	///<44100Hz / 60fps
 	//static const unsigned int BufferSize = 2205;	///<44100Hz / 20fps
+	//static const unsigned int BufferSize = 735;	///<22050Hz / 30fps
 	//static const unsigned int BufferSize = 1470;	///<22050Hz / 15fps
 	static const unsigned int BufferSize = 2205;	///<22050Hz / 10fps
 
@@ -28,6 +29,7 @@ public:
 
 	//External
 	AudioBuffer GetStableAudioBuffer();
+	int GetAudioBufferCount();
 
 	//Registers
 
@@ -51,6 +53,7 @@ private:
 	AudioBuffer* m_activeAudioBuffer;
 	AudioBuffer* m_stableAudioBuffer;
 	void* m_audioBufferLock;
+	int m_audioBufferCount;
 
 	float m_ticksPerSample;
 	float m_ticksUntilNextSample;

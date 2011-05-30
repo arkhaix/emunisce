@@ -29,6 +29,8 @@ void Sound::Initialize()
 
 	m_lastSweepUpdateTimeSeconds = 0.f;
 	m_sound1Frequency = 0;
+
+	m_audioBufferCount = 0;
 }
 
 void Sound::SetMachine(Machine* machine)
@@ -245,6 +247,7 @@ void Sound::Run(int ticks)
 				m_activeAudioBuffer = temp;
 			LeaveCriticalSection((LPCRITICAL_SECTION)m_audioBufferLock);
 
+			m_audioBufferCount++;
 			m_nextSampleIndex = 0;
 		}
 	}
@@ -257,6 +260,11 @@ AudioBuffer Sound::GetStableAudioBuffer()
 	LeaveCriticalSection((LPCRITICAL_SECTION)m_audioBufferLock);
 
 	return result;
+}
+
+int Sound::GetAudioBufferCount()
+{
+	return m_audioBufferCount;
 }
 
 void Sound::SetNR10(u8 value)

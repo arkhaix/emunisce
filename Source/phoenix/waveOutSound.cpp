@@ -7,7 +7,9 @@
 #include "../common/machine.h"
 #include "../sound/sound.h"
 
-#include <cstdio>
+#include <iostream>
+#include <queue>
+using namespace std;
 
 class WaveOutSound_Private
 {
@@ -16,7 +18,7 @@ public:
 	Phoenix* _Phoenix;
 
 	Machine* _Machine;
-	unsigned int _LastFramePlayed;
+	unsigned int _LastFrameQueued;
 
 	bool _Mute;
 
@@ -30,22 +32,23 @@ public:
 	AudioBuffer _Silence;
 
 	AudioBuffer _AudioBuffer[_NumOutputBuffers];
-	int _NextBufferIndex;
 
 	u8 _InterleavedBuffer[_NumOutputBuffers][AudioBuffer::BufferSize * _NumOutputChannels];
 
 	HANDLE _PlaybackThreadHandle;
+
+	queue<AudioBuffer> _PendingBufferQueue;
+	CRITICAL_SECTION _PendingBufferQueueLock;
+	HANDLE _MonitorThreadHandle;
 
 	WaveOutSound_Private()
 	{
 		_Phoenix = NULL;
 		_Machine = NULL;
 
-		_LastFramePlayed = 0;
+		_LastFrameQueued = 0;
 
 		_Mute = false;
-
-		_NextBufferIndex = 0;
 
 		for(int i=0;i<AudioBuffer::BufferSize;i++)
 		{
@@ -56,8 +59,11 @@ public:
 
 	void Initialize()
 	{
+		InitializeCriticalSection(&_PendingBufferQueueLock);
+
 		InitializeWaveOut();
 
+		_MonitorThreadHandle = CreateThread(NULL, 0, StaticMonitorThread, (LPVOID)this, 0, NULL);
 		_PlaybackThreadHandle = CreateThread(NULL, 0, StaticPlaybackThread, (LPVOID)this, 0, NULL);
 	}
 
@@ -83,13 +89,54 @@ public:
 	{
 		_Phoenix->RequestShutdown();
 		WaitForSingleObject(_PlaybackThreadHandle, 1000);
+		WaitForSingleObject(_MonitorThreadHandle, 1000);
 
 		ShutdownWaveOut();
+
+		DeleteCriticalSection(&_PendingBufferQueueLock);
 	}
 
 	void ShutdownWaveOut()
 	{
 		waveOutClose(_WaveOut);
+	}
+
+	DWORD MonitorThread()
+	{
+		while(_Machine == NULL && _Phoenix->ShutdownRequested() == false)
+			Sleep(100);
+
+		if(_Phoenix->ShutdownRequested())
+			return 0;
+
+		while(_Phoenix->ShutdownRequested() == false)
+		{
+			if(_Mute == false && _Machine != NULL && _Machine->GetSound()->GetAudioBufferCount() != _LastFrameQueued)
+			{
+				AudioBuffer buffer = _Machine->GetSound()->GetStableAudioBuffer();
+
+				EnterCriticalSection(&_PendingBufferQueueLock);
+					_PendingBufferQueue.push(buffer);
+				LeaveCriticalSection(&_PendingBufferQueueLock);
+
+				_LastFrameQueued = _Machine->GetSound()->GetAudioBufferCount();
+			}
+			else
+			{
+				Sleep(10);
+			}
+		}
+
+		return 0;
+	}
+
+	static DWORD WINAPI StaticMonitorThread(LPVOID param)
+	{
+		WaveOutSound_Private* instance = (WaveOutSound_Private*)param;
+		if(instance == NULL)
+			return 1;
+
+		return instance->MonitorThread();
 	}
 
 	DWORD PlaybackThread()
@@ -111,8 +158,6 @@ public:
 			PlayAudioBuffer(i);
 
 
-		_NextBufferIndex = 0;
-
 		while(_Phoenix->ShutdownRequested() == false)
 		{
 			DWORD waitResult = WaitForSingleObject(_BufferFinishedEvent, 1000);
@@ -122,26 +167,27 @@ public:
 			for(int i=0;i<_NumOutputBuffers;i++)
 			{
 				if(_WaveHeader[i].dwFlags & WHDR_DONE)
-					_NextBufferIndex = i;
-			}
+				{
+					waveOutUnprepareHeader(_WaveOut, &_WaveHeader[i], sizeof(WAVEHDR));
 
-			waveOutUnprepareHeader(_WaveOut, &_WaveHeader[_NextBufferIndex], sizeof(WAVEHDR));
+					bool usedPendingBuffer = false;
 
-			if(_Mute == false && _Machine != NULL && _Machine->GetFrameCount() > _LastFramePlayed)
-			{
-				//if(_LastFramePlayed+1 < _Machine->GetFrameCount())
-				//	printf("Missed a frame (%d < %d)\n", _LastFramePlayed, _Machine->GetFrameCount());
-				_AudioBuffer[_NextBufferIndex] = _Machine->GetSound()->GetStableAudioBuffer();
-				_LastFramePlayed = _Machine->GetFrameCount();
-			}
-			else
-			{
-				//printf("Playing silence\n");
-				_AudioBuffer[_NextBufferIndex] = _Silence;
-			}
+					EnterCriticalSection(&_PendingBufferQueueLock);
+						if(_PendingBufferQueue.size() > 0)
+						{
+							_AudioBuffer[i] = _PendingBufferQueue.front();
+							_PendingBufferQueue.pop();
+							usedPendingBuffer = true;
+						}
+					LeaveCriticalSection(&_PendingBufferQueueLock);
 
-			InterleaveAudioBuffer(_NextBufferIndex);
-			PlayAudioBuffer(_NextBufferIndex);
+					if(usedPendingBuffer == false)
+						_AudioBuffer[i] = _Silence;
+
+					InterleaveAudioBuffer(i);
+					PlayAudioBuffer(i);
+				}
+			}
 		}
 
 		return 0;
