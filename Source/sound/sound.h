@@ -6,7 +6,9 @@
 struct AudioBuffer
 {
 	//static const unsigned int BufferSize = 735;	///<44100Hz / 60fps
-	static const unsigned int BufferSize = 2205;	///<44100Hz / 20fps
+	//static const unsigned int BufferSize = 2205;	///<44100Hz / 20fps
+	//static const unsigned int BufferSize = 1470;	///<22050Hz / 15fps
+	static const unsigned int BufferSize = 2205;	///<22050Hz / 10fps
 
 	u8 Samples[2][BufferSize];	///<2 channels
 };
@@ -28,6 +30,12 @@ public:
 	AudioBuffer GetStableAudioBuffer();
 
 	//Registers
+
+	void SetNR10(u8 value);
+	void SetNR11(u8 value);
+	void SetNR12(u8 value);
+	void SetNR13(u8 value);
+	void SetNR14(u8 value);
 
 private:
 
@@ -51,11 +59,11 @@ private:
 
 	//Registers
 
-	u8 m_sound1Sweep;			///<NR10, ff10
-	u8 m_sound1Length;			///<NR11, ff11
-	u8 m_sound1Envelope;		///<NR12, ff12
-	u8 m_sound1FrequencyLow;	///<NR13, ff13
-	u8 m_sound1FrequencyHigh;	///<NR14, ff14
+	u8 m_nr10;	///<NR10, ff10
+	u8 m_nr11;	///<NR11, ff11
+	u8 m_nr12;	///<NR12, ff12
+	u8 m_nr13;	///<NR13, ff13
+	u8 m_nr14;	///<NR14, ff14
 
 	u8 m_sound2Length;			///<NR21, ff16
 	u8 m_sound2Envelope;		///<NR22, ff17
@@ -102,6 +110,7 @@ private:
 	float m_envelope1StepTimeSeconds;
 	bool m_envelope1Increasing;
 	int m_envelope1Value;
+	int m_envelope1InitialValue;
 };
 
 

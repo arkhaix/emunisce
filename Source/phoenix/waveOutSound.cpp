@@ -19,6 +19,7 @@ public:
 	bool _Mute;
 
 	static const int _NumOutputBuffers = 3;
+	static const int _NumOutputChannels = 2;	///< Mono/Stereo output
 
 	HWAVEOUT _WaveOut;
 	WAVEHDR _WaveHeader[_NumOutputBuffers];
@@ -29,7 +30,7 @@ public:
 	AudioBuffer _AudioBuffer[_NumOutputBuffers];
 	int _NextBufferIndex;
 
-	u8 _InterleavedBuffer[_NumOutputBuffers][AudioBuffer::BufferSize*2];
+	u8 _InterleavedBuffer[_NumOutputBuffers][AudioBuffer::BufferSize * _NumOutputChannels];
 
 	HANDLE _PlaybackThreadHandle;
 
@@ -64,9 +65,9 @@ public:
 
 		WAVEFORMATEX waveFormat;
 
-		waveFormat.nSamplesPerSec = 44100;
+		waveFormat.nSamplesPerSec = 22050;
 		waveFormat.wBitsPerSample = 8;
-		waveFormat.nChannels = 2;
+		waveFormat.nChannels = _NumOutputChannels;
 
 		waveFormat.cbSize = 0;
 		waveFormat.wFormatTag = WAVE_FORMAT_PCM;
@@ -157,8 +158,19 @@ public:
 	{
 		for(int i=0;i<AudioBuffer::BufferSize;i++)
 		{
-			_InterleavedBuffer[index][ (i*2) + 0 ] = _AudioBuffer[index].Samples[0][i];
-			_InterleavedBuffer[index][ (i*2) + 1 ] = _AudioBuffer[index].Samples[1][i];
+			if(_NumOutputChannels == 1)
+			{
+				int sample = _AudioBuffer[index].Samples[0][i];
+				//sample += _AudioBuffer[index].Samples[1][i];
+				//sample /= 2;
+
+				_InterleavedBuffer[index][i] = (u8)sample;
+			}
+			else if(_NumOutputChannels == 2)
+			{
+				_InterleavedBuffer[index][ (i*2) + 0 ] = _AudioBuffer[index].Samples[0][i];
+				_InterleavedBuffer[index][ (i*2) + 1 ] = _AudioBuffer[index].Samples[1][i];
+			}
 		}
 	}
 
@@ -166,7 +178,7 @@ public:
 	{
 		WAVEHDR* header = &_WaveHeader[index];
 		ZeroMemory(header, sizeof(WAVEHDR));
-		header->dwBufferLength = AudioBuffer::BufferSize*2;
+		header->dwBufferLength = AudioBuffer::BufferSize * _NumOutputChannels;
 		header->lpData = (LPSTR)&_InterleavedBuffer[index][0];
 
 		waveOutPrepareHeader(_WaveOut, header, sizeof(WAVEHDR));
