@@ -44,6 +44,12 @@ public:
 	void SetNR23(u8 value);
 	void SetNR24(u8 value);
 
+	void SetNR30(u8 value);
+	void SetNR31(u8 value);
+	void SetNR32(u8 value);
+	void SetNR33(u8 value);
+	void SetNR34(u8 value);
+
 private:
 
 	Machine* m_machine;
@@ -78,11 +84,11 @@ private:
 	u8 m_nr23;	///<NR23, ff18
 	u8 m_nr24;	///<NR24, ff19
 
-	u8 m_sound3Enable;			///<NR30, ff1a
-	u8 m_sound3Length;			///<NR31, ff1b
-	u8 m_sound3Level;			///<NR32, ff1c
-	u8 m_sound3FrequencyLow;	///<NR33, ff1d
-	u8 m_sound3FrequencyHigh;	///<NR34, ff1e
+	u8 m_nr30;	///<NR30, ff1a
+	u8 m_nr31;	///<NR31, ff1b
+	u8 m_nr32;	///<NR32, ff1c
+	u8 m_nr33;	///<NR33, ff1d
+	u8 m_nr34;	///<NR34, ff1e
 
 	u8 m_sound4Length;			///<NR41, ff20
 	u8 m_sound4Envelope;		///<NR42, ff21
@@ -137,6 +143,18 @@ private:
 	bool m_envelope2Increasing;
 	int m_envelope2Value;
 	int m_envelope2InitialValue;
+
+
+	bool m_sound3Enabled;
+	bool m_sound3Playing;
+	bool m_sound3Off;
+	bool m_sound3Continuous;
+
+	float m_sound3StartTimeSeconds;
+	float m_sound3LengthSeconds;
+
+	int m_sound3Frequency;
+	int m_sound3Level;
 };
 
 
