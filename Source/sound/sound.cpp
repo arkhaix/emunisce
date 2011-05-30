@@ -54,11 +54,11 @@ void Sound::SetMachine(Machine* machine)
 	m_memory->SetRegisterLocation(0x18, &m_nr23, false);
 	m_memory->SetRegisterLocation(0x19, &m_nr24, false);
 
-	m_memory->SetRegisterLocation(0x1a, &m_sound3Enable, true);
-	m_memory->SetRegisterLocation(0x1b, &m_sound3Length, true);
-	m_memory->SetRegisterLocation(0x1c, &m_sound3Level, true);
-	m_memory->SetRegisterLocation(0x1d, &m_sound3FrequencyLow, true);
-	m_memory->SetRegisterLocation(0x1e, &m_sound3FrequencyHigh, true);
+	m_memory->SetRegisterLocation(0x1a, &m_nr30, false);
+	m_memory->SetRegisterLocation(0x1b, &m_nr31, false);
+	m_memory->SetRegisterLocation(0x1c, &m_nr32, false);
+	m_memory->SetRegisterLocation(0x1d, &m_nr33, false);
+	m_memory->SetRegisterLocation(0x1e, &m_nr34, false);
 
 	m_memory->SetRegisterLocation(0x20, &m_sound4Length, true);
 	m_memory->SetRegisterLocation(0x21, &m_sound4Envelope, true);
@@ -202,7 +202,54 @@ void Sound::Run(int ticks)
 			}
 		}
 
-		//Get the samples
+		//Sound 3 Tick
+		//if(m_sound3Enabled)
+		if(m_sound3Off == false)
+		{
+			if(m_sound3Playing)
+			{
+				//Update sound time
+				if(m_sound3Continuous == false && m_totalSeconds - m_sound3StartTimeSeconds >= m_sound3LengthSeconds)
+				{
+					m_sound3Playing = false;
+					m_soundEnable &= ~(0x04);
+				}
+
+				//Get sample
+				if(m_sound3Playing)
+				{
+					float actualFrequency = 4194304.f / (float)((2048 - m_sound3Frequency) << 5);
+
+					float waveX = m_fractionalSeconds * actualFrequency;
+					waveX -= (int)waveX;
+
+					int sampleIndex = (int)(waveX * 32.f);
+					u16 sampleAddress = 0xff30 + (sampleIndex / 2);
+					u8 sample = m_memory->Read8(sampleAddress);
+					if(sampleIndex & 1)
+						sample &= 0x0f;
+					else
+						sample = (sample & 0xf0) >> 4;
+
+					bool sampleIsPositive = (sample & 0x08) ? true : false;
+
+					if(m_sound3Level == 0)
+						sample = 0;
+					else
+						sample = sample >> (m_sound3Level - 1);
+
+					if(sampleIsPositive)
+						sample = 128 + (sample << 3);
+					else
+						sample = 128 - (sample << 3);
+
+					sampleValue[2] = sample;
+					channelEnabled[2] = true;
+				}
+			}
+		}
+
+		//Mix the samples
 		int sampleTotal = 0;
 		int numSampleSources = 0;
 		for(int i=0;i<4;i++)
@@ -220,19 +267,9 @@ void Sound::Run(int ticks)
 			numSampleSources = 1;
 		}
 
-		//Mix the samples
 		int finalSampleValue = sampleTotal / numSampleSources;
 
 		//Output the final sample
-
-		//float testFrequency = 100.f * (m_totalSeconds / 2.f);
-		//float go = m_fractionalSeconds * testFrequency;
-		//go -= (int)go;
-		//if(go < .5f)
-		//	finalSampleValue = 68;
-		//else
-		//	finalSampleValue = 188;
-
 		m_activeAudioBuffer->Samples[0][m_nextSampleIndex] = (u8)finalSampleValue;
 		m_activeAudioBuffer->Samples[1][m_nextSampleIndex] = (u8)finalSampleValue;
 		
@@ -394,4 +431,58 @@ void Sound::SetNR24(u8 value)
 
 	m_nr24 = value & 0x40;
 	m_nr24 |= 0xbf;
+}
+
+void Sound::SetNR30(u8 value)
+{
+	if(value & 0x80)
+		m_sound3Off = false;
+	else
+		m_sound3Off = true;
+
+	m_nr30 = value & 0x80;
+	m_nr30 |= 0x7f;
+}
+
+void Sound::SetNR31(u8 value)
+{
+	m_sound3LengthSeconds = (float)(256 - value) * (1.f / 256.f);
+
+	m_nr31 = value;
+}
+
+void Sound::SetNR32(u8 value)
+{
+	m_sound3Level = (value & 0x60) >> 5;
+
+	m_nr32 = value & 0x60;
+	m_nr32 |= 0x9f;
+}
+
+void Sound::SetNR33(u8 value)
+{
+	m_sound3Frequency &= 0x700;
+	m_sound3Frequency |= value;
+
+	m_nr33 = 0xff;
+}
+
+void Sound::SetNR34(u8 value)
+{
+	m_sound3Frequency &= 0x0ff;
+	m_sound3Frequency |= (value & 0x07) << 8;
+
+	if(value & 0x40)
+		m_sound3Continuous = false;
+	else
+		m_sound3Continuous = true;
+
+	if(value & 0x80)
+	{
+		m_sound3Playing = true;
+		m_sound3StartTimeSeconds = m_totalSeconds;
+	}
+
+	m_nr34 = value & 0x40;
+	m_nr34 |= 0xbf;
 }

@@ -81,6 +81,12 @@ void Memory::SetMachine(Machine* machine)
 	m_callWriteRegister[0x17] = true;	//Sound::SetNR22
 	m_callWriteRegister[0x18] = true;	//Sound::SetNR23
 	m_callWriteRegister[0x19] = true;	//Sound::SetNR24
+
+	m_callWriteRegister[0x1a] = true;	//Sound::SetNR30
+	m_callWriteRegister[0x1b] = true;	//Sound::SetNR31
+	m_callWriteRegister[0x1c] = true;	//Sound::SetNR32
+	m_callWriteRegister[0x1d] = true;	//Sound::SetNR33
+	m_callWriteRegister[0x1e] = true;	//Sound::SetNR34
 }
 
 void Memory::Initialize()
@@ -275,20 +281,32 @@ void Memory::WriteRegister(u16 address, u8 value)
 	switch(address)
 	{
 	case 0xff00: m_input->SetJoypadMode(value); break;
+
 	case 0xff04: m_cpu->SetTimerDivider(value); break;
 	case 0xff07: m_cpu->SetTimerControl(value); break;
+
 	case 0xff10: m_sound->SetNR10(value); break;
 	case 0xff11: m_sound->SetNR11(value); break;
 	case 0xff12: m_sound->SetNR12(value); break;
 	case 0xff13: m_sound->SetNR13(value); break;
 	case 0xff14: m_sound->SetNR14(value); break;
+
 	case 0xff16: m_sound->SetNR21(value); break;
 	case 0xff17: m_sound->SetNR22(value); break;
 	case 0xff18: m_sound->SetNR23(value); break;
 	case 0xff19: m_sound->SetNR24(value); break;
+
+	case 0xff1a: m_sound->SetNR30(value); break;
+	case 0xff1b: m_sound->SetNR31(value); break;
+	case 0xff1c: m_sound->SetNR32(value); break;
+	case 0xff1d: m_sound->SetNR33(value); break;
+	case 0xff1e: m_sound->SetNR34(value); break;
+
 	case 0xff44: m_display->SetCurrentScanline(value); break;
 	case 0xff45: m_display->SetScanlineCompare(value); break;
+
 	case 0xff46: SetDmaStartLocation(value); break;
+
 	case 0xff50: DisableBootRom(value); break;
 	}
 }
