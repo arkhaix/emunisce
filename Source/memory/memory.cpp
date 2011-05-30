@@ -11,6 +11,7 @@ using namespace std;
 #include "romonly.h"
 #include "mbc1.h"
 #include "mbc3.h"
+#include "mbc5.h"
 
 //Solution
 #include "../common/machine.h"
@@ -200,6 +201,13 @@ Memory* Memory::CreateFromFile(const char* filename)
 		memoryController = new MBC1();
 	else if(cartType >= 0x0f && cartType <= 0x13)
 		memoryController = new MBC3();
+	else if(cartType >= 0x19 && cartType <= 0x1e)
+		memoryController = new MBC5();
+
+	if(memoryController != NULL)
+		printf("Cartridge type ok: %d (0x%02X)\n", cartType, cartType);
+	else
+		printf("Unsupported cartridge type: %d (0x%02X)\n", cartType, cartType);
 
 	if(memoryController == NULL)
 		return NULL;

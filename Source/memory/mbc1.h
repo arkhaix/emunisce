@@ -18,8 +18,8 @@ protected:
 	void SwitchROM();
 	void SwitchRAM();
 
-	u8 m_romBanks[0x80][0x4000];
-	u8 m_ramBanks[0x04][0x2000];
+	u8 m_romBanks[0x200][0x4000];
+	u8 m_ramBanks[0x10][0x2000];
 
 	int m_selectedRomBank;
 	int m_selectedRamBank;
