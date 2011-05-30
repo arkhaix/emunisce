@@ -7,6 +7,8 @@
 #include "../common/machine.h"
 #include "../sound/sound.h"
 
+#include <cstdio>
+
 class WaveOutSound_Private
 {
 public:
@@ -117,22 +119,29 @@ public:
 			if(waitResult == WAIT_ABANDONED)
 				continue;
 
+			for(int i=0;i<_NumOutputBuffers;i++)
+			{
+				if(_WaveHeader[i].dwFlags & WHDR_DONE)
+					_NextBufferIndex = i;
+			}
+
 			waveOutUnprepareHeader(_WaveOut, &_WaveHeader[_NextBufferIndex], sizeof(WAVEHDR));
 
 			if(_Mute == false && _Machine != NULL && _Machine->GetFrameCount() > _LastFramePlayed)
 			{
+				//if(_LastFramePlayed+1 < _Machine->GetFrameCount())
+				//	printf("Missed a frame (%d < %d)\n", _LastFramePlayed, _Machine->GetFrameCount());
 				_AudioBuffer[_NextBufferIndex] = _Machine->GetSound()->GetStableAudioBuffer();
 				_LastFramePlayed = _Machine->GetFrameCount();
 			}
 			else
 			{
+				//printf("Playing silence\n");
 				_AudioBuffer[_NextBufferIndex] = _Silence;
 			}
 
 			InterleaveAudioBuffer(_NextBufferIndex);
 			PlayAudioBuffer(_NextBufferIndex);
-
-			IncrementBufferIndex();
 		}
 
 		return 0;
@@ -145,13 +154,6 @@ public:
 			return instance->PlaybackThread();
 
 		return 1;
-	}
-
-	void IncrementBufferIndex()
-	{
-		_NextBufferIndex++;
-		if(_NextBufferIndex >= _NumOutputBuffers)
-			_NextBufferIndex = 0;
 	}
 
 	void InterleaveAudioBuffer(int index)

@@ -141,12 +141,6 @@ void Sound::Run(int ticks)
 					float actualFrequency = 4194304.f / (float)((2048 - m_sound1Frequency) << 5);
 					float actualAmplitude = (float)m_envelope1Value / (float)0x0f;
 
-					//static float lastActualFrequency = 0.f;
-					//float test = actualFrequency - lastActualFrequency;
-					//if(test < -1e-5 || test > 1e-5)
-					//	printf("New frequency: %0.02f \t from: %d (0x%04X)\n", actualFrequency, m_sound1Frequency, m_sound1Frequency);
-					//lastActualFrequency = actualFrequency;
-
 					float waveX = m_fractionalSeconds * actualFrequency;
 					waveX -= (int)waveX;
 
@@ -155,13 +149,6 @@ void Sound::Run(int ticks)
 						fSample = -fSample;
 
 					u8 sample = (u8)(128 + (fSample * 127.f));
-
-					//float go = m_fractionalSeconds * 100.f;
-					//go -= (int)go;
-					//if(go < .5f)
-					//	sample = 68;
-					//else
-					//	sample = 188;
 
 					sampleValue[0] = sample;
 					channelEnabled[0] = true;
@@ -178,7 +165,7 @@ void Sound::Run(int ticks)
 				if(m_sound2Continuous == false && m_totalSeconds - m_sound2StartTimeSeconds >= m_sound2LengthSeconds)
 				{
 					m_sound2Playing = false;
-					m_soundEnable &= ~(0x01);
+					m_soundEnable &= ~(0x02);
 				}
 
 				//Update envelope
@@ -198,12 +185,6 @@ void Sound::Run(int ticks)
 					float actualFrequency = 4194304.f / (float)((2048 - m_sound2Frequency) << 5);
 					float actualAmplitude = (float)m_envelope2Value / (float)0x0f;
 
-					//static float lastActualFrequency = 0.f;
-					//float test = actualFrequency - lastActualFrequency;
-					//if(test < -1e-5 || test > 1e-5)
-					//	printf("New frequency: %0.02f \t from: %d (0x%04X)\n", actualFrequency, m_sound2Frequency, m_sound2Frequency);
-					//lastActualFrequency = actualFrequency;
-
 					float waveX = m_fractionalSeconds * actualFrequency;
 					waveX -= (int)waveX;
 
@@ -212,13 +193,6 @@ void Sound::Run(int ticks)
 						fSample = -fSample;
 
 					u8 sample = (u8)(128 + (fSample * 127.f));
-
-					//float go = m_fractionalSeconds * 100.f;
-					//go -= (int)go;
-					//if(go < .5f)
-					//	sample = 68;
-					//else
-					//	sample = 188;
 
 					sampleValue[1] = sample;
 					channelEnabled[1] = true;
@@ -249,12 +223,13 @@ void Sound::Run(int ticks)
 
 		//Output the final sample
 
-		//float go = m_fractionalSeconds * 100.f;
+		//float testFrequency = 100.f * (m_totalSeconds / 2.f);
+		//float go = m_fractionalSeconds * testFrequency;
 		//go -= (int)go;
 		//if(go < .5f)
-		//	sampleValue[0] = 68;
+		//	finalSampleValue = 68;
 		//else
-		//	sampleValue[0] = 188;
+		//	finalSampleValue = 188;
 
 		m_activeAudioBuffer->Samples[0][m_nextSampleIndex] = (u8)finalSampleValue;
 		m_activeAudioBuffer->Samples[1][m_nextSampleIndex] = (u8)finalSampleValue;
