@@ -37,6 +37,11 @@ public:
 	void SetNR13(u8 value);
 	void SetNR14(u8 value);
 
+	void SetNR21(u8 value);
+	void SetNR22(u8 value);
+	void SetNR23(u8 value);
+	void SetNR24(u8 value);
+
 private:
 
 	Machine* m_machine;
@@ -65,10 +70,10 @@ private:
 	u8 m_nr13;	///<NR13, ff13
 	u8 m_nr14;	///<NR14, ff14
 
-	u8 m_sound2Length;			///<NR21, ff16
-	u8 m_sound2Envelope;		///<NR22, ff17
-	u8 m_sound2FrequencyLow;	///<NR23, ff18
-	u8 m_sound2FrequencyHigh;	///<NR24, ff19
+	u8 m_nr21;	///<NR21, ff16
+	u8 m_nr22;	///<NR22, ff17
+	u8 m_nr23;	///<NR23, ff18
+	u8 m_nr24;	///<NR24, ff19
 
 	u8 m_sound3Enable;			///<NR30, ff1a
 	u8 m_sound3Length;			///<NR31, ff1b
@@ -95,7 +100,6 @@ private:
 	float m_sound1StartTimeSeconds;
 	float m_sound1LengthSeconds;
 
-	
 	float m_sound1DutyCycles;	///<[0,1]
 
 	int m_sound1Frequency;
@@ -110,6 +114,26 @@ private:
 	bool m_envelope1Increasing;
 	int m_envelope1Value;
 	int m_envelope1InitialValue;
+
+
+
+	bool m_sound2Enabled;
+	bool m_sound2Playing;
+	bool m_sound2Continuous;
+
+	float m_sound2StartTimeSeconds;
+	float m_sound2LengthSeconds;
+
+	float m_sound2DutyCycles;	///<[0,1]
+
+	int m_sound2Frequency;
+
+	bool m_envelope2Enabled;
+	float m_lastEnvelope2UpdateTimeSeconds;
+	float m_envelope2StepTimeSeconds;
+	bool m_envelope2Increasing;
+	int m_envelope2Value;
+	int m_envelope2InitialValue;
 };
 
 

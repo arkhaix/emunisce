@@ -76,6 +76,11 @@ void Memory::SetMachine(Machine* machine)
 	m_callWriteRegister[0x12] = true;	//Sound::SetNR12
 	m_callWriteRegister[0x13] = true;	//Sound::SetNR13
 	m_callWriteRegister[0x14] = true;	//Sound::SetNR14
+
+	m_callWriteRegister[0x16] = true;	//Sound::SetNR21
+	m_callWriteRegister[0x17] = true;	//Sound::SetNR22
+	m_callWriteRegister[0x18] = true;	//Sound::SetNR23
+	m_callWriteRegister[0x19] = true;	//Sound::SetNR24
 }
 
 void Memory::Initialize()
@@ -277,6 +282,10 @@ void Memory::WriteRegister(u16 address, u8 value)
 	case 0xff12: m_sound->SetNR12(value); break;
 	case 0xff13: m_sound->SetNR13(value); break;
 	case 0xff14: m_sound->SetNR14(value); break;
+	case 0xff16: m_sound->SetNR21(value); break;
+	case 0xff17: m_sound->SetNR22(value); break;
+	case 0xff18: m_sound->SetNR23(value); break;
+	case 0xff19: m_sound->SetNR24(value); break;
 	case 0xff44: m_display->SetCurrentScanline(value); break;
 	case 0xff45: m_display->SetScanlineCompare(value); break;
 	case 0xff46: SetDmaStartLocation(value); break;

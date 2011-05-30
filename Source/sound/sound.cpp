@@ -47,10 +47,10 @@ void Sound::SetMachine(Machine* machine)
 	m_memory->SetRegisterLocation(0x13, &m_nr13, false);
 	m_memory->SetRegisterLocation(0x14, &m_nr14, false);
 
-	m_memory->SetRegisterLocation(0x16, &m_sound2Length, true);
-	m_memory->SetRegisterLocation(0x17, &m_sound2Envelope, true);
-	m_memory->SetRegisterLocation(0x18, &m_sound2FrequencyLow, true);
-	m_memory->SetRegisterLocation(0x19, &m_sound2FrequencyHigh, true);
+	m_memory->SetRegisterLocation(0x16, &m_nr21, false);
+	m_memory->SetRegisterLocation(0x17, &m_nr22, false);
+	m_memory->SetRegisterLocation(0x18, &m_nr23, false);
+	m_memory->SetRegisterLocation(0x19, &m_nr24, false);
 
 	m_memory->SetRegisterLocation(0x1a, &m_sound3Enable, true);
 	m_memory->SetRegisterLocation(0x1b, &m_sound3Length, true);
@@ -164,13 +164,88 @@ void Sound::Run(int ticks)
 					//	sample = 188;
 
 					sampleValue[0] = sample;
+					channelEnabled[0] = true;
+				}
+			}
+		}
+
+		//Sound 2 Tick
+		//if(m_sound2Enabled)
+		{
+			if(m_sound2Playing)
+			{
+				//Update sound time
+				if(m_sound2Continuous == false && m_totalSeconds - m_sound2StartTimeSeconds >= m_sound2LengthSeconds)
+				{
+					m_sound2Playing = false;
+					m_soundEnable &= ~(0x01);
+				}
+
+				//Update envelope
+				if(m_totalSeconds - m_lastEnvelope2UpdateTimeSeconds >= m_envelope2StepTimeSeconds)
+				{
+					m_lastEnvelope2UpdateTimeSeconds += m_totalSeconds - m_lastEnvelope2UpdateTimeSeconds;
+
+					if(m_envelope2Increasing == true && m_envelope2Value < 0x0f)
+						m_envelope2Value++;
+					else if(m_envelope2Increasing == false && m_envelope2Value > 0x00)
+						m_envelope2Value--;
+				}
+
+				//Get sample
+				if(m_sound2Playing)
+				{
+					float actualFrequency = 4194304.f / (float)((2048 - m_sound2Frequency) << 5);
+					float actualAmplitude = (float)m_envelope2Value / (float)0x0f;
+
+					//static float lastActualFrequency = 0.f;
+					//float test = actualFrequency - lastActualFrequency;
+					//if(test < -1e-5 || test > 1e-5)
+					//	printf("New frequency: %0.02f \t from: %d (0x%04X)\n", actualFrequency, m_sound2Frequency, m_sound2Frequency);
+					//lastActualFrequency = actualFrequency;
+
+					float waveX = m_fractionalSeconds * actualFrequency;
+					waveX -= (int)waveX;
+
+					float fSample = 1.f * actualAmplitude;
+					if(waveX > m_sound2DutyCycles)
+						fSample = -fSample;
+
+					u8 sample = (u8)(128 + (fSample * 127.f));
+
+					//float go = m_fractionalSeconds * 100.f;
+					//go -= (int)go;
+					//if(go < .5f)
+					//	sample = 68;
+					//else
+					//	sample = 188;
+
+					sampleValue[1] = sample;
+					channelEnabled[1] = true;
 				}
 			}
 		}
 
 		//Get the samples
+		int sampleTotal = 0;
+		int numSampleSources = 0;
+		for(int i=0;i<4;i++)
+		{
+			if(channelEnabled[i] == false)
+				continue;
+
+			sampleTotal += sampleValue[i];
+			numSampleSources++;
+		}
+
+		if(numSampleSources == 0)
+		{
+			sampleTotal = 128;
+			numSampleSources = 1;
+		}
 
 		//Mix the samples
+		int finalSampleValue = sampleTotal / numSampleSources;
 
 		//Output the final sample
 
@@ -181,8 +256,8 @@ void Sound::Run(int ticks)
 		//else
 		//	sampleValue[0] = 188;
 
-		m_activeAudioBuffer->Samples[0][m_nextSampleIndex] = sampleValue[0];
-		m_activeAudioBuffer->Samples[1][m_nextSampleIndex] = sampleValue[0];
+		m_activeAudioBuffer->Samples[0][m_nextSampleIndex] = (u8)finalSampleValue;
+		m_activeAudioBuffer->Samples[1][m_nextSampleIndex] = (u8)finalSampleValue;
 		
 		//Update the index
 		m_nextSampleIndex++;
@@ -281,3 +356,59 @@ void Sound::SetNR14(u8 value)
 	m_nr14 |= 0xbf;
 }
 
+void Sound::SetNR21(u8 value)
+{
+	m_sound2LengthSeconds = (float)(64 - (value & 0x3f)) * (1.f / 256.f);
+
+	int duty = (value & 0xc0) >> 6;
+	if(duty == 0)
+		m_sound2DutyCycles = 0.125f;
+	else
+		m_sound2DutyCycles = 0.25f * duty;
+
+	m_nr21 = value & 0xc0;
+	m_nr21 |= 0x3f;
+}
+
+void Sound::SetNR22(u8 value)
+{
+	m_envelope2StepTimeSeconds = (value & 0x03) * (1.f / 64.f);
+
+	if(value & 0x08)
+		m_envelope2Increasing = true;
+	else
+		m_envelope2Increasing = false;
+
+	m_envelope2InitialValue = (value & 0xf0) >> 4;
+
+	m_nr22 = value;
+}
+
+void Sound::SetNR23(u8 value)
+{
+	m_sound2Frequency &= 0x700;
+	m_sound2Frequency |= value;
+
+	m_nr23 = 0xff;
+}
+
+void Sound::SetNR24(u8 value)
+{
+	m_sound2Frequency &= 0x0ff;
+	m_sound2Frequency |= (value & 0x07) << 8;
+
+	if(value & 0x40)
+		m_sound2Continuous = false;
+	else
+		m_sound2Continuous = true;
+
+	if(value & 0x80)
+	{
+		m_sound2Playing = true;
+		m_sound2StartTimeSeconds = m_totalSeconds;
+		m_envelope2Value = m_envelope2InitialValue;
+	}
+
+	m_nr24 = value & 0x40;
+	m_nr24 |= 0xbf;
+}
