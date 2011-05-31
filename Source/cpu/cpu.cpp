@@ -112,9 +112,6 @@ void Cpu::SetTimerControl(u8 value)
 
 void Cpu::UpdateTimer(int ticks)
 {
-	if(m_timerEnabled == false)
-		return;
-
 	//Divider
 	m_ticksUntilDividerIncrement -= ticks;
 	if(m_ticksUntilDividerIncrement <= 0)
@@ -123,6 +120,9 @@ void Cpu::UpdateTimer(int ticks)
 
 		m_timerDivider++;
 	}
+
+	if(m_timerEnabled == false)
+		return;
 
 	//Counter
 	m_ticksUntilCounterIncrement -= ticks;
