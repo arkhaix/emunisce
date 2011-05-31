@@ -70,6 +70,7 @@ private:
 	string m_lastFileLoaded;
 	int m_frameTicksRemaining;
 
+	bool m_breakpointsEnabled;
 	set<u16> m_breakpoints;
 
 	bool m_muteSound;

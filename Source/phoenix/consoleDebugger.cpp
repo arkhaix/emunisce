@@ -28,6 +28,8 @@ ConsoleDebugger::ConsoleDebugger()
 	m_memory = NULL;
 
 	m_muteSound = false;
+
+	m_breakpointsEnabled = false;
 }
 
 void ConsoleDebugger::Initialize(Phoenix* phoenix)
@@ -301,7 +303,7 @@ void ConsoleDebugger::RunMachine()
 		while(m_machine->GetFrameCount() == curFrame)
 		{
 			StepInto();
-			if(m_breakpoints.find( m_cpu->pc ) != m_breakpoints.end())
+			if(m_breakpointsEnabled == true && m_breakpoints.find( m_cpu->pc ) != m_breakpoints.end())
 			{
 				keepGoing = false;
 				break;
@@ -343,10 +345,16 @@ void ConsoleDebugger::RunMachineTo(int address)
 		addedBreakpoint = true;
 	}
 
+	m_breakpointsEnabled = true;
+
 	RunMachine();
 
 	if(addedBreakpoint && iter != m_breakpoints.end())
+	{
 		m_breakpoints.erase(iter);
+		if(m_breakpoints.size() == 0)
+			m_breakpointsEnabled = false;
+	}
 }
 
 
@@ -366,6 +374,11 @@ void ConsoleDebugger::ToggleBreakpoint(int address)
 		m_breakpoints.erase(iter);
 		printf("Removed a breakpoint at: %04X\n", gbAddress);
 	}
+
+	if(m_breakpoints.size() > 0)
+		m_breakpointsEnabled = true;
+	else
+		m_breakpointsEnabled = false;
 
 	Sleep(1000);
 }
@@ -390,6 +403,7 @@ void ConsoleDebugger::ClearBreakpoints()
 
 	auto numBreakpoints = m_breakpoints.size();
 	m_breakpoints.clear();
+	m_breakpointsEnabled = false;
 
 	printf("\nCleared %d breakpoints\n", numBreakpoints);
 	Sleep(1000);
