@@ -38,7 +38,7 @@ void Sound::SetMachine(Machine* machine)
 	m_machine = machine;
 	m_memory = machine->GetMemory();
 
-	m_ticksPerSample = (float)machine->GetTicksPerSecond() / 22050.f;
+	m_ticksPerSample = (float)machine->GetTicksPerSecond() / (float)SamplesPerSecond;
 	m_ticksUntilNextSample = m_ticksPerSample;
 	m_ticksSinceLastSample = 0;
 
@@ -87,9 +87,9 @@ void Sound::Run(int ticks)
 		while(m_fractionalSeconds >= 1.f)
 			m_fractionalSeconds -= 1.f;
 
-		u8 sampleValue[4];
+		SampleType sampleValue[4];
 		for(int i=0;i<4;i++)
-			sampleValue[i] = (u8)0x80;	///<silent
+			sampleValue[i] = SilentSample;
 
 		//Update the generators
 
@@ -111,9 +111,9 @@ void Sound::Run(int ticks)
 					m_lastSweepUpdateTimeSeconds += m_totalSeconds - m_lastSweepUpdateTimeSeconds;
 
 					if(m_sweepIncreasing == true)
-						m_sound1Frequency <<= m_sweepShift;
+						m_sound1Frequency += (m_sound1Frequency >> m_sweepShift);
 					else
-						m_sound1Frequency >>= m_sweepShift;
+						m_sound1Frequency -= (m_sound1Frequency >> m_sweepShift);
 
 					if(m_sound1Frequency >= 0x800)	///<Frequency has maximum 11-bits.  Overflow turns off the sound
 					{
@@ -136,7 +136,7 @@ void Sound::Run(int ticks)
 				//Get sample
 				if(m_sound1Playing)
 				{
-					float actualFrequency = 4194304.f / (float)((2048 - m_sound1Frequency) << 5);
+					float actualFrequency = (float)m_machine->GetTicksPerSecond() / (float)((2048 - m_sound1Frequency) << 5);
 					float actualAmplitude = (float)m_envelope1Value / (float)0x0f;
 
 					float waveX = m_fractionalSeconds * actualFrequency;
@@ -146,7 +146,7 @@ void Sound::Run(int ticks)
 					if(waveX > m_sound1DutyCycles)
 						fSample = -fSample;
 
-					u8 sample = (u8)(128 + (fSample * 127.f));
+					SampleType sample = (SampleType)(SilentSample + (fSample * ((float)SilentSample / 2.f) - 1.f));
 
 					sampleValue[0] = sample;
 				}
@@ -189,7 +189,7 @@ void Sound::Run(int ticks)
 					if(waveX > m_sound2DutyCycles)
 						fSample = -fSample;
 
-					u8 sample = (u8)(128 + (fSample * 127.f));
+					SampleType sample = (SampleType)(SilentSample + (fSample * ((float)SilentSample / 2.f) - 1.f));
 
 					sampleValue[1] = sample;
 				}
@@ -219,7 +219,7 @@ void Sound::Run(int ticks)
 
 					int sampleIndex = (int)(waveX * 32.f);
 					u16 sampleAddress = 0xff30 + (sampleIndex / 2);
-					u8 sample = m_memory->Read8(sampleAddress);
+					SampleType sample = m_memory->Read8(sampleAddress);
 					if(sampleIndex & 1)
 						sample &= 0x0f;
 					else
@@ -232,10 +232,29 @@ void Sound::Run(int ticks)
 					else
 						sample = sample >> (m_sound3Level - 1);
 
+					//???
+					// It sounds horrible if I try to shift the result at all
+					// But that doesn't make sense...
+
+					//if(BytesPerSample == 1)
+					//{
+					//	if(sampleIsPositive)
+					//		sample = SilentSample + (sample << 0);
+					//	else
+					//		sample = SilentSample - (sample << 0);
+					//}
+					//else if(BytesPerSample == 2)
+					//{
+					//	if(sampleIsPositive)
+					//		sample = SilentSample + (sample << 0);
+					//	else
+					//		sample = SilentSample - (sample << 0);
+					//}
+
 					if(sampleIsPositive)
-						sample = 128 + (sample << 3);
+						sample = SilentSample + sample;
 					else
-						sample = 128 - (sample << 3);
+						sample = SilentSample - sample;
 
 					sampleValue[2] = sample;
 				}
@@ -245,25 +264,41 @@ void Sound::Run(int ticks)
 		//Mix the samples
 		float finalSampleValue = 0.f;
 		for(int i=0;i<4;i++)
-			finalSampleValue += (float)sampleValue[i] - 128.f;
+			finalSampleValue += (float)sampleValue[i] - (float)SilentSample;
 
-		float attenuator = .25f;
-		finalSampleValue *= attenuator;
+		if(BytesPerSample == 1)
+		{
+			float attenuator = .5f;
+			finalSampleValue *= attenuator;
+		}
 
-		finalSampleValue += 128.f;
+		finalSampleValue += (float)SilentSample;
+
 
 		if(finalSampleValue < 0.f)
 			finalSampleValue = 0.f;
-		if(finalSampleValue > 255.f)
-			finalSampleValue = 255.f;
+
+		if(BytesPerSample == 1)
+		{
+			if(finalSampleValue > (float)MaxSample)
+				finalSampleValue = (float)MaxSample;
+		}
+		else if(BytesPerSample == 2)
+		{
+			if(finalSampleValue > 65535.f)
+				finalSampleValue = 65535.f;
+		}
+
+		//SampleType finalSampleValue = Mix(sampleValue[0], Mix(sampleValue[1], sampleValue[3]));
+		//SampleType finalSampleValue = Mix(sampleValue[0], Mix(sampleValue[1], Mix(sampleValue[2], sampleValue[3])));
 
 		//Output the final sample
-		m_activeAudioBuffer->Samples[0][m_nextSampleIndex] = (u8)finalSampleValue;
-		m_activeAudioBuffer->Samples[1][m_nextSampleIndex] = (u8)finalSampleValue;
+		m_activeAudioBuffer->Samples[0][m_nextSampleIndex] = (SampleType)finalSampleValue;
+		m_activeAudioBuffer->Samples[1][m_nextSampleIndex] = (SampleType)finalSampleValue;
 		
 		//Update the index
 		m_nextSampleIndex++;
-		if(m_nextSampleIndex >= AudioBuffer::BufferSize)
+		if(m_nextSampleIndex >= AudioBuffer::BufferSizeSamples)
 		{
 			//Reached the end of the buffer.  Swap them.
 			EnterCriticalSection((LPCRITICAL_SECTION)m_audioBufferLock);
@@ -473,4 +508,19 @@ void Sound::SetNR34(u8 value)
 
 	m_nr34 = value & 0x40;
 	m_nr34 |= 0xbf;
+}
+
+SampleType Sound::Mix(SampleType a, SampleType b)
+{
+	float fa = (float)a / (float)MaxSample;
+	float fb = (float)b / (float)MaxSample;
+
+	float fResult = 0.5f;
+	if(fa < 0.5f && fb < 0.5f)
+		fResult = 2.f * fa * fb;
+	else
+		fResult = (2.f * (fa + fb)) - (2.f * fa * fb) - 1.f;
+
+	fResult *= (float)MaxSample;
+	return (SampleType)fResult;
 }

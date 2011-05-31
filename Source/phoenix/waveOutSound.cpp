@@ -23,7 +23,7 @@ public:
 	bool _Mute;
 
 	static const int _NumOutputBuffers = 3;
-	static const int _NumOutputChannels = 2;	///< Mono/Stereo output
+	static const int _NumOutputChannels = 1;	///< Mono/Stereo output
 
 	HWAVEOUT _WaveOut;
 	WAVEHDR _WaveHeader[_NumOutputBuffers];
@@ -33,7 +33,7 @@ public:
 
 	AudioBuffer _AudioBuffer[_NumOutputBuffers];
 
-	u8 _InterleavedBuffer[_NumOutputBuffers][AudioBuffer::BufferSize * _NumOutputChannels];
+	SampleType _InterleavedBuffer[_NumOutputBuffers][AudioBuffer::BufferSizeSamples * _NumOutputChannels];
 
 	HANDLE _PlaybackThreadHandle;
 
@@ -50,10 +50,10 @@ public:
 
 		_Mute = false;
 
-		for(int i=0;i<AudioBuffer::BufferSize;i++)
+		for(int i=0;i<AudioBuffer::BufferSizeSamples;i++)
 		{
-			_Silence.Samples[0][i] = (u8)128;
-			_Silence.Samples[1][i] = (u8)128;
+			_Silence.Samples[0][i] = SilentSample;
+			_Silence.Samples[1][i] = SilentSample;
 		}
 	}
 
@@ -73,8 +73,8 @@ public:
 
 		WAVEFORMATEX waveFormat;
 
-		waveFormat.nSamplesPerSec = 22050;
-		waveFormat.wBitsPerSample = 8;
+		waveFormat.nSamplesPerSec = SamplesPerSecond;
+		waveFormat.wBitsPerSample = 8 * BytesPerSample;
 		waveFormat.nChannels = _NumOutputChannels;
 
 		waveFormat.cbSize = 0;
@@ -204,7 +204,7 @@ public:
 
 	void InterleaveAudioBuffer(int index)
 	{
-		for(int i=0;i<AudioBuffer::BufferSize;i++)
+		for(int i=0;i<AudioBuffer::BufferSizeSamples;i++)
 		{
 			if(_NumOutputChannels == 1)
 			{
@@ -212,7 +212,7 @@ public:
 				//sample += _AudioBuffer[index].Samples[1][i];
 				//sample /= 2;
 
-				_InterleavedBuffer[index][i] = (u8)sample;
+				_InterleavedBuffer[index][i] = (SampleType)sample;
 			}
 			else if(_NumOutputChannels == 2)
 			{
@@ -226,7 +226,7 @@ public:
 	{
 		WAVEHDR* header = &_WaveHeader[index];
 		ZeroMemory(header, sizeof(WAVEHDR));
-		header->dwBufferLength = AudioBuffer::BufferSize * _NumOutputChannels;
+		header->dwBufferLength = AudioBuffer::BufferSizeBytes * _NumOutputChannels;
 		header->lpData = (LPSTR)&_InterleavedBuffer[index][0];
 
 		waveOutPrepareHeader(_WaveOut, header, sizeof(WAVEHDR));

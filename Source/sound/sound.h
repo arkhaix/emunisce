@@ -3,15 +3,24 @@
 
 #include "../common/types.h"
 
+static const unsigned int SamplesPerSecond = 22050;
+
+static const unsigned int BytesPerSample = 1;
+typedef u8 SampleType;
+#define SilentSample ((SampleType)0x80)
+#define MaxSample ((SampleType)0xff)
+
+//static const unsigned int BytesPerSample = 2;
+//typedef u16 SampleType;
+//#define SilentSample ((SampleType)0x80)
+//#define MaxSample ((SampleType)0xff)
+
 struct AudioBuffer
 {
-	//static const unsigned int BufferSize = 735;	///<44100Hz / 60fps
-	//static const unsigned int BufferSize = 2205;	///<44100Hz / 20fps
-	//static const unsigned int BufferSize = 735;	///<22050Hz / 30fps
-	//static const unsigned int BufferSize = 1470;	///<22050Hz / 15fps
-	static const unsigned int BufferSize = 2205;	///<22050Hz / 10fps
+	static const unsigned int BufferSizeSamples = SamplesPerSecond / 10;	///<10fps
+	static const unsigned int BufferSizeBytes = BufferSizeSamples * BytesPerSample;
 
-	u8 Samples[2][BufferSize];	///<2 channels
+	SampleType Samples[2][BufferSizeSamples];	///<2 channels
 };
 
 class Sound
@@ -51,6 +60,8 @@ public:
 	void SetNR34(u8 value);
 
 private:
+	
+	SampleType Mix(SampleType a, SampleType b);
 
 	Machine* m_machine;
 	Memory* m_memory;
