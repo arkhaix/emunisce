@@ -8,6 +8,7 @@ class MBC1 : public Memory
 public:
 
 	MBC1();
+	~MBC1();
 
 	virtual void Write8(u16 address, u8 value);
 
@@ -17,6 +18,9 @@ protected:
 
 	void SwitchROM();
 	void SwitchRAM();
+
+	char m_romFilename[1024];
+	char m_sramFilename[1024];
 
 	u8 m_romBanks[0x200][0x4000];
 	u8 m_ramBanks[0x10][0x2000];

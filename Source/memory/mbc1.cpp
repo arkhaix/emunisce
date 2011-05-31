@@ -8,6 +8,28 @@ MBC1::MBC1()
 	m_fiveBitBankCheck = true;
 }
 
+MBC1::~MBC1()
+{
+	u8 cartType = m_memoryData[0x147];
+	u8 batteryTypes[] = { 0x03, 0x06, 0x09, 0x0f, 0x10, 0x13, 0x1b };
+
+	bool isBatteryType = false;
+	for(int i=0;i<7;i++)
+		if(batteryTypes[i] == cartType)
+			isBatteryType = true;
+
+	if(isBatteryType == false)
+		return;
+	
+	ofstream sramFile(m_sramFilename, ios::out | ios::binary);
+	if(sramFile.good())
+	{
+		for(int i=0;i<0x10;i++)
+			sramFile.write((char*)(&m_ramBanks[i][0]), 0x2000);
+		sramFile.close();
+	}
+}
+
 void MBC1::Write8(u16 address, u8 value)
 {
 	//RAM Enable/Disable
@@ -84,6 +106,13 @@ bool MBC1::LoadFile(const char* filename)
 		return false;
 
 
+	//Save the filename
+
+	strcpy_s(m_romFilename, 1024, filename);
+	strcpy_s(m_sramFilename, 1024, filename);
+	strcat_s(m_sramFilename, 1024, ".sram");
+
+
 	//Load all the banks
 
 	int romBank = 0;
@@ -120,6 +149,18 @@ bool MBC1::LoadFile(const char* filename)
 		m_ramBanks[2][address] = randomByte[2];
 		m_ramBanks[3][address] = randomByte[3];
 	}
+
+
+	//Load battery-backed RAM if applicable
+
+	ifstream sramFile(m_sramFilename, ios::in | ios::binary);
+	if(sramFile.good())
+	{
+		for(int i=0;i<0x10;i++)
+			sramFile.read((char*)(&m_ramBanks[i][0]), 0x2000);
+		sramFile.close();
+	}
+
 
 
 	//Copy the first RAM bank to active memory
