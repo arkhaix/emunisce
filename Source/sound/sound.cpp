@@ -28,9 +28,39 @@ void Sound::Initialize()
 	m_fractionalSeconds = 0.f;
 
 	m_lastSweepUpdateTimeSeconds = 0.f;
+	m_lastEnvelope1UpdateTimeSeconds = 0.f;
 	m_sound1Frequency = 0;
 
+	m_lastEnvelope2UpdateTimeSeconds = 0.f;
+
 	m_audioBufferCount = 0;
+
+	SetNR10(0x80);
+	SetNR11(0x3f);
+	SetNR12(0x00);
+	SetNR13(0xff);
+	SetNR14(0xbf);
+
+	//SetNR20(0xff);
+	SetNR21(0x3f);
+	SetNR22(0x00);
+	SetNR23(0xff);
+	SetNR24(0xbf);
+
+	SetNR30(0x7f);
+	SetNR31(0xff);
+	SetNR32(0x9f);
+	SetNR33(0xff);
+	SetNR34(0xbf);
+
+	m_sound4Length = 0xff;		///<NR40
+	m_sound4Envelope = 0xff;	///<NR41
+	m_sound4Nfc = 0x00;			///<NR42
+	m_sound4Initialize = 0xbf;	///<NR43
+
+	m_soundOutputLevels = 0x00;	///<NR50
+	m_soundOutputTerminals = 0x00;	///<NR51
+	m_soundEnable = 0xf0;		///<NR52
 }
 
 void Sound::SetMachine(Machine* machine)
@@ -87,9 +117,10 @@ void Sound::Run(int ticks)
 		while(m_fractionalSeconds >= 1.f)
 			m_fractionalSeconds -= 1.f;
 
-		SampleType sampleValue[4];
+		float sampleValue[4];
 		for(int i=0;i<4;i++)
-			sampleValue[i] = SilentSample;
+			sampleValue[i] = 0.f;
+
 
 		//Update the generators
 
@@ -108,24 +139,30 @@ void Sound::Run(int ticks)
 				//Update sweep
 				if(m_sweepShift > 0 && m_totalSeconds - m_lastSweepUpdateTimeSeconds >= m_sweepStepTimeSeconds)
 				{
-					m_lastSweepUpdateTimeSeconds += m_totalSeconds - m_lastSweepUpdateTimeSeconds;
+					m_lastSweepUpdateTimeSeconds = m_totalSeconds;
+
+					int newFrequency = m_sound1Frequency;
 
 					if(m_sweepIncreasing == true)
-						m_sound1Frequency += (m_sound1Frequency >> m_sweepShift);
+						newFrequency += (m_sound1Frequency >> m_sweepShift);
 					else
-						m_sound1Frequency -= (m_sound1Frequency >> m_sweepShift);
+						newFrequency -= (m_sound1Frequency >> m_sweepShift);
 
-					if(m_sound1Frequency >= 0x800)	///<Frequency has maximum 11-bits.  Overflow turns off the sound
+					if(newFrequency >= 0x800)	///<Frequency has maximum 11-bits.  Overflow turns off the sound
 					{
 						m_sound1Playing = false;
 						m_soundEnable &= ~(0x01);
 					}
+					else
+					{
+						m_sound1Frequency = newFrequency;
+					}
 				}
 
 				//Update envelope
-				if(m_totalSeconds - m_lastEnvelope1UpdateTimeSeconds >= m_envelope1StepTimeSeconds)
+				if(m_envelope1Enabled && m_totalSeconds - m_lastEnvelope1UpdateTimeSeconds >= m_envelope1StepTimeSeconds)
 				{
-					m_lastEnvelope1UpdateTimeSeconds += m_totalSeconds - m_lastEnvelope1UpdateTimeSeconds;
+					m_lastEnvelope1UpdateTimeSeconds = m_totalSeconds;
 
 					if(m_envelope1Increasing == true && m_envelope1Value < 0x0f)
 						m_envelope1Value++;
@@ -146,9 +183,7 @@ void Sound::Run(int ticks)
 					if(waveX > m_sound1DutyCycles)
 						fSample = -fSample;
 
-					SampleType sample = (SampleType)(SilentSample + (fSample * ((float)SilentSample / 2.f) - 1.f));
-
-					sampleValue[0] = sample;
+					sampleValue[0] = fSample;
 				}
 			}
 		}
@@ -166,7 +201,7 @@ void Sound::Run(int ticks)
 				}
 
 				//Update envelope
-				if(m_totalSeconds - m_lastEnvelope2UpdateTimeSeconds >= m_envelope2StepTimeSeconds)
+				if(m_envelope2Enabled && m_totalSeconds - m_lastEnvelope2UpdateTimeSeconds >= m_envelope2StepTimeSeconds)
 				{
 					m_lastEnvelope2UpdateTimeSeconds += m_totalSeconds - m_lastEnvelope2UpdateTimeSeconds;
 
@@ -179,7 +214,7 @@ void Sound::Run(int ticks)
 				//Get sample
 				if(m_sound2Playing)
 				{
-					float actualFrequency = 4194304.f / (float)((2048 - m_sound2Frequency) << 5);
+					float actualFrequency = (float)m_machine->GetTicksPerSecond() / (float)((2048 - m_sound2Frequency) << 5);
 					float actualAmplitude = (float)m_envelope2Value / (float)0x0f;
 
 					float waveX = m_fractionalSeconds * actualFrequency;
@@ -189,9 +224,7 @@ void Sound::Run(int ticks)
 					if(waveX > m_sound2DutyCycles)
 						fSample = -fSample;
 
-					SampleType sample = (SampleType)(SilentSample + (fSample * ((float)SilentSample / 2.f) - 1.f));
-
-					sampleValue[1] = sample;
+					sampleValue[1] = fSample;
 				}
 			}
 		}
@@ -212,7 +245,7 @@ void Sound::Run(int ticks)
 				//Get sample
 				if(m_sound3Playing)
 				{
-					float actualFrequency = 4194304.f / (float)((2048 - m_sound3Frequency) << 5);
+					float actualFrequency = (float)m_machine->GetTicksPerSecond() / (float)((2048 - m_sound3Frequency) << 5);
 
 					float waveX = m_fractionalSeconds * actualFrequency;
 					waveX -= (int)waveX;
@@ -225,77 +258,71 @@ void Sound::Run(int ticks)
 					else
 						sample = (sample & 0xf0) >> 4;
 
-					bool sampleIsPositive = (sample & 0x08) ? true : false;
-
 					if(m_sound3Level == 0)
 						sample = 0;
 					else
 						sample = sample >> (m_sound3Level - 1);
 
-					//???
-					// It sounds horrible if I try to shift the result at all
-					// But that doesn't make sense...
+					//Adjust to [0,1]
+					sampleValue[2] = (float)sample / 15.f;
 
-					//if(BytesPerSample == 1)
-					//{
-					//	if(sampleIsPositive)
-					//		sample = SilentSample + (sample << 0);
-					//	else
-					//		sample = SilentSample - (sample << 0);
-					//}
-					//else if(BytesPerSample == 2)
-					//{
-					//	if(sampleIsPositive)
-					//		sample = SilentSample + (sample << 0);
-					//	else
-					//		sample = SilentSample - (sample << 0);
-					//}
-
-					if(sampleIsPositive)
-						sample = SilentSample + sample;
-					else
-						sample = SilentSample - sample;
-
-					sampleValue[2] = sample;
+					//Expand to [-1,1]
+					sampleValue[2] *= 2.f;
+					sampleValue[2] -= 1.f;
 				}
 			}
 		}
 
-		//Mix the samples
-		float finalSampleValue = 0.f;
-		for(int i=0;i<4;i++)
-			finalSampleValue += (float)sampleValue[i] - (float)SilentSample;
 
-		if(BytesPerSample == 1)
+		//Add adjusted samples with range [0,1] instead of [-1,1]
+		float adjustedSamples[4];
+		for(int i=0;i<4;i++)
 		{
-			float attenuator = .5f;
-			finalSampleValue *= attenuator;
+			adjustedSamples[i] = sampleValue[i] / 2.f;
+			adjustedSamples[i] += 0.5f;
 		}
 
-		finalSampleValue += (float)SilentSample;
 
-
-		if(finalSampleValue < 0.f)
-			finalSampleValue = 0.f;
+		//Mix the samples
+		float finalSampleValue = 0.f;
 
 		if(BytesPerSample == 1)
 		{
-			if(finalSampleValue > (float)MaxSample)
-				finalSampleValue = (float)MaxSample;
+			//for(int i=0;i<4;i++)
+			//	finalSampleValue += (adjustedSamples[i]-0.5f) * mixPercentage[i];
+			//finalSampleValue += 0.5f;
+
+			for(int i=0;i<4;i++)
+				finalSampleValue += adjustedSamples[i]-0.5f;
+			finalSampleValue /= 4.f;
+			finalSampleValue += 0.5f;
+
+			//finalSampleValue = Mix(adjustedSamples[0], Mix(adjustedSamples[1], adjustedSamples[3]));
+			//finalSampleValue = Mix(adjustedSamples[0], Mix(adjustedSamples[1], Mix(adjustedSamples[2], adjustedSamples[3])));
 		}
 		else if(BytesPerSample == 2)
 		{
-			if(finalSampleValue > 65535.f)
-				finalSampleValue = 65535.f;
+			for(int i=0;i<4;i++)
+				finalSampleValue += sampleValue[i];
+			finalSampleValue /= 4.f;
 		}
 
-		//SampleType finalSampleValue = Mix(sampleValue[0], Mix(sampleValue[1], sampleValue[3]));
-		//SampleType finalSampleValue = Mix(sampleValue[0], Mix(sampleValue[1], Mix(sampleValue[2], sampleValue[3])));
 
 		//Output the final sample
+
+		if(BytesPerSample == 1 && finalSampleValue < 0.f)
+			finalSampleValue = 0.f;
+		else if(BytesPerSample == 2 && finalSampleValue < -1.f)
+			finalSampleValue = -1.f;
+		else if(finalSampleValue > 1.f)
+			finalSampleValue = 1.f;
+
+		finalSampleValue *= (float)MaxSample;
+
 		m_activeAudioBuffer->Samples[0][m_nextSampleIndex] = (SampleType)finalSampleValue;
 		m_activeAudioBuffer->Samples[1][m_nextSampleIndex] = (SampleType)finalSampleValue;
 		
+
 		//Update the index
 		m_nextSampleIndex++;
 		if(m_nextSampleIndex >= AudioBuffer::BufferSizeSamples)
@@ -330,6 +357,7 @@ int Sound::GetAudioBufferCount()
 void Sound::SetNR10(u8 value)
 {
 	m_sweepShift = value & 0x07;
+	m_envelope1Value = m_envelope1InitialValue;
 
 	if(value & 0x08)
 		m_sweepIncreasing = false;
@@ -338,8 +366,9 @@ void Sound::SetNR10(u8 value)
 
 	m_sweepStepTimeSeconds = (float)((value & 0x70) >> 4) / 128.f;
 
-	m_nr10 = value & 0x7f;
-	m_nr10 |= 0x80;
+	//m_nr10 = value & 0x7f;
+	//m_nr10 |= 0x80;
+	m_nr10 = value;
 }
 
 void Sound::SetNR11(u8 value)
@@ -352,13 +381,18 @@ void Sound::SetNR11(u8 value)
 	else
 		m_sound1DutyCycles = 0.25f * duty;
 
-	m_nr11 = value & 0xc0;
-	m_nr11 |= 0x3f;
+	//m_nr11 = value & 0xc0;
+	//m_nr11 |= 0x3f;
+	m_nr11 = value;
 }
 
 void Sound::SetNR12(u8 value)
 {
 	m_envelope1StepTimeSeconds = (value & 0x03) * (1.f / 64.f);
+	if((value & 0x03) == 0)
+		m_envelope1Enabled = false;
+	else
+		m_envelope1Enabled = true;
 
 	if(value & 0x08)
 		m_envelope1Increasing = true;
@@ -366,6 +400,7 @@ void Sound::SetNR12(u8 value)
 		m_envelope1Increasing = false;
 
 	m_envelope1InitialValue = (value & 0xf0) >> 4;
+	m_envelope1Value = m_envelope1InitialValue;
 
 	m_nr12 = value;
 }
@@ -375,7 +410,8 @@ void Sound::SetNR13(u8 value)
 	m_sound1Frequency &= 0x700;
 	m_sound1Frequency |= value;
 
-	m_nr13 = 0xff;
+	//m_nr13 = 0xff;
+	m_nr13 = value;
 }
 
 void Sound::SetNR14(u8 value)
@@ -395,8 +431,9 @@ void Sound::SetNR14(u8 value)
 		m_envelope1Value = m_envelope1InitialValue;
 	}
 
-	m_nr14 = value & 0x40;
-	m_nr14 |= 0xbf;
+	//m_nr14 = value & 0x40;
+	//m_nr14 |= 0xbf;
+	m_nr14 = value;
 }
 
 void Sound::SetNR21(u8 value)
@@ -411,11 +448,16 @@ void Sound::SetNR21(u8 value)
 
 	m_nr21 = value & 0xc0;
 	m_nr21 |= 0x3f;
+	m_nr21 = value;
 }
 
 void Sound::SetNR22(u8 value)
 {
 	m_envelope2StepTimeSeconds = (value & 0x03) * (1.f / 64.f);
+	if((value & 0x03) == 0)
+		m_envelope2Enabled = false;
+	else
+		m_envelope2Enabled = true;
 
 	if(value & 0x08)
 		m_envelope2Increasing = true;
@@ -423,6 +465,7 @@ void Sound::SetNR22(u8 value)
 		m_envelope2Increasing = false;
 
 	m_envelope2InitialValue = (value & 0xf0) >> 4;
+	m_envelope2Value = m_envelope2InitialValue;
 
 	m_nr22 = value;
 }
@@ -433,6 +476,7 @@ void Sound::SetNR23(u8 value)
 	m_sound2Frequency |= value;
 
 	m_nr23 = 0xff;
+	m_nr23 = value;
 }
 
 void Sound::SetNR24(u8 value)
@@ -454,6 +498,7 @@ void Sound::SetNR24(u8 value)
 
 	m_nr24 = value & 0x40;
 	m_nr24 |= 0xbf;
+	m_nr24 = value;
 }
 
 void Sound::SetNR30(u8 value)
@@ -465,6 +510,7 @@ void Sound::SetNR30(u8 value)
 
 	m_nr30 = value & 0x80;
 	m_nr30 |= 0x7f;
+	m_nr30 = value;
 }
 
 void Sound::SetNR31(u8 value)
@@ -480,6 +526,7 @@ void Sound::SetNR32(u8 value)
 
 	m_nr32 = value & 0x60;
 	m_nr32 |= 0x9f;
+	m_nr32 = value;
 }
 
 void Sound::SetNR33(u8 value)
@@ -488,6 +535,7 @@ void Sound::SetNR33(u8 value)
 	m_sound3Frequency |= value;
 
 	m_nr33 = 0xff;
+	m_nr33 = value;
 }
 
 void Sound::SetNR34(u8 value)
@@ -508,19 +556,17 @@ void Sound::SetNR34(u8 value)
 
 	m_nr34 = value & 0x40;
 	m_nr34 |= 0xbf;
+	m_nr34 = value;
 }
 
-SampleType Sound::Mix(SampleType a, SampleType b)
+float Sound::Mix(float a, float b)
 {
-	float fa = (float)a / (float)MaxSample;
-	float fb = (float)b / (float)MaxSample;
+	float fResult;
 
-	float fResult = 0.5f;
-	if(fa < 0.5f && fb < 0.5f)
-		fResult = 2.f * fa * fb;
+	if(a < 0.5f && b < 0.5f)
+		fResult = 2.f * a * b;
 	else
-		fResult = (2.f * (fa + fb)) - (2.f * fa * fb) - 1.f;
+		fResult = (2.f * (a + b)) - (2.f * a * b) - 1.f;
 
-	fResult *= (float)MaxSample;
-	return (SampleType)fResult;
+	return fResult;
 }

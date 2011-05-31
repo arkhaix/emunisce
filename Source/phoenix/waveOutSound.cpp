@@ -123,7 +123,7 @@ public:
 			}
 			else
 			{
-				Sleep(10);
+				Sleep(1);
 			}
 		}
 
@@ -148,15 +148,30 @@ public:
 			return 0;
 
 
-		for(int i=0;i<_NumOutputBuffers;i++)
+		int numPendingBuffers = 0;
+		while(numPendingBuffers == 0 && _Phoenix->ShutdownRequested() == false)
 		{
-			_AudioBuffer[i] = _Silence;
-			InterleaveAudioBuffer(i);
+			EnterCriticalSection(&_PendingBufferQueueLock);
+				numPendingBuffers = _PendingBufferQueue.size();
+			LeaveCriticalSection(&_PendingBufferQueueLock);
+
+			if(numPendingBuffers == 0)
+				Sleep(1);
 		}
 
-		for(int i=0;i<_NumOutputBuffers;i++)
-			PlayAudioBuffer(i);
+		if(_Phoenix->ShutdownRequested())
+			return 0;
 
+
+		//Initialize the playback variables
+
+		SetEvent(_BufferFinishedEvent);	///<No playback has occurred yet, so waveOutWrite hasn't set the event on its own yet, and we don't want to get stuck on WaitForSingleObject the first time through
+
+		for(int i=0;i<_NumOutputBuffers;i++)
+			_WaveHeader[i].dwFlags |= WHDR_DONE;	///<No playback has occurred yet, so this flag hasn't been set yet for any of the headers, but they're all really available.
+
+
+		//The juice is here
 
 		while(_Phoenix->ShutdownRequested() == false)
 		{
@@ -164,28 +179,36 @@ public:
 			if(waitResult == WAIT_ABANDONED)
 				continue;
 
-			for(int i=0;i<_NumOutputBuffers;i++)
+			int numPendingBuffers = 0;
+			while(numPendingBuffers == 0)
 			{
-				if(_WaveHeader[i].dwFlags & WHDR_DONE)
+				EnterCriticalSection(&_PendingBufferQueueLock);
+					numPendingBuffers = _PendingBufferQueue.size();
+				LeaveCriticalSection(&_PendingBufferQueueLock);
+
+				if(numPendingBuffers == 0)
+					Sleep(1);
+			}
+
+
+			for(int i=0;i<numPendingBuffers;i++)
+			{
+				for(int j=0;j<_NumOutputBuffers;j++)
 				{
-					waveOutUnprepareHeader(_WaveOut, &_WaveHeader[i], sizeof(WAVEHDR));
+					if(_WaveHeader[j].dwFlags & WHDR_DONE)
+					{
+						waveOutUnprepareHeader(_WaveOut, &_WaveHeader[j], sizeof(WAVEHDR));
 
-					bool usedPendingBuffer = false;
-
-					EnterCriticalSection(&_PendingBufferQueueLock);
-						if(_PendingBufferQueue.size() > 0)
-						{
-							_AudioBuffer[i] = _PendingBufferQueue.front();
+						EnterCriticalSection(&_PendingBufferQueueLock);
+							_AudioBuffer[j] = _PendingBufferQueue.front();
 							_PendingBufferQueue.pop();
-							usedPendingBuffer = true;
-						}
-					LeaveCriticalSection(&_PendingBufferQueueLock);
+						LeaveCriticalSection(&_PendingBufferQueueLock);
 
-					if(usedPendingBuffer == false)
-						_AudioBuffer[i] = _Silence;
+						InterleaveAudioBuffer(j);
+						PlayAudioBuffer(j);
 
-					InterleaveAudioBuffer(i);
-					PlayAudioBuffer(i);
+						break;
+					}
 				}
 			}
 		}
