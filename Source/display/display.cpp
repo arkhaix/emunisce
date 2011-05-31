@@ -432,58 +432,52 @@ void Display::RenderSpritePixel(int screenX, int screenY)
 		int tileY = screenY - spriteY;
 		int cacheScreenY = screenY;
 
-		while(tileY <= 7)
+		while(tileX <= 7)
 		{
-			while(tileX <= 7)
+			//Is it visible?  (priority vs background and window)
+			if(spriteFlags & (1<<7))	///<Lower priority if set, higher priority otherwise
 			{
-				//Is it visible?  (priority vs background and window)
-				if(spriteFlags & (1<<7))	///<Lower priority if set, higher priority otherwise
+				//Lower priority means the sprite is hidden behind any value except 0
+				if( m_activeScreenBuffer->GetPixel(cacheScreenX, cacheScreenY) != 0 )
 				{
-					//Lower priority means the sprite is hidden behind any value except 0
-					if( m_activeScreenBuffer->GetPixel(cacheScreenX, cacheScreenY) != 0 )
-					{
-						tileX++;
-						cacheScreenX++;
-						continue;
-					}
+					tileX++;
+					cacheScreenX++;
+					continue;
 				}
-
-				//Determine the bit offset for the X value
-				int bitOffset = tileX;
-				if(spriteFlags & (1<<5))	///<Flip X if set
-					bitOffset = 7 - bitOffset;
-
-				//At bit7, we get the value for x=0.  We need to reverse it to get a shift value.
-				bitOffset = 7 - bitOffset;
-
-				//Get the value for the pixel
-				u8 pixelValue = (tileLineLow & (1<<bitOffset)) ? 1 : 0;
-				if(tileLineHigh & (1<<bitOffset))
-					pixelValue |= 0x02;
-
-				//Transparent?
-				if(pixelValue == 0)
-				{
-					m_frameSpriteData.SetPixel(cacheScreenX, cacheScreenY, PIXEL_TRANSPARENT);
-				}
-				else
-				{
-					//Look it up in the palette
-					u8 pixelPaletteShift = pixelValue * 2;	///<2 bits per palette entry
-					u8 pixelPaletteValue = (m_spritePalette0 & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
-					if(spriteFlags & (1<<4))	///<Use sprite palette 1 if set
-						pixelPaletteValue = (m_spritePalette1 & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
-
-					//Done
-					m_frameSpriteData.SetPixel(cacheScreenX, cacheScreenY, pixelPaletteValue);
-				}
-
-				cacheScreenX++;
-				tileX++;
 			}
 
-			cacheScreenY++;
-			tileY++;
+			//Determine the bit offset for the X value
+			int bitOffset = tileX;
+			if(spriteFlags & (1<<5))	///<Flip X if set
+				bitOffset = 7 - bitOffset;
+
+			//At bit7, we get the value for x=0.  We need to reverse it to get a shift value.
+			bitOffset = 7 - bitOffset;
+
+			//Get the value for the pixel
+			u8 pixelValue = (tileLineLow & (1<<bitOffset)) ? 1 : 0;
+			if(tileLineHigh & (1<<bitOffset))
+				pixelValue |= 0x02;
+
+			//Transparent?
+			if(pixelValue == 0)
+			{
+				m_frameSpriteData.SetPixel(cacheScreenX, cacheScreenY, PIXEL_TRANSPARENT);
+			}
+			else
+			{
+				//Look it up in the palette
+				u8 pixelPaletteShift = pixelValue * 2;	///<2 bits per palette entry
+				u8 pixelPaletteValue = (m_spritePalette0 & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
+				if(spriteFlags & (1<<4))	///<Use sprite palette 1 if set
+					pixelPaletteValue = (m_spritePalette1 & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
+
+				//Done
+				m_frameSpriteData.SetPixel(cacheScreenX, cacheScreenY, pixelPaletteValue);
+			}
+
+			cacheScreenX++;
+			tileX++;
 		}
 
 		//Priority rules dictate that the earliest relevant sprite in the OAM table gets priority over others
