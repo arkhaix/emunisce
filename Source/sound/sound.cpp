@@ -88,12 +88,8 @@ void Sound::Run(int ticks)
 			m_fractionalSeconds -= 1.f;
 
 		u8 sampleValue[4];
-		bool channelEnabled[4];
 		for(int i=0;i<4;i++)
-		{
 			sampleValue[i] = (u8)0x80;	///<silent
-			channelEnabled[i] = false;
-		}
 
 		//Update the generators
 
@@ -153,7 +149,6 @@ void Sound::Run(int ticks)
 					u8 sample = (u8)(128 + (fSample * 127.f));
 
 					sampleValue[0] = sample;
-					channelEnabled[0] = true;
 				}
 			}
 		}
@@ -197,7 +192,6 @@ void Sound::Run(int ticks)
 					u8 sample = (u8)(128 + (fSample * 127.f));
 
 					sampleValue[1] = sample;
-					channelEnabled[1] = true;
 				}
 			}
 		}
@@ -244,30 +238,24 @@ void Sound::Run(int ticks)
 						sample = 128 - (sample << 3);
 
 					sampleValue[2] = sample;
-					channelEnabled[2] = true;
 				}
 			}
 		}
 
 		//Mix the samples
-		int sampleTotal = 0;
-		int numSampleSources = 0;
+		float finalSampleValue = 0.f;
 		for(int i=0;i<4;i++)
-		{
-			if(channelEnabled[i] == false)
-				continue;
+			finalSampleValue += (float)sampleValue[i] - 128.f;
 
-			sampleTotal += sampleValue[i];
-			numSampleSources++;
-		}
+		float attenuator = .25f;
+		finalSampleValue *= attenuator;
 
-		if(numSampleSources == 0)
-		{
-			sampleTotal = 128;
-			numSampleSources = 1;
-		}
+		finalSampleValue += 128.f;
 
-		int finalSampleValue = sampleTotal / numSampleSources;
+		if(finalSampleValue < 0.f)
+			finalSampleValue = 0.f;
+		if(finalSampleValue > 255.f)
+			finalSampleValue = 255.f;
 
 		//Output the final sample
 		m_activeAudioBuffer->Samples[0][m_nextSampleIndex] = (u8)finalSampleValue;
