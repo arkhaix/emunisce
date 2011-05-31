@@ -56,7 +56,7 @@ public:
 	{
 		GdiplusStartup(&_GdiplusToken, &_GdiplusStartupInput, NULL);
 
-		_Bitmap = new Bitmap(160, 144, PixelFormat24bppRGB);
+		_Bitmap = new Bitmap(160, 144, PixelFormat32bppARGB);
 
 		_Palette[3] = new Color(0, 0, 0);
 		_Palette[2] = new Color(85, 85, 85);
@@ -234,9 +234,34 @@ public:
 
 		_LastFrameRendered = _Machine->GetFrameCount();
 
+		BitmapData bitmapData;
+		Gdiplus::Rect bitmapRect(0, 0, _Bitmap->GetWidth(), _Bitmap->GetHeight());
+		Status lockResult = _Bitmap->LockBits(&bitmapRect, ImageLockModeWrite, PixelFormat32bppARGB, &bitmapData);
+		if(lockResult != Ok)
+			return;
+
 		for(int y=0;y<144;y++)
+		{
+			UINT* pixel = (UINT*)bitmapData.Scan0;
+			pixel += bitmapData.Stride * y / 4;
+
 			for(int x=0;x<160;x++)
-				_Bitmap->SetPixel(x, y, *_Palette[ screen.GetPixel(x,y) ]);
+			{
+				u8 screenPixel = screen.GetPixel(x,y);
+				if(screenPixel > 3)
+					continue;
+
+				u8* argb = (u8*)pixel;
+				argb[0] = _Palette[screenPixel]->GetB();
+				argb[1] = _Palette[screenPixel]->GetG();
+				argb[2] = _Palette[screenPixel]->GetR();
+				argb[3] = _Palette[screenPixel]->GetA();
+
+				pixel++;
+			}
+		}
+
+		_Bitmap->UnlockBits(&bitmapData);
 	}
 };
 
