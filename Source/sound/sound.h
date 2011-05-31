@@ -5,19 +5,19 @@
 
 static const unsigned int SamplesPerSecond = 22050;
 
-static const unsigned int BytesPerSample = 1;
-typedef u8 SampleType;
-#define SilentSample ((SampleType)0x80)
-#define MaxSample ((SampleType)0xff)
-
-//static const unsigned int BytesPerSample = 2;
-//typedef u16 SampleType;
+//static const unsigned int BytesPerSample = 1;
+//typedef u8 SampleType;
 //#define SilentSample ((SampleType)0x80)
 //#define MaxSample ((SampleType)0xff)
 
+static const unsigned int BytesPerSample = 2;
+typedef s16 SampleType;
+#define SilentSample ((SampleType)0x0000)
+#define MaxSample ((SampleType)0x7fff)
+
 struct AudioBuffer
 {
-	static const unsigned int BufferSizeSamples = SamplesPerSecond / 10;	///<10fps
+	static const unsigned int BufferSizeSamples = SamplesPerSecond / 20;	///<Constant is frames per second
 	static const unsigned int BufferSizeBytes = BufferSizeSamples * BytesPerSample;
 
 	SampleType Samples[2][BufferSizeSamples];	///<2 channels
@@ -61,7 +61,7 @@ public:
 
 private:
 	
-	SampleType Mix(SampleType a, SampleType b);
+	float Mix(float a, float b);
 
 	Machine* m_machine;
 	Memory* m_memory;
