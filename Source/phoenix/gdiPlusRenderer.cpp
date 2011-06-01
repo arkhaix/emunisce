@@ -109,6 +109,8 @@ public:
 		{
 			_CreatedWindow = true;
 
+			AdjustWindowSize();
+
 			ShowWindow(_Window, SW_SHOW);
 			UpdateWindow(_Window);
 		}
@@ -137,6 +139,52 @@ public:
 		//todo: intercept WndProc
 	}
 
+	void AdjustWindowSize()
+	{
+		//Resize the window so that the client area is a whole multiple of 160x144
+
+		RECT clientRect;
+		GetClientRect(_Window, &clientRect);
+		int clientWidth = clientRect.right - clientRect.left;
+		int clientHeight = clientRect.bottom - clientRect.top;
+
+		if( (clientWidth % 160) != 0 || (clientHeight % 144) != 0 )
+		{
+			//Figure out what the new client area should be
+			// Adjust to the nearest multiple.
+			// So, if we're at 161, we want to decrease to 160
+			// But if we're at 319, we want to increase to 320
+
+			int newWidth = clientWidth;
+			if(clientWidth < 160)		///<Only support 1x scale or greater for now
+				newWidth = 160;
+			else if(clientWidth % 160 < 80)
+				newWidth = clientWidth - (clientWidth % 160);	///<Nearest multiple is smaller than the current width
+			else
+				newWidth = clientWidth + (160 - (clientWidth % 160));	///<Nearest multiple is larger than the current width
+
+			int newHeight = 144 * (newWidth / 160);
+
+
+			//Figure out what we need to add to the original size in order to get our new target size
+
+			int deltaWidth = newWidth - clientWidth;
+			int deltaHeight = newHeight - clientHeight;
+
+
+			//Apply the deltas to the window size
+			// The client size is the drawable area
+			// The window size is the drawable area plus the title bar, borders, etc
+
+			RECT windowRect;
+			GetWindowRect(_Window, &windowRect);
+			windowRect.right += deltaWidth;
+			windowRect.bottom += deltaHeight;
+
+			MoveWindow(_Window, windowRect.left, windowRect.top, (windowRect.right - windowRect.left), (windowRect.bottom - windowRect.top), TRUE);
+		}
+	}
+
 	LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		if(hWnd != _Window)
@@ -158,6 +206,9 @@ public:
 			//todo: fix this
 			if(_Phoenix->GetInput() != NULL)
 				_Phoenix->GetInput()->KeyUp(wParam);
+			return 0;
+		case WM_SIZE:
+			AdjustWindowSize();
 			return 0;
 		case WM_CLOSE:
 		case WM_DESTROY:
@@ -191,9 +242,9 @@ public:
 
 		Graphics graphics(hdc);
 
-		RECT windowRect;
-		GetClientRect(_Window, &windowRect);
-		graphics.DrawImage(_Bitmap, 0, 0, windowRect.right - windowRect.left, windowRect.bottom - windowRect.top);
+		RECT clientRect;
+		GetClientRect(_Window, &clientRect);
+		graphics.DrawImage(_Bitmap, 0, 0, clientRect.right - clientRect.left, clientRect.bottom - clientRect.top);
 
 
 		//Draw the frame counter
