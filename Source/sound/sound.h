@@ -184,7 +184,7 @@ private:
 	double m_sound4StartTimeSeconds;
 	double m_sound4LengthSeconds;
 
-	u8 m_sound4Sample;
+	u32 m_sound4Sample;
 
 	bool m_envelope4Enabled;
 	double m_lastEnvelope4UpdateTimeSeconds;
