@@ -82,8 +82,8 @@ private:
 
 	unsigned int m_nextSampleIndex;
 
-	float m_totalSeconds;	///<Total time elapsed in seconds
-	float m_fractionalSeconds;	///<Fractional part of m_totalSeconds
+	double m_totalSeconds;	///<Total time elapsed in seconds
+	double m_fractionalSeconds;	///<Fractional part of m_totalSeconds
 
 
 	//Registers
@@ -124,20 +124,20 @@ private:
 	bool m_sound1Playing;
 	bool m_sound1Continuous;
 
-	float m_sound1StartTimeSeconds;
-	float m_sound1LengthSeconds;
+	double m_sound1StartTimeSeconds;
+	double m_sound1LengthSeconds;
 
 	float m_sound1DutyCycles;	///<[0,1]
 
 	int m_sound1Frequency;
-	float m_lastSweepUpdateTimeSeconds;
-	float m_sweepStepTimeSeconds;
+	double m_lastSweepUpdateTimeSeconds;
+	double m_sweepStepTimeSeconds;
 	int m_sweepShift;
 	bool m_sweepIncreasing;
 
 	bool m_envelope1Enabled;
-	float m_lastEnvelope1UpdateTimeSeconds;
-	float m_envelope1StepTimeSeconds;
+	double m_lastEnvelope1UpdateTimeSeconds;
+	double m_envelope1StepTimeSeconds;
 	bool m_envelope1Increasing;
 	int m_envelope1Value;
 	int m_envelope1InitialValue;
@@ -147,16 +147,16 @@ private:
 	bool m_sound2Playing;
 	bool m_sound2Continuous;
 
-	float m_sound2StartTimeSeconds;
-	float m_sound2LengthSeconds;
+	double m_sound2StartTimeSeconds;
+	double m_sound2LengthSeconds;
 
 	float m_sound2DutyCycles;	///<[0,1]
 
 	int m_sound2Frequency;
 
 	bool m_envelope2Enabled;
-	float m_lastEnvelope2UpdateTimeSeconds;
-	float m_envelope2StepTimeSeconds;
+	double m_lastEnvelope2UpdateTimeSeconds;
+	double m_envelope2StepTimeSeconds;
 	bool m_envelope2Increasing;
 	int m_envelope2Value;
 	int m_envelope2InitialValue;
@@ -166,8 +166,8 @@ private:
 	bool m_sound3Off;
 	bool m_sound3Continuous;
 
-	float m_sound3StartTimeSeconds;
-	float m_sound3LengthSeconds;
+	double m_sound3StartTimeSeconds;
+	double m_sound3LengthSeconds;
 
 	int m_sound3Frequency;
 	int m_sound3Level;
@@ -176,12 +176,12 @@ private:
 	bool m_sound4Playing;
 	bool m_sound4Continuous;
 
-	float m_sound4StartTimeSeconds;
-	float m_sound4LengthSeconds;
+	double m_sound4StartTimeSeconds;
+	double m_sound4LengthSeconds;
 
 	bool m_envelope4Enabled;
-	float m_lastEnvelope4UpdateTimeSeconds;
-	float m_envelope4StepTimeSeconds;
+	double m_lastEnvelope4UpdateTimeSeconds;
+	double m_envelope4StepTimeSeconds;
 	bool m_envelope4Increasing;
 	int m_envelope4Value;
 	int m_envelope4InitialValue;

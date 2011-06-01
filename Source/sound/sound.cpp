@@ -174,7 +174,7 @@ void Sound::Run(int ticks)
 				float actualFrequency = (float)m_machine->GetTicksPerSecond() / (float)((2048 - m_sound1Frequency) << 5);
 				float actualAmplitude = (float)m_envelope1Value / (float)0x0f;
 
-				float waveX = m_fractionalSeconds * actualFrequency;
+				double waveX = (float)m_fractionalSeconds * actualFrequency;
 				waveX -= (int)waveX;
 
 				float fSample = 1.f * actualAmplitude;
@@ -212,7 +212,7 @@ void Sound::Run(int ticks)
 				float actualFrequency = (float)m_machine->GetTicksPerSecond() / (float)((2048 - m_sound2Frequency) << 5);
 				float actualAmplitude = (float)m_envelope2Value / (float)0x0f;
 
-				float waveX = m_fractionalSeconds * actualFrequency;
+				double waveX = m_fractionalSeconds * actualFrequency;
 				waveX -= (int)waveX;
 
 				float fSample = 1.f * actualAmplitude;
@@ -238,7 +238,7 @@ void Sound::Run(int ticks)
 			{
 				float actualFrequency = (float)m_machine->GetTicksPerSecond() / (float)((2048 - m_sound3Frequency) << 5);
 
-				float waveX = m_fractionalSeconds * actualFrequency;
+				double waveX = m_fractionalSeconds * actualFrequency;
 				waveX -= (int)waveX;
 
 				int sampleIndex = (int)(waveX * 32.f);
