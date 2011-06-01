@@ -356,9 +356,6 @@ void Display::RenderBackgroundPixel(int screenX, int screenY)
 
 		tilePixelX++;
 		cacheScreenX++;
-
-		//Temporarily disabled caching until I can figure out what's wrong with it (artifacts when scrolling)
-		break;
 	}
 
 	//Write this pixel out of the cache
