@@ -56,7 +56,6 @@ void Cpu::Initialize()
 	SetTimerControl(0);
 	m_ticksUntilCounterIncrement = m_ticksPerCounterIncrement;
 
-	m_instructionTime = 0;
 	m_halted = false;
 	m_stopped = false;
 
