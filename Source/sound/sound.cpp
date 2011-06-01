@@ -33,6 +33,8 @@ void Sound::Initialize()
 
 	m_lastEnvelope2UpdateTimeSeconds = 0.f;
 
+	m_lastEnvelope4UpdateTimeSeconds = 0.f;
+
 	m_audioBufferCount = 0;
 
 	SetNR10(0x80);
@@ -53,10 +55,10 @@ void Sound::Initialize()
 	SetNR33(0xff);
 	SetNR34(0xbf);
 
-	m_sound4Length = 0xff;		///<NR40
-	m_sound4Envelope = 0xff;	///<NR41
-	m_sound4Nfc = 0x00;			///<NR42
-	m_sound4Initialize = 0xbf;	///<NR43
+	SetNR41(0xff);
+	SetNR42(0xff);
+	SetNR43(0x00);
+	SetNR44(0xbf);
 
 	SetNR50(0x00);
 	SetNR51(0x00);
@@ -90,13 +92,13 @@ void Sound::SetMachine(Machine* machine)
 	m_memory->SetRegisterLocation(0x1d, &m_nr33, false);
 	m_memory->SetRegisterLocation(0x1e, &m_nr34, false);
 
-	m_memory->SetRegisterLocation(0x20, &m_sound4Length, true);
-	m_memory->SetRegisterLocation(0x21, &m_sound4Envelope, true);
-	m_memory->SetRegisterLocation(0x22, &m_sound4Nfc, true);
-	m_memory->SetRegisterLocation(0x23, &m_sound4Initialize, true);
+	m_memory->SetRegisterLocation(0x20, &m_nr41, false);
+	m_memory->SetRegisterLocation(0x21, &m_nr42, false);
+	m_memory->SetRegisterLocation(0x22, &m_nr43, false);
+	m_memory->SetRegisterLocation(0x23, &m_nr44, false);
 
-	m_memory->SetRegisterLocation(0x24, &m_nr50, true);
-	m_memory->SetRegisterLocation(0x25, &m_nr51, true);
+	m_memory->SetRegisterLocation(0x24, &m_nr50, false);
+	m_memory->SetRegisterLocation(0x25, &m_nr51, false);
 	m_memory->SetRegisterLocation(0x26, &m_nr52, false);
 }
 
@@ -260,6 +262,59 @@ void Sound::Run(int ticks)
 				//Expand to [-1,1]
 				sampleValue[2] *= 2.f;
 				sampleValue[2] -= 1.f;
+			}
+		}
+
+
+		//Sound 4 Tick
+		if(m_soundMasterEnable && m_sound4Playing)
+		{
+			//Update sound time
+			if(m_sound4Continuous == false && m_totalSeconds - m_sound4StartTimeSeconds >= m_sound4LengthSeconds)
+			{
+				m_sound4Playing = false;
+				m_nr52 &= ~(0x08);
+			}
+
+			//Update envelope
+			if(m_envelope4Enabled && m_totalSeconds - m_lastEnvelope4UpdateTimeSeconds >= m_envelope4StepTimeSeconds)
+			{
+				m_lastEnvelope4UpdateTimeSeconds = m_totalSeconds;
+
+				if(m_envelope4Increasing == true && m_envelope4Value < 0x0f)
+					m_envelope4Value++;
+				else if(m_envelope4Increasing == false && m_envelope4Value > 0x00)
+					m_envelope4Value--;
+			}
+
+			//Update frequency
+			m_sound4TicksUntilNextShift -= ticks;
+			if(m_sound4TicksUntilNextShift <= 0)
+			{
+				m_sound4TicksUntilNextShift += m_sound4TicksPerShift;
+
+				int a = (m_sound4ShiftRegister & (1<<m_sound4ShiftTap)) >> m_sound4ShiftTap;
+				int b = (m_sound4ShiftRegister & (1<<(m_sound4ShiftTap-1))) >> (m_sound4ShiftTap-1);
+				int result = a ^ b;
+
+				m_sound4ShiftRegister <<= 1;
+				if(result)
+					m_sound4ShiftRegister |= result;
+
+				m_sound4Sample <<= 1;
+				if(a)
+					m_sound4Sample |= a;
+			}
+
+			//Get sample
+			if(m_sound4Playing)
+			{
+				float actualAmplitude = (float)m_envelope4Value / (float)0x0f;
+
+				float sample = (float)m_sound4Sample / (float)0xff;
+				sample *= actualAmplitude;
+
+				sampleValue[3] = sample;
 			}
 		}
 
@@ -543,6 +598,78 @@ void Sound::SetNR34(u8 value)
 
 	m_nr34 = value & 0x40;
 	m_nr34 |= 0xbf;
+}
+
+void Sound::SetNR41(u8 value)
+{
+	m_sound4LengthSeconds = (double)(64 - (value & 0x3f)) * (1.0 / 64.0);
+
+	m_nr41 = 0xff;
+}
+
+void Sound::SetNR42(u8 value)
+{
+	m_envelope4StepTimeSeconds = (value & 0x07) * (1.f / 64.f);
+	if((value & 0x07) == 0)
+		m_envelope4Enabled = false;
+	else
+		m_envelope4Enabled = true;
+
+	if(value & 0x08)
+		m_envelope4Increasing = true;
+	else
+		m_envelope4Increasing = false;
+
+	m_envelope4InitialValue = (value & 0xf0) >> 4;
+	m_envelope4Value = m_envelope4InitialValue;
+
+	m_nr42 = value;
+}
+
+void Sound::SetNR43(u8 value)
+{
+	if(value & 0x40)
+		m_sound4ShiftTap = 7;
+	else
+		m_sound4ShiftTap = 15;
+
+
+	float shiftFrequency = (float)m_machine->GetTicksPerSecond();
+	shiftFrequency /= 8.f;
+
+	int frequencyDivisionRatio = value & 0x07;
+	if(frequencyDivisionRatio == 0)
+		shiftFrequency *= 2.f;
+	else
+		shiftFrequency *= (1.f / (float)frequencyDivisionRatio);
+
+	int shiftClockFrequency = (value & 0xf0) >> 4;
+	shiftFrequency *= (1.f / (float)(1<<(shiftClockFrequency+1)));
+
+
+	m_sound4TicksPerShift = (int)( (float)m_machine->GetTicksPerSecond() / shiftFrequency );
+	m_sound4TicksUntilNextShift = m_sound4TicksPerShift;
+
+	m_nr43 = value;
+}
+
+void Sound::SetNR44(u8 value)
+{
+	if(value & 0x40)
+		m_sound4Continuous = false;
+	else
+		m_sound4Continuous = true;
+
+	if(value & 0x80)
+	{
+		m_sound4Playing = true;
+		m_sound4StartTimeSeconds = m_totalSeconds;
+		m_envelope4Value = m_envelope4InitialValue;
+		m_sound4ShiftRegister = 0xffff;
+	}
+
+	m_nr44 = value & 0x40;
+	m_nr44 |= 0xbf;
 }
 
 void Sound::SetNR50(u8 value)

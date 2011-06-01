@@ -59,6 +59,11 @@ public:
 	void SetNR33(u8 value);
 	void SetNR34(u8 value);
 
+	void SetNR41(u8 value);
+	void SetNR42(u8 value);
+	void SetNR43(u8 value);
+	void SetNR44(u8 value);
+
 	void SetNR50(u8 value);
 	void SetNR51(u8 value);
 	void SetNR52(u8 value);
@@ -105,10 +110,10 @@ private:
 	u8 m_nr33;	///<NR33, ff1d
 	u8 m_nr34;	///<NR34, ff1e
 
-	u8 m_sound4Length;			///<NR41, ff20
-	u8 m_sound4Envelope;		///<NR42, ff21
-	u8 m_sound4Nfc;				///<NR43, ff22
-	u8 m_sound4Initialize;		///<NR44, ff23
+	u8 m_nr41;	///<NR41, ff20
+	u8 m_nr42;	///<NR42, ff21
+	u8 m_nr43;	///<NR43, ff22
+	u8 m_nr44;	///<NR44, ff23
 
 	u8 m_nr50;	///<NR50, ff24
 	u8 m_nr51;	///<NR51, ff25
@@ -179,12 +184,19 @@ private:
 	double m_sound4StartTimeSeconds;
 	double m_sound4LengthSeconds;
 
+	u8 m_sound4Sample;
+
 	bool m_envelope4Enabled;
 	double m_lastEnvelope4UpdateTimeSeconds;
 	double m_envelope4StepTimeSeconds;
 	bool m_envelope4Increasing;
 	int m_envelope4Value;
 	int m_envelope4InitialValue;
+
+	int m_sound4ShiftRegister;	///<linear feedback shift register
+	int m_sound4ShiftTap;	///<tap bit for the lfsr
+	int m_sound4TicksPerShift;
+	int m_sound4TicksUntilNextShift;
 };
 
 
