@@ -87,7 +87,6 @@ private:
 	bool m_masterInterruptsEnabled;	///<Interrupt master enable flag (IME)
 	bool m_delayNextInterrupt;	///<Interrupts are not enabled until one instruction after EI completes.
 
-	int m_instructionTime;
 	bool m_halted;
 	bool m_stopped;
 
