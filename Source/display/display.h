@@ -81,6 +81,8 @@ private:
 	void RenderSpritePixel(int screenX, int screenY);
 	void RenderWindowPixel(int screenX, int screenY);
 
+	void RenderSprites(int screenY);
+
 	void RenderPixel(int screenX, int screenY);
 	void RenderScanline();
 

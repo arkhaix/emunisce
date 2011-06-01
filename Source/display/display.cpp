@@ -369,126 +369,8 @@ void Display::RenderBackgroundPixel(int screenX, int screenY)
 
 void Display::RenderSpritePixel(int screenX, int screenY)
 {
-	//Cached?
+	//RenderSprites fills m_frameSpriteData.  If there's no value there at this pixel, then there's no sprite at this pixel.
 	u8 cachedValue = m_frameSpriteData.GetPixel(screenX, screenY);
-	if(cachedValue != PIXEL_NOT_CACHED && cachedValue != PIXEL_TRANSPARENT)
-	{
-		m_activeScreenBuffer->SetPixel(screenX, screenY, cachedValue);
-		return;
-	}
-	
-	//Sprites can be 8x8 or 8x16
-	u8 spriteWidth = 8;
-	u8 spriteHeight = 8;
-	if(m_lcdControl & LCDC_SpriteSize)
-		spriteHeight = 16;
-
-	u8 spriteTileSize = 16;
-
-	u16 spriteDataAddress = 0xfe00 - 4;
-
-	//Iterate over all sprite entries in the table
-	for(int i=0;i<40;i++)
-	{
-		spriteDataAddress += 4;
-
-		u8 spriteY = m_oamCache[spriteDataAddress - m_oamOffset];
-		u8 spriteX = m_oamCache[spriteDataAddress+1 - m_oamOffset];
-
-		//Sprite coordinates are offset, so sprite[8,16] = screen[0,0].
-		spriteX -= 8;
-		spriteY -= 16;
-
-		//Is the sprite relevant to this pixel?
-		if( spriteY > screenY || spriteY+spriteHeight <= screenY ||
-			spriteX > screenX || spriteX+spriteWidth <= screenX )
-			continue;
-
-		//It's relevant, so get the rest of the data
-		u8 spriteTileValue = m_oamCache[spriteDataAddress+2 - m_oamOffset];
-		u8 spriteFlags = m_oamCache[spriteDataAddress+3 - m_oamOffset];
-
-		//In 8x16 mode, the least significant bit of the tile value is ignored
-		if(m_lcdControl & LCDC_SpriteSize)
-			spriteTileValue &= ~(0x01);
-
-		//Figure out which line we need
-		u8 targetTileLine = screenY - spriteY;
-		if(spriteFlags & (1<<6))	///<Flip Y if set
-			targetTileLine = (spriteHeight-1) - targetTileLine;
-
-		//Figure out where to get the bytes that correspond to this line of the tile
-		u16 tileDataAddress = 0x8000 + (spriteTileValue * spriteTileSize);
-		u16 tileLineAddress = tileDataAddress + (targetTileLine * 2);
-
-		//Read the two bytes for this line of the tile
-		u8 tileLineLow = m_vramCache[tileLineAddress - m_vramOffset];
-		u8 tileLineHigh = m_vramCache[tileLineAddress+1 - m_vramOffset];
-
-		//Cache the rest of the sprite values on this line
-		int tileX = screenX - spriteX;
-		int cacheScreenX = screenX;
-
-		int tileY = screenY - spriteY;
-		int cacheScreenY = screenY;
-
-		while(tileX <= 7)
-		{
-			//Is it visible?  (priority vs background and window)
-			if(spriteFlags & (1<<7))	///<Lower priority if set, higher priority otherwise
-			{
-				//Lower priority means the sprite is hidden behind any value except 0
-				if( m_activeScreenBuffer->GetPixel(cacheScreenX, cacheScreenY) != 0 )
-				{
-					tileX++;
-					cacheScreenX++;
-					continue;
-				}
-			}
-
-			//Determine the bit offset for the X value
-			int bitOffset = tileX;
-			if(spriteFlags & (1<<5))	///<Flip X if set
-				bitOffset = 7 - bitOffset;
-
-			//At bit7, we get the value for x=0.  We need to reverse it to get a shift value.
-			bitOffset = 7 - bitOffset;
-
-			//Get the value for the pixel
-			u8 pixelValue = (tileLineLow & (1<<bitOffset)) ? 1 : 0;
-			if(tileLineHigh & (1<<bitOffset))
-				pixelValue |= 0x02;
-
-			//Transparent?
-			if(pixelValue == 0)
-			{
-				m_frameSpriteData.SetPixel(cacheScreenX, cacheScreenY, PIXEL_TRANSPARENT);
-			}
-			else
-			{
-				//Look it up in the palette
-				u8 pixelPaletteShift = pixelValue * 2;	///<2 bits per palette entry
-				u8 pixelPaletteValue = (m_spritePalette0 & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
-				if(spriteFlags & (1<<4))	///<Use sprite palette 1 if set
-					pixelPaletteValue = (m_spritePalette1 & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
-
-				//Done
-				m_frameSpriteData.SetPixel(cacheScreenX, cacheScreenY, pixelPaletteValue);
-			}
-
-			cacheScreenX++;
-			tileX++;
-		}
-
-		//Priority rules dictate that the earliest relevant sprite in the OAM table gets priority over others
-		//So once we've written a sprite at this pixel, we're done and don't need to check the rest
-		cachedValue = m_frameSpriteData.GetPixel(screenX, screenY);
-		if(cachedValue != PIXEL_NOT_CACHED && cachedValue != PIXEL_TRANSPARENT)
-			break;
-	}
-
-	//Write the pixel data from the cache
-	cachedValue = m_frameSpriteData.GetPixel(screenX, screenY);
 	if(cachedValue != PIXEL_NOT_CACHED && cachedValue != PIXEL_TRANSPARENT)
 		m_activeScreenBuffer->SetPixel(screenX, screenY, cachedValue);
 }
@@ -566,6 +448,123 @@ void Display::RenderWindowPixel(int screenX, int screenY)
 		m_activeScreenBuffer->SetPixel(screenX, screenY, cachedValue);
 }
 
+void Display::RenderSprites(int screenY)
+{
+	//Sprites can be 8x8 or 8x16
+	u8 spriteWidth = 8;
+	u8 spriteHeight = 8;
+	if(m_lcdControl & LCDC_SpriteSize)
+		spriteHeight = 16;
+
+	u8 spriteTileSize = 16;
+
+	//Iterate over all sprite entries in the table
+	for(int i=0;i<40;i++)
+	{
+		u16 spriteDataAddress = 0xfe00 + (i*4);
+
+		u8 spriteY = m_oamCache[spriteDataAddress - m_oamOffset];
+		u8 spriteX = m_oamCache[spriteDataAddress+1 - m_oamOffset];
+
+		//Sprite coordinates are offset, so sprite[8,16] = screen[0,0].
+		spriteX -= 8;
+		spriteY -= 16;
+
+		//Is the sprite relevant to this line?
+		if(spriteY > screenY || spriteY+spriteHeight <= screenY)
+			continue;
+
+		//Is the sprite visible?
+		if(spriteX+spriteWidth < 0 || spriteX >= 160)
+			continue;
+
+		//It's relevant, so get the rest of the data
+		u8 spriteTileValue = m_oamCache[spriteDataAddress+2 - m_oamOffset];
+		u8 spriteFlags = m_oamCache[spriteDataAddress+3 - m_oamOffset];
+
+		//In 8x16 mode, the least significant bit of the tile value is ignored
+		if(m_lcdControl & LCDC_SpriteSize)
+			spriteTileValue &= ~(0x01);
+
+		//Figure out which line we need
+		u8 targetTileLine = screenY - spriteY;
+		if(spriteFlags & (1<<6))	///<Flip Y if set
+			targetTileLine = (spriteHeight-1) - targetTileLine;
+
+		//Figure out where to get the bytes that correspond to this line of the tile
+		u16 tileDataAddress = 0x8000 + (spriteTileValue * spriteTileSize);
+		u16 tileLineAddress = tileDataAddress + (targetTileLine * 2);
+
+		//Read the two bytes for this line of the tile
+		u8 tileLineLow = m_vramCache[tileLineAddress - m_vramOffset];
+		u8 tileLineHigh = m_vramCache[tileLineAddress+1 - m_vramOffset];
+
+		//Cache the rest of the sprite values on this line
+		int tileX = 0;
+		int cacheScreenX = spriteX;
+
+		int tileY = screenY - spriteY;
+		int cacheScreenY = screenY;
+
+		while(tileX <= 7)
+		{
+			//Have we already drawn a sprite at this pixel?
+			u8 cachedValue = m_frameSpriteData.GetPixel(cacheScreenX, cacheScreenY);
+			if(cachedValue != PIXEL_NOT_CACHED && cachedValue != PIXEL_TRANSPARENT)
+			{
+				tileX++;
+				cacheScreenX++;
+				continue;
+			}
+
+			//Is it visible?  (priority vs background and window)
+			if(spriteFlags & (1<<7))	///<Lower priority if set, higher priority otherwise
+			{
+				//Lower priority means the sprite is hidden behind any value except 0
+				if( m_activeScreenBuffer->GetPixel(cacheScreenX, cacheScreenY) != 0 )
+				{
+					tileX++;
+					cacheScreenX++;
+					continue;
+				}
+			}
+
+			//Determine the bit offset for the X value
+			int bitOffset = tileX;
+			if(spriteFlags & (1<<5))	///<Flip X if set
+				bitOffset = 7 - bitOffset;
+
+			//At bit7, we get the value for x=0.  We need to reverse it to get a shift value.
+			bitOffset = 7 - bitOffset;
+
+			//Get the value for the pixel
+			u8 pixelValue = (tileLineLow & (1<<bitOffset)) ? 1 : 0;
+			if(tileLineHigh & (1<<bitOffset))
+				pixelValue |= 0x02;
+
+			//Transparent?
+			if(pixelValue == 0)
+			{
+				m_frameSpriteData.SetPixel(cacheScreenX, cacheScreenY, PIXEL_TRANSPARENT);
+			}
+			else
+			{
+				//Look it up in the palette
+				u8 pixelPaletteShift = pixelValue * 2;	///<2 bits per palette entry
+				u8 pixelPaletteValue = (m_spritePalette0 & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
+				if(spriteFlags & (1<<4))	///<Use sprite palette 1 if set
+					pixelPaletteValue = (m_spritePalette1 & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
+
+				//Done
+				m_frameSpriteData.SetPixel(cacheScreenX, cacheScreenY, pixelPaletteValue);
+			}
+
+			cacheScreenX++;
+			tileX++;
+		}
+	}
+}
+
 void Display::RenderScanline()
 {
 	//todo: LCDC:7 = LCD Controller on/off
@@ -587,6 +586,8 @@ void Display::RenderScanline()
 	//Render sprites
 	if(m_lcdControl & LCDC_Sprites)
 	{
+		RenderSprites(m_currentScanline);
+
 		for(int x=0;x<160;x++)
 			RenderSpritePixel(x, m_currentScanline);
 	}
