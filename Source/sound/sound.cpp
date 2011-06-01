@@ -141,7 +141,7 @@ void Sound::Run(int ticks)
 			{
 				m_lastSweepUpdateTimeSeconds = m_totalSeconds;
 
-				int newFrequency = m_sound1Frequency;
+				unsigned int newFrequency = m_sound1Frequency;
 
 				if(m_sweepIncreasing == true)
 					newFrequency += (m_sound1Frequency >> m_sweepShift);
@@ -293,17 +293,17 @@ void Sound::Run(int ticks)
 			{
 				m_sound4TicksUntilNextShift += m_sound4TicksPerShift;
 
-				int a = (m_sound4ShiftRegister & (1<<m_sound4ShiftTap)) >> m_sound4ShiftTap;
-				int b = (m_sound4ShiftRegister & (1<<(m_sound4ShiftTap-1))) >> (m_sound4ShiftTap-1);
-				int result = a ^ b;
-
+				int a = m_sound4ShiftRegister & (1<<m_sound4ShiftTap);
 				m_sound4ShiftRegister <<= 1;
+				int b = m_sound4ShiftRegister & (1<<m_sound4ShiftTap);
+
+				int result = a ^ b;
 				if(result)
-					m_sound4ShiftRegister |= result;
+					m_sound4ShiftRegister |= 1;
 
 				m_sound4Sample <<= 1;
 				if(a)
-					m_sound4Sample |= a;
+					m_sound4Sample |= 1;
 			}
 
 			//Get sample
@@ -311,8 +311,13 @@ void Sound::Run(int ticks)
 			{
 				float actualAmplitude = (float)m_envelope4Value / (float)0x0f;
 
-				float sample = (float)m_sound4Sample / (float)0x7fffffff;
-				sample -= 1.f;
+				//float sample = (float)m_sound4Sample / (float)0x7fffffff;
+				//sample -= 1.f;
+				//sample *= actualAmplitude;
+
+				float sample = -1.f;
+				if(m_sound4Sample & 0x01)
+					sample = 1.f;
 				sample *= actualAmplitude;
 
 				sampleValue[3] = sample;
@@ -635,8 +640,8 @@ void Sound::SetNR43(u8 value)
 		m_sound4ShiftTap = 15;
 
 
-	int frequencyDivisionRatio = value & 0x07;
-	int shiftClockFrequency = (value & 0xf0) >> 4;
+	unsigned int frequencyDivisionRatio = value & 0x07;
+	unsigned int shiftClockFrequency = (value & 0xf0) >> 4;
 
 	float shiftFrequency = (float)m_machine->GetTicksPerSecond() / 4.f;
 	shiftFrequency /= (float)(frequencyDivisionRatio + 1);
