@@ -23,7 +23,7 @@ public:
 	bool _Mute;
 
 	static const int _NumOutputBuffers = 3;
-	static const int _NumOutputChannels = 1;	///< Mono/Stereo output
+	static const int _NumOutputChannels = 2;	///< Mono/Stereo output
 
 	HWAVEOUT _WaveOut;
 	WAVEHDR _WaveHeader[_NumOutputBuffers];

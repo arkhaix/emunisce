@@ -59,6 +59,10 @@ public:
 	void SetNR33(u8 value);
 	void SetNR34(u8 value);
 
+	void SetNR50(u8 value);
+	void SetNR51(u8 value);
+	void SetNR52(u8 value);
+
 private:
 	
 	float Mix(float a, float b);
@@ -106,14 +110,17 @@ private:
 	u8 m_sound4Nfc;				///<NR43, ff22
 	u8 m_sound4Initialize;		///<NR44, ff23
 
-	u8 m_soundOutputLevels;		///<NR50, ff24
-	u8 m_soundOutputTerminals;	///<NR51, ff25
-	u8 m_soundEnable;			///<NR52, ff26
+	u8 m_nr50;	///<NR50, ff24
+	u8 m_nr51;	///<NR51, ff25
+	u8 m_nr52;	///<NR52, ff26
 
 
 	//Useful things
 
-	bool m_sound1Enabled;
+	bool m_soundMasterEnable;
+	bool m_terminalOutputs[2][4];	///<2 output channels (stereo left/right), 4 component channels (Sound1,2,3,4)
+
+
 	bool m_sound1Playing;
 	bool m_sound1Continuous;
 
@@ -137,7 +144,6 @@ private:
 
 
 
-	bool m_sound2Enabled;
 	bool m_sound2Playing;
 	bool m_sound2Continuous;
 
@@ -156,7 +162,6 @@ private:
 	int m_envelope2InitialValue;
 
 
-	bool m_sound3Enabled;
 	bool m_sound3Playing;
 	bool m_sound3Off;
 	bool m_sound3Continuous;
@@ -166,6 +171,20 @@ private:
 
 	int m_sound3Frequency;
 	int m_sound3Level;
+
+
+	bool m_sound4Playing;
+	bool m_sound4Continuous;
+
+	float m_sound4StartTimeSeconds;
+	float m_sound4LengthSeconds;
+
+	bool m_envelope4Enabled;
+	float m_lastEnvelope4UpdateTimeSeconds;
+	float m_envelope4StepTimeSeconds;
+	bool m_envelope4Increasing;
+	int m_envelope4Value;
+	int m_envelope4InitialValue;
 };
 
 
