@@ -12,11 +12,17 @@ struct ScreenBuffer
 
 	u8 GetPixel(int x, int y)
 	{
+		if(x<0 || x>=160 || y<0 || y>=144)
+			return (u8)0;
+
 		return Pixels[y*160+x];
 	}
 
 	void SetPixel(int x, int y, u8 value)
 	{
+		if(x<0 || x>=160 || y<0 || y>=144)
+			return;
+
 		Pixels[y*160+x] = value;
 	}
 };
