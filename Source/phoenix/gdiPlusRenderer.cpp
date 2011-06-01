@@ -241,32 +241,13 @@ public:
 		HDC hdc = BeginPaint(_Window, &paintStruct);
 
 		Graphics graphics(hdc);
+		graphics.SetInterpolationMode(InterpolationModeNearestNeighbor);	///<Disable antialiasing
+		graphics.SetSmoothingMode(SmoothingModeHighSpeed);	///<Dunno if this does anything useful
+		graphics.SetPixelOffsetMode(PixelOffsetModeHighSpeed);	///<Dunno if this does anything useful
 
 		RECT clientRect;
 		GetClientRect(_Window, &clientRect);
 		graphics.DrawImage(_Bitmap, 0, 0, clientRect.right - clientRect.left, clientRect.bottom - clientRect.top);
-
-
-		//Draw the frame counter
-
-		WCHAR strFrameCount[20];
-		wsprintfW(strFrameCount, L"%d", _LastFrameRendered);
-
-		Gdiplus::FontFamily someFontFamily(L"Consolas");
-		Gdiplus::Font someFont(&someFontFamily, 16);
-		Gdiplus::PointF someOrigin(0, 0);
-
-		graphics.SetSmoothingMode(SmoothingModeAntiAlias);
-		graphics.SetInterpolationMode(InterpolationModeHighQualityBicubic);
-
-		StringFormat strFormat;
-		GraphicsPath path;
-		path.AddString(strFrameCount, wcslen(strFrameCount), &someFontFamily, 
-			FontStyleRegular, 16, someOrigin, &strFormat );
-		Pen pen(Color(0,0,0), 3);
-		graphics.DrawPath(&pen, &path);
-		SolidBrush brush(Color(255, 255, 255));
-		graphics.FillPath(&brush, &path);
 
 		EndPaint(_Window, &paintStruct);
 	}
