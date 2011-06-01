@@ -289,7 +289,7 @@ void Sound::Run(int ticks)
 
 			//Update frequency
 			m_sound4TicksUntilNextShift -= ticks;
-			if(m_sound4TicksUntilNextShift <= 0)
+			while(m_sound4TicksUntilNextShift <= 0)
 			{
 				m_sound4TicksUntilNextShift += m_sound4TicksPerShift;
 
@@ -311,7 +311,8 @@ void Sound::Run(int ticks)
 			{
 				float actualAmplitude = (float)m_envelope4Value / (float)0x0f;
 
-				float sample = (float)m_sound4Sample / (float)0xff;
+				float sample = (float)m_sound4Sample / (float)0x7fffffff;
+				sample -= 1.f;
 				sample *= actualAmplitude;
 
 				sampleValue[3] = sample;
@@ -634,18 +635,12 @@ void Sound::SetNR43(u8 value)
 		m_sound4ShiftTap = 15;
 
 
-	float shiftFrequency = (float)m_machine->GetTicksPerSecond();
-	shiftFrequency /= 8.f;
-
 	int frequencyDivisionRatio = value & 0x07;
-	if(frequencyDivisionRatio == 0)
-		shiftFrequency *= 2.f;
-	else
-		shiftFrequency *= (1.f / (float)frequencyDivisionRatio);
-
 	int shiftClockFrequency = (value & 0xf0) >> 4;
-	shiftFrequency *= (1.f / (float)(1<<(shiftClockFrequency+1)));
 
+	float shiftFrequency = (float)m_machine->GetTicksPerSecond() / 4.f;
+	shiftFrequency /= (float)(frequencyDivisionRatio + 1);
+	shiftFrequency /= (float)(1<<(shiftClockFrequency+1));
 
 	m_sound4TicksPerShift = (int)( (float)m_machine->GetTicksPerSecond() / shiftFrequency );
 	m_sound4TicksUntilNextShift = m_sound4TicksPerShift;
@@ -665,7 +660,7 @@ void Sound::SetNR44(u8 value)
 		m_sound4Playing = true;
 		m_sound4StartTimeSeconds = m_totalSeconds;
 		m_envelope4Value = m_envelope4InitialValue;
-		m_sound4ShiftRegister = 0xffff;
+		m_sound4ShiftRegister = 0x00ff;
 	}
 
 	m_nr44 = value & 0x40;

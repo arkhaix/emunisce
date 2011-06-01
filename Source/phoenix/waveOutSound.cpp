@@ -180,7 +180,7 @@ public:
 				continue;
 
 			int numPendingBuffers = 0;
-			while(numPendingBuffers == 0)
+			while(numPendingBuffers == 0 && _Phoenix->ShutdownRequested() == false)
 			{
 				EnterCriticalSection(&_PendingBufferQueueLock);
 					numPendingBuffers = _PendingBufferQueue.size();
