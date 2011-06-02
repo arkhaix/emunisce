@@ -93,6 +93,8 @@ private:
 
 	//Registers
 
+	u8 m_inaccessable;	///<For registers like NR20, NR40, and the unused memory before wave ram.
+
 	u8 m_nr10;	///<NR10, ff10
 	u8 m_nr11;	///<NR11, ff11
 	u8 m_nr12;	///<NR12, ff12

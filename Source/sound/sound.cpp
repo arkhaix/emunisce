@@ -35,7 +35,16 @@ void Sound::Initialize()
 
 	m_lastEnvelope4UpdateTimeSeconds = 0.f;
 
+	m_sound1Playing = false;
+	m_sound2Playing = false;
+	m_sound3Playing = false;
+	m_sound4Playing = false;
+
 	m_audioBufferCount = 0;
+
+	m_inaccessable = 0xff;
+
+	SetNR52(0xf0);	///<Must enable the master control before setting the individual registers
 
 	SetNR10(0x80);
 	SetNR11(0x3f);
@@ -43,7 +52,6 @@ void Sound::Initialize()
 	SetNR13(0xff);
 	SetNR14(0xbf);
 
-	//SetNR20(0xff);
 	SetNR21(0x3f);
 	SetNR22(0x00);
 	SetNR23(0xff);
@@ -62,7 +70,6 @@ void Sound::Initialize()
 
 	SetNR50(0x00);
 	SetNR51(0x00);
-	SetNR52(0xf0);
 }
 
 void Sound::SetMachine(Machine* machine)
@@ -81,6 +88,7 @@ void Sound::SetMachine(Machine* machine)
 	m_memory->SetRegisterLocation(0x13, &m_nr13, false);
 	m_memory->SetRegisterLocation(0x14, &m_nr14, false);
 
+	m_memory->SetRegisterLocation(0x15, &m_inaccessable, false);
 	m_memory->SetRegisterLocation(0x16, &m_nr21, false);
 	m_memory->SetRegisterLocation(0x17, &m_nr22, false);
 	m_memory->SetRegisterLocation(0x18, &m_nr23, false);
@@ -92,6 +100,7 @@ void Sound::SetMachine(Machine* machine)
 	m_memory->SetRegisterLocation(0x1d, &m_nr33, false);
 	m_memory->SetRegisterLocation(0x1e, &m_nr34, false);
 
+	m_memory->SetRegisterLocation(0x1f, &m_inaccessable, false);
 	m_memory->SetRegisterLocation(0x20, &m_nr41, false);
 	m_memory->SetRegisterLocation(0x21, &m_nr42, false);
 	m_memory->SetRegisterLocation(0x22, &m_nr43, false);
@@ -100,6 +109,16 @@ void Sound::SetMachine(Machine* machine)
 	m_memory->SetRegisterLocation(0x24, &m_nr50, false);
 	m_memory->SetRegisterLocation(0x25, &m_nr51, false);
 	m_memory->SetRegisterLocation(0x26, &m_nr52, false);
+
+	m_memory->SetRegisterLocation(0x27, &m_inaccessable, false);
+	m_memory->SetRegisterLocation(0x28, &m_inaccessable, false);
+	m_memory->SetRegisterLocation(0x29, &m_inaccessable, false);
+	m_memory->SetRegisterLocation(0x2a, &m_inaccessable, false);
+	m_memory->SetRegisterLocation(0x2b, &m_inaccessable, false);
+	m_memory->SetRegisterLocation(0x2c, &m_inaccessable, false);
+	m_memory->SetRegisterLocation(0x2d, &m_inaccessable, false);
+	m_memory->SetRegisterLocation(0x2e, &m_inaccessable, false);
+	m_memory->SetRegisterLocation(0x2f, &m_inaccessable, false);
 }
 
 void Sound::Run(int ticks)
@@ -129,6 +148,8 @@ void Sound::Run(int ticks)
 		//Sound 1 Tick
 		if(m_soundMasterEnable && m_sound1Playing)
 		{
+			m_nr52 |= 0x01;
+
 			//Update sound time
 			if(m_sound1Continuous == false && m_totalSeconds - m_sound1StartTimeSeconds >= m_sound1LengthSeconds)
 			{
@@ -190,6 +211,8 @@ void Sound::Run(int ticks)
 		//Sound 2 Tick
 		if(m_soundMasterEnable && m_sound2Playing)
 		{
+			m_nr52 |= 0x02;
+
 			//Update sound time
 			if(m_sound2Continuous == false && m_totalSeconds - m_sound2StartTimeSeconds >= m_sound2LengthSeconds)
 			{
@@ -228,6 +251,8 @@ void Sound::Run(int ticks)
 		//Sound 3 Tick
 		if(m_soundMasterEnable && m_sound3Playing && m_sound3Off == false)
 		{
+			m_nr52 |= 0x04;
+
 			//Update sound time
 			if(m_sound3Continuous == false && m_totalSeconds - m_sound3StartTimeSeconds >= m_sound3LengthSeconds)
 			{
@@ -269,6 +294,8 @@ void Sound::Run(int ticks)
 		//Sound 4 Tick
 		if(m_soundMasterEnable && m_sound4Playing)
 		{
+			m_nr52 |= 0x08;
+
 			//Update sound time
 			if(m_sound4Continuous == false && m_totalSeconds - m_sound4StartTimeSeconds >= m_sound4LengthSeconds)
 			{
@@ -415,6 +442,9 @@ int Sound::GetAudioBufferCount()
 
 void Sound::SetNR10(u8 value)
 {
+	if(m_soundMasterEnable == false)
+		return;
+
 	m_sweepShift = value & 0x07;
 
 	if(value & 0x08)
@@ -430,6 +460,9 @@ void Sound::SetNR10(u8 value)
 
 void Sound::SetNR11(u8 value)
 {
+	if(m_soundMasterEnable == false)
+		return;
+
 	m_sound1LengthSeconds = (float)(64 - (value & 0x3f)) * (1.f / 256.f);
 
 	int duty = (value & 0xc0) >> 6;
@@ -444,6 +477,9 @@ void Sound::SetNR11(u8 value)
 
 void Sound::SetNR12(u8 value)
 {
+	if(m_soundMasterEnable == false)
+		return;
+
 	m_envelope1StepTimeSeconds = (value & 0x07) * (1.f / 64.f);
 	if((value & 0x07) == 0)
 		m_envelope1Enabled = false;
@@ -463,6 +499,9 @@ void Sound::SetNR12(u8 value)
 
 void Sound::SetNR13(u8 value)
 {
+	if(m_soundMasterEnable == false)
+		return;
+
 	m_sound1Frequency &= 0x700;
 	m_sound1Frequency |= value;
 
@@ -471,6 +510,9 @@ void Sound::SetNR13(u8 value)
 
 void Sound::SetNR14(u8 value)
 {
+	if(m_soundMasterEnable == false)
+		return;
+
 	m_sound1Frequency &= 0x0ff;
 	m_sound1Frequency |= (value & 0x07) << 8;
 
@@ -492,6 +534,9 @@ void Sound::SetNR14(u8 value)
 
 void Sound::SetNR21(u8 value)
 {
+	if(m_soundMasterEnable == false)
+		return;
+
 	m_sound2LengthSeconds = (float)(64 - (value & 0x3f)) * (1.f / 256.f);
 
 	int duty = (value & 0xc0) >> 6;
@@ -506,6 +551,9 @@ void Sound::SetNR21(u8 value)
 
 void Sound::SetNR22(u8 value)
 {
+	if(m_soundMasterEnable == false)
+		return;
+
 	m_envelope2StepTimeSeconds = (value & 0x07) * (1.f / 64.f);
 	if((value & 0x07) == 0)
 		m_envelope2Enabled = false;
@@ -525,6 +573,9 @@ void Sound::SetNR22(u8 value)
 
 void Sound::SetNR23(u8 value)
 {
+	if(m_soundMasterEnable == false)
+		return;
+
 	m_sound2Frequency &= 0x700;
 	m_sound2Frequency |= value;
 
@@ -533,6 +584,9 @@ void Sound::SetNR23(u8 value)
 
 void Sound::SetNR24(u8 value)
 {
+	if(m_soundMasterEnable == false)
+		return;
+
 	m_sound2Frequency &= 0x0ff;
 	m_sound2Frequency |= (value & 0x07) << 8;
 
@@ -554,6 +608,9 @@ void Sound::SetNR24(u8 value)
 
 void Sound::SetNR30(u8 value)
 {
+	if(m_soundMasterEnable == false)
+		return;
+
 	if(value & 0x80)
 		m_sound3Off = false;
 	else
@@ -565,13 +622,19 @@ void Sound::SetNR30(u8 value)
 
 void Sound::SetNR31(u8 value)
 {
+	if(m_soundMasterEnable == false)
+		return;
+
 	m_sound3LengthSeconds = (float)(256 - value) * (1.f / 256.f);
 
-	m_nr31 = value;
+	m_nr31 = 0xff;
 }
 
 void Sound::SetNR32(u8 value)
 {
+	if(m_soundMasterEnable == false)
+		return;
+
 	m_sound3Level = (value & 0x60) >> 5;
 
 	m_nr32 = value & 0x60;
@@ -580,6 +643,9 @@ void Sound::SetNR32(u8 value)
 
 void Sound::SetNR33(u8 value)
 {
+	if(m_soundMasterEnable == false)
+		return;
+
 	m_sound3Frequency &= 0x700;
 	m_sound3Frequency |= value;
 
@@ -588,6 +654,9 @@ void Sound::SetNR33(u8 value)
 
 void Sound::SetNR34(u8 value)
 {
+	if(m_soundMasterEnable == false)
+		return;
+
 	m_sound3Frequency &= 0x0ff;
 	m_sound3Frequency |= (value & 0x07) << 8;
 
@@ -608,6 +677,9 @@ void Sound::SetNR34(u8 value)
 
 void Sound::SetNR41(u8 value)
 {
+	if(m_soundMasterEnable == false)
+		return;
+
 	m_sound4LengthSeconds = (double)(64 - (value & 0x3f)) * (1.0 / 64.0);
 
 	m_nr41 = 0xff;
@@ -615,6 +687,9 @@ void Sound::SetNR41(u8 value)
 
 void Sound::SetNR42(u8 value)
 {
+	if(m_soundMasterEnable == false)
+		return;
+
 	m_envelope4StepTimeSeconds = (value & 0x07) * (1.f / 64.f);
 	if((value & 0x07) == 0)
 		m_envelope4Enabled = false;
@@ -634,6 +709,9 @@ void Sound::SetNR42(u8 value)
 
 void Sound::SetNR43(u8 value)
 {
+	if(m_soundMasterEnable == false)
+		return;
+
 	if(value & 0x40)
 		m_sound4ShiftTap = 7;
 	else
@@ -655,6 +733,9 @@ void Sound::SetNR43(u8 value)
 
 void Sound::SetNR44(u8 value)
 {
+	if(m_soundMasterEnable == false)
+		return;
+
 	if(value & 0x40)
 		m_sound4Continuous = false;
 	else
@@ -674,11 +755,17 @@ void Sound::SetNR44(u8 value)
 
 void Sound::SetNR50(u8 value)
 {
+	if(m_soundMasterEnable == false)
+		return;
+
 	m_nr50 = value;
 }
 
 void Sound::SetNR51(u8 value)
 {
+	if(m_soundMasterEnable == false)
+		return;
+
 	for(int i=0;i<4;i++)
 	{
 		if(value & (1<<i))
@@ -698,9 +785,44 @@ void Sound::SetNR51(u8 value)
 void Sound::SetNR52(u8 value)
 {
 	if(value & 0x80)
+	{
 		m_soundMasterEnable = true;
+	}
 	else
+	{
+		SetNR10(0);
+		SetNR11(0);
+		SetNR12(0);
+		SetNR13(0);
+		SetNR14(0);
+
+		SetNR21(0);
+		SetNR22(0);
+		SetNR23(0);
+		SetNR24(0);
+
+		SetNR30(0);
+		SetNR31(0);
+		SetNR32(0);
+		SetNR33(0);
+		SetNR34(0);
+
+		//SetNR41(0);	///<Powering down doesn't affect NR41?
+		SetNR42(0);
+		SetNR43(0);
+		SetNR44(0);
+
+		SetNR50(0);
+		SetNR51(0);
+		
+		m_sound1Playing = false;
+		m_sound2Playing = false;
+		m_sound3Playing = false;
+		m_sound4Playing = false;
+
 		m_soundMasterEnable = false;
+		m_nr52 = 0x70;
+	}
 	
 	m_nr52 = (value & 0x80) | 0x70 | (m_nr52 & 0x0f);
 }
