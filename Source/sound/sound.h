@@ -3,7 +3,7 @@
 
 #include "../common/types.h"
 
-static const unsigned int SamplesPerSecond = 22050;
+static const unsigned int SamplesPerSecond = 48000;
 
 //static const unsigned int BytesPerSample = 1;
 //typedef u8 SampleType;

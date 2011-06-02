@@ -707,10 +707,10 @@ void Sound::SetNR43(u8 value)
 	if(m_soundMasterEnable == false)
 		return;
 
-	if(value & 0x40)
+	if(value & 0x08)
 	{
 		m_sound4ShiftRegisterWidth = 7;
-		m_sound4ShiftRegisterTap = 3;
+		m_sound4ShiftRegisterTap = 1;//3;	//(1 is most tone-like, 3 is most white-noise-like)
 	}
 	else
 	{
@@ -726,7 +726,7 @@ void Sound::SetNR43(u8 value)
 	shiftFrequency /= (float)(frequencyDivisionRatio + 1);
 	shiftFrequency /= (float)(1<<(shiftClockFrequency+1));
 
-	m_sound4TicksPerShift = (int)( (float)m_machine->GetTicksPerSecond() / shiftFrequency );
+	m_sound4TicksPerShift = (int)( ((float)m_machine->GetTicksPerSecond() / shiftFrequency) + 0.5f );
 	m_sound4TicksUntilNextShift = m_sound4TicksPerShift;
 
 	m_nr43 = value;
