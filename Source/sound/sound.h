@@ -186,7 +186,7 @@ private:
 	double m_sound4StartTimeSeconds;
 	double m_sound4LengthSeconds;
 
-	u32 m_sound4Sample;
+	u8 m_sound4Sample;
 
 	bool m_envelope4Enabled;
 	double m_lastEnvelope4UpdateTimeSeconds;
@@ -195,8 +195,10 @@ private:
 	int m_envelope4Value;
 	int m_envelope4InitialValue;
 
-	int m_sound4ShiftRegister;	///<linear feedback shift register
-	int m_sound4ShiftTap;	///<tap bit for the lfsr
+	unsigned int m_sound4ShiftRegister;	///<linear feedback shift register
+	int m_sound4ShiftRegisterTap;	///<tap bit for the lfsr
+	int m_sound4ShiftRegisterWidth;	///<7 or 15
+	int m_sound4ShiftRegisterOutput;
 	int m_sound4TicksPerShift;
 	int m_sound4TicksUntilNextShift;
 };

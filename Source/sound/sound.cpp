@@ -314,23 +314,21 @@ void Sound::Run(int ticks)
 					m_envelope4Value--;
 			}
 
-			//Update frequency
+			//Update shift register
 			m_sound4TicksUntilNextShift -= ticks;
 			while(m_sound4TicksUntilNextShift <= 0)
 			{
 				m_sound4TicksUntilNextShift += m_sound4TicksPerShift;
 
-				int a = m_sound4ShiftRegister & (1<<m_sound4ShiftTap);
-				m_sound4ShiftRegister <<= 1;
-				int b = m_sound4ShiftRegister & (1<<m_sound4ShiftTap);
+				int a = (m_sound4ShiftRegister & 1) ? 1 : 0;
+				int b = (m_sound4ShiftRegister & (1<<m_sound4ShiftRegisterTap)) ? 1 : 0;
+				m_sound4ShiftRegister >>= 1;
 
 				int result = a ^ b;
 				if(result)
-					m_sound4ShiftRegister |= 1;
+					m_sound4ShiftRegister |= (1<<m_sound4ShiftRegisterWidth);
 
-				m_sound4Sample <<= 1;
-				if(a)
-					m_sound4Sample |= 1;
+				m_sound4ShiftRegisterOutput = a;
 			}
 
 			//Get sample
@@ -338,13 +336,10 @@ void Sound::Run(int ticks)
 			{
 				float actualAmplitude = (float)m_envelope4Value / (float)0x0f;
 
-				//float sample = (float)m_sound4Sample / (float)0x7fffffff;
-				//sample -= 1.f;
-				//sample *= actualAmplitude;
-
 				float sample = -1.f;
-				if(m_sound4Sample & 0x01)
+				if(m_sound4ShiftRegisterOutput)
 					sample = 1.f;
+
 				sample *= actualAmplitude;
 
 				sampleValue[3] = sample;
@@ -355,10 +350,10 @@ void Sound::Run(int ticks)
 		//Debug
 		//for(int i=0;i<2;i++)
 		//{
-		//	m_terminalOutputs[i][0] = true;
+		//	m_terminalOutputs[i][0] = false;
 		//	m_terminalOutputs[i][1] = false;
 		//	m_terminalOutputs[i][2] = false;
-		//	m_terminalOutputs[i][3] = false;
+		//	m_terminalOutputs[i][3] = true;
 		//}
 
 		//Mix the samples
@@ -713,9 +708,15 @@ void Sound::SetNR43(u8 value)
 		return;
 
 	if(value & 0x40)
-		m_sound4ShiftTap = 7;
+	{
+		m_sound4ShiftRegisterWidth = 7;
+		m_sound4ShiftRegisterTap = 3;
+	}
 	else
-		m_sound4ShiftTap = 15;
+	{
+		m_sound4ShiftRegisterWidth = 15;
+		m_sound4ShiftRegisterTap = 7;
+	}
 
 
 	unsigned int frequencyDivisionRatio = value & 0x07;
@@ -746,7 +747,7 @@ void Sound::SetNR44(u8 value)
 		m_sound4Playing = true;
 		m_sound4StartTimeSeconds = m_totalSeconds;
 		m_envelope4Value = m_envelope4InitialValue;
-		m_sound4ShiftRegister = 0x00ff;
+		m_sound4ShiftRegister = 0xffff;
 	}
 
 	m_nr44 = value & 0x40;
