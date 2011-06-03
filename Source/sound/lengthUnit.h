@@ -16,6 +16,10 @@ public:
 
 	int GetCurrentLength();
 
+	void Enable();
+	void Disable();
+	bool IsEnabled();
+
 	void Run(int ticks);
 
 
@@ -31,6 +35,9 @@ private:
 
 	int m_maxLength;
 	int m_currentLength;
+
+	bool m_enabled;
+	bool m_pendingEnable;
 };
 
 #endif

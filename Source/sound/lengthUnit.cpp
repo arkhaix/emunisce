@@ -11,6 +11,9 @@ LengthUnit::LengthUnit()
 
 	m_maxLength = 0;
 	m_currentLength = 0;
+
+	m_enabled = true;
+	m_pendingEnable = false;
 }
 
 void LengthUnit::SetTicksPerSecond(double ticksPerSecond)
@@ -56,17 +59,41 @@ int LengthUnit::GetCurrentLength()
 	return m_currentLength;
 }
 
+void LengthUnit::Enable()
+{
+	//if(m_ticksUntilNextDecrement * 2.0 >= m_ticksPerDecrement)
+		m_enabled = true;
+	//else
+	//	m_pendingEnable = true;
+}
+
+void LengthUnit::Disable()
+{
+	m_enabled = false;
+	m_pendingEnable = false;
+}
+
+bool LengthUnit::IsEnabled()
+{
+	return m_enabled;
+}
+
 void LengthUnit::Run(int ticks)
 {
-	if(m_currentLength == 0)
-		return;
-
 	m_ticksUntilNextDecrement -= (double)ticks;
 	while(m_ticksUntilNextDecrement <= 0.0+1e-5)
 	{
 		m_ticksUntilNextDecrement += m_ticksPerDecrement;
 
-		m_currentLength--;
+		if(m_enabled == true && m_currentLength > 0)
+		{
+			m_currentLength--;
+		}
+		else if(m_pendingEnable == true)
+		{
+			m_enabled = true;
+			m_pendingEnable = false;
+		}
 	}
 }
 
