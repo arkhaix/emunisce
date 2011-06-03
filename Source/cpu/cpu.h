@@ -95,6 +95,7 @@ private:
 	u8 m_interruptFlags;		///<0xff0f - Interrupt Flag.  Which interrupts are currently set.
 
 	u8 m_timerDivider;	///<0xff04 - Timer Divider.
+	int m_ticksPerDividerIncrement;	///<The timer divider increments once every 256 ticks.
 	int m_ticksUntilDividerIncrement;	///<The timer divider increments once every 256 ticks.
 
 	u8 m_timerModulo;	///<0xff06 - Timer Modulo.  This value gets loaded into the timer counter when it overflows.

@@ -1486,11 +1486,11 @@ int Cpu::Step()
 		if(TST_Z)
 		{
 			ExecJP(nn);
-			instructionTime += 12;
+			instructionTime += 16;
 		}
 		else
 		{
-			instructionTime += 8;
+			instructionTime += 12;
 		}
 	break;
 
@@ -1960,6 +1960,7 @@ int Cpu::ExecuteCB()
 	case 0x05:
 		//CB05		RLC L			8	2	2
 		ExecRLC(&l);
+		instructionTime += 8;
 	break;
 
 	case 0x06:
@@ -2366,7 +2367,7 @@ int Cpu::ExecuteCB()
 		//CB46	 	BIT 0,(HL)		12	3	2
 		n = m_memory->Read8(hl);
 		ExecBIT(n,0);
-		instructionTime += 16;
+		instructionTime += 12;
 	break;
 
 	case 0x47:
@@ -2415,7 +2416,7 @@ int Cpu::ExecuteCB()
 		//CB4E	 	BIT 1,(HL)		12	3	2
 		n = m_memory->Read8(hl);
 		ExecBIT(n,1);
-		instructionTime += 16;
+		instructionTime += 12;
 	break;
 
 	case 0x4F:
@@ -2464,7 +2465,7 @@ int Cpu::ExecuteCB()
 		//CB56	 	BIT 2,(HL)		12	3	2
 		n = m_memory->Read8(hl);
 		ExecBIT(n,2);
-		instructionTime += 16;
+		instructionTime += 12;
 	break;
 
 	case 0x57:
@@ -2513,7 +2514,7 @@ int Cpu::ExecuteCB()
 		//CB5E	 	BIT 3,(HL)		12	3	2
 		n = m_memory->Read8(hl);
 		ExecBIT(n,3);
-		instructionTime += 16;
+		instructionTime += 12;
 	break;
 
 	case 0x5F:
@@ -2562,7 +2563,7 @@ int Cpu::ExecuteCB()
 		//CB66	 	BIT 4,(HL)		12	3	2
 		n = m_memory->Read8(hl);
 		ExecBIT(n,4);
-		instructionTime += 16;
+		instructionTime += 12;
 	break;
 
 	case 0x67:
@@ -2611,7 +2612,7 @@ int Cpu::ExecuteCB()
 		//CB6E	 	BIT 5,(HL)		12	3	2
 		n = m_memory->Read8(hl);
 		ExecBIT(n,5);
-		instructionTime += 16;
+		instructionTime += 12;
 	break;
 
 	case 0x6F:
@@ -2660,7 +2661,7 @@ int Cpu::ExecuteCB()
 		//CB76	 	BIT 6,(HL)		12	3	2
 		n = m_memory->Read8(hl);
 		ExecBIT(n,6);
-		instructionTime += 16;
+		instructionTime += 12;
 	break;
 
 	case 0x77:
@@ -2709,7 +2710,7 @@ int Cpu::ExecuteCB()
 		//CB7E	 	BIT 7,(HL)		12	3	2
 		n = m_memory->Read8(hl);
 		ExecBIT(n,7);
-		instructionTime += 16;
+		instructionTime += 12;
 	break;
 
 	case 0x7F:

@@ -16,8 +16,6 @@ Cpu::Cpu()
 {
 	m_machine = NULL;
 	m_memory = NULL;
-
-	Initialize();
 }
 
 void Cpu::SetMachine(Machine* machine)
@@ -47,7 +45,8 @@ void Cpu::Initialize()
 	u8 m_interruptFlags;		///<0xff0f - Interrupt Flag.  Which interrupts are currently set.
 
 	m_timerDivider = 0;	///<0xff04 - Timer Divider.
-	m_ticksUntilDividerIncrement = 256;	///<The timer divider increments once every 256 ticks.
+	m_ticksPerDividerIncrement = 256;	///<The timer divider increments once every 256 ticks.
+	m_ticksUntilDividerIncrement = m_ticksPerDividerIncrement;
 
 	m_timerModulo = 0;	///<0xff06 - Timer Modulo.  This value gets loaded into the timer counter when it overflows.
 
@@ -87,6 +86,7 @@ void Cpu::SetTimerControl(u8 value)
 
 	//TAC[1:0] Input Clock Select
 	int clockSelect = value & 0x03;
+
 	if(clockSelect == 0)
 		m_ticksPerCounterIncrement = 1024;	///<4096 Hz
 	else if(clockSelect == 1)
@@ -115,7 +115,7 @@ void Cpu::UpdateTimer(int ticks)
 	m_ticksUntilDividerIncrement -= ticks;
 	if(m_ticksUntilDividerIncrement <= 0)
 	{
-		m_ticksUntilDividerIncrement += 256;
+		m_ticksUntilDividerIncrement += m_ticksPerDividerIncrement;
 
 		m_timerDivider++;
 	}
@@ -125,7 +125,7 @@ void Cpu::UpdateTimer(int ticks)
 
 	//Counter
 	m_ticksUntilCounterIncrement -= ticks;
-	if(m_ticksUntilCounterIncrement <= 0)
+	while(m_ticksUntilCounterIncrement <= 0)
 	{
 		m_ticksUntilCounterIncrement += m_ticksPerCounterIncrement;
 
