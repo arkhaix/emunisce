@@ -475,16 +475,20 @@ int Cpu::Step()
 
 	case 0x34:
 		//34		INC (HL)		11	3	1
+		//m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecINC(&n);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 12;
 	break;
 
 	case 0x35:
 		//35		DEC (HL)		11	3	1
+		//m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecDEC(&n);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 12;
 	break;
@@ -493,6 +497,7 @@ int Cpu::Step()
 		//36 n		LD (HL),n		10	3	1
 		n = ReadNext8();
 		ExecLD(&t, n);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, t);
 		instructionTime += 12;
 	break;
@@ -1495,7 +1500,7 @@ int Cpu::Step()
 	break;
 
 	case 0xcb:
-		instructionTime = ExecuteCB();
+		instructionTime += ExecuteCB();
 	break;
 
 	case 0xcc:
@@ -1687,6 +1692,7 @@ int Cpu::Step()
 		n = ReadNext8();
 		address = 0xff00 + n;
 		ExecLD(&t, a);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(address, t);
 		instructionTime += 12;
 	break;
@@ -1753,6 +1759,7 @@ int Cpu::Step()
 		//EA      JP   PE,nn      LD   (nn),A
 		nn = ReadNext16();
 		ExecLD(&t, a);
+		m_machine->RunDuringInstruction(8);
 		m_memory->Write8(nn, t);
 		instructionTime += 16;
 	break;
@@ -1793,6 +1800,7 @@ int Cpu::Step()
 		//F0      RET  P          LD   A,(FF00+n)
 		n = ReadNext8();
 		address = 0xff00 + n;
+		m_machine->RunDuringInstruction(4);
 		t = m_memory->Read8(address);
 		ExecLD(&a, t);
 		instructionTime += 12;
@@ -1870,6 +1878,7 @@ int Cpu::Step()
 	case 0xfa:
 		//FA      JP   M,nn       LD   A,(nn)
 		nn = ReadNext16();
+		m_machine->RunDuringInstruction(8);
 		t = m_memory->Read8(nn);
 		ExecLD(&a, t);
 		instructionTime += 16;
@@ -1909,8 +1918,6 @@ int Cpu::Step()
 	default:
 	break;
 	}
-
-	UpdateTimer(instructionTime);
 
 	return instructionTime;
 }
@@ -1965,8 +1972,10 @@ int Cpu::ExecuteCB()
 
 	case 0x06:
 		//CB06		RLC (HL)		15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecRLC(&n);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -2015,8 +2024,10 @@ int Cpu::ExecuteCB()
 
 	case 0x0E:
 		//CB0E		RRC (HL)		15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecRRC(&n);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -2065,8 +2076,10 @@ int Cpu::ExecuteCB()
 
 	case 0x16:
 		//CB16		RL (HL)			15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecRL(&n);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -2115,8 +2128,10 @@ int Cpu::ExecuteCB()
 
 	case 0x1E:
 		//CB1E		RR (HL)			15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecRR(&n);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -2165,8 +2180,10 @@ int Cpu::ExecuteCB()
 
 	case 0x26:
 		//CB26		SLA (HL)		15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecSLA(&n);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -2215,8 +2232,10 @@ int Cpu::ExecuteCB()
 
 	case 0x2E:
 		//CB2E		SRA (HL)		15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecSRA(&n);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -2265,8 +2284,10 @@ int Cpu::ExecuteCB()
 
 	case 0x36:
 		//CB36		SLL (HL)*	SWAP (HL)		15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecSWAP(&n);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -2315,8 +2336,10 @@ int Cpu::ExecuteCB()
 
 	case 0x3E:
 		//CB3E		SRL (HL)		15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecSRL(&n);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -2365,6 +2388,7 @@ int Cpu::ExecuteCB()
 
 	case 0x46:
 		//CB46	 	BIT 0,(HL)		12	3	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecBIT(n,0);
 		instructionTime += 12;
@@ -2414,6 +2438,7 @@ int Cpu::ExecuteCB()
 
 	case 0x4E:
 		//CB4E	 	BIT 1,(HL)		12	3	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecBIT(n,1);
 		instructionTime += 12;
@@ -2463,6 +2488,7 @@ int Cpu::ExecuteCB()
 
 	case 0x56:
 		//CB56	 	BIT 2,(HL)		12	3	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecBIT(n,2);
 		instructionTime += 12;
@@ -2512,6 +2538,7 @@ int Cpu::ExecuteCB()
 
 	case 0x5E:
 		//CB5E	 	BIT 3,(HL)		12	3	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecBIT(n,3);
 		instructionTime += 12;
@@ -2561,6 +2588,7 @@ int Cpu::ExecuteCB()
 
 	case 0x66:
 		//CB66	 	BIT 4,(HL)		12	3	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecBIT(n,4);
 		instructionTime += 12;
@@ -2610,6 +2638,7 @@ int Cpu::ExecuteCB()
 
 	case 0x6E:
 		//CB6E	 	BIT 5,(HL)		12	3	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecBIT(n,5);
 		instructionTime += 12;
@@ -2659,6 +2688,7 @@ int Cpu::ExecuteCB()
 
 	case 0x76:
 		//CB76	 	BIT 6,(HL)		12	3	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecBIT(n,6);
 		instructionTime += 12;
@@ -2708,6 +2738,7 @@ int Cpu::ExecuteCB()
 
 	case 0x7E:
 		//CB7E	 	BIT 7,(HL)		12	3	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecBIT(n,7);
 		instructionTime += 12;
@@ -2757,8 +2788,10 @@ int Cpu::ExecuteCB()
 
 	case 0x86:
 		//CB86	 	RES 0,(HL)		15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecRES(&n,0);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -2807,8 +2840,10 @@ int Cpu::ExecuteCB()
 
 	case 0x8E:
 		//CB8E	 	RES 1,(HL)		15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecRES(&n,1);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -2857,8 +2892,10 @@ int Cpu::ExecuteCB()
 
 	case 0x96:
 		//CB96	 	RES 2,(HL)		15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecRES(&n,2);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -2907,8 +2944,10 @@ int Cpu::ExecuteCB()
 
 	case 0x9E:
 		//CB9E	 	RES 3,(HL)		15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecRES(&n,3);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -2957,8 +2996,10 @@ int Cpu::ExecuteCB()
 
 	case 0xA6:
 		//CBA6	 	RES 4,(HL)		15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecRES(&n,4);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -3007,8 +3048,10 @@ int Cpu::ExecuteCB()
 
 	case 0xAE:
 		//CBAE	 	RES 5,(HL)		15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecRES(&n,5);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -3057,8 +3100,10 @@ int Cpu::ExecuteCB()
 
 	case 0xB6:
 		//CBB6	 	RES 6,(HL)		15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecRES(&n,6);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -3107,8 +3152,10 @@ int Cpu::ExecuteCB()
 
 	case 0xBE:
 		//CBBE	 	RES 7,(HL)		15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecRES(&n,7);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -3157,8 +3204,10 @@ int Cpu::ExecuteCB()
 
 	case 0xC6:
 		//CBC6	 	SET 0,(HL)		15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecSET(&n,0);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -3207,8 +3256,10 @@ int Cpu::ExecuteCB()
 
 	case 0xCE:
 		//CBCE	 	SET 1,(HL)		15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecSET(&n,1);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -3257,8 +3308,10 @@ int Cpu::ExecuteCB()
 
 	case 0xD6:
 		//CBD6	 	SET 2,(HL)		15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecSET(&n,2);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -3307,8 +3360,10 @@ int Cpu::ExecuteCB()
 
 	case 0xDE:
 		//CBDE	 	SET 3,(HL)		15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecSET(&n,3);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -3357,8 +3412,10 @@ int Cpu::ExecuteCB()
 
 	case 0xE6:
 		//CBE6	 	SET 4,(HL)		15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecSET(&n,4);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -3407,8 +3464,10 @@ int Cpu::ExecuteCB()
 
 	case 0xEE:
 		//CBEE	 	SET 5,(HL)		15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecSET(&n,5);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -3457,8 +3516,10 @@ int Cpu::ExecuteCB()
 
 	case 0xF6:
 		//CBF6	 	SET 6,(HL)		15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecSET(&n,6);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;
@@ -3507,8 +3568,10 @@ int Cpu::ExecuteCB()
 
 	case 0xFE:
 		//CBFE	 	SET 7,(HL)		15	4	2
+		m_machine->RunDuringInstruction(4);
 		n = m_memory->Read8(hl);
 		ExecSET(&n,7);
+		m_machine->RunDuringInstruction(4);
 		m_memory->Write8(hl, n);
 		instructionTime += 16;
 	break;

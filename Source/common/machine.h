@@ -53,6 +53,7 @@ public:
 	void RunOneFrame();
 	void Run();
 	void Stop();
+	void RunDuringInstruction(unsigned int ticks);	///<Should only be called by the CPU.  Won't do anything if called externally.
 
 	//Persistence
 	bool SaveState(const char* filename);
@@ -80,6 +81,9 @@ protected:
 	unsigned int m_ticksPerSecond;
 	unsigned int m_ticksPerFrame;
 	int m_frameTicksRemaining;
+
+	bool m_executingInstruction;
+	unsigned int m_subInstructionTicksSpent;	///<Tracks how many ticks were used during instruction execution
 };
 
 #endif
