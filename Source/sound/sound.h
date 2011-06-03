@@ -132,7 +132,6 @@ private:
 
 
 	bool m_sound1Playing;
-	bool m_sound1Continuous;
 
 	LengthUnit m_sound1LengthUnit;
 
@@ -154,7 +153,6 @@ private:
 
 
 	bool m_sound2Playing;
-	bool m_sound2Continuous;
 
 	LengthUnit m_sound2LengthUnit;
 
@@ -172,7 +170,6 @@ private:
 
 	bool m_sound3Playing;
 	bool m_sound3Off;
-	bool m_sound3Continuous;
 
 	LengthUnit m_sound3LengthUnit;
 
@@ -181,7 +178,6 @@ private:
 
 
 	bool m_sound4Playing;
-	bool m_sound4Continuous;
 
 	LengthUnit m_sound4LengthUnit;
 

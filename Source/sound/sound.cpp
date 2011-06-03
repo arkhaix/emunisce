@@ -152,7 +152,7 @@ void Sound::Run(int ticks)
 		//Sound 1 Tick
 
 		//Update length
-		if(m_sound1Continuous == false)
+		if(m_sound1LengthUnit.IsEnabled())
 		{
 			m_sound1LengthUnit.Run(ticks);
 			if(m_sound1LengthUnit.GetCurrentLength() == 0)
@@ -204,7 +204,7 @@ void Sound::Run(int ticks)
 		//Sound 2 Tick
 
 		//Update length
-		if(m_sound2Continuous == false)
+		if(m_sound2LengthUnit.IsEnabled())
 		{
 			m_sound2LengthUnit.Run(ticks);
 			if(m_sound2LengthUnit.GetCurrentLength() == 0)
@@ -233,7 +233,7 @@ void Sound::Run(int ticks)
 		//Sound 3 Tick
 
 		//Update length
-		if(m_sound3Continuous == false)
+		if(m_sound3LengthUnit.IsEnabled())
 		{
 			m_sound3LengthUnit.Run(ticks);
 			if(m_sound3LengthUnit.GetCurrentLength() == 0)
@@ -248,7 +248,7 @@ void Sound::Run(int ticks)
 		//Sound 4 Tick
 
 		//Update length
-		if(m_sound4Continuous == false)
+		if(m_sound4LengthUnit.IsEnabled())
 		{
 			m_sound4LengthUnit.Run(ticks);
 			if(m_sound4LengthUnit.GetCurrentLength() == 0)
@@ -574,9 +574,9 @@ void Sound::SetNR14(u8 value)
 	m_sound1Frequency |= (value & 0x07) << 8;
 
 	if(value & 0x40)
-		m_sound1Continuous = false;
+		m_sound1LengthUnit.Enable();
 	else
-		m_sound1Continuous = true;
+		m_sound1LengthUnit.Disable();
 
 	if(value & 0x80)
 	{
@@ -665,9 +665,9 @@ void Sound::SetNR24(u8 value)
 	m_sound2Frequency |= (value & 0x07) << 8;
 
 	if(value & 0x40)
-		m_sound2Continuous = false;
+		m_sound2LengthUnit.Enable();
 	else
-		m_sound2Continuous = true;
+		m_sound2LengthUnit.Disable();
 
 	if(value & 0x80)
 	{
@@ -755,9 +755,9 @@ void Sound::SetNR34(u8 value)
 	m_sound3Frequency |= (value & 0x07) << 8;
 
 	if(value & 0x40)
-		m_sound3Continuous = false;
+		m_sound3LengthUnit.Enable();
 	else
-		m_sound3Continuous = true;
+		m_sound3LengthUnit.Disable();
 
 	if(value & 0x80)
 	{
@@ -854,9 +854,9 @@ void Sound::SetNR44(u8 value)
 		return;
 
 	if(value & 0x40)
-		m_sound4Continuous = false;
+		m_sound4LengthUnit.Enable();
 	else
-		m_sound4Continuous = true;
+		m_sound4LengthUnit.Disable();
 
 	if(value & 0x80)
 	{
