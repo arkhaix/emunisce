@@ -127,6 +127,7 @@ private:
 	//Useful things
 
 	bool m_soundMasterEnable;
+	bool m_poweringDown;
 	bool m_terminalOutputs[2][4];	///<2 output channels (stereo left/right), 4 component channels (Sound1,2,3,4)
 
 
