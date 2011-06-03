@@ -3,6 +3,8 @@
 
 #include "../common/types.h"
 
+#include "lengthUnit.h"
+
 static const unsigned int SamplesPerSecond = 48000;
 
 //static const unsigned int BytesPerSample = 1;
@@ -131,8 +133,7 @@ private:
 	bool m_sound1Playing;
 	bool m_sound1Continuous;
 
-	double m_sound1StartTimeSeconds;
-	double m_sound1LengthSeconds;
+	LengthUnit m_sound1LengthUnit;
 
 	float m_sound1DutyCycles;	///<[0,1]
 
@@ -154,8 +155,7 @@ private:
 	bool m_sound2Playing;
 	bool m_sound2Continuous;
 
-	double m_sound2StartTimeSeconds;
-	double m_sound2LengthSeconds;
+	LengthUnit m_sound2LengthUnit;
 
 	float m_sound2DutyCycles;	///<[0,1]
 
@@ -173,8 +173,7 @@ private:
 	bool m_sound3Off;
 	bool m_sound3Continuous;
 
-	double m_sound3StartTimeSeconds;
-	double m_sound3LengthSeconds;
+	LengthUnit m_sound3LengthUnit;
 
 	int m_sound3Frequency;
 	int m_sound3Level;
@@ -183,8 +182,7 @@ private:
 	bool m_sound4Playing;
 	bool m_sound4Continuous;
 
-	double m_sound4StartTimeSeconds;
-	double m_sound4LengthSeconds;
+	LengthUnit m_sound4LengthUnit;
 
 	u8 m_sound4Sample;
 

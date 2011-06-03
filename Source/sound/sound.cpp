@@ -5,6 +5,13 @@
 #include "../common/machine.h"
 #include "../memory/memory.h"
 
+#if 0
+#include <cstdio>
+#define TRACE_REGISTER_WRITE printf(__FUNCTION__ "(%02X) nr52(%02X)\n", value, m_nr52);
+#else
+#define TRACE_REGISTER_WRITE
+#endif
+
 Sound::Sound()
 {
 	m_activeAudioBuffer = &m_audioBuffer[0];
@@ -39,6 +46,21 @@ void Sound::Initialize()
 	m_sound2Playing = false;
 	m_sound3Playing = false;
 	m_sound4Playing = false;
+
+	m_sound1LengthUnit.SetTicksPerSecond( m_machine->GetTicksPerSecond() );
+	m_sound2LengthUnit.SetTicksPerSecond( m_machine->GetTicksPerSecond() );
+	m_sound3LengthUnit.SetTicksPerSecond( m_machine->GetTicksPerSecond() );
+	m_sound4LengthUnit.SetTicksPerSecond( m_machine->GetTicksPerSecond() );
+
+	m_sound1LengthUnit.SetDecrementsPerSecond(256);
+	m_sound2LengthUnit.SetDecrementsPerSecond(256);
+	m_sound3LengthUnit.SetDecrementsPerSecond(256);
+	m_sound4LengthUnit.SetDecrementsPerSecond(256);
+
+	m_sound1LengthUnit.SetMaxLength(64);
+	m_sound2LengthUnit.SetMaxLength(64);
+	m_sound3LengthUnit.SetMaxLength(256);
+	m_sound4LengthUnit.SetMaxLength(64);
 
 	m_audioBufferCount = 0;
 
@@ -123,6 +145,149 @@ void Sound::SetMachine(Machine* machine)
 
 void Sound::Run(int ticks)
 {
+	//Sound 1 Tick
+
+	//Update length
+	if(m_sound1Continuous == false)
+	{
+		m_sound1LengthUnit.Run(ticks);
+		if(m_sound1LengthUnit.GetCurrentLength() == 0)
+		{
+			m_sound1Playing = false;
+			m_nr52 &= ~(0x01);
+		}
+		else if(m_sound1Playing == true)
+			m_nr52 |= 0x01;
+	}
+
+	if(m_sound1Playing)
+	{
+		//Update sweep
+		if(m_sweepShift > 0 && m_totalSeconds - m_lastSweepUpdateTimeSeconds >= m_sweepStepTimeSeconds)
+		{
+			m_lastSweepUpdateTimeSeconds = m_totalSeconds;
+
+			unsigned int newFrequency = m_sound1Frequency;
+
+			if(m_sweepIncreasing == true)
+				newFrequency += (m_sound1Frequency >> m_sweepShift);
+			else
+				newFrequency -= (m_sound1Frequency >> m_sweepShift);
+
+			if(newFrequency >= 0x800)	///<Frequency has maximum 11-bits.  Overflow turns off the sound
+			{
+				m_sound1Playing = false;
+				m_nr52 &= ~(0x01);
+			}
+			else
+			{
+				m_sound1Frequency = newFrequency;
+			}
+		}
+
+		//Update envelope
+		if(m_envelope1Enabled && m_totalSeconds - m_lastEnvelope1UpdateTimeSeconds >= m_envelope1StepTimeSeconds)
+		{
+			m_lastEnvelope1UpdateTimeSeconds = m_totalSeconds;
+
+			if(m_envelope1Increasing == true && m_envelope1Value < 0x0f)
+				m_envelope1Value++;
+			else if(m_envelope1Increasing == false && m_envelope1Value > 0x00)
+				m_envelope1Value--;
+		}
+	}
+
+	//Sound 2 Tick
+
+	//Update length
+	if(m_sound2Continuous == false)
+	{
+		m_sound2LengthUnit.Run(ticks);
+		if(m_sound2LengthUnit.GetCurrentLength() == 0)
+		{
+			m_sound2Playing = false;
+			m_nr52 &= ~(0x02);
+		}
+		else if(m_sound2Playing == true)
+			m_nr52 |= 0x02;
+	}
+
+	if(m_sound2Playing)
+	{
+		//Update envelope
+		if(m_envelope2Enabled && m_totalSeconds - m_lastEnvelope2UpdateTimeSeconds >= m_envelope2StepTimeSeconds)
+		{
+			m_lastEnvelope2UpdateTimeSeconds = m_totalSeconds;
+
+			if(m_envelope2Increasing == true && m_envelope2Value < 0x0f)
+				m_envelope2Value++;
+			else if(m_envelope2Increasing == false && m_envelope2Value > 0x00)
+				m_envelope2Value--;
+		}
+	}
+
+	//Sound 3 Tick
+
+	//Update length
+	if(m_sound3Continuous == false)
+	{
+		m_sound3LengthUnit.Run(ticks);
+		if(m_sound3LengthUnit.GetCurrentLength() == 0)
+		{
+			m_sound3Playing = false;
+			m_nr52 &= ~(0x04);
+		}
+		else if(m_sound3Playing == true)
+			m_nr52 |= 0x04;
+	}
+
+	//Sound 4 Tick
+
+	//Update length
+	if(m_sound4Continuous == false)
+	{
+		m_sound4LengthUnit.Run(ticks);
+		if(m_sound4LengthUnit.GetCurrentLength() == 0)
+		{
+			m_sound4Playing = false;
+			m_nr52 &= ~(0x08);
+		}
+		else if(m_sound4Playing == true)
+			m_nr52 |= 0x08;
+	}
+
+	if(m_sound4Playing == true)
+	{
+		//Update envelope
+		if(m_envelope4Enabled && m_totalSeconds - m_lastEnvelope4UpdateTimeSeconds >= m_envelope4StepTimeSeconds)
+		{
+			m_lastEnvelope4UpdateTimeSeconds = m_totalSeconds;
+
+			if(m_envelope4Increasing == true && m_envelope4Value < 0x0f)
+				m_envelope4Value++;
+			else if(m_envelope4Increasing == false && m_envelope4Value > 0x00)
+				m_envelope4Value--;
+		}
+
+		//Update shift register
+		m_sound4TicksUntilNextShift -= ticks;
+		while(m_sound4TicksUntilNextShift <= 0)
+		{
+			m_sound4TicksUntilNextShift += m_sound4TicksPerShift;
+
+			int a = (m_sound4ShiftRegister & 1) ? 1 : 0;
+			int b = (m_sound4ShiftRegister & (1<<m_sound4ShiftRegisterTap)) ? 1 : 0;
+			m_sound4ShiftRegister >>= 1;
+
+			int result = a ^ b;
+			if(result)
+				m_sound4ShiftRegister |= (1<<m_sound4ShiftRegisterWidth);
+
+			m_sound4ShiftRegisterOutput = a;
+		}
+	}
+
+
 	m_ticksSinceLastSample += ticks;
 	m_ticksUntilNextSample -= ticks;
 
@@ -143,207 +308,82 @@ void Sound::Run(int ticks)
 			sampleValue[i] = 0.f;
 
 
-		//Update the generators
-
-		//Sound 1 Tick
+		//Sound 1 Sample
 		if(m_soundMasterEnable && m_sound1Playing)
 		{
-			m_nr52 |= 0x01;
+			float actualFrequency = (float)m_machine->GetTicksPerSecond() / (float)((2048 - m_sound1Frequency) << 5);
+			float actualAmplitude = (float)m_envelope1Value / (float)0x0f;
 
-			//Update sound time
-			if(m_sound1Continuous == false && m_totalSeconds - m_sound1StartTimeSeconds >= m_sound1LengthSeconds)
-			{
-				m_sound1Playing = false;
-				m_nr52 &= ~(0x01);
-			}
+			double waveX = (float)m_fractionalSeconds * actualFrequency;
+			waveX -= (int)waveX;
 
-			//Update sweep
-			if(m_sweepShift > 0 && m_totalSeconds - m_lastSweepUpdateTimeSeconds >= m_sweepStepTimeSeconds)
-			{
-				m_lastSweepUpdateTimeSeconds = m_totalSeconds;
+			float fSample = 1.f * actualAmplitude;
+			if(waveX > m_sound1DutyCycles)
+				fSample = -fSample;
 
-				unsigned int newFrequency = m_sound1Frequency;
-
-				if(m_sweepIncreasing == true)
-					newFrequency += (m_sound1Frequency >> m_sweepShift);
-				else
-					newFrequency -= (m_sound1Frequency >> m_sweepShift);
-
-				if(newFrequency >= 0x800)	///<Frequency has maximum 11-bits.  Overflow turns off the sound
-				{
-					m_sound1Playing = false;
-					m_nr52 &= ~(0x01);
-				}
-				else
-				{
-					m_sound1Frequency = newFrequency;
-				}
-			}
-
-			//Update envelope
-			if(m_envelope1Enabled && m_totalSeconds - m_lastEnvelope1UpdateTimeSeconds >= m_envelope1StepTimeSeconds)
-			{
-				m_lastEnvelope1UpdateTimeSeconds = m_totalSeconds;
-
-				if(m_envelope1Increasing == true && m_envelope1Value < 0x0f)
-					m_envelope1Value++;
-				else if(m_envelope1Increasing == false && m_envelope1Value > 0x00)
-					m_envelope1Value--;
-			}
-
-			//Get sample
-			if(m_sound1Playing)
-			{
-				float actualFrequency = (float)m_machine->GetTicksPerSecond() / (float)((2048 - m_sound1Frequency) << 5);
-				float actualAmplitude = (float)m_envelope1Value / (float)0x0f;
-
-				double waveX = (float)m_fractionalSeconds * actualFrequency;
-				waveX -= (int)waveX;
-
-				float fSample = 1.f * actualAmplitude;
-				if(waveX > m_sound1DutyCycles)
-					fSample = -fSample;
-
-				sampleValue[0] = fSample;
-			}
+			sampleValue[0] = fSample;
 		}
 
-		//Sound 2 Tick
+
+		//Sound 2 Sample
 		if(m_soundMasterEnable && m_sound2Playing)
 		{
-			m_nr52 |= 0x02;
+			float actualFrequency = (float)m_machine->GetTicksPerSecond() / (float)((2048 - m_sound2Frequency) << 5);
+			float actualAmplitude = (float)m_envelope2Value / (float)0x0f;
 
-			//Update sound time
-			if(m_sound2Continuous == false && m_totalSeconds - m_sound2StartTimeSeconds >= m_sound2LengthSeconds)
-			{
-				m_sound2Playing = false;
-				m_nr52 &= ~(0x02);
-			}
+			double waveX = m_fractionalSeconds * actualFrequency;
+			waveX -= (int)waveX;
 
-			//Update envelope
-			if(m_envelope2Enabled && m_totalSeconds - m_lastEnvelope2UpdateTimeSeconds >= m_envelope2StepTimeSeconds)
-			{
-				m_lastEnvelope2UpdateTimeSeconds = m_totalSeconds;
+			float fSample = 1.f * actualAmplitude;
+			if(waveX > m_sound2DutyCycles)
+				fSample = -fSample;
 
-				if(m_envelope2Increasing == true && m_envelope2Value < 0x0f)
-					m_envelope2Value++;
-				else if(m_envelope2Increasing == false && m_envelope2Value > 0x00)
-					m_envelope2Value--;
-			}
-
-			//Get sample
-			if(m_sound2Playing)
-			{
-				float actualFrequency = (float)m_machine->GetTicksPerSecond() / (float)((2048 - m_sound2Frequency) << 5);
-				float actualAmplitude = (float)m_envelope2Value / (float)0x0f;
-
-				double waveX = m_fractionalSeconds * actualFrequency;
-				waveX -= (int)waveX;
-
-				float fSample = 1.f * actualAmplitude;
-				if(waveX > m_sound2DutyCycles)
-					fSample = -fSample;
-
-				sampleValue[1] = fSample;
-			}
-		}
-
-		//Sound 3 Tick
-		if(m_soundMasterEnable && m_sound3Playing && m_sound3Off == false)
-		{
-			m_nr52 |= 0x04;
-
-			//Update sound time
-			if(m_sound3Continuous == false && m_totalSeconds - m_sound3StartTimeSeconds >= m_sound3LengthSeconds)
-			{
-				m_sound3Playing = false;
-				m_nr52 &= ~(0x04);
-			}
-
-			//Get sample
-			if(m_sound3Playing)
-			{
-				float actualFrequency = (float)m_machine->GetTicksPerSecond() / (float)((2048 - m_sound3Frequency) << 5);
-
-				double waveX = m_fractionalSeconds * actualFrequency;
-				waveX -= (int)waveX;
-
-				int sampleIndex = (int)(waveX * 32.f);
-				u16 sampleAddress = 0xff30 + (sampleIndex / 2);
-				SampleType sample = m_memory->Read8(sampleAddress);
-				if(sampleIndex & 1)
-					sample &= 0x0f;
-				else
-					sample = (sample & 0xf0) >> 4;
-
-				if(m_sound3Level == 0)
-					sample = 0;
-				else
-					sample = sample >> (m_sound3Level - 1);
-
-				//Adjust to [0,1]
-				sampleValue[2] = (float)sample / 15.f;
-
-				//Expand to [-1,1]
-				sampleValue[2] *= 2.f;
-				sampleValue[2] -= 1.f;
-			}
+			sampleValue[1] = fSample;
 		}
 
 
-		//Sound 4 Tick
-		if(m_soundMasterEnable && m_sound4Playing)
+		//Sound 3 Sample
+		if(m_soundMasterEnable && m_sound3Playing)
 		{
-			m_nr52 |= 0x08;
+			float actualFrequency = (float)m_machine->GetTicksPerSecond() / (float)((2048 - m_sound3Frequency) << 5);
 
-			//Update sound time
-			if(m_sound4Continuous == false && m_totalSeconds - m_sound4StartTimeSeconds >= m_sound4LengthSeconds)
-			{
-				m_sound4Playing = false;
-				m_nr52 &= ~(0x08);
-			}
+			double waveX = m_fractionalSeconds * actualFrequency;
+			waveX -= (int)waveX;
 
-			//Update envelope
-			if(m_envelope4Enabled && m_totalSeconds - m_lastEnvelope4UpdateTimeSeconds >= m_envelope4StepTimeSeconds)
-			{
-				m_lastEnvelope4UpdateTimeSeconds = m_totalSeconds;
+			int sampleIndex = (int)(waveX * 32.f);
+			u16 sampleAddress = 0xff30 + (sampleIndex / 2);
+			SampleType sample = m_memory->Read8(sampleAddress);
+			if(sampleIndex & 1)
+				sample &= 0x0f;
+			else
+				sample = (sample & 0xf0) >> 4;
 
-				if(m_envelope4Increasing == true && m_envelope4Value < 0x0f)
-					m_envelope4Value++;
-				else if(m_envelope4Increasing == false && m_envelope4Value > 0x00)
-					m_envelope4Value--;
-			}
+			if(m_sound3Level == 0)
+				sample = 0;
+			else
+				sample = sample >> (m_sound3Level - 1);
 
-			//Update shift register
-			m_sound4TicksUntilNextShift -= ticks;
-			while(m_sound4TicksUntilNextShift <= 0)
-			{
-				m_sound4TicksUntilNextShift += m_sound4TicksPerShift;
+			//Adjust to [0,1]
+			sampleValue[2] = (float)sample / 15.f;
 
-				int a = (m_sound4ShiftRegister & 1) ? 1 : 0;
-				int b = (m_sound4ShiftRegister & (1<<m_sound4ShiftRegisterTap)) ? 1 : 0;
-				m_sound4ShiftRegister >>= 1;
+			//Expand to [-1,1]
+			sampleValue[2] *= 2.f;
+			sampleValue[2] -= 1.f;
+		}
 
-				int result = a ^ b;
-				if(result)
-					m_sound4ShiftRegister |= (1<<m_sound4ShiftRegisterWidth);
 
-				m_sound4ShiftRegisterOutput = a;
-			}
+		//Sound 4 Sample
+		if(m_sound4Playing)
+		{
+			float actualAmplitude = (float)m_envelope4Value / (float)0x0f;
 
-			//Get sample
-			if(m_sound4Playing)
-			{
-				float actualAmplitude = (float)m_envelope4Value / (float)0x0f;
+			float sample = -1.f;
+			if(m_sound4ShiftRegisterOutput)
+				sample = 1.f;
 
-				float sample = -1.f;
-				if(m_sound4ShiftRegisterOutput)
-					sample = 1.f;
+			sample *= actualAmplitude;
 
-				sample *= actualAmplitude;
-
-				sampleValue[3] = sample;
-			}
+			sampleValue[3] = sample;
 		}
 
 
@@ -437,6 +477,8 @@ int Sound::GetAudioBufferCount()
 
 void Sound::SetNR10(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	if(m_soundMasterEnable == false)
 		return;
 
@@ -455,10 +497,12 @@ void Sound::SetNR10(u8 value)
 
 void Sound::SetNR11(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	if(m_soundMasterEnable == false)
 		return;
 
-	m_sound1LengthSeconds = (float)(64 - (value & 0x3f)) * (1.f / 256.f);
+	m_sound1LengthUnit.SetInverseLength(value & 0x3f);
 
 	int duty = (value & 0xc0) >> 6;
 	if(duty == 0)
@@ -472,6 +516,8 @@ void Sound::SetNR11(u8 value)
 
 void Sound::SetNR12(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	if(m_soundMasterEnable == false)
 		return;
 
@@ -489,11 +535,19 @@ void Sound::SetNR12(u8 value)
 	m_envelope1InitialValue = (value & 0xf0) >> 4;
 	m_envelope1Value = m_envelope1InitialValue;
 
+	if(m_envelope1Value == 0)
+	{
+		m_sound1Playing = false;
+		m_nr52 &= ~(0x01);
+	}
+
 	m_nr12 = value;
 }
 
 void Sound::SetNR13(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	if(m_soundMasterEnable == false)
 		return;
 
@@ -505,6 +559,8 @@ void Sound::SetNR13(u8 value)
 
 void Sound::SetNR14(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	if(m_soundMasterEnable == false)
 		return;
 
@@ -519,8 +575,10 @@ void Sound::SetNR14(u8 value)
 	if(value & 0x80)
 	{
 		m_sound1Playing = true;
-		m_sound1StartTimeSeconds = m_totalSeconds;
 		m_envelope1Value = m_envelope1InitialValue;
+
+		if(m_sound1LengthUnit.GetCurrentLength() == 0)
+			m_sound1LengthUnit.SetInverseLength(0);
 	}
 
 	m_nr14 = value & 0x40;
@@ -529,10 +587,12 @@ void Sound::SetNR14(u8 value)
 
 void Sound::SetNR21(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	if(m_soundMasterEnable == false)
 		return;
 
-	m_sound2LengthSeconds = (float)(64 - (value & 0x3f)) * (1.f / 256.f);
+	m_sound2LengthUnit.SetInverseLength(value & 0x3f);
 
 	int duty = (value & 0xc0) >> 6;
 	if(duty == 0)
@@ -546,6 +606,8 @@ void Sound::SetNR21(u8 value)
 
 void Sound::SetNR22(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	if(m_soundMasterEnable == false)
 		return;
 
@@ -563,11 +625,19 @@ void Sound::SetNR22(u8 value)
 	m_envelope2InitialValue = (value & 0xf0) >> 4;
 	m_envelope2Value = m_envelope2InitialValue;
 
+	if(m_envelope2Value == 0)
+	{
+		m_sound2Playing = false;
+		m_nr52 &= ~(0x02);
+	}
+
 	m_nr22 = value;
 }
 
 void Sound::SetNR23(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	if(m_soundMasterEnable == false)
 		return;
 
@@ -579,6 +649,8 @@ void Sound::SetNR23(u8 value)
 
 void Sound::SetNR24(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	if(m_soundMasterEnable == false)
 		return;
 
@@ -593,8 +665,10 @@ void Sound::SetNR24(u8 value)
 	if(value & 0x80)
 	{
 		m_sound2Playing = true;
-		m_sound2StartTimeSeconds = m_totalSeconds;
 		m_envelope2Value = m_envelope2InitialValue;
+
+		if(m_sound2LengthUnit.GetCurrentLength() == 0)
+			m_sound2LengthUnit.SetInverseLength(0);
 	}
 
 	m_nr24 = value & 0x40;
@@ -603,13 +677,22 @@ void Sound::SetNR24(u8 value)
 
 void Sound::SetNR30(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	if(m_soundMasterEnable == false)
 		return;
 
 	if(value & 0x80)
+	{
 		m_sound3Off = false;
+	}
 	else
+	{
 		m_sound3Off = true;
+
+		m_sound3Playing = false;
+		m_nr52 &= ~(0x04);
+	}
 
 	m_nr30 = value & 0x80;
 	m_nr30 |= 0x7f;
@@ -617,16 +700,20 @@ void Sound::SetNR30(u8 value)
 
 void Sound::SetNR31(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	if(m_soundMasterEnable == false)
 		return;
 
-	m_sound3LengthSeconds = (float)(256 - value) * (1.f / 256.f);
+	m_sound3LengthUnit.SetInverseLength(value);
 
 	m_nr31 = 0xff;
 }
 
 void Sound::SetNR32(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	if(m_soundMasterEnable == false)
 		return;
 
@@ -638,6 +725,8 @@ void Sound::SetNR32(u8 value)
 
 void Sound::SetNR33(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	if(m_soundMasterEnable == false)
 		return;
 
@@ -649,6 +738,8 @@ void Sound::SetNR33(u8 value)
 
 void Sound::SetNR34(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	if(m_soundMasterEnable == false)
 		return;
 
@@ -663,7 +754,9 @@ void Sound::SetNR34(u8 value)
 	if(value & 0x80)
 	{
 		m_sound3Playing = true;
-		m_sound3StartTimeSeconds = m_totalSeconds;
+
+		if(m_sound3LengthUnit.GetCurrentLength() == 0)
+			m_sound3LengthUnit.SetInverseLength(0);
 	}
 
 	m_nr34 = value & 0x40;
@@ -672,16 +765,20 @@ void Sound::SetNR34(u8 value)
 
 void Sound::SetNR41(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	if(m_soundMasterEnable == false)
 		return;
 
-	m_sound4LengthSeconds = (double)(64 - (value & 0x3f)) * (1.0 / 64.0);
+	m_sound4LengthUnit.SetInverseLength(value & 0x3f);
 
 	m_nr41 = 0xff;
 }
 
 void Sound::SetNR42(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	if(m_soundMasterEnable == false)
 		return;
 
@@ -699,11 +796,19 @@ void Sound::SetNR42(u8 value)
 	m_envelope4InitialValue = (value & 0xf0) >> 4;
 	m_envelope4Value = m_envelope4InitialValue;
 
+	if(m_envelope4Value == 0)
+	{
+		m_sound4Playing = false;
+		m_nr52 &= ~(0x08);
+	}
+
 	m_nr42 = value;
 }
 
 void Sound::SetNR43(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	if(m_soundMasterEnable == false)
 		return;
 
@@ -734,6 +839,8 @@ void Sound::SetNR43(u8 value)
 
 void Sound::SetNR44(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	if(m_soundMasterEnable == false)
 		return;
 
@@ -745,9 +852,11 @@ void Sound::SetNR44(u8 value)
 	if(value & 0x80)
 	{
 		m_sound4Playing = true;
-		m_sound4StartTimeSeconds = m_totalSeconds;
 		m_envelope4Value = m_envelope4InitialValue;
 		m_sound4ShiftRegister = 0xffff;
+
+		if(m_sound4LengthUnit.GetCurrentLength() == 0)
+			m_sound4LengthUnit.SetInverseLength(0);
 	}
 
 	m_nr44 = value & 0x40;
@@ -756,6 +865,8 @@ void Sound::SetNR44(u8 value)
 
 void Sound::SetNR50(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	if(m_soundMasterEnable == false)
 		return;
 
@@ -764,6 +875,8 @@ void Sound::SetNR50(u8 value)
 
 void Sound::SetNR51(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	if(m_soundMasterEnable == false)
 		return;
 
@@ -785,6 +898,8 @@ void Sound::SetNR51(u8 value)
 
 void Sound::SetNR52(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	if(value & 0x80)
 	{
 		m_soundMasterEnable = true;
