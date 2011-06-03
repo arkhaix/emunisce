@@ -106,10 +106,10 @@ void Cpu::SetTimerControl(u8 value)
 		m_timerEnabled = true;
 	}
 
-	UpdateTimer(0);
+	RunTimer(0);
 }
 
-void Cpu::UpdateTimer(int ticks)
+void Cpu::RunTimer(int ticks)
 {
 	//Divider
 	m_ticksUntilDividerIncrement -= ticks;

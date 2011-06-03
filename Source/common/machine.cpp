@@ -63,6 +63,9 @@ Machine::Machine()
 	m_display = NULL;
 	m_input = NULL;
 	m_sound = NULL;
+
+	m_executingInstruction = false;
+	m_subInstructionTicksSpent = 0;
 }
 
 void Machine::Initialize()
@@ -117,18 +120,38 @@ Sound* Machine::GetSound()
 	return m_sound;
 }
 
-
 //Execution
 void Machine::Step()
 {
-	int ticks = m_cpu->Step();
+	m_executingInstruction = true;
+	unsigned int ticks = m_cpu->Step();
+	m_executingInstruction = false;
+
+	unsigned int totalTicks = ticks;
+
+	//If the instruction spent more ticks than its total time (should never happen)
+	// then roll over the spent ticks to the next instruction
+	if(ticks < m_subInstructionTicksSpent)
+	{
+		m_subInstructionTicksSpent -= ticks;
+		ticks = 0;
+	}
+
+	//Otherwise (normal case), just subtract the spent ticks from the total instruction time
+	else
+	{
+		ticks -= m_subInstructionTicksSpent;
+		m_subInstructionTicksSpent = 0;
+	}
+
+	m_cpu->RunTimer(ticks);
 
 	if(m_cpu->IsStopped() == false)
 		m_display->Run(ticks);
 
 	m_sound->Run(ticks);
 
-	m_frameTicksRemaining -= ticks;
+	m_frameTicksRemaining -= totalTicks;
 	if(m_frameTicksRemaining<= 0)
 	{
 		m_frameCount++;
@@ -151,6 +174,21 @@ void Machine::Run()
 void Machine::Stop()
 {
 	//todo
+}
+
+void Machine::RunDuringInstruction(unsigned int ticks)
+{
+	if(m_executingInstruction == false)
+		return;
+
+	if(m_cpu->IsStopped() == false)
+		m_display->Run(ticks);
+
+	m_cpu->RunTimer(ticks);
+
+	m_sound->Run(ticks);
+
+	m_subInstructionTicksSpent += ticks;
 }
 
 

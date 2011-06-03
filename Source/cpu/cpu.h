@@ -72,6 +72,7 @@ public:
 
 	//External
 	int Step();
+	void RunTimer(int ticks);
 
 	bool IsStopped();
 
@@ -107,7 +108,6 @@ private:
 	u8 m_timerControl;	///<0xff07 - Timer Control.
 	bool m_timerEnabled;
 
-	void UpdateTimer(int ticks);
 
 	u8 ReadNext8();
 	u16 ReadNext16();
