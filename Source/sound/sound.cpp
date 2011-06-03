@@ -34,6 +34,8 @@ void Sound::Initialize()
 	m_totalSeconds = 0.f;
 	m_fractionalSeconds = 0.f;
 
+	m_poweringDown = false;
+
 	m_lastSweepUpdateTimeSeconds = 0.f;
 	m_lastEnvelope1UpdateTimeSeconds = 0.f;
 	m_sound1Frequency = 0;
@@ -145,147 +147,150 @@ void Sound::SetMachine(Machine* machine)
 
 void Sound::Run(int ticks)
 {
-	//Sound 1 Tick
-
-	//Update length
-	if(m_sound1Continuous == false)
+	if(m_soundMasterEnable == true)
 	{
-		m_sound1LengthUnit.Run(ticks);
-		if(m_sound1LengthUnit.GetCurrentLength() == 0)
+		//Sound 1 Tick
+
+		//Update length
+		if(m_sound1Continuous == false)
 		{
-			m_sound1Playing = false;
-			m_nr52 &= ~(0x01);
-		}
-		else if(m_sound1Playing == true)
-			m_nr52 |= 0x01;
-	}
-
-	if(m_sound1Playing)
-	{
-		//Update sweep
-		if(m_sweepShift > 0 && m_totalSeconds - m_lastSweepUpdateTimeSeconds >= m_sweepStepTimeSeconds)
-		{
-			m_lastSweepUpdateTimeSeconds = m_totalSeconds;
-
-			unsigned int newFrequency = m_sound1Frequency;
-
-			if(m_sweepIncreasing == true)
-				newFrequency += (m_sound1Frequency >> m_sweepShift);
-			else
-				newFrequency -= (m_sound1Frequency >> m_sweepShift);
-
-			if(newFrequency >= 0x800)	///<Frequency has maximum 11-bits.  Overflow turns off the sound
+			m_sound1LengthUnit.Run(ticks);
+			if(m_sound1LengthUnit.GetCurrentLength() == 0)
 			{
 				m_sound1Playing = false;
 				m_nr52 &= ~(0x01);
 			}
-			else
+			else if(m_sound1Playing == true)
+				m_nr52 |= 0x01;
+		}
+
+		if(m_sound1Playing)
+		{
+			//Update sweep
+			if(m_sweepShift > 0 && m_totalSeconds - m_lastSweepUpdateTimeSeconds >= m_sweepStepTimeSeconds)
 			{
-				m_sound1Frequency = newFrequency;
+				m_lastSweepUpdateTimeSeconds = m_totalSeconds;
+
+				unsigned int newFrequency = m_sound1Frequency;
+
+				if(m_sweepIncreasing == true)
+					newFrequency += (m_sound1Frequency >> m_sweepShift);
+				else
+					newFrequency -= (m_sound1Frequency >> m_sweepShift);
+
+				if(newFrequency >= 0x800)	///<Frequency has maximum 11-bits.  Overflow turns off the sound
+				{
+					m_sound1Playing = false;
+					m_nr52 &= ~(0x01);
+				}
+				else
+				{
+					m_sound1Frequency = newFrequency;
+				}
+			}
+
+			//Update envelope
+			if(m_envelope1Enabled && m_totalSeconds - m_lastEnvelope1UpdateTimeSeconds >= m_envelope1StepTimeSeconds)
+			{
+				m_lastEnvelope1UpdateTimeSeconds = m_totalSeconds;
+
+				if(m_envelope1Increasing == true && m_envelope1Value < 0x0f)
+					m_envelope1Value++;
+				else if(m_envelope1Increasing == false && m_envelope1Value > 0x00)
+					m_envelope1Value--;
 			}
 		}
 
-		//Update envelope
-		if(m_envelope1Enabled && m_totalSeconds - m_lastEnvelope1UpdateTimeSeconds >= m_envelope1StepTimeSeconds)
+		//Sound 2 Tick
+
+		//Update length
+		if(m_sound2Continuous == false)
 		{
-			m_lastEnvelope1UpdateTimeSeconds = m_totalSeconds;
-
-			if(m_envelope1Increasing == true && m_envelope1Value < 0x0f)
-				m_envelope1Value++;
-			else if(m_envelope1Increasing == false && m_envelope1Value > 0x00)
-				m_envelope1Value--;
-		}
-	}
-
-	//Sound 2 Tick
-
-	//Update length
-	if(m_sound2Continuous == false)
-	{
-		m_sound2LengthUnit.Run(ticks);
-		if(m_sound2LengthUnit.GetCurrentLength() == 0)
-		{
-			m_sound2Playing = false;
-			m_nr52 &= ~(0x02);
-		}
-		else if(m_sound2Playing == true)
-			m_nr52 |= 0x02;
-	}
-
-	if(m_sound2Playing)
-	{
-		//Update envelope
-		if(m_envelope2Enabled && m_totalSeconds - m_lastEnvelope2UpdateTimeSeconds >= m_envelope2StepTimeSeconds)
-		{
-			m_lastEnvelope2UpdateTimeSeconds = m_totalSeconds;
-
-			if(m_envelope2Increasing == true && m_envelope2Value < 0x0f)
-				m_envelope2Value++;
-			else if(m_envelope2Increasing == false && m_envelope2Value > 0x00)
-				m_envelope2Value--;
-		}
-	}
-
-	//Sound 3 Tick
-
-	//Update length
-	if(m_sound3Continuous == false)
-	{
-		m_sound3LengthUnit.Run(ticks);
-		if(m_sound3LengthUnit.GetCurrentLength() == 0)
-		{
-			m_sound3Playing = false;
-			m_nr52 &= ~(0x04);
-		}
-		else if(m_sound3Playing == true)
-			m_nr52 |= 0x04;
-	}
-
-	//Sound 4 Tick
-
-	//Update length
-	if(m_sound4Continuous == false)
-	{
-		m_sound4LengthUnit.Run(ticks);
-		if(m_sound4LengthUnit.GetCurrentLength() == 0)
-		{
-			m_sound4Playing = false;
-			m_nr52 &= ~(0x08);
-		}
-		else if(m_sound4Playing == true)
-			m_nr52 |= 0x08;
-	}
-
-	if(m_sound4Playing == true)
-	{
-		//Update envelope
-		if(m_envelope4Enabled && m_totalSeconds - m_lastEnvelope4UpdateTimeSeconds >= m_envelope4StepTimeSeconds)
-		{
-			m_lastEnvelope4UpdateTimeSeconds = m_totalSeconds;
-
-			if(m_envelope4Increasing == true && m_envelope4Value < 0x0f)
-				m_envelope4Value++;
-			else if(m_envelope4Increasing == false && m_envelope4Value > 0x00)
-				m_envelope4Value--;
+			m_sound2LengthUnit.Run(ticks);
+			if(m_sound2LengthUnit.GetCurrentLength() == 0)
+			{
+				m_sound2Playing = false;
+				m_nr52 &= ~(0x02);
+			}
+			else if(m_sound2Playing == true)
+				m_nr52 |= 0x02;
 		}
 
-		//Update shift register
-		m_sound4TicksUntilNextShift -= ticks;
-		while(m_sound4TicksUntilNextShift <= 0)
+		if(m_sound2Playing)
 		{
-			m_sound4TicksUntilNextShift += m_sound4TicksPerShift;
+			//Update envelope
+			if(m_envelope2Enabled && m_totalSeconds - m_lastEnvelope2UpdateTimeSeconds >= m_envelope2StepTimeSeconds)
+			{
+				m_lastEnvelope2UpdateTimeSeconds = m_totalSeconds;
 
-			int a = (m_sound4ShiftRegister & 1) ? 1 : 0;
-			int b = (m_sound4ShiftRegister & (1<<m_sound4ShiftRegisterTap)) ? 1 : 0;
-			m_sound4ShiftRegister >>= 1;
-
-			int result = a ^ b;
-			if(result)
-				m_sound4ShiftRegister |= (1<<m_sound4ShiftRegisterWidth);
-
-			m_sound4ShiftRegisterOutput = a;
+				if(m_envelope2Increasing == true && m_envelope2Value < 0x0f)
+					m_envelope2Value++;
+				else if(m_envelope2Increasing == false && m_envelope2Value > 0x00)
+					m_envelope2Value--;
+			}
 		}
-	}
+
+		//Sound 3 Tick
+
+		//Update length
+		if(m_sound3Continuous == false)
+		{
+			m_sound3LengthUnit.Run(ticks);
+			if(m_sound3LengthUnit.GetCurrentLength() == 0)
+			{
+				m_sound3Playing = false;
+				m_nr52 &= ~(0x04);
+			}
+			else if(m_sound3Playing == true)
+				m_nr52 |= 0x04;
+		}
+
+		//Sound 4 Tick
+
+		//Update length
+		if(m_sound4Continuous == false)
+		{
+			m_sound4LengthUnit.Run(ticks);
+			if(m_sound4LengthUnit.GetCurrentLength() == 0)
+			{
+				m_sound4Playing = false;
+				m_nr52 &= ~(0x08);
+			}
+			else if(m_sound4Playing == true)
+				m_nr52 |= 0x08;
+		}
+
+		if(m_sound4Playing == true)
+		{
+			//Update envelope
+			if(m_envelope4Enabled && m_totalSeconds - m_lastEnvelope4UpdateTimeSeconds >= m_envelope4StepTimeSeconds)
+			{
+				m_lastEnvelope4UpdateTimeSeconds = m_totalSeconds;
+
+				if(m_envelope4Increasing == true && m_envelope4Value < 0x0f)
+					m_envelope4Value++;
+				else if(m_envelope4Increasing == false && m_envelope4Value > 0x00)
+					m_envelope4Value--;
+			}
+
+			//Update shift register
+			m_sound4TicksUntilNextShift -= ticks;
+			while(m_sound4TicksUntilNextShift <= 0)
+			{
+				m_sound4TicksUntilNextShift += m_sound4TicksPerShift;
+
+				int a = (m_sound4ShiftRegister & 1) ? 1 : 0;
+				int b = (m_sound4ShiftRegister & (1<<m_sound4ShiftRegisterTap)) ? 1 : 0;
+				m_sound4ShiftRegister >>= 1;
+
+				int result = a ^ b;
+				if(result)
+					m_sound4ShiftRegister |= (1<<m_sound4ShiftRegisterWidth);
+
+				m_sound4ShiftRegisterOutput = a;
+			}
+		}
+	}	//< if(m_soundMasterEnable == true)
 
 
 	m_ticksSinceLastSample += ticks;
@@ -499,10 +504,11 @@ void Sound::SetNR11(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
+	if(m_poweringDown == false)	///<DMG only?
+		m_sound1LengthUnit.SetInverseLength(value & 0x3f);
+
 	if(m_soundMasterEnable == false)
 		return;
-
-	m_sound1LengthUnit.SetInverseLength(value & 0x3f);
 
 	int duty = (value & 0xc0) >> 6;
 	if(duty == 0)
@@ -589,10 +595,11 @@ void Sound::SetNR21(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
+	if(m_poweringDown == false)	///<DMG only?
+		m_sound2LengthUnit.SetInverseLength(value & 0x3f);
+
 	if(m_soundMasterEnable == false)
 		return;
-
-	m_sound2LengthUnit.SetInverseLength(value & 0x3f);
 
 	int duty = (value & 0xc0) >> 6;
 	if(duty == 0)
@@ -702,10 +709,11 @@ void Sound::SetNR31(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
+	if(m_poweringDown == false)	///<DMG only?
+		m_sound3LengthUnit.SetInverseLength(value);
+
 	if(m_soundMasterEnable == false)
 		return;
-
-	m_sound3LengthUnit.SetInverseLength(value);
 
 	m_nr31 = 0xff;
 }
@@ -767,10 +775,11 @@ void Sound::SetNR41(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
+	if(m_poweringDown == false)	///<DMG only?
+		m_sound4LengthUnit.SetInverseLength(value & 0x3f);
+
 	if(m_soundMasterEnable == false)
 		return;
-
-	m_sound4LengthUnit.SetInverseLength(value & 0x3f);
 
 	m_nr41 = 0xff;
 }
@@ -906,6 +915,8 @@ void Sound::SetNR52(u8 value)
 	}
 	else
 	{
+		m_poweringDown = true;
+
 		SetNR10(0);
 		SetNR11(0);
 		SetNR12(0);
@@ -923,13 +934,15 @@ void Sound::SetNR52(u8 value)
 		SetNR33(0);
 		SetNR34(0);
 
-		//SetNR41(0);	///<Powering down doesn't affect NR41?
+		SetNR41(0);
 		SetNR42(0);
 		SetNR43(0);
 		SetNR44(0);
 
 		SetNR50(0);
 		SetNR51(0);
+
+		m_poweringDown = false;
 		
 		m_sound1Playing = false;
 		m_sound2Playing = false;
