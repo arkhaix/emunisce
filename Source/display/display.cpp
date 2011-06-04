@@ -179,6 +179,9 @@ void Display::SetLcdControl(u8 value)
 		m_stateTicksRemaining = 0;
 		Begin_SpritesLocked();
 		m_stateTicksRemaining -= 4;
+
+		m_memory->SetVramLock(false);
+		m_memory->SetOamLock(false);
 	}
 }
 
