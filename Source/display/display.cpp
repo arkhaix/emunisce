@@ -92,20 +92,20 @@ void Display::Initialize()
 	m_stableScreenBuffer = &m_screenBuffer2;
 
 	SetLcdControl(0x91);
-	m_lcdStatus = 0x00;	//??
+	m_lcdStatus = 0x00;	//???
 
-	m_scrollY = 0; //??
-	m_scrollX = 0; //??
+	m_scrollY = 0;
+	m_scrollX = 0;
 
-	m_currentScanline = 0; //??
-	m_scanlineCompare = 0; //??
+	m_currentScanline = 0;
+	m_scanlineCompare = 0;
 
-	m_backgroundPalette = 0; //??
-	m_spritePalette0 = 0; //??
-	m_spritePalette1 = 0; //??
+	m_backgroundPalette = 0xfc;
+	m_spritePalette0 = 0xff;
+	m_spritePalette1 = 0xff;
 
-	m_windowX = 0; //??
-	m_windowY = 0; //??
+	m_windowX = 0;
+	m_windowY = 0;
 
 	//Start everything off at 0,0
 	m_currentScanline = 153;
@@ -169,33 +169,22 @@ void Display::SetLcdControl(u8 value)
 	{
 		if(m_lcdEnabled == false)
 		{
-			//If the lcd was disabled, then it was behaving like h-blank, but when enabled
-			// it needs to pick up a couple cycles after the Begin_SpritesLocked.
-			//So, oam and vram need to be locked again, and STAT needs to be updated
-			m_memory->SetVramLock(true);
-			m_memory->SetOamLock(true);
-			m_lcdStatus &= ~(STAT_Mode);
-			m_lcdStatus |= Mode_SpriteLock;
+			//When re-enabling the lcd, it needs to pick up a couple cycles into the sprites-locked phase.
+			m_stateTicksRemaining = -4;
+			m_currentScanline = -1;	///<Begin_SpritesLocked auto-increments and we want to start at LY=0
+			Begin_SpritesLocked();
 		}
 
 		m_lcdEnabled = true;
 	}
 	else
 	{
-		m_lcdEnabled = false;
-
-		m_currentScanline = 153;
-
-		m_vblankScanlineTicksRemaining = 0;
-		m_stateTicksRemaining = 0;
-		Begin_SpritesLocked();
-		m_stateTicksRemaining -= 4;
-
 		//Behaves as though it's in h-blank while disabled
-		m_memory->SetVramLock(false);
-		m_memory->SetOamLock(false);
-		m_lcdStatus &= ~(STAT_Mode);
-		m_lcdStatus |= Mode_HBlank;
+		Begin_HBlank();
+		m_currentScanline = 0;
+		m_stateTicksRemaining = 0;
+
+		m_lcdEnabled = false;
 	}
 }
 
