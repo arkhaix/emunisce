@@ -177,7 +177,8 @@ void Display::SetLcdControl(u8 value)
 
 		m_vblankScanlineTicksRemaining = 0;
 		m_stateTicksRemaining = 0;
-		Begin_HBlank();
+		Begin_SpritesLocked();
+		m_stateTicksRemaining -= 4;
 	}
 }
 
