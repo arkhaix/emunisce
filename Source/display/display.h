@@ -93,6 +93,7 @@ private:
 
 	void RenderPixel(int screenX, int screenY);
 	void RenderScanline();
+	void Render(int ticks);
 
 	void CheckCoincidence();
 
@@ -105,6 +106,10 @@ private:
 	ScreenBuffer* m_activeScreenBuffer;	///<The screen buffer currently being rendered to by the gameboy
 	ScreenBuffer* m_stableScreenBuffer;	///<The screen buffer ready to be displayed on the pc
 	void* m_screenBufferLock;
+
+	int m_lastPixelRenderedX;	///<X-position of the last pixel rendered during this scanline
+	int m_ticksSpentThisScanline;	///<How many ticks have passed during this scanline.  So we know how many pixels to render.
+	bool m_spriteHasPriority[160];	///<Sprites are rendered before the background and window, so we need to keep track of whether they should be on top.
 
 
 	// Caches

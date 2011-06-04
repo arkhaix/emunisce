@@ -119,6 +119,8 @@ void Display::Run(int ticks)
 	if(m_lcdEnabled == false)
 		return;
 
+	Render(ticks);
+
 	if(m_currentState == DisplayState::VBlank)
 		Run_VBlank(ticks);
 
@@ -179,12 +181,15 @@ void Display::SetLcdControl(u8 value)
 	}
 	else
 	{
-		//Behaves as though it's in h-blank while disabled
-		Begin_HBlank();
-		m_currentScanline = 0;
-		m_stateTicksRemaining = 0;
+		if(m_currentState == DisplayState::VBlank)
+		{
+			//Behaves as though it's in h-blank while disabled
+			Begin_HBlank();
+			m_currentScanline = 0;
+			m_stateTicksRemaining = 0;
 
-		m_lcdEnabled = false;
+			m_lcdEnabled = false;
+		}
 	}
 }
 
@@ -211,8 +216,6 @@ void Display::Begin_HBlank()
 {
 	m_currentState = DisplayState::HBlank;
 	m_stateTicksRemaining += 204;
-
-	RenderScanline();
 
 	//Set mode 00
 	m_lcdStatus &= ~(STAT_Mode);
@@ -296,6 +299,9 @@ void Display::Begin_SpritesLocked()
 		interrupts |= IF_LCDC;
 		m_memory->Write8(REG_IF, interrupts);
 	}
+
+	//Sprites are locked, so we can render them
+	RenderSprites(m_currentScanline);
 }
 
 void Display::Begin_VideoRamLocked()
@@ -352,6 +358,9 @@ void Display::Run_VBlank(int ticks)
 
 void Display::RenderBackgroundPixel(int screenX, int screenY)
 {
+	if((m_lcdControl & LCDC_Background) == 0)
+		return;
+
 	//Cached?
 	u8 cachedValue = m_frameBackgroundData.GetPixel(screenX, screenY);
 	if(cachedValue != PIXEL_NOT_CACHED)
@@ -421,6 +430,10 @@ void Display::RenderBackgroundPixel(int screenX, int screenY)
 
 void Display::RenderSpritePixel(int screenX, int screenY)
 {
+	//Check priority
+	if(m_spriteHasPriority[screenX] == false && m_activeScreenBuffer->GetPixel(screenX, screenY) != 0)
+		return;
+
 	//RenderSprites fills m_frameSpriteData.  If there's no value there at this pixel, then there's no sprite at this pixel.
 	u8 cachedValue = m_frameSpriteData.GetPixel(screenX, screenY);
 	if(cachedValue != PIXEL_NOT_CACHED && cachedValue != PIXEL_TRANSPARENT)
@@ -429,6 +442,9 @@ void Display::RenderSpritePixel(int screenX, int screenY)
 
 void Display::RenderWindowPixel(int screenX, int screenY)
 {
+	if((m_lcdControl & LCDC_Window) == 0)
+		return;
+
 	//Visible?
 	if(screenX + 7 < m_windowX || screenY < m_windowY)
 		return;
@@ -502,6 +518,13 @@ void Display::RenderWindowPixel(int screenX, int screenY)
 
 void Display::RenderSprites(int screenY)
 {
+	if((m_lcdControl & LCDC_Sprites) == 0)
+		return;
+
+	//Default to no priority
+	for(int i=0;i<160;i++)
+		m_spriteHasPriority[i] = false;
+
 	//Sprites can be 8x8 or 8x16
 	u8 spriteWidth = 8;
 	u8 spriteHeight = 8;
@@ -571,15 +594,9 @@ void Display::RenderSprites(int screenY)
 
 			//Is it visible?  (priority vs background and window)
 			if(spriteFlags & (1<<7))	///<Lower priority if set, higher priority otherwise
-			{
-				//Lower priority means the sprite is hidden behind any value except 0
-				if( m_activeScreenBuffer->GetPixel(cacheScreenX, cacheScreenY) != 0 )
-				{
-					tileX++;
-					cacheScreenX++;
-					continue;
-				}
-			}
+				m_spriteHasPriority[cacheScreenX] = false;
+			else
+				m_spriteHasPriority[cacheScreenX] = true;
 
 			//Determine the bit offset for the X value
 			int bitOffset = tileX;
@@ -617,31 +634,41 @@ void Display::RenderSprites(int screenY)
 	}
 }
 
-void Display::RenderScanline()
+void Display::Render(int ticks)
 {
-	//todo: LCDC:7 = LCD Controller on/off
-
-	//Render background
-	if(m_lcdControl & LCDC_Background)
+	//Finish rendering the line if necessary
+	if( (m_currentState == DisplayState::HBlank || m_currentState == DisplayState::VBlank) && m_ticksSpentThisScanline != 0)
 	{
-		for(int x=0;x<160;x++)
-			RenderBackgroundPixel(x, m_currentScanline);
+		for(int pixelX = m_lastPixelRenderedX; pixelX < 160; pixelX++)
+		{
+			RenderBackgroundPixel(pixelX, m_currentScanline);
+			RenderWindowPixel(pixelX, m_currentScanline);
+			RenderSpritePixel(pixelX, m_currentScanline);
+		}
+
+		m_ticksSpentThisScanline = 0;
+		m_lastPixelRenderedX = -1;
 	}
 
-	//Render window
-	if(m_lcdControl & LCDC_Window)
-	{
-		for(int x=0;x<160;x++)
-			RenderWindowPixel(x, m_currentScanline);
-	}
+	//Nothing to render during h-blank or v-blank
+	if(m_currentState != DisplayState::SpritesLocked && m_currentState != DisplayState::VideoRamLocked)
+		return;
 
-	//Render sprites
-	if(m_lcdControl & LCDC_Sprites)
-	{
-		RenderSprites(m_currentScanline);
+	//Figure out how many pixels we should have rendered by now
+	static const float TicksPerPixel = 1.575f;	///< (80 (Mode 10) + 172 (Mode 11)) ticks / 160 pixels
+	m_ticksSpentThisScanline += ticks;
+	int numPixelsRendered = (int)( (float)m_ticksSpentThisScanline / TicksPerPixel );
+	if(numPixelsRendered < 0)
+		numPixelsRendered = 0;
+	if(numPixelsRendered > 160)
+		numPixelsRendered = 160;
 
-		for(int x=0;x<160;x++)
-			RenderSpritePixel(x, m_currentScanline);
+	//Render them
+	for(; m_lastPixelRenderedX < numPixelsRendered; m_lastPixelRenderedX++)
+	{
+		RenderBackgroundPixel(m_lastPixelRenderedX, m_currentScanline);
+		RenderWindowPixel(m_lastPixelRenderedX, m_currentScanline);
+		RenderSpritePixel(m_lastPixelRenderedX, m_currentScanline);
 	}
 }
 
