@@ -167,6 +167,17 @@ void Display::SetLcdControl(u8 value)
 
 	if(m_lcdControl & 0x80)
 	{
+		if(m_lcdEnabled == false)
+		{
+			//If the lcd was disabled, then it was behaving like h-blank, but when enabled
+			// it needs to pick up a couple cycles after the Begin_SpritesLocked.
+			//So, oam and vram need to be locked again, and STAT needs to be updated
+			m_memory->SetVramLock(true);
+			m_memory->SetOamLock(true);
+			m_lcdStatus &= ~(STAT_Mode);
+			m_lcdStatus |= Mode_SpriteLock;
+		}
+
 		m_lcdEnabled = true;
 	}
 	else
@@ -180,8 +191,11 @@ void Display::SetLcdControl(u8 value)
 		Begin_SpritesLocked();
 		m_stateTicksRemaining -= 4;
 
+		//Behaves as though it's in h-blank while disabled
 		m_memory->SetVramLock(false);
 		m_memory->SetOamLock(false);
+		m_lcdStatus &= ~(STAT_Mode);
+		m_lcdStatus |= Mode_HBlank;
 	}
 }
 
