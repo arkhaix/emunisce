@@ -53,6 +53,8 @@ public:
 
 	//Gameboy registers
 
+	void SetLcdControl(u8 value);
+	void SetLcdStatus(u8 value);
 	void SetCurrentScanline(u8 value);
 	void SetScanlineCompare(u8 value);
 
@@ -95,6 +97,7 @@ private:
 	void CheckCoincidence();
 
 
+	Machine* m_machine;
 	Memory* m_memory;
 
 	ScreenBuffer m_screenBuffer;
@@ -152,6 +155,11 @@ private:
 
 	u8 m_windowX;
 	u8 m_windowY;
+
+
+	// Properties from registers
+
+	bool m_lcdEnabled;
 };
 
 #endif

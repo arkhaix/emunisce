@@ -23,6 +23,9 @@ public:
 	void SetDmaStartLocation(u8 value);
 	void DisableBootRom(u8 value);
 
+	void SetVramLock(bool locked);
+	void SetOamLock(bool locked);
+
 	static Memory* CreateFromFile(const char* filename);
 
 protected:
@@ -59,6 +62,12 @@ protected:
 	u8* m_registerLocation[0x100];
 	bool m_registerWriteable[0x100];
 	bool m_callWriteRegister[0x100];
+
+
+	//Display features
+
+	bool m_vramLocked;
+	bool m_oamLocked;
 };
 
 #endif
