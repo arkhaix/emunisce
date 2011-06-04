@@ -69,11 +69,12 @@ Display::~Display()
 
 void Display::SetMachine(Machine* machine)
 {
+	m_machine = machine;
 	m_memory = machine->GetMemory();
 
 	//Registers
-	m_memory->SetRegisterLocation(0x40, &m_lcdControl, true);
-	m_memory->SetRegisterLocation(0x41, &m_lcdStatus, true);
+	m_memory->SetRegisterLocation(0x40, &m_lcdControl, false);
+	m_memory->SetRegisterLocation(0x41, &m_lcdStatus, false);
 	m_memory->SetRegisterLocation(0x42, &m_scrollY, true);
 	m_memory->SetRegisterLocation(0x43, &m_scrollX, true);
 	m_memory->SetRegisterLocation(0x44, &m_currentScanline, false);
@@ -90,7 +91,7 @@ void Display::Initialize()
 	m_activeScreenBuffer = &m_screenBuffer;
 	m_stableScreenBuffer = &m_screenBuffer2;
 
-	m_lcdControl = 0x91;
+	SetLcdControl(0x91);
 	m_lcdStatus = 0x00;	//??
 
 	m_scrollY = 0; //??
@@ -115,6 +116,9 @@ void Display::Initialize()
 
 void Display::Run(int ticks)
 {
+	if(m_lcdEnabled == false)
+		return;
+
 	if(m_currentState == DisplayState::VBlank)
 		Run_VBlank(ticks);
 
@@ -157,6 +161,34 @@ ScreenBuffer Display::GetStableScreenBuffer()
 }
 
 
+void Display::SetLcdControl(u8 value)
+{
+	m_lcdControl = value;
+
+	if(m_lcdControl & 0x80)
+	{
+		m_lcdEnabled = true;
+	}
+	else
+	{
+		m_lcdEnabled = false;
+
+		m_currentScanline = 153;
+
+		m_vblankScanlineTicksRemaining = 0;
+		m_stateTicksRemaining = 0;
+		Begin_HBlank();
+	}
+}
+
+void Display::SetLcdStatus(u8 value)
+{
+	m_lcdStatus = value;
+
+	if(m_currentState == DisplayState::HBlank || m_currentState == DisplayState::VBlank)
+		CheckCoincidence();
+}
+
 void Display::SetCurrentScanline(u8 value)
 {
 	//todo: something about resetting the counter or stopping the display
@@ -178,6 +210,10 @@ void Display::Begin_HBlank()
 	//Set mode 00
 	m_lcdStatus &= ~(STAT_Mode);
 	m_lcdStatus |= Mode_HBlank;
+
+	//Unlock vram and oam
+	m_memory->SetVramLock(false);
+	m_memory->SetOamLock(false);
 
 	//LCDC interrupt
 	if(m_lcdStatus & STAT_Interrupt_HBlank)
@@ -204,6 +240,10 @@ void Display::Begin_VBlank()
 	m_lcdStatus &= ~(STAT_Mode);
 	m_lcdStatus |= Mode_VBlank;
 
+	//Lock vram and oam
+	m_memory->SetVramLock(false);
+	m_memory->SetOamLock(false);
+	
 	//VBlank interrupt
 	u8 interrupts = m_memory->Read8(REG_IF);
 	interrupts |= IF_VBLANK;
@@ -238,6 +278,10 @@ void Display::Begin_SpritesLocked()
 	m_lcdStatus &= ~(STAT_Mode);
 	m_lcdStatus |= Mode_SpriteLock;
 
+	//Lock vram and oam
+	m_memory->SetVramLock(true);
+	m_memory->SetOamLock(true);
+
 	//LCDC interrupt
 	if(m_lcdStatus & STAT_Interrupt_SpriteLock)
 	{
@@ -255,6 +299,10 @@ void Display::Begin_VideoRamLocked()
 	//Set mode 11
 	m_lcdStatus &= ~(STAT_Mode);
 	m_lcdStatus |= Mode_VideoRamLock;
+
+	//Lock vram, but not oam
+	m_memory->SetVramLock(true);
+	m_memory->SetOamLock(false);
 
 	//No interrupts for this mode
 }
@@ -592,6 +640,9 @@ void Display::RenderScanline()
 
 void Display::CheckCoincidence()
 {
+	if(m_lcdEnabled == false)
+		return;
+
 	if(m_currentScanline == m_scanlineCompare)
 	{
 		//LYC=LY flag

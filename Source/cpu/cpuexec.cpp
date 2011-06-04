@@ -36,6 +36,7 @@ int Cpu::Step()
 
 			ExecCALL(0x0040);
 			instructionTime += 16;
+			return instructionTime;
 		}
 		else if( (interruptFlags & IF_LCDC) && (interruptEnableFlags & IF_LCDC) && !m_stopped )
 		{
@@ -46,6 +47,7 @@ int Cpu::Step()
 
 			ExecCALL(0x0048);
 			instructionTime += 16;
+			return instructionTime;
 		}
 		else if( (interruptFlags & IF_TIMER) && (interruptEnableFlags & IF_TIMER) && !m_stopped )
 		{
@@ -56,6 +58,7 @@ int Cpu::Step()
 
 			ExecCALL(0x0050);
 			instructionTime += 16;
+			return instructionTime;
 		}
 		else if( (interruptFlags & IF_SERIAL) && (interruptEnableFlags & IF_SERIAL) && !m_stopped )
 		{
@@ -66,6 +69,7 @@ int Cpu::Step()
 
 			ExecCALL(0x0058);
 			instructionTime += 16;
+			return instructionTime;
 		}
 		else if( (interruptFlags & IF_INPUT) && (interruptEnableFlags & IF_INPUT) )
 		{
@@ -77,6 +81,7 @@ int Cpu::Step()
 
 			ExecCALL(0x0060);
 			instructionTime += 16;
+			return instructionTime;
 		}
 	}
 

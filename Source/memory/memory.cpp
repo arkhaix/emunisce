@@ -66,6 +66,8 @@ void Memory::SetMachine(Machine* machine)
 	m_callWriteRegister[0x04] = true;	//CPU::SetTimerDivider
 	m_callWriteRegister[0x07] = true;	//CPU::SetTimerControl
 
+	m_callWriteRegister[0x40] = true;	//Display::SetLcdControl
+	m_callWriteRegister[0x41] = true;	//Display::SetLcdStatus
 	m_callWriteRegister[0x44] = true;	//Display::SetCurrentScanline
 	m_callWriteRegister[0x45] = true;	//Display::SetScanlineCompare
 
@@ -126,9 +128,18 @@ u8 Memory::Read8(u16 address)
 		if(pRegister != NULL)
 			return *pRegister;
 	}
-
-	if(address < 0x100 && m_bootRomEnabled == true)
+	else if(address >= 0x8000 && address < 0xa000 && m_vramLocked)
+	{
+		return 0xff;
+	}
+	else if(address >= 0xfe00 && address < 0xfea0 && m_oamLocked)
+	{
+		return 0xff;
+	}
+	else if(address < 0x100 && m_bootRomEnabled == true)
+	{
 		return m_bootRom[address];
+	}
 
 	return m_memoryData[address];
 }
@@ -205,6 +216,16 @@ void Memory::DisableBootRom(u8 value)
 		return;
 
 	m_bootRomEnabled = false;
+}
+
+void Memory::SetVramLock(bool locked)
+{
+	m_vramLocked = locked;
+}
+
+void Memory::SetOamLock(bool locked)
+{
+	m_oamLocked = locked;
 }
 	
 Memory* Memory::CreateFromFile(const char* filename)
@@ -320,6 +341,8 @@ void Memory::WriteRegister(u16 address, u8 value)
 	case 0xff25: m_sound->SetNR51(value); break;
 	case 0xff26: m_sound->SetNR52(value); break;
 
+	case 0xff40: m_display->SetLcdControl(value); break;
+	case 0xff41: m_display->SetLcdStatus(value); break;
 	case 0xff44: m_display->SetCurrentScanline(value); break;
 	case 0xff45: m_display->SetScanlineCompare(value); break;
 
