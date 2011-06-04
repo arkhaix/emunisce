@@ -174,10 +174,16 @@ void Memory::Write8(u16 address, u8 value)
 		}
 	}
 
+	//Ignore writes to locked areas
+	if(address >= 0x8000 && address < 0xa000 && m_vramLocked)
+		return;
+	if(address >= 0xfe00 && address < 0xfea0 && m_oamLocked)
+		return;
+
 	//Send notifications when applicable
 	if(address >= 0x8000 && address < 0xa000 && m_display)
 		m_display->WriteVram(address, value);
-	else if(address >= 0xfe00 && address < 0xfea0 && m_display)
+	if(address >= 0xfe00 && address < 0xfea0 && m_display)
 		m_display->WriteOam(address, value);
 
 	//Write it
