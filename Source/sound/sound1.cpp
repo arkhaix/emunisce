@@ -104,6 +104,8 @@ void Sound1::SetNR12(u8 value)
 	if(m_hasPower == false)
 		return;
 
+	WriteEnvelopeRegister(value);
+
 	m_nr12 = value;
 }
 
