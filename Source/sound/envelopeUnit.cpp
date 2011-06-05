@@ -18,10 +18,10 @@ void EnvelopeUnit::Tick()
 	if(m_enabled == false)
 		return;
 
-	m_timer--;
-	while(m_timer <= 0)
+	m_timerValue--;
+	while(m_timerValue <= 0)
 	{
-		m_timer += m_period;
+		m_timerValue += m_timerPeriod;
 
 		if(m_volumeIncreasing == true)
 			m_currentVolume++;
@@ -36,9 +36,9 @@ void EnvelopeUnit::Tick()
 
 void EnvelopeUnit::WriteEnvelopeRegister(u8 value)
 {
-	m_period = value & 0x07;
+	m_timerPeriod = value & 0x07;
 
-	if(m_period == 0)
+	if(m_timerPeriod == 0)
 		m_enabled = false;
 	else
 		m_enabled = true;
