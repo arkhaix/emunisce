@@ -117,94 +117,130 @@ int Sound::GetAudioBufferCount()
 
 void Sound::SetNR10(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	m_sound1->SetNR10(value);
 }
 
 void Sound::SetNR11(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	m_sound1->SetNR11(value);
 }
 
 void Sound::SetNR12(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	m_sound1->SetNR12(value);
 }
 
 void Sound::SetNR13(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	m_sound1->SetNR13(value);
 }
 
 void Sound::SetNR14(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	m_sound1->SetNR14(value);
 }
 
 
 void Sound::SetNR21(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	m_sound2->SetNR21(value);
 }
 
 void Sound::SetNR22(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	m_sound2->SetNR22(value);
 }
 
 void Sound::SetNR23(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	m_sound2->SetNR23(value);
 }
 
 void Sound::SetNR24(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	m_sound2->SetNR24(value);
 }
 
 
 void Sound::SetNR30(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	m_sound3->SetNR30(value);
 }
 
 void Sound::SetNR31(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	m_sound3->SetNR31(value);
 }
 
 void Sound::SetNR32(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	m_sound3->SetNR32(value);
 }
 
 void Sound::SetNR33(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	m_sound3->SetNR33(value);
 }
 
 void Sound::SetNR34(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	m_sound3->SetNR34(value);
 }
 
 
 void Sound::SetNR41(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	m_sound4->SetNR41(value);
 }
 
 void Sound::SetNR42(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	m_sound4->SetNR42(value);
 }
 
 void Sound::SetNR43(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	m_sound4->SetNR43(value);
 }
 
 void Sound::SetNR44(u8 value)
 {
+	TRACE_REGISTER_WRITE
+
 	m_sound4->SetNR44(value);
 }
 

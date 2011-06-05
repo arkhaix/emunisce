@@ -4,14 +4,6 @@
 #include "../memory/memory.h"
 
 
-#if 0
-#include <cstdio>
-#define TRACE_REGISTER_WRITE printf(__FUNCTION__ "(%02X) nr52(%02X)\n", value, m_nr52);
-#else
-#define TRACE_REGISTER_WRITE
-#endif
-
-
 Sound2::Sound2()
 {
 	m_machine = NULL;
@@ -71,30 +63,22 @@ float Sound2::GetSample()
 
 void Sound2::SetNR21(u8 value)
 {
-	TRACE_REGISTER_WRITE
-
 	m_nr21 = value & 0xc0;
 	m_nr21 |= 0x3f;
 }
 
 void Sound2::SetNR22(u8 value)
 {
-	TRACE_REGISTER_WRITE
-
 	m_nr22 = value;
 }
 
 void Sound2::SetNR23(u8 value)
 {
-	TRACE_REGISTER_WRITE
-
 	m_nr23 = 0xff;
 }
 
 void Sound2::SetNR24(u8 value)
 {
-	TRACE_REGISTER_WRITE
-
 	m_nr24 = value & 0x40;
 	m_nr24 |= 0xbf;
 }
