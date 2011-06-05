@@ -120,13 +120,7 @@ void Sound1::SetNR14(u8 value)
 	if(m_hasPower == false)
 		return;
 
-	if(value & 0x40)
-		EnableLengthCounter();
-	else
-		DisableLengthCounter();
-
-	if(value & 0x80)
-		Trigger();
+	WriteTriggerRegister(value);
 
 	m_nr14 = value & 0x40;
 	m_nr14 |= 0xbf;

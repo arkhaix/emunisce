@@ -105,13 +105,7 @@ void Sound2::SetNR24(u8 value)
 	if(m_hasPower == false)
 		return;
 
-	if(value & 0x40)
-		EnableLengthCounter();
-	else
-		DisableLengthCounter();
-
-	if(value & 0x80)
-		Trigger();
+	WriteTriggerRegister(value);
 
 	m_nr24 = value & 0x40;
 	m_nr24 |= 0xbf;
