@@ -12,6 +12,7 @@ class SoundGenerator
 public:
 
 	SoundGenerator();
+	~SoundGenerator();
 
 	virtual void Initialize(ChannelController* channelController);
 	virtual void SetMachine(Machine* machine);
@@ -42,13 +43,8 @@ protected:
 
 	//Length counter
 
-	void EnableLengthCounter();
-	void DisableLengthCounter();
-	void WriteLengthRegister(u8 value);
-
-	bool m_lengthCounterEnabled;
-	int m_lengthCounterValue;
-	int m_lengthCounterMaxValue;
+	friend class LengthUnit;
+	LengthUnit* m_lengthUnit;
 
 
 	//Envelope

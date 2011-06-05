@@ -3,12 +3,14 @@
 #include "../common/machine.h"
 #include "../memory/memory.h"
 
+#include "lengthUnit.h"
+
 
 Sound2::Sound2()
 {
 	m_machine = NULL;
 
-	m_lengthCounterMaxValue = 64;
+	m_lengthUnit->SetMaxValue(64);
 }
 
 
@@ -79,7 +81,7 @@ void Sound2::SetNR21(u8 value)
 		m_nr21 = value & 0xc0;
 	}
 
-	WriteLengthRegister(value & 0x3f);
+	m_lengthUnit->WriteLengthRegister(value & 0x3f);
 
 	m_nr21 |= 0x3f;
 }

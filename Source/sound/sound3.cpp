@@ -4,13 +4,14 @@
 #include "../memory/memory.h"
 
 #include "channelController.h"
+#include "lengthUnit.h"
 
 
 Sound3::Sound3()
 {
 	m_machine = NULL;
 
-	m_lengthCounterMaxValue = 256;
+	m_lengthUnit->SetMaxValue(256);
 }
 
 
@@ -97,7 +98,7 @@ void Sound3::SetNR31(u8 value)
 	//DMG allows writing this even when the power is off
 	//todo: CGB does not
 
-	WriteLengthRegister(value);
+	m_lengthUnit->WriteLengthRegister(value);
 
 	m_nr31 = 0xff;
 }
