@@ -46,7 +46,6 @@ private:
 	//Sound component
 
 	Machine* m_machine;
-	bool m_hasPower;
 
 
 	//Registers

@@ -51,7 +51,6 @@ private:
 	u8 m_nr42;	///<ff21
 	u8 m_nr43;	///<ff22
 	u8 m_nr44;	///<ff23
-
 };
 
 #endif

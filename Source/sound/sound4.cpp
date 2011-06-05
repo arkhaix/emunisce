@@ -19,6 +19,8 @@ void Sound4::Initialize()
 	SetNR42(0xff);
 	SetNR43(0x00);
 	SetNR44(0xbf);
+
+	SoundGenerator::Initialize();
 }
 
 void Sound4::SetMachine(Machine* machine)
@@ -42,10 +44,13 @@ void Sound4::PowerOff()
 	SetNR42(0);
 	SetNR43(0);
 	SetNR44(0);
+
+	SoundGenerator::PowerOff();
 }
 
 void Sound4::PowerOn()
 {
+	SoundGenerator::PowerOn();
 }
 
 
@@ -63,21 +68,33 @@ float Sound4::GetSample()
 
 void Sound4::SetNR41(u8 value)
 {
+	//DMG allows writing this even when the power is off
+	//todo: CGB does not
+
 	m_nr41 = 0xff;
 }
 
 void Sound4::SetNR42(u8 value)
 {
+	if(m_hasPower == false)
+		return;
+
 	m_nr42 = value;
 }
 
 void Sound4::SetNR43(u8 value)
 {
+	if(m_hasPower == false)
+		return;
+
 	m_nr43 = value;
 }
 
 void Sound4::SetNR44(u8 value)
 {
+	if(m_hasPower == false)
+		return;
+
 	m_nr44 = value & 0x40;
 	m_nr44 |= 0xbf;
 }
