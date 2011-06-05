@@ -63,6 +63,7 @@
     <ClInclude Include="sound2.h" />
     <ClInclude Include="sound3.h" />
     <ClInclude Include="sound4.h" />
+    <ClInclude Include="soundGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sound.cpp" />
@@ -70,6 +71,7 @@
     <ClCompile Include="sound2.cpp" />
     <ClCompile Include="sound3.cpp" />
     <ClCompile Include="sound4.cpp" />
+    <ClCompile Include="soundGenerator.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
