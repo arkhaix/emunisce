@@ -10,24 +10,6 @@ MBC1::MBC1()
 
 MBC1::~MBC1()
 {
-	u8 cartType = m_memoryData[0x147];
-	u8 batteryTypes[] = { 0x03, 0x06, 0x09, 0x0f, 0x10, 0x13, 0x1b };
-
-	bool isBatteryType = false;
-	for(int i=0;i<7;i++)
-		if(batteryTypes[i] == cartType)
-			isBatteryType = true;
-
-	if(isBatteryType == false)
-		return;
-	
-	ofstream sramFile(m_sramFilename, ios::out | ios::binary);
-	if(sramFile.good())
-	{
-		for(int i=0;i<0x10;i++)
-			sramFile.write((char*)(&m_ramBanks[i][0]), 0x2000);
-		sramFile.close();
-	}
 }
 
 void MBC1::Write8(u16 address, u8 value)
@@ -35,7 +17,9 @@ void MBC1::Write8(u16 address, u8 value)
 	//RAM Enable/Disable
 	if(address < 0x2000)
 	{
-		//Nothing needs to be done here
+		if((value & 0x0a) != 0x0a)
+			SaveRAM();
+
 		return;
 	}
 
@@ -182,4 +166,26 @@ void MBC1::SwitchROM()
 void MBC1::SwitchRAM()
 {
 	memcpy_s((void*)(&m_memoryData[0xa000]), (0x10000 - 0xa000), (void*)(&m_ramBanks[m_selectedRamBank][0]), 0x2000);
+}
+
+void MBC1::SaveRAM()
+{
+	u8 cartType = m_memoryData[0x147];
+	u8 batteryTypes[] = { 0x03, 0x06, 0x09, 0x0f, 0x10, 0x13, 0x1b, 0 };
+
+	bool isBatteryType = false;
+	for(u8* batteryType = batteryTypes; *batteryType != 0; batteryType++)
+		if(*batteryType == cartType)
+			isBatteryType = true;
+
+	if(isBatteryType == false)
+		return;
+	
+	ofstream sramFile(m_sramFilename, ios::out | ios::binary);
+	if(sramFile.good())
+	{
+		for(int i=0;i<0x10;i++)
+			sramFile.write((char*)(&m_ramBanks[i][0]), 0x2000);
+		sramFile.close();
+	}
 }
