@@ -43,10 +43,6 @@ public:
 
 private:
 
-	//Sound component
-
-	Machine* m_machine;
-
 
 	//Registers
 

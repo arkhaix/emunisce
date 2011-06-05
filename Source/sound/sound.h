@@ -47,6 +47,9 @@ public:
 	AudioBuffer GetStableAudioBuffer();
 	int GetAudioBufferCount();
 
+	//Internal (for the sound generators)
+	int GetFrameSequencerPosition();
+
 	//Registers
 
 	void SetNR10(u8 value);

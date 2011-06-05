@@ -39,11 +39,6 @@ public:
 
 private:
 
-	//Sound component
-
-	Machine* m_machine;
-
-
 	//Registers
 
 	u8 m_nr40;	///<ff1f

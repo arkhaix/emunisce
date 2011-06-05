@@ -169,6 +169,12 @@ int Sound::GetAudioBufferCount()
 }
 
 
+int Sound::GetFrameSequencerPosition()
+{
+	return m_frameSequencerPosition;
+}
+
+
 void Sound::SetNR10(u8 value)
 {
 	TRACE_REGISTER_WRITE

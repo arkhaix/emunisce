@@ -1,6 +1,9 @@
 #include "soundGenerator.h"
 
+#include "../common/machine.h"
+
 #include "channelController.h"
+#include "sound.h"
 
 
 SoundGenerator::SoundGenerator()
@@ -13,6 +16,12 @@ void SoundGenerator::Initialize(ChannelController* channelController)
 {
 	m_channelController = channelController;
 }
+
+void SoundGenerator::SetMachine(Machine* machine)
+{
+	m_machine = machine;
+}
+
 
 void SoundGenerator::PowerOff()
 {
@@ -66,6 +75,20 @@ void SoundGenerator::Trigger()
 
 void SoundGenerator::EnableLengthCounter()
 {
+	int frameSequencerPosition = m_machine->GetSound()->GetFrameSequencerPosition();
+
+	if(frameSequencerPosition == 0 || frameSequencerPosition == 2 ||
+		frameSequencerPosition == 4 || frameSequencerPosition == 6)
+	{
+		if(m_lengthCounterEnabled == false && m_lengthCounterValue > 0)
+		{
+			m_lengthCounterValue--;
+
+			if(m_lengthCounterValue == 0)
+				m_channelController->DisableChannel();
+		}
+	}
+
 	m_lengthCounterEnabled = true;
 }
 

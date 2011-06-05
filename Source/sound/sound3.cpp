@@ -27,7 +27,8 @@ void Sound3::Initialize(ChannelController* channelController)
 
 void Sound3::SetMachine(Machine* machine)
 {
-	m_machine = machine;
+	SoundGenerator::SetMachine(machine);
+
 	Memory* memory = machine->GetMemory();
 
 	memory->SetRegisterLocation(0x1a, &m_nr30, false);

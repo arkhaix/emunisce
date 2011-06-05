@@ -27,7 +27,8 @@ void Sound4::Initialize(ChannelController* channelController)
 
 void Sound4::SetMachine(Machine* machine)
 {
-	m_machine = machine;
+	SoundGenerator::SetMachine(machine);
+
 	Memory* memory = machine->GetMemory();
 
 	memory->SetRegisterLocation(0x1f, &m_nr40, false);
