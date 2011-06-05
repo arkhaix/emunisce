@@ -10,12 +10,15 @@
 #include "sound3.h"
 #include "sound4.h"
 
+#include "channelDisabler.h"
+
 #if 0
 #include <cstdio>
 #define TRACE_REGISTER_WRITE printf(__FUNCTION__ "(%02X) nr52(%02X)\n", value, m_nr52);
 #else
 #define TRACE_REGISTER_WRITE
 #endif
+
 
 Sound::Sound()
 {
@@ -60,11 +63,10 @@ void Sound::Initialize()
 	SetNR51(0x00);
 	SetNR52(0xf0);
 
-	m_sound1->Initialize();
-	m_sound2->Initialize();
-	m_sound3->Initialize();
-	m_sound4->Initialize();
-
+	m_sound1->Initialize( new ChannelDisabler(m_nr52, 0) );
+	m_sound2->Initialize( new ChannelDisabler(m_nr52, 1) );
+	m_sound3->Initialize( new ChannelDisabler(m_nr52, 2) );
+	m_sound4->Initialize( new ChannelDisabler(m_nr52, 3) );
 }
 
 void Sound::SetMachine(Machine* machine)

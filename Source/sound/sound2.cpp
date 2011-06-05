@@ -7,12 +7,14 @@
 Sound2::Sound2()
 {
 	m_machine = NULL;
+
+	m_lengthCounterMaxValue = 64;
 }
 
 
 //Sound component
 
-void Sound2::Initialize()
+void Sound2::Initialize(ChannelDisabler* channelDisabler)
 {
 	m_nr20 = 0xff;	///<inaccessible
 	SetNR21(0x3f);
@@ -20,7 +22,7 @@ void Sound2::Initialize()
 	SetNR23(0xff);
 	SetNR24(0xbf);
 
-	SoundGenerator::Initialize();
+	SoundGenerator::Initialize(channelDisabler);
 }
 
 void Sound2::SetMachine(Machine* machine)

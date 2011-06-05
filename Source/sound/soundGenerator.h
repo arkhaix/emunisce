@@ -3,6 +3,8 @@
 
 #include "../common/types.h"
 
+class ChannelDisabler;
+
 
 class SoundGenerator
 {
@@ -10,7 +12,7 @@ public:
 
 	SoundGenerator();
 
-	virtual void Initialize();
+	virtual void Initialize(ChannelDisabler* channelDisabler);
 
 	virtual void PowerOff();
 	virtual void PowerOn();
@@ -25,11 +27,19 @@ public:
 
 protected:
 
-	void WriteLengthRegister(u8 value);
 	//WriteDutyRegister?  Maybe put that in Sound2 and have Sound1 inherit from Sound2?
 	void WriteEnvelopeRegister(u8 value);
 
 	bool m_hasPower;
+	ChannelDisabler* m_channelDisabler;
+
+
+	//Length counter
+
+	void WriteLengthRegister(u8 value);
+	bool m_lengthCounterEnabled;
+	int m_lengthCounterValue;
+	int m_lengthCounterMaxValue;
 };
 
 #endif
