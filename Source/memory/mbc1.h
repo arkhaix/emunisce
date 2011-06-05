@@ -19,6 +19,8 @@ protected:
 	void SwitchROM();
 	void SwitchRAM();
 
+	void SaveRAM();
+
 	char m_romFilename[1024];
 	char m_sramFilename[1024];
 

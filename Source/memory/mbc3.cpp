@@ -10,8 +10,8 @@ void MBC3::Write8(u16 address, u8 value)
 	//RAM Enable/Disable
 	if(address < 0x2000)
 	{
-		//Nothing needs to be done here
-		return;
+		if((value & 0x0a) != 0x0a)
+			SaveRAM();
 	}
 
 	//ROM Bank Select (7:0)
