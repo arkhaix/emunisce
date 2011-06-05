@@ -96,7 +96,14 @@ private:
 	unsigned int m_nextSampleIndex;
 
 
-	//Sound generation
+	//Frame sequencer
+
+	int m_frameSequencerTimer;	///<Ticks remaining until the timer clocks.
+	int m_frameSequencerPeriod;
+	int m_frameSequencerPosition;	///<Controls the tick rates for the components (length/envelope/sweep)
+
+
+	//Sound master
 
 	bool m_hasPower;
 

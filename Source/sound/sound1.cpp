@@ -43,6 +43,8 @@ void Sound1::PowerOff()
 	SetNR12(0);
 	SetNR13(0);
 	SetNR14(0);
+
+	SoundGenerator::PowerOff();
 }
 
 void Sound1::PowerOn()
@@ -53,6 +55,12 @@ void Sound1::PowerOn()
 void Sound1::Run(int ticks)
 {
 }
+
+
+void Sound1::TickSweep()
+{
+}
+
 
 float Sound1::GetSample()
 {
