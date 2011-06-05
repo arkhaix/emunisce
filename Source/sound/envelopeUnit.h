@@ -20,12 +20,14 @@ private:
 
 	SoundGenerator* m_soundGenerator;
 
-	bool m_envelopeEnabled;
-	bool m_envelopeVolumeIncreasing;
-	int m_envelopeInitialVolume;
-	int m_envelopeVolume;
-	int m_envelopeTimer;
-	int m_envelopePeriod;
+	bool m_enabled;
+
+	bool m_volumeIncreasing;
+	int m_initialVolume;
+	int m_currentVolume;
+	
+	int m_timer;
+	int m_period;
 };
 
 #endif
