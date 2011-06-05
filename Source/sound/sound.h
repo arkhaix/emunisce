@@ -3,8 +3,6 @@
 
 #include "../common/types.h"
 
-#include "lengthUnit.h"
-
 static const unsigned int SamplesPerSecond = 48000;
 
 //static const unsigned int BytesPerSample = 1;
@@ -72,8 +70,6 @@ public:
 
 private:
 	
-	float Mix(float a, float b);
-
 	Machine* m_machine;
 	Memory* m_memory;
 
@@ -89,113 +85,36 @@ private:
 
 	unsigned int m_nextSampleIndex;
 
-	double m_totalSeconds;	///<Total time elapsed in seconds
-	double m_fractionalSeconds;	///<Fractional part of m_totalSeconds
-
 
 	//Registers
 
-	u8 m_inaccessable;	///<For registers like NR20, NR40, and the unused memory before wave ram.
+	u8 m_inaccessible;	///<For registers like NR20, NR40, and the unused memory before wave ram.
 
-	u8 m_nr10;	///<NR10, ff10
-	u8 m_nr11;	///<NR11, ff11
-	u8 m_nr12;	///<NR12, ff12
-	u8 m_nr13;	///<NR13, ff13
-	u8 m_nr14;	///<NR14, ff14
+	u8 m_nr10;	///<ff10
+	u8 m_nr11;	///<ff11
+	u8 m_nr12;	///<ff12
+	u8 m_nr13;	///<ff13
+	u8 m_nr14;	///<ff14
 
-	u8 m_nr21;	///<NR21, ff16
-	u8 m_nr22;	///<NR22, ff17
-	u8 m_nr23;	///<NR23, ff18
-	u8 m_nr24;	///<NR24, ff19
+	u8 m_nr21;	///<ff16
+	u8 m_nr22;	///<ff17
+	u8 m_nr23;	///<ff18
+	u8 m_nr24;	///<ff19
 
-	u8 m_nr30;	///<NR30, ff1a
-	u8 m_nr31;	///<NR31, ff1b
-	u8 m_nr32;	///<NR32, ff1c
-	u8 m_nr33;	///<NR33, ff1d
-	u8 m_nr34;	///<NR34, ff1e
+	u8 m_nr30;	///<ff1a
+	u8 m_nr31;	///<ff1b
+	u8 m_nr32;	///<ff1c
+	u8 m_nr33;	///<ff1d
+	u8 m_nr34;	///<ff1e
 
-	u8 m_nr41;	///<NR41, ff20
-	u8 m_nr42;	///<NR42, ff21
-	u8 m_nr43;	///<NR43, ff22
-	u8 m_nr44;	///<NR44, ff23
+	u8 m_nr41;	///<ff20
+	u8 m_nr42;	///<ff21
+	u8 m_nr43;	///<ff22
+	u8 m_nr44;	///<ff23
 
-	u8 m_nr50;	///<NR50, ff24
-	u8 m_nr51;	///<NR51, ff25
-	u8 m_nr52;	///<NR52, ff26
-
-
-	//Useful things
-
-	bool m_soundMasterEnable;
-	bool m_poweringDown;
-	bool m_terminalOutputs[2][4];	///<2 output channels (stereo left/right), 4 component channels (Sound1,2,3,4)
-
-
-	bool m_sound1Playing;
-
-	LengthUnit m_sound1LengthUnit;
-
-	float m_sound1DutyCycles;	///<[0,1]
-
-	int m_sound1Frequency;
-	double m_lastSweepUpdateTimeSeconds;
-	double m_sweepStepTimeSeconds;
-	int m_sweepShift;
-	bool m_sweepIncreasing;
-
-	bool m_envelope1Enabled;
-	double m_lastEnvelope1UpdateTimeSeconds;
-	double m_envelope1StepTimeSeconds;
-	bool m_envelope1Increasing;
-	int m_envelope1Value;
-	int m_envelope1InitialValue;
-
-
-
-	bool m_sound2Playing;
-
-	LengthUnit m_sound2LengthUnit;
-
-	float m_sound2DutyCycles;	///<[0,1]
-
-	int m_sound2Frequency;
-
-	bool m_envelope2Enabled;
-	double m_lastEnvelope2UpdateTimeSeconds;
-	double m_envelope2StepTimeSeconds;
-	bool m_envelope2Increasing;
-	int m_envelope2Value;
-	int m_envelope2InitialValue;
-
-
-	bool m_sound3Playing;
-	bool m_sound3Off;
-
-	LengthUnit m_sound3LengthUnit;
-
-	int m_sound3Frequency;
-	int m_sound3Level;
-
-
-	bool m_sound4Playing;
-
-	LengthUnit m_sound4LengthUnit;
-
-	u8 m_sound4Sample;
-
-	bool m_envelope4Enabled;
-	double m_lastEnvelope4UpdateTimeSeconds;
-	double m_envelope4StepTimeSeconds;
-	bool m_envelope4Increasing;
-	int m_envelope4Value;
-	int m_envelope4InitialValue;
-
-	unsigned int m_sound4ShiftRegister;	///<linear feedback shift register
-	int m_sound4ShiftRegisterTap;	///<tap bit for the lfsr
-	int m_sound4ShiftRegisterWidth;	///<7 or 15
-	int m_sound4ShiftRegisterOutput;
-	int m_sound4TicksPerShift;
-	int m_sound4TicksUntilNextShift;
+	u8 m_nr50;	///<ff24
+	u8 m_nr51;	///<ff25
+	u8 m_nr52;	///<ff26
 };
 
 
