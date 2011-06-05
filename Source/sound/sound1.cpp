@@ -19,6 +19,8 @@ void Sound1::Initialize()
 	SetNR12(0x00);
 	SetNR13(0xff);
 	SetNR14(0xbf);
+
+	SoundGenerator::Initialize();
 }
 
 void Sound1::SetMachine(Machine* machine)
@@ -35,7 +37,6 @@ void Sound1::SetMachine(Machine* machine)
 
 
 //Sound generation
-
 void Sound1::PowerOff()
 {
 	SetNR10(0);
@@ -49,6 +50,7 @@ void Sound1::PowerOff()
 
 void Sound1::PowerOn()
 {
+	SoundGenerator::PowerOn();
 }
 
 
@@ -72,28 +74,47 @@ float Sound1::GetSample()
 
 void Sound1::SetNR10(u8 value)
 {
+	if(m_hasPower == false)
+		return;
+
 	m_nr10 = value & 0x7f;
 	m_nr10 |= 0x80;
 }
 
 void Sound1::SetNR11(u8 value)
 {
-	m_nr11 = value & 0xc0;
+	//DMG allows writing this even when the power is off
+	//todo: CGB does not
+
+	if(m_hasPower == true)
+	{
+		m_nr11 = value & 0xc0;
+	}
+
 	m_nr11 |= 0x3f;
 }
 
 void Sound1::SetNR12(u8 value)
 {
+	if(m_hasPower == false)
+		return;
+
 	m_nr12 = value;
 }
 
 void Sound1::SetNR13(u8 value)
 {
+	if(m_hasPower == false)
+		return;
+
 	m_nr13 = 0xff;
 }
 
 void Sound1::SetNR14(u8 value)
 {
+	if(m_hasPower == false)
+		return;
+
 	m_nr14 = value & 0x40;
 	m_nr14 |= 0xbf;
 }

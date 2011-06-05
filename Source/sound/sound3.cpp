@@ -19,6 +19,8 @@ void Sound3::Initialize()
 	SetNR32(0x9f);
 	SetNR33(0xff);
 	SetNR34(0xbf);
+
+	SoundGenerator::Initialize();
 }
 
 void Sound3::SetMachine(Machine* machine)
@@ -43,10 +45,13 @@ void Sound3::PowerOff()
 	SetNR32(0);
 	SetNR33(0);
 	SetNR34(0);
+
+	SoundGenerator::PowerOff();
 }
 
 void Sound3::PowerOn()
 {
+	SoundGenerator::PowerOn();
 }
 
 
@@ -64,28 +69,43 @@ float Sound3::GetSample()
 
 void Sound3::SetNR30(u8 value)
 {
+	if(m_hasPower == false)
+		return;
+
 	m_nr30 = value & 0x80;
 	m_nr30 |= 0x7f;
 }
 
 void Sound3::SetNR31(u8 value)
 {
+	//DMG allows writing this even when the power is off
+	//todo: CGB does not
+
 	m_nr31 = 0xff;
 }
 
 void Sound3::SetNR32(u8 value)
 {
+	if(m_hasPower == false)
+		return;
+
 	m_nr32 = value & 0x60;
 	m_nr32 |= 0x9f;
 }
 
 void Sound3::SetNR33(u8 value)
 {
+	if(m_hasPower == false)
+		return;
+
 	m_nr33 = 0xff;
 }
 
 void Sound3::SetNR34(u8 value)
 {
+	if(m_hasPower == false)
+		return;
+
 	m_nr34 = value & 0x40;
 	m_nr34 |= 0xbf;
 }

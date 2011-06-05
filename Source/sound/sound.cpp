@@ -290,12 +290,18 @@ void Sound::SetNR50(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
+	if(m_hasPower == false)
+		return;
+
 	m_nr50 = value;
 }
 
 void Sound::SetNR51(u8 value)
 {
 	TRACE_REGISTER_WRITE
+
+	if(m_hasPower == false)
+		return;
 
 	m_nr51 = value;
 }
@@ -320,8 +326,6 @@ void Sound::SetNR52(u8 value)
 	{
 		if(m_hasPower == true)
 		{
-			m_hasPower = false;
-
 			m_sound1->PowerOff();
 			m_sound2->PowerOff();
 			m_sound3->PowerOff();
@@ -330,8 +334,9 @@ void Sound::SetNR52(u8 value)
 
 		SetNR50(0);
 		SetNR51(0);
-
 		m_nr52 = 0x70;
+
+		m_hasPower = false;
 	}
 	
 	m_nr52 = (value & 0x80) | 0x70 | (m_nr52 & 0x0f);

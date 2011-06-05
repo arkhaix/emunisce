@@ -19,6 +19,8 @@ void Sound2::Initialize()
 	SetNR22(0x00);
 	SetNR23(0xff);
 	SetNR24(0xbf);
+
+	SoundGenerator::Initialize();
 }
 
 void Sound2::SetMachine(Machine* machine)
@@ -42,10 +44,13 @@ void Sound2::PowerOff()
 	SetNR22(0);
 	SetNR23(0);
 	SetNR24(0);
+
+	SoundGenerator::PowerOff();
 }
 
 void Sound2::PowerOn()
 {
+	SoundGenerator::PowerOn();
 }
 
 
@@ -63,22 +68,38 @@ float Sound2::GetSample()
 
 void Sound2::SetNR21(u8 value)
 {
-	m_nr21 = value & 0xc0;
+	//DMG allows writing this even when the power is off
+	//todo: CGB does not
+
+	if(m_hasPower == true)
+	{
+		m_nr21 = value & 0xc0;
+	}
+
 	m_nr21 |= 0x3f;
 }
 
 void Sound2::SetNR22(u8 value)
 {
+	if(m_hasPower == false)
+		return;
+
 	m_nr22 = value;
 }
 
 void Sound2::SetNR23(u8 value)
 {
+	if(m_hasPower == false)
+		return;
+
 	m_nr23 = 0xff;
 }
 
 void Sound2::SetNR24(u8 value)
 {
+	if(m_hasPower == false)
+		return;
+
 	m_nr24 = value & 0x40;
 	m_nr24 |= 0xbf;
 }

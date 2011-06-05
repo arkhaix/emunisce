@@ -11,7 +11,6 @@ void SoundGenerator::Initialize()
 {
 }
 
-
 void SoundGenerator::PowerOff()
 {
 	m_hasPower = false;
@@ -40,4 +39,13 @@ void SoundGenerator::TickEnvelope()
 float SoundGenerator::GetSample()
 {
 	return 0.f;
+}
+
+
+void SoundGenerator::WriteLengthRegister(u8 value)
+{
+}
+
+void SoundGenerator::WriteEnvelopeRegister(u8 value)
+{
 }
