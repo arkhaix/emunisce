@@ -61,7 +61,7 @@ void Sound::Initialize()
 
 	m_frameSequencerPeriod = 8192;	///<8192 = 512Hz = (4194304 ticks per second / 512Hz).
 	m_frameSequencerTimer = m_frameSequencerPeriod;
-	m_frameSequencerPosition = 0;
+	m_frameSequencerPosition = -1;	///<auto-increments, and we want to start at 0
 
 	m_inaccessible = 0xff;
 
@@ -350,7 +350,7 @@ void Sound::SetNR52(u8 value)
 			m_sound3->PowerOff();
 			m_sound4->PowerOff();
 
-			m_frameSequencerPosition = 0;
+			m_frameSequencerPosition = -1;
 		}
 
 		SetNR50(0);

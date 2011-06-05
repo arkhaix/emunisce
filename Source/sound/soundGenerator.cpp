@@ -70,6 +70,17 @@ void SoundGenerator::Trigger()
 
 	if(m_lengthCounterValue == 0)
 		m_lengthCounterValue = m_lengthCounterMaxValue;
+
+	int frameSequencerPosition = m_machine->GetSound()->GetFrameSequencerPosition();
+
+	if(frameSequencerPosition == 0 || frameSequencerPosition == 2 ||
+		frameSequencerPosition == 4 || frameSequencerPosition == 6)
+	{
+		if(m_lengthCounterEnabled == true && m_lengthCounterValue == m_lengthCounterMaxValue)
+		{
+			m_lengthCounterValue--;
+		}
+	}
 }
 
 void SoundGenerator::WriteTriggerRegister(u8 value)
