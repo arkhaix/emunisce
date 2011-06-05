@@ -14,7 +14,7 @@ Sound4::Sound4()
 
 //Sound component
 
-void Sound4::Initialize(ChannelDisabler* channelDisabler)
+void Sound4::Initialize(ChannelController* channelController)
 {
 	m_nr40 = 0xff;	///<inaccessible
 	SetNR41(0xff);
@@ -22,7 +22,7 @@ void Sound4::Initialize(ChannelDisabler* channelDisabler)
 	SetNR43(0x00);
 	SetNR44(0xbf);
 
-	SoundGenerator::Initialize(channelDisabler);
+	SoundGenerator::Initialize(channelController);
 }
 
 void Sound4::SetMachine(Machine* machine)
@@ -72,6 +72,8 @@ void Sound4::SetNR41(u8 value)
 {
 	//DMG allows writing this even when the power is off
 	//todo: CGB does not
+
+	WriteLengthRegister(value & 0x3f);
 
 	m_nr41 = 0xff;
 }

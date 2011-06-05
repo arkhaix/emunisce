@@ -4,18 +4,20 @@
 #include "../common/types.h"
 
 
-class ChannelDisabler
+class ChannelController
 {
 public:
 
-	ChannelDisabler(u8& nr52, int channelBit);
+	ChannelController(u8& nr52, int channelBit);
 
+	void EnableChannel();
 	void DisableChannel();
+	bool IsChannelEnabled();
 
 private:
 
 	u8& m_nr52;
-	int m_channelMask;
+	int m_channelBit;
 };
 
 #endif

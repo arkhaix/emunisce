@@ -1,6 +1,6 @@
 #include "soundGenerator.h"
 
-#include "channelDisabler.h"
+#include "channelController.h"
 
 
 SoundGenerator::SoundGenerator()
@@ -9,9 +9,9 @@ SoundGenerator::SoundGenerator()
 }
 
 
-void SoundGenerator::Initialize(ChannelDisabler* channelDisabler)
+void SoundGenerator::Initialize(ChannelController* channelController)
 {
-	m_channelDisabler = channelDisabler;
+	m_channelController = channelController;
 }
 
 void SoundGenerator::PowerOff()
@@ -32,6 +32,16 @@ void SoundGenerator::Run(int ticks)
 
 void SoundGenerator::TickLength()
 {
+	if(m_lengthCounterEnabled == false)
+		return;
+
+	if(m_lengthCounterValue > 0)
+	{
+		m_lengthCounterValue--;
+
+		if(m_lengthCounterValue == 0)
+			m_channelController->DisableChannel();
+	}
 }
 
 void SoundGenerator::TickEnvelope()
@@ -47,6 +57,7 @@ float SoundGenerator::GetSample()
 
 void SoundGenerator::WriteLengthRegister(u8 value)
 {
+	m_lengthCounterValue = m_lengthCounterMaxValue - value;
 }
 
 void SoundGenerator::WriteEnvelopeRegister(u8 value)
