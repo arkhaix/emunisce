@@ -16,13 +16,13 @@ Sound1::Sound1()
 
 void Sound1::Initialize(ChannelController* channelController)
 {
+	SoundGenerator::Initialize(channelController);
+
 	SetNR10(0x80);
 	SetNR11(0x3f);
 	SetNR12(0x00);
 	SetNR13(0xff);
 	SetNR14(0xbf);
-
-	SoundGenerator::Initialize(channelController);
 }
 
 void Sound1::SetMachine(Machine* machine)
@@ -118,6 +118,14 @@ void Sound1::SetNR14(u8 value)
 {
 	if(m_hasPower == false)
 		return;
+
+	if(value & 0x40)
+		EnableLengthCounter();
+	else
+		DisableLengthCounter();
+
+	if(value & 0x80)
+		Trigger();
 
 	m_nr14 = value & 0x40;
 	m_nr14 |= 0xbf;

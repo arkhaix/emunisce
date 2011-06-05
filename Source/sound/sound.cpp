@@ -113,31 +113,36 @@ void Sound::Run(int ticks)
 	{
 		m_frameSequencerTimer += m_frameSequencerPeriod;
 
-		m_frameSequencerPosition++;
-		if(m_frameSequencerPosition > 7)
-			m_frameSequencerPosition = 0;
-
-		if(m_frameSequencerPosition == 0 || m_frameSequencerPosition == 2 || 
-			m_frameSequencerPosition == 4 || m_frameSequencerPosition == 6)
+		if(m_hasPower)
 		{
-			m_sound1->TickLength();
-			m_sound2->TickLength();
-			m_sound3->TickLength();
-			m_sound4->TickLength();
-		}
 
-		if(m_frameSequencerPosition == 2 || m_frameSequencerPosition == 6)
-		{
-			m_sound1->TickSweep();
-		}
+			m_frameSequencerPosition++;
+			if(m_frameSequencerPosition > 7)
+				m_frameSequencerPosition = 0;
 
-		if(m_frameSequencerPosition == 7)
-		{
-			m_sound1->TickEnvelope();
-			m_sound2->TickEnvelope();
-			//3 has no envelope
-			m_sound4->TickEnvelope();
-		}
+			if(m_frameSequencerPosition == 0 || m_frameSequencerPosition == 2 || 
+				m_frameSequencerPosition == 4 || m_frameSequencerPosition == 6)
+			{
+				m_sound1->TickLength();
+				m_sound2->TickLength();
+				m_sound3->TickLength();
+				m_sound4->TickLength();
+			}
+
+			if(m_frameSequencerPosition == 2 || m_frameSequencerPosition == 6)
+			{
+				m_sound1->TickSweep();
+			}
+
+			if(m_frameSequencerPosition == 7)
+			{
+				m_sound1->TickEnvelope();
+				m_sound2->TickEnvelope();
+				//3 has no envelope
+				m_sound4->TickEnvelope();
+			}
+
+		}	//if(m_hasPower)
 	}
 
 
@@ -338,6 +343,8 @@ void Sound::SetNR52(u8 value)
 			m_sound2->PowerOff();
 			m_sound3->PowerOff();
 			m_sound4->PowerOff();
+
+			m_frameSequencerPosition = 0;
 		}
 
 		SetNR50(0);
