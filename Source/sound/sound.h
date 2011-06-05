@@ -3,6 +3,11 @@
 
 #include "../common/types.h"
 
+class Sound1;
+class Sound2;
+class Sound3;
+class Sound4;
+
 static const unsigned int SamplesPerSecond = 48000;
 
 //static const unsigned int BytesPerSample = 1;
@@ -70,8 +75,13 @@ public:
 
 private:
 	
+	//Component
+
 	Machine* m_machine;
 	Memory* m_memory;
+
+	
+	//Audio
 
 	AudioBuffer m_audioBuffer[2];
 	AudioBuffer* m_activeAudioBuffer;
@@ -86,31 +96,22 @@ private:
 	unsigned int m_nextSampleIndex;
 
 
+	//Sound generation
+
+	bool m_hasPower;
+
+
+	//Sound generators
+
+	Sound1* m_sound1;
+	Sound2* m_sound2;
+	Sound3* m_sound3;
+	Sound4* m_sound4;
+
+
 	//Registers
 
-	u8 m_inaccessible;	///<For registers like NR20, NR40, and the unused memory before wave ram.
-
-	u8 m_nr10;	///<ff10
-	u8 m_nr11;	///<ff11
-	u8 m_nr12;	///<ff12
-	u8 m_nr13;	///<ff13
-	u8 m_nr14;	///<ff14
-
-	u8 m_nr21;	///<ff16
-	u8 m_nr22;	///<ff17
-	u8 m_nr23;	///<ff18
-	u8 m_nr24;	///<ff19
-
-	u8 m_nr30;	///<ff1a
-	u8 m_nr31;	///<ff1b
-	u8 m_nr32;	///<ff1c
-	u8 m_nr33;	///<ff1d
-	u8 m_nr34;	///<ff1e
-
-	u8 m_nr41;	///<ff20
-	u8 m_nr42;	///<ff21
-	u8 m_nr43;	///<ff22
-	u8 m_nr44;	///<ff23
+	u8 m_inaccessible;	///<For registers like the unused memory before wave ram.
 
 	u8 m_nr50;	///<ff24
 	u8 m_nr51;	///<ff25
