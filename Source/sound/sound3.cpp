@@ -16,13 +16,13 @@ Sound3::Sound3()
 
 void Sound3::Initialize(ChannelController* channelController)
 {
+	SoundGenerator::Initialize(channelController);
+
 	SetNR30(0x7f);
 	SetNR31(0xff);
 	SetNR32(0x9f);
 	SetNR33(0xff);
 	SetNR34(0xbf);
-
-	SoundGenerator::Initialize(channelController);
 }
 
 void Sound3::SetMachine(Machine* machine)
@@ -109,6 +109,14 @@ void Sound3::SetNR34(u8 value)
 {
 	if(m_hasPower == false)
 		return;
+
+	if(value & 0x40)
+		EnableLengthCounter();
+	else
+		DisableLengthCounter();
+
+	if(value & 0x80)
+		Trigger();
 
 	m_nr34 = value & 0x40;
 	m_nr34 |= 0xbf;

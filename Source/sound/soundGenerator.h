@@ -28,7 +28,8 @@ public:
 protected:
 
 	//WriteDutyRegister?  Maybe put that in Sound2 and have Sound1 inherit from Sound2?
-	void WriteEnvelopeRegister(u8 value);
+
+	virtual void Trigger();
 
 	bool m_hasPower;
 	ChannelController* m_channelController;
@@ -36,10 +37,18 @@ protected:
 
 	//Length counter
 
+	void EnableLengthCounter();
+	void DisableLengthCounter();
 	void WriteLengthRegister(u8 value);
+
 	bool m_lengthCounterEnabled;
 	int m_lengthCounterValue;
 	int m_lengthCounterMaxValue;
+
+
+	//Envelope
+
+	void WriteEnvelopeRegister(u8 value);
 };
 
 #endif

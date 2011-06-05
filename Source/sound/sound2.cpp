@@ -16,13 +16,13 @@ Sound2::Sound2()
 
 void Sound2::Initialize(ChannelController* channelController)
 {
+	SoundGenerator::Initialize(channelController);
+
 	m_nr20 = 0xff;	///<inaccessible
 	SetNR21(0x3f);
 	SetNR22(0x00);
 	SetNR23(0xff);
 	SetNR24(0xbf);
-
-	SoundGenerator::Initialize(channelController);
 }
 
 void Sound2::SetMachine(Machine* machine)
@@ -103,6 +103,14 @@ void Sound2::SetNR24(u8 value)
 {
 	if(m_hasPower == false)
 		return;
+
+	if(value & 0x40)
+		EnableLengthCounter();
+	else
+		DisableLengthCounter();
+
+	if(value & 0x80)
+		Trigger();
 
 	m_nr24 = value & 0x40;
 	m_nr24 |= 0xbf;

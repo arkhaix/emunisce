@@ -16,13 +16,13 @@ Sound4::Sound4()
 
 void Sound4::Initialize(ChannelController* channelController)
 {
+	SoundGenerator::Initialize(channelController);
+
 	m_nr40 = 0xff;	///<inaccessible
 	SetNR41(0xff);
 	SetNR42(0xff);
 	SetNR43(0x00);
 	SetNR44(0xbf);
-
-	SoundGenerator::Initialize(channelController);
 }
 
 void Sound4::SetMachine(Machine* machine)
@@ -98,6 +98,14 @@ void Sound4::SetNR44(u8 value)
 {
 	if(m_hasPower == false)
 		return;
+
+	if(value & 0x40)
+		EnableLengthCounter();
+	else
+		DisableLengthCounter();
+
+	if(value & 0x80)
+		Trigger();
 
 	m_nr44 = value & 0x40;
 	m_nr44 |= 0xbf;

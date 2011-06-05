@@ -55,10 +55,30 @@ float SoundGenerator::GetSample()
 }
 
 
+void SoundGenerator::Trigger()
+{
+	m_channelController->EnableChannel();
+
+	if(m_lengthCounterValue == 0)
+		m_lengthCounterValue = m_lengthCounterMaxValue;
+}
+
+
+void SoundGenerator::EnableLengthCounter()
+{
+	m_lengthCounterEnabled = true;
+}
+
+void SoundGenerator::DisableLengthCounter()
+{
+	m_lengthCounterEnabled = false;
+}
+
 void SoundGenerator::WriteLengthRegister(u8 value)
 {
 	m_lengthCounterValue = m_lengthCounterMaxValue - value;
 }
+
 
 void SoundGenerator::WriteEnvelopeRegister(u8 value)
 {
