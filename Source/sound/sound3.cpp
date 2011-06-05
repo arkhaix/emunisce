@@ -14,7 +14,7 @@ Sound3::Sound3()
 
 //Sound component
 
-void Sound3::Initialize(ChannelDisabler* channelDisabler)
+void Sound3::Initialize(ChannelController* channelController)
 {
 	SetNR30(0x7f);
 	SetNR31(0xff);
@@ -22,7 +22,7 @@ void Sound3::Initialize(ChannelDisabler* channelDisabler)
 	SetNR33(0xff);
 	SetNR34(0xbf);
 
-	SoundGenerator::Initialize(channelDisabler);
+	SoundGenerator::Initialize(channelController);
 }
 
 void Sound3::SetMachine(Machine* machine)
@@ -82,6 +82,8 @@ void Sound3::SetNR31(u8 value)
 {
 	//DMG allows writing this even when the power is off
 	//todo: CGB does not
+
+	WriteLengthRegister(value);
 
 	m_nr31 = 0xff;
 }

@@ -14,7 +14,7 @@ Sound1::Sound1()
 
 //Sound component
 
-void Sound1::Initialize(ChannelDisabler* channelDisabler)
+void Sound1::Initialize(ChannelController* channelController)
 {
 	SetNR10(0x80);
 	SetNR11(0x3f);
@@ -22,7 +22,7 @@ void Sound1::Initialize(ChannelDisabler* channelDisabler)
 	SetNR13(0xff);
 	SetNR14(0xbf);
 
-	SoundGenerator::Initialize(channelDisabler);
+	SoundGenerator::Initialize(channelController);
 }
 
 void Sound1::SetMachine(Machine* machine)
@@ -92,6 +92,8 @@ void Sound1::SetNR11(u8 value)
 	{
 		m_nr11 = value & 0xc0;
 	}
+
+	WriteLengthRegister(value & 0x3f);
 
 	m_nr11 |= 0x3f;
 }

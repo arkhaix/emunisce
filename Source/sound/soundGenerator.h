@@ -3,7 +3,7 @@
 
 #include "../common/types.h"
 
-class ChannelDisabler;
+class ChannelController;
 
 
 class SoundGenerator
@@ -12,7 +12,7 @@ public:
 
 	SoundGenerator();
 
-	virtual void Initialize(ChannelDisabler* channelDisabler);
+	virtual void Initialize(ChannelController* channelController);
 
 	virtual void PowerOff();
 	virtual void PowerOn();
@@ -31,7 +31,7 @@ protected:
 	void WriteEnvelopeRegister(u8 value);
 
 	bool m_hasPower;
-	ChannelDisabler* m_channelDisabler;
+	ChannelController* m_channelController;
 
 
 	//Length counter

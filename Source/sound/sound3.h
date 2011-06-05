@@ -16,7 +16,7 @@ public:
 
 	//Sound component
 
-	virtual void Initialize(ChannelDisabler* channelDisabler);
+	virtual void Initialize(ChannelController* channelController);
 	void SetMachine(Machine* machine);
 
 

@@ -8,6 +8,8 @@ class Sound2;
 class Sound3;
 class Sound4;
 
+class ChannelController;
+
 static const unsigned int SamplesPerSecond = 48000;
 
 //static const unsigned int BytesPerSample = 1;
@@ -114,6 +116,8 @@ private:
 	Sound2* m_sound2;
 	Sound3* m_sound3;
 	Sound4* m_sound4;
+
+	ChannelController* m_channelDisabler[4];
 
 
 	//Registers

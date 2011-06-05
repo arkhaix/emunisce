@@ -29,7 +29,7 @@
     <ClInclude Include="soundGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="channelDisabler.h">
+    <ClInclude Include="channelController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -52,7 +52,7 @@
     <ClCompile Include="soundGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="channelDisabler.cpp">
+    <ClCompile Include="channelController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

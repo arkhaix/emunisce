@@ -10,7 +10,7 @@
 #include "sound3.h"
 #include "sound4.h"
 
-#include "channelDisabler.h"
+#include "channelController.h"
 
 #if 0
 #include <cstdio>
@@ -30,6 +30,9 @@ Sound::Sound()
 
 	m_hasPower = true;
 
+	for(int i=0;i<4;i++)
+		m_channelDisabler[i] = new ChannelController(m_nr52, i);
+
 	m_sound1 = new Sound1();
 	m_sound2 = new Sound2();
 	m_sound3 = new Sound3();
@@ -42,6 +45,9 @@ Sound::~Sound()
 	delete m_sound2;
 	delete m_sound3;
 	delete m_sound4;
+
+	for(int i=0;i<4;i++)
+		delete m_channelDisabler[i];
 
 	DeleteCriticalSection((LPCRITICAL_SECTION)m_audioBufferLock);
 	delete (LPCRITICAL_SECTION)m_audioBufferLock;
@@ -63,10 +69,10 @@ void Sound::Initialize()
 	SetNR51(0x00);
 	SetNR52(0xf0);
 
-	m_sound1->Initialize( new ChannelDisabler(m_nr52, 0) );
-	m_sound2->Initialize( new ChannelDisabler(m_nr52, 1) );
-	m_sound3->Initialize( new ChannelDisabler(m_nr52, 2) );
-	m_sound4->Initialize( new ChannelDisabler(m_nr52, 3) );
+	m_sound1->Initialize(m_channelDisabler[0]);
+	m_sound2->Initialize(m_channelDisabler[1]);
+	m_sound3->Initialize(m_channelDisabler[2]);
+	m_sound4->Initialize(m_channelDisabler[3]);
 }
 
 void Sound::SetMachine(Machine* machine)
