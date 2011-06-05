@@ -12,46 +12,46 @@ EnvelopeUnit::EnvelopeUnit(SoundGenerator* soundGenerator)
 
 void EnvelopeUnit::Tick()
 {
-	if(m_envelopeVolume == 0 || m_envelopeVolume == 15)
+	if(m_currentVolume == 0 || m_currentVolume == 15)
 		return;
 
-	if(m_envelopeEnabled == false)
+	if(m_enabled == false)
 		return;
 
-	m_envelopeTimer--;
-	while(m_envelopeTimer <= 0)
+	m_timer--;
+	while(m_timer <= 0)
 	{
-		m_envelopeTimer += m_envelopePeriod;
+		m_timer += m_period;
 
-		if(m_envelopeVolumeIncreasing == true)
-			m_envelopeVolume++;
+		if(m_volumeIncreasing == true)
+			m_currentVolume++;
 		else
-			m_envelopeVolume--;
+			m_currentVolume--;
 
-		if(m_envelopeVolume == 0 || m_envelopeVolume == 15)
-			m_envelopeEnabled = false;
+		if(m_currentVolume == 0 || m_currentVolume == 15)
+			m_enabled = false;
 	}
 }
 
 
 void EnvelopeUnit::WriteEnvelopeRegister(u8 value)
 {
-	m_envelopePeriod = value & 0x07;
+	m_period = value & 0x07;
 
-	if(m_envelopePeriod == 0)
-		m_envelopeEnabled = false;
+	if(m_period == 0)
+		m_enabled = false;
 	else
-		m_envelopeEnabled = true;
+		m_enabled = true;
 
 	if(value & 0x08)
-		m_envelopeVolumeIncreasing = true;
+		m_volumeIncreasing = true;
 	else
-		m_envelopeVolumeIncreasing = false;
+		m_volumeIncreasing = false;
 
-	m_envelopeInitialVolume = (value & 0xf0) >> 4;
+	m_initialVolume = (value & 0xf0) >> 4;
 
 	//Disable the DAC?
-	if(m_envelopeInitialVolume == 0 && m_envelopeVolumeIncreasing == false)
+	if(m_initialVolume == 0 && m_volumeIncreasing == false)
 	{
 		m_soundGenerator->m_channelController->DisableChannel();
 		m_soundGenerator->m_dacEnabled = false;
