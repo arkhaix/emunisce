@@ -46,6 +46,26 @@ public:
 private:
 
 
+	//Sound generation
+
+	int m_frequency;	///<11-bit frequency
+
+	virtual void Trigger();
+	void TriggerSweep();
+	void WriteSweepRegister(u8 value);
+
+	int CalculateFrequency();
+
+	int m_frequencyShadow;
+
+	bool m_sweepEnabled;
+	int m_sweepShift;
+	bool m_sweepIncreasing;
+	int m_sweepTimerValue;
+	int m_sweepTimerPeriod;
+
+
+
 	//Registers
 
 	u8 m_nr10;	///<ff10

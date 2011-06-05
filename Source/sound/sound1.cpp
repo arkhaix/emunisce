@@ -3,6 +3,7 @@
 #include "../common/machine.h"
 #include "../memory/memory.h"
 
+#include "channelController.h"
 #include "envelopeUnit.h"
 #include "lengthUnit.h"
 
@@ -27,6 +28,9 @@ Sound1::~Sound1()
 void Sound1::Initialize(ChannelController* channelController)
 {
 	SoundGenerator::Initialize(channelController);
+
+	m_frequency = 0;
+	m_frequencyShadow = 0;
 
 	SetNR10(0x80);
 	SetNR11(0x3f);
@@ -79,6 +83,32 @@ void Sound1::TickEnvelope()
 
 void Sound1::TickSweep()
 {
+	if(m_sweepEnabled == false)
+		return;
+
+	if(m_sweepTimerPeriod == 0)
+		return;
+
+	m_frequencyShadow = m_frequency;
+	int newFrequency = CalculateFrequency();
+	if(newFrequency > 2047)
+	{
+		m_channelController->DisableChannel();
+		return;
+	}
+
+	if(m_sweepShift == 0)
+		return;
+
+	m_frequency = newFrequency;
+	m_frequencyShadow = newFrequency;
+
+	newFrequency = CalculateFrequency();
+	if(newFrequency > 2047)
+	{
+		m_channelController->DisableChannel();
+		return;
+	}
 }
 
 
@@ -94,6 +124,8 @@ void Sound1::SetNR10(u8 value)
 {
 	if(m_hasPower == false)
 		return;
+
+	WriteSweepRegister(value);
 
 	m_nr10 = value & 0x7f;
 	m_nr10 |= 0x80;
@@ -129,6 +161,9 @@ void Sound1::SetNR13(u8 value)
 	if(m_hasPower == false)
 		return;
 
+	m_frequency &= ~(0xff);
+	m_frequency |= value;
+
 	m_nr13 = 0xff;
 }
 
@@ -137,8 +172,66 @@ void Sound1::SetNR14(u8 value)
 	if(m_hasPower == false)
 		return;
 
+	m_frequency &= ~(0x70);
+	m_frequency |= ((value & 0x07) << 4);
+
 	WriteTriggerRegister(value);
 
 	m_nr14 = value & 0x40;
 	m_nr14 |= 0xbf;
+}
+
+
+void Sound1::Trigger()
+{
+	SoundGenerator::Trigger();
+
+	TriggerSweep();
+}
+
+void Sound1::TriggerSweep()
+{
+	m_frequencyShadow = m_frequency;
+
+	m_sweepTimerValue = m_sweepTimerPeriod;
+
+	if(m_sweepTimerPeriod == 0 && m_sweepShift == 0)
+		m_sweepEnabled = false;
+	else
+		m_sweepEnabled = true;
+
+	if(m_sweepShift > 0)
+	{
+		int newFrequency = CalculateFrequency();
+		if(newFrequency > 2047)
+		{
+			m_channelController->DisableChannel();
+		}
+	}
+}
+
+void Sound1::WriteSweepRegister(u8 value)
+{
+	m_sweepShift = value & 0x07;
+
+	if(value & 0x08)
+		m_sweepIncreasing = false;
+	else
+		m_sweepIncreasing = true;
+
+	m_sweepTimerPeriod = (value & 0x70) >> 4;
+}
+
+int Sound1::CalculateFrequency()
+{
+	int result = m_frequencyShadow;
+
+	result >>= m_sweepShift;
+
+	if(m_sweepIncreasing == false)
+		result = -result;
+
+	result += m_frequencyShadow;
+
+	return result;
 }
