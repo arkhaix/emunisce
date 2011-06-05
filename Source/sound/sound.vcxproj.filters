@@ -32,6 +32,9 @@
     <ClInclude Include="channelController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="lengthUnit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sound.cpp">
@@ -53,6 +56,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="channelController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lengthUnit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

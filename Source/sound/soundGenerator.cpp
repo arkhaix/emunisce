@@ -3,12 +3,19 @@
 #include "../common/machine.h"
 
 #include "channelController.h"
+#include "lengthUnit.h"
 #include "sound.h"
 
 
 SoundGenerator::SoundGenerator()
 {
+	m_lengthUnit = new LengthUnit(this);
 	m_hasPower = true;
+}
+
+SoundGenerator::~SoundGenerator()
+{
+	delete m_lengthUnit;
 }
 
 
@@ -41,16 +48,7 @@ void SoundGenerator::Run(int ticks)
 
 void SoundGenerator::TickLength()
 {
-	if(m_lengthCounterEnabled == false)
-		return;
-
-	if(m_lengthCounterValue > 0)
-	{
-		m_lengthCounterValue--;
-
-		if(m_lengthCounterValue == 0)
-			m_channelController->DisableChannel();
-	}
+	m_lengthUnit->Tick();
 }
 
 void SoundGenerator::TickEnvelope()
@@ -90,60 +88,18 @@ void SoundGenerator::Trigger()
 		m_channelController->EnableChannel();
 	}
 
-	if(m_lengthCounterValue == 0)
-		m_lengthCounterValue = m_lengthCounterMaxValue;
-
-	int frameSequencerPosition = m_machine->GetSound()->GetFrameSequencerPosition();
-
-	if(frameSequencerPosition == 0 || frameSequencerPosition == 2 ||
-		frameSequencerPosition == 4 || frameSequencerPosition == 6)
-	{
-		if(m_lengthCounterEnabled == true && m_lengthCounterValue == m_lengthCounterMaxValue)
-		{
-			m_lengthCounterValue--;
-		}
-	}
+	m_lengthUnit->Trigger();
 }
 
 void SoundGenerator::WriteTriggerRegister(u8 value)
 {
 	if(value & 0x40)
-		EnableLengthCounter();
+		m_lengthUnit->Enable();
 	else
-		DisableLengthCounter();
+		m_lengthUnit->Disable();
 
 	if(value & 0x80)
 		Trigger();
-}
-
-
-void SoundGenerator::EnableLengthCounter()
-{
-	int frameSequencerPosition = m_machine->GetSound()->GetFrameSequencerPosition();
-
-	if(frameSequencerPosition == 0 || frameSequencerPosition == 2 ||
-		frameSequencerPosition == 4 || frameSequencerPosition == 6)
-	{
-		if(m_lengthCounterEnabled == false && m_lengthCounterValue > 0)
-		{
-			m_lengthCounterValue--;
-
-			if(m_lengthCounterValue == 0)
-				m_channelController->DisableChannel();
-		}
-	}
-
-	m_lengthCounterEnabled = true;
-}
-
-void SoundGenerator::DisableLengthCounter()
-{
-	m_lengthCounterEnabled = false;
-}
-
-void SoundGenerator::WriteLengthRegister(u8 value)
-{
-	m_lengthCounterValue = m_lengthCounterMaxValue - value;
 }
 
 

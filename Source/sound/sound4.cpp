@@ -3,12 +3,14 @@
 #include "../common/machine.h"
 #include "../memory/memory.h"
 
+#include "lengthUnit.h"
+
 
 Sound4::Sound4()
 {
 	m_machine = NULL;
 
-	m_lengthCounterMaxValue = 64;
+	m_lengthUnit->SetMaxValue(64);
 }
 
 
@@ -74,7 +76,7 @@ void Sound4::SetNR41(u8 value)
 	//DMG allows writing this even when the power is off
 	//todo: CGB does not
 
-	WriteLengthRegister(value & 0x3f);
+	m_lengthUnit->WriteLengthRegister(value & 0x3f);
 
 	m_nr41 = 0xff;
 }
