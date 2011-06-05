@@ -72,6 +72,17 @@ void SoundGenerator::Trigger()
 		m_lengthCounterValue = m_lengthCounterMaxValue;
 }
 
+void SoundGenerator::WriteTriggerRegister(u8 value)
+{
+	if(value & 0x40)
+		EnableLengthCounter();
+	else
+		DisableLengthCounter();
+
+	if(value & 0x80)
+		Trigger();
+}
+
 
 void SoundGenerator::EnableLengthCounter()
 {

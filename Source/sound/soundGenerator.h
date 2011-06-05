@@ -32,6 +32,7 @@ protected:
 	//WriteDutyRegister?  Maybe put that in Sound2 and have Sound1 inherit from Sound2?
 
 	virtual void Trigger();
+	virtual void WriteTriggerRegister(u8 value);
 
 	Machine* m_machine;
 	bool m_hasPower;
