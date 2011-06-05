@@ -535,20 +535,20 @@ void Display::RenderSprites(int screenY)
 		m_spriteHasPriority[i] = false;
 
 	//Sprites can be 8x8 or 8x16
-	u8 spriteWidth = 8;
-	u8 spriteHeight = 8;
+	int spriteWidth = 8;
+	int spriteHeight = 8;
 	if(m_lcdControl & LCDC_SpriteSize)
 		spriteHeight = 16;
 
-	u8 spriteTileSize = 16;
+	int spriteTileSize = 16;
 
 	//Iterate over all sprite entries in the table
 	for(int i=0;i<40;i++)
 	{
 		u16 spriteDataAddress = 0xfe00 + (i*4);
 
-		u8 spriteY = m_oamCache[spriteDataAddress - m_oamOffset];
-		u8 spriteX = m_oamCache[spriteDataAddress+1 - m_oamOffset];
+		int spriteY = m_oamCache[spriteDataAddress - m_oamOffset];
+		int spriteX = m_oamCache[spriteDataAddress+1 - m_oamOffset];
 
 		//Sprite coordinates are offset, so sprite[8,16] = screen[0,0].
 		spriteX -= 8;
@@ -563,15 +563,15 @@ void Display::RenderSprites(int screenY)
 			continue;
 
 		//It's relevant, so get the rest of the data
-		u8 spriteTileValue = m_oamCache[spriteDataAddress+2 - m_oamOffset];
-		u8 spriteFlags = m_oamCache[spriteDataAddress+3 - m_oamOffset];
+		int spriteTileValue = m_oamCache[spriteDataAddress+2 - m_oamOffset];
+		int spriteFlags = m_oamCache[spriteDataAddress+3 - m_oamOffset];
 
 		//In 8x16 mode, the least significant bit of the tile value is ignored
 		if(m_lcdControl & LCDC_SpriteSize)
 			spriteTileValue &= ~(0x01);
 
 		//Figure out which line we need
-		u8 targetTileLine = screenY - spriteY;
+		int targetTileLine = screenY - spriteY;
 		if(spriteFlags & (1<<6))	///<Flip Y if set
 			targetTileLine = (spriteHeight-1) - targetTileLine;
 
