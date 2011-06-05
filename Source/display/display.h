@@ -107,7 +107,7 @@ private:
 	ScreenBuffer* m_stableScreenBuffer;	///<The screen buffer ready to be displayed on the pc
 	void* m_screenBufferLock;
 
-	int m_lastPixelRenderedX;	///<X-position of the last pixel rendered during this scanline
+	int m_nextPixelToRenderX;	///<X-position of the last pixel rendered during this scanline
 	int m_ticksSpentThisScanline;	///<How many ticks have passed during this scanline.  So we know how many pixels to render.
 	bool m_spriteHasPriority[160];	///<Sprites are rendered before the background and window, so we need to keep track of whether they should be on top.
 
