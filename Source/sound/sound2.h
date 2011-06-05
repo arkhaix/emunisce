@@ -12,6 +12,7 @@ class Sound2 : public SoundGenerator
 public:
 
 	Sound2();
+	~Sound2();
 
 
 	//Sound component
@@ -26,6 +27,9 @@ public:
 	virtual void PowerOn();
 
 	virtual void Run(int ticks);
+
+	void TickEnvelope();
+
 	virtual float GetSample();
 
 

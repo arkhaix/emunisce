@@ -3,6 +3,7 @@
 #include "../common/machine.h"
 #include "../memory/memory.h"
 
+#include "envelopeUnit.h"
 #include "lengthUnit.h"
 
 
@@ -10,7 +11,14 @@ Sound1::Sound1()
 {
 	m_machine = NULL;
 
+	m_envelopeUnit = new EnvelopeUnit(this);
+
 	m_lengthUnit->SetMaxValue(64);
+}
+
+Sound1::~Sound1()
+{
+	delete m_envelopeUnit;
 }
 
 
@@ -64,6 +72,11 @@ void Sound1::Run(int ticks)
 }
 
 
+void Sound1::TickEnvelope()
+{
+	m_envelopeUnit->Tick();
+}
+
 void Sound1::TickSweep()
 {
 }
@@ -106,7 +119,7 @@ void Sound1::SetNR12(u8 value)
 	if(m_hasPower == false)
 		return;
 
-	WriteEnvelopeRegister(value);
+	m_envelopeUnit->WriteEnvelopeRegister(value);
 
 	m_nr12 = value;
 }

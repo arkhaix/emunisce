@@ -59,6 +59,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="channelController.h" />
+    <ClInclude Include="envelopeUnit.h" />
     <ClInclude Include="lengthUnit.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="sound1.h" />
@@ -69,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="channelController.cpp" />
+    <ClCompile Include="envelopeUnit.cpp" />
     <ClCompile Include="lengthUnit.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="sound1.cpp" />

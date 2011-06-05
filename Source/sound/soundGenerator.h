@@ -23,14 +23,10 @@ public:
 	virtual void Run(int ticks);
 
 	virtual void TickLength();
-	//TickDuty?  Maybe put that in Sound2 and have Sound1 inherit from Sound2?
-	virtual void TickEnvelope();
 
 	virtual float GetSample();
 
 protected:
-
-	//WriteDutyRegister?  Maybe put that in Sound2 and have Sound1 inherit from Sound2?
 
 	virtual void Trigger();
 	virtual void WriteTriggerRegister(u8 value);
@@ -47,16 +43,16 @@ protected:
 	LengthUnit* m_lengthUnit;
 
 
+	//Sweep
+
+	//Duty
+
 	//Envelope
 
-	void WriteEnvelopeRegister(u8 value);
+	friend class EnvelopeUnit;
+	EnvelopeUnit* m_envelopeUnit;
 
-	bool m_envelopeEnabled;
-	bool m_envelopeVolumeIncreasing;
-	int m_envelopeInitialVolume;
-	int m_envelopeVolume;
-	int m_envelopeTimer;
-	int m_envelopePeriod;
+	//Noise
 };
 
 #endif
