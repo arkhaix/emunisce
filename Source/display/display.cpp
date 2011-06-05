@@ -183,6 +183,18 @@ void Display::SetLcdControl(u8 value)
 	{
 		if(m_currentState == DisplayState::VBlank)
 		{
+			//Clear caches
+			for(int y=0;y<144;y++)
+			{
+				for(int x=0;x<160;x++)
+				{
+					m_frameBackgroundData.SetPixel(x, y, PIXEL_NOT_CACHED);
+					m_frameWindowData.SetPixel(x, y, PIXEL_NOT_CACHED);
+					m_frameSpriteData.SetPixel(x, y, PIXEL_NOT_CACHED);
+					m_activeScreenBuffer->SetPixel(x, y, 0);
+				}
+			}
+
 			//Behaves as though it's in h-blank while disabled
 			Begin_HBlank();
 			m_currentScanline = 0;
@@ -299,9 +311,6 @@ void Display::Begin_SpritesLocked()
 		interrupts |= IF_LCDC;
 		m_memory->Write8(REG_IF, interrupts);
 	}
-
-	//Sprites are locked, so we can render them
-	RenderSprites(m_currentScanline);
 }
 
 void Display::Begin_VideoRamLocked()
@@ -430,6 +439,9 @@ void Display::RenderBackgroundPixel(int screenX, int screenY)
 
 void Display::RenderSpritePixel(int screenX, int screenY)
 {
+	if((m_lcdControl & LCDC_Sprites) == 0)
+		return;
+
 	//Check priority
 	if(m_spriteHasPriority[screenX] == false && m_activeScreenBuffer->GetPixel(screenX, screenY) != 0)
 		return;
@@ -518,9 +530,6 @@ void Display::RenderWindowPixel(int screenX, int screenY)
 
 void Display::RenderSprites(int screenY)
 {
-	if((m_lcdControl & LCDC_Sprites) == 0)
-		return;
-
 	//Default to no priority
 	for(int i=0;i<160;i++)
 		m_spriteHasPriority[i] = false;
@@ -592,12 +601,6 @@ void Display::RenderSprites(int screenY)
 				continue;
 			}
 
-			//Is it visible?  (priority vs background and window)
-			if(spriteFlags & (1<<7))	///<Lower priority if set, higher priority otherwise
-				m_spriteHasPriority[cacheScreenX] = false;
-			else
-				m_spriteHasPriority[cacheScreenX] = true;
-
 			//Determine the bit offset for the X value
 			int bitOffset = tileX;
 			if(spriteFlags & (1<<5))	///<Flip X if set
@@ -624,8 +627,14 @@ void Display::RenderSprites(int screenY)
 				if(spriteFlags & (1<<4))	///<Use sprite palette 1 if set
 					pixelPaletteValue = (m_spritePalette1 & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
 
-				//Done
+				//Write the pixel
 				m_frameSpriteData.SetPixel(cacheScreenX, cacheScreenY, pixelPaletteValue);
+
+				//Save the priority
+				if(spriteFlags & (1<<7))	///<Lower priority if set, higher priority otherwise
+					m_spriteHasPriority[cacheScreenX] = false;
+				else
+					m_spriteHasPriority[cacheScreenX] = true;
 			}
 
 			cacheScreenX++;
@@ -637,38 +646,43 @@ void Display::RenderSprites(int screenY)
 void Display::Render(int ticks)
 {
 	//Finish rendering the line if necessary
-	if( (m_currentState == DisplayState::HBlank || m_currentState == DisplayState::VBlank) && m_ticksSpentThisScanline != 0)
+	if(m_currentState == DisplayState::HBlank && m_ticksSpentThisScanline != 0)
 	{
-		for(int pixelX = m_lastPixelRenderedX; pixelX < 160; pixelX++)
+		for(; m_nextPixelToRenderX < 160; m_nextPixelToRenderX++)
 		{
-			RenderBackgroundPixel(pixelX, m_currentScanline);
-			RenderWindowPixel(pixelX, m_currentScanline);
-			RenderSpritePixel(pixelX, m_currentScanline);
+			RenderBackgroundPixel(m_nextPixelToRenderX, m_currentScanline);
+			RenderWindowPixel(m_nextPixelToRenderX, m_currentScanline);
+			RenderSpritePixel(m_nextPixelToRenderX, m_currentScanline);
 		}
 
 		m_ticksSpentThisScanline = 0;
-		m_lastPixelRenderedX = -1;
+		m_nextPixelToRenderX = 0;
 	}
 
-	//Nothing to render during h-blank or v-blank
-	if(m_currentState != DisplayState::SpritesLocked && m_currentState != DisplayState::VideoRamLocked)
+	//Rendering only occurs during mode 11
+	if(m_currentState != DisplayState::VideoRamLocked)
+		return;
+
+	if(m_stateTicksRemaining > 160)
 		return;
 
 	//Figure out how many pixels we should have rendered by now
-	static const float TicksPerPixel = 1.575f;	///< (80 (Mode 10) + 172 (Mode 11)) ticks / 160 pixels
+	static const float TicksPerPixel = 1.f;	///< Render during 160 of the mode 11 ticks (172).
 	m_ticksSpentThisScanline += ticks;
 	int numPixelsRendered = (int)( (float)m_ticksSpentThisScanline / TicksPerPixel );
-	if(numPixelsRendered < 0)
-		numPixelsRendered = 0;
 	if(numPixelsRendered > 160)
 		numPixelsRendered = 160;
 
+	//Cache the sprites if they haven't been cached yet
+	if(m_nextPixelToRenderX == 0)
+		RenderSprites(m_currentScanline);
+
 	//Render them
-	for(; m_lastPixelRenderedX < numPixelsRendered; m_lastPixelRenderedX++)
+	for(; m_nextPixelToRenderX < numPixelsRendered; m_nextPixelToRenderX++)
 	{
-		RenderBackgroundPixel(m_lastPixelRenderedX, m_currentScanline);
-		RenderWindowPixel(m_lastPixelRenderedX, m_currentScanline);
-		RenderSpritePixel(m_lastPixelRenderedX, m_currentScanline);
+		RenderBackgroundPixel(m_nextPixelToRenderX, m_currentScanline);
+		RenderWindowPixel(m_nextPixelToRenderX, m_currentScanline);
+		RenderSpritePixel(m_nextPixelToRenderX, m_currentScanline);
 	}
 }
 
