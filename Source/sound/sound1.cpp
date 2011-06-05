@@ -7,12 +7,14 @@
 Sound1::Sound1()
 {
 	m_machine = NULL;
+
+	m_lengthCounterMaxValue = 64;
 }
 
 
 //Sound component
 
-void Sound1::Initialize()
+void Sound1::Initialize(ChannelDisabler* channelDisabler)
 {
 	SetNR10(0x80);
 	SetNR11(0x3f);
@@ -20,7 +22,7 @@ void Sound1::Initialize()
 	SetNR13(0xff);
 	SetNR14(0xbf);
 
-	SoundGenerator::Initialize();
+	SoundGenerator::Initialize(channelDisabler);
 }
 
 void Sound1::SetMachine(Machine* machine)

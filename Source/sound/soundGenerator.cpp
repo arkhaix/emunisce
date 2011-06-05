@@ -1,5 +1,7 @@
 #include "soundGenerator.h"
 
+#include "channelDisabler.h"
+
 
 SoundGenerator::SoundGenerator()
 {
@@ -7,8 +9,9 @@ SoundGenerator::SoundGenerator()
 }
 
 
-void SoundGenerator::Initialize()
+void SoundGenerator::Initialize(ChannelDisabler* channelDisabler)
 {
+	m_channelDisabler = channelDisabler;
 }
 
 void SoundGenerator::PowerOff()

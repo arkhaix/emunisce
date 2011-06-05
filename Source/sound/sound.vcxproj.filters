@@ -29,6 +29,9 @@
     <ClInclude Include="soundGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="channelDisabler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sound.cpp">
@@ -47,6 +50,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="soundGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="channelDisabler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

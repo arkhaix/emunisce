@@ -58,6 +58,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="channelDisabler.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="sound1.h" />
     <ClInclude Include="sound2.h" />
@@ -66,6 +67,7 @@
     <ClInclude Include="soundGenerator.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="channelDisabler.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="sound1.cpp" />
     <ClCompile Include="sound2.cpp" />
