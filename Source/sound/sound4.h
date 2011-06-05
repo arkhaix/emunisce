@@ -2,10 +2,12 @@
 #define SOUND4_H
 
 #include "../common/types.h"
-
 class Machine;
 
-class Sound4
+#include "soundGenerator.h"
+
+
+class Sound4 : public SoundGenerator
 {
 public:
 
@@ -14,17 +16,17 @@ public:
 
 	//Sound component
 
-	void Initialize();
+	virtual void Initialize();
 	void SetMachine(Machine* machine);
 
 
 	//Sound generation
 
-	void PowerOff();
-	void PowerOn();
+	virtual void PowerOff();
+	virtual void PowerOn();
 
-	void Run(int ticks);
-	float GetSample();
+	virtual void Run(int ticks);
+	virtual float GetSample();
 
 
 	//Registers
