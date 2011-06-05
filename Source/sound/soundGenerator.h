@@ -36,6 +36,7 @@ protected:
 
 	Machine* m_machine;
 	bool m_hasPower;
+	bool m_dacEnabled;
 	ChannelController* m_channelController;
 
 
@@ -53,6 +54,13 @@ protected:
 	//Envelope
 
 	void WriteEnvelopeRegister(u8 value);
+
+	bool m_envelopeEnabled;
+	bool m_envelopeVolumeIncreasing;
+	int m_envelopeInitialVolume;
+	int m_envelopeVolume;
+	int m_envelopeTimer;
+	int m_envelopePeriod;
 };
 
 #endif

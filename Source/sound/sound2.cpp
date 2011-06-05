@@ -89,6 +89,8 @@ void Sound2::SetNR22(u8 value)
 	if(m_hasPower == false)
 		return;
 
+	WriteEnvelopeRegister(value);
+
 	m_nr22 = value;
 }
 

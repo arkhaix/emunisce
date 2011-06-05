@@ -3,6 +3,8 @@
 #include "../common/machine.h"
 #include "../memory/memory.h"
 
+#include "channelController.h"
+
 
 Sound3::Sound3()
 {
@@ -74,6 +76,17 @@ void Sound3::SetNR30(u8 value)
 {
 	if(m_hasPower == false)
 		return;
+
+	//Disable the DAC?
+	if((value & 0x80) == 0)
+	{
+		m_channelController->DisableChannel();
+		m_dacEnabled = false;
+	}
+	else
+	{
+		m_dacEnabled = true;
+	}
 
 	m_nr30 = value & 0x80;
 	m_nr30 |= 0x7f;

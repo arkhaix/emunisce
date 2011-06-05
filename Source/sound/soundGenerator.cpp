@@ -55,6 +55,25 @@ void SoundGenerator::TickLength()
 
 void SoundGenerator::TickEnvelope()
 {
+	if(m_envelopeVolume == 0 || m_envelopeVolume == 15)
+		return;
+
+	if(m_envelopeEnabled == false)
+		return;
+
+	m_envelopeTimer--;
+	while(m_envelopeTimer <= 0)
+	{
+		m_envelopeTimer += m_envelopePeriod;
+
+		if(m_envelopeVolumeIncreasing == true)
+			m_envelopeVolume++;
+		else
+			m_envelopeVolume--;
+
+		if(m_envelopeVolume == 0 || m_envelopeVolume == 15)
+			m_envelopeEnabled = false;
+	}
 }
 
 
@@ -66,7 +85,10 @@ float SoundGenerator::GetSample()
 
 void SoundGenerator::Trigger()
 {
-	m_channelController->EnableChannel();
+	if(m_dacEnabled == true)
+	{
+		m_channelController->EnableChannel();
+	}
 
 	if(m_lengthCounterValue == 0)
 		m_lengthCounterValue = m_lengthCounterMaxValue;
@@ -127,4 +149,28 @@ void SoundGenerator::WriteLengthRegister(u8 value)
 
 void SoundGenerator::WriteEnvelopeRegister(u8 value)
 {
+	m_envelopePeriod = value & 0x07;
+
+	if(m_envelopePeriod == 0)
+		m_envelopeEnabled = false;
+	else
+		m_envelopeEnabled = true;
+
+	if(value & 0x08)
+		m_envelopeVolumeIncreasing = true;
+	else
+		m_envelopeVolumeIncreasing = false;
+
+	m_envelopeInitialVolume = (value & 0xf0) >> 4;
+
+	//Disable the DAC?
+	if(m_envelopeInitialVolume == 0 && m_envelopeVolumeIncreasing == false)
+	{
+		m_channelController->DisableChannel();
+		m_dacEnabled = false;
+	}
+	else
+	{
+		m_dacEnabled = true;
+	}
 }

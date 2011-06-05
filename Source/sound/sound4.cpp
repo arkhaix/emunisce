@@ -84,6 +84,8 @@ void Sound4::SetNR42(u8 value)
 	if(m_hasPower == false)
 		return;
 
+	WriteEnvelopeRegister(value);
+
 	m_nr42 = value;
 }
 
