@@ -2,6 +2,7 @@
 #define SOUNDGENERATOR_H
 
 #include "../common/types.h"
+class Machine;
 
 class ChannelController;
 
@@ -13,6 +14,7 @@ public:
 	SoundGenerator();
 
 	virtual void Initialize(ChannelController* channelController);
+	virtual void SetMachine(Machine* machine);
 
 	virtual void PowerOff();
 	virtual void PowerOn();
@@ -31,6 +33,7 @@ protected:
 
 	virtual void Trigger();
 
+	Machine* m_machine;
 	bool m_hasPower;
 	ChannelController* m_channelController;
 

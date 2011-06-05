@@ -27,7 +27,8 @@ void Sound2::Initialize(ChannelController* channelController)
 
 void Sound2::SetMachine(Machine* machine)
 {
-	m_machine = machine;
+	SoundGenerator::SetMachine(machine);
+
 	Memory* memory = machine->GetMemory();
 
 	memory->SetRegisterLocation(0x15, &m_nr20, false);
