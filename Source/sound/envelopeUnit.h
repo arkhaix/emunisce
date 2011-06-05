@@ -26,8 +26,8 @@ private:
 	int m_initialVolume;
 	int m_currentVolume;
 	
-	int m_timer;
-	int m_period;
+	int m_timerValue;
+	int m_timerPeriod;
 };
 
 #endif
