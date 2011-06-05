@@ -50,6 +50,10 @@ void Sound::Initialize()
 
 	m_audioBufferCount = 0;
 
+	m_frameSequencerPeriod = 8192;	///<8192 = 512Hz = (4194304 ticks per second / 512Hz).
+	m_frameSequencerTimer = m_frameSequencerPeriod;
+	m_frameSequencerPosition = 0;
+
 	m_inaccessible = 0xff;
 
 	SetNR50(0x00);
@@ -94,6 +98,43 @@ void Sound::SetMachine(Machine* machine)
 
 void Sound::Run(int ticks)
 {
+	//Update the frame sequencer
+
+	m_frameSequencerTimer -= ticks;
+	while(m_frameSequencerTimer <= 0)
+	{
+		m_frameSequencerTimer += m_frameSequencerPeriod;
+
+		m_frameSequencerPosition++;
+		if(m_frameSequencerPosition > 7)
+			m_frameSequencerPosition = 0;
+
+		if(m_frameSequencerPosition == 0 || m_frameSequencerPosition == 2 || 
+			m_frameSequencerPosition == 4 || m_frameSequencerPosition == 6)
+		{
+			m_sound1->TickLength();
+			m_sound2->TickLength();
+			m_sound3->TickLength();
+			m_sound4->TickLength();
+		}
+
+		if(m_frameSequencerPosition == 2 || m_frameSequencerPosition == 6)
+		{
+			m_sound1->TickSweep();
+		}
+
+		if(m_frameSequencerPosition == 7)
+		{
+			m_sound1->TickEnvelope();
+			m_sound2->TickEnvelope();
+			//3 has no envelope
+			m_sound4->TickEnvelope();
+		}
+	}
+
+
+	//Run the components
+
 	m_sound1->Run(ticks);
 	m_sound2->Run(ticks);
 	m_sound3->Run(ticks);

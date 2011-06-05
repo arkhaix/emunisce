@@ -26,6 +26,9 @@ public:
 	virtual void PowerOn();
 
 	virtual void Run(int ticks);
+
+	virtual void TickSweep();
+
 	virtual float GetSample();
 
 
