@@ -3,6 +3,7 @@
 #include "../common/machine.h"
 #include "../memory/memory.h"
 
+#include "dutyUnit.h"
 #include "envelopeUnit.h"
 #include "lengthUnit.h"
 
@@ -11,14 +12,18 @@ Sound2::Sound2()
 {
 	m_machine = NULL;
 
+	m_dutyUnit = new DutyUnit();
 	m_envelopeUnit = new EnvelopeUnit(this);
 
 	m_lengthUnit->SetMaxValue(64);
+
+	m_frequency = 0;
 }
 
 Sound2::~Sound2()
 {
 	delete m_envelopeUnit;
+	delete m_dutyUnit;
 }
 
 
@@ -69,6 +74,7 @@ void Sound2::PowerOn()
 
 void Sound2::Run(int ticks)
 {
+	m_dutyUnit->Run(ticks);
 }
 
 
@@ -80,7 +86,11 @@ void Sound2::TickEnvelope()
 
 float Sound2::GetSample()
 {
-	return 0.f;
+	float sample = m_dutyUnit->GetSample();
+
+	sample *= m_envelopeUnit->GetCurrentVolume();
+
+	return sample;
 }
 
 
@@ -93,6 +103,7 @@ void Sound2::SetNR21(u8 value)
 
 	if(m_hasPower == true)
 	{
+		m_dutyUnit->WriteDutyRegister(value & 0xc0);
 		m_nr21 = value & 0xc0;
 	}
 
@@ -116,6 +127,10 @@ void Sound2::SetNR23(u8 value)
 	if(m_hasPower == false)
 		return;
 
+	m_frequency &= ~(0xff);
+	m_frequency |= value;
+	m_dutyUnit->SetFrequency(m_frequency);
+
 	m_nr23 = 0xff;
 }
 
@@ -124,8 +139,20 @@ void Sound2::SetNR24(u8 value)
 	if(m_hasPower == false)
 		return;
 
+	m_frequency &= ~(0x700);
+	m_frequency |= ((value & 0x07) << 8);
+	m_dutyUnit->SetFrequency(m_frequency);
+
 	WriteTriggerRegister(value);
 
 	m_nr24 = value & 0x40;
 	m_nr24 |= 0xbf;
+}
+
+
+void Sound2::Trigger()
+{
+	SoundGenerator::Trigger();
+	m_dutyUnit->Trigger();
+	m_envelopeUnit->Trigger();
 }
