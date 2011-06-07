@@ -16,6 +16,8 @@ public:
 
 	void WriteEnvelopeRegister(u8 value);
 
+	float GetCurrentVolume();
+
 
 private:
 

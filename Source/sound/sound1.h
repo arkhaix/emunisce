@@ -50,6 +50,13 @@ private:
 
 	int m_frequency;	///<11-bit frequency
 
+	int m_frequencyTimerValue;
+	int m_frequencyTimerPeriod;
+
+	int m_dutyPosition;
+	int m_dutyMode;
+	int m_dutyTable[4][8];
+
 	virtual void Trigger();
 	void TriggerSweep();
 	void WriteSweepRegister(u8 value);

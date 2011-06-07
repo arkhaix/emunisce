@@ -59,6 +59,8 @@ Display::Display()
 			m_frameSpriteData.SetPixel(x, y, PIXEL_NOT_CACHED);
 		}
 	}
+
+	m_nextPixelToRenderX = 0;
 }
 
 Display::~Display()
