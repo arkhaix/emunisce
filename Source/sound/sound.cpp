@@ -60,8 +60,8 @@ void Sound::Initialize()
 	m_audioBufferCount = 0;
 
 	m_frameSequencerPeriod = 8192;	///<8192 = 512Hz = (4194304 ticks per second / 512Hz).
-	m_frameSequencerTimer = m_frameSequencerPeriod;
-	m_frameSequencerPosition = -1;	///<auto-increments, and we want to start at 0
+	m_frameSequencerTimer = 0;//m_frameSequencerPeriod;
+	m_frameSequencerPosition = 7;	///<auto-increments, and we want to start at 0
 
 	m_inaccessible = 0xff;
 
@@ -138,7 +138,6 @@ void Sound::Run(int ticks)
 			{
 				m_sound1->TickEnvelope();
 				m_sound2->TickEnvelope();
-				//3 has no envelope
 				m_sound4->TickEnvelope();
 			}
 
@@ -350,7 +349,7 @@ void Sound::SetNR52(u8 value)
 			m_sound3->PowerOff();
 			m_sound4->PowerOff();
 
-			m_frameSequencerPosition = -1;
+			m_frameSequencerPosition = 7;
 		}
 
 		SetNR50(0);

@@ -33,6 +33,12 @@ void EnvelopeUnit::Tick()
 	}
 }
 
+void EnvelopeUnit::Trigger()
+{
+	m_timerValue = m_timerPeriod;
+	m_currentVolume = m_initialVolume;
+}
+
 
 void EnvelopeUnit::WriteEnvelopeRegister(u8 value)
 {
