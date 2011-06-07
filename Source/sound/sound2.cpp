@@ -74,6 +74,8 @@ void Sound2::PowerOn()
 
 void Sound2::Run(int ticks)
 {
+	SoundGenerator::Run(ticks);
+
 	m_dutyUnit->Run(ticks);
 }
 

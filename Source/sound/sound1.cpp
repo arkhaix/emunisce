@@ -77,10 +77,10 @@ void Sound1::PowerOn()
 
 void Sound1::Run(int ticks)
 {
+	SoundGenerator::Run(ticks);
+
 	m_dutyUnit->SetFrequency(m_frequency);
 	m_dutyUnit->Run(ticks);
-
-	SoundGenerator::Run(ticks);
 }
 
 

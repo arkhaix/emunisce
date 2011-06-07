@@ -40,6 +40,20 @@ public:
 
 private:
 
+	virtual void Trigger();
+
+
+	//Sound generation
+
+	int m_frequency;
+	int m_outputLevelShift;
+
+	int m_waveTimerPeriod;
+	int m_waveTimerValue;
+
+	int m_waveSamplePosition;
+
+
 	//Registers
 
 	u8 m_nr30;	///<ff1a
