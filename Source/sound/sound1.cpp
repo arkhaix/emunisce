@@ -34,6 +34,7 @@ void Sound1::Initialize(ChannelController* channelController)
 
 	m_frequency = 0;
 	m_frequencyShadow = 0;
+	m_hasPerformedDecreasingCalculation = false;
 
 	SetNR10(0x80);
 	SetNR11(0x3f);
@@ -93,16 +94,17 @@ void Sound1::TickSweep()
 	if(m_sweepEnabled == false)
 		return;
 
-	if(m_sweepTimerPeriod == 0)
-		return;
-
 	m_sweepTimerValue--;
 	if(m_sweepTimerValue > 0)
 		return;
 
-	m_sweepTimerValue += m_sweepTimerPeriod;
+	if(m_sweepTimerPeriod == 0)
+		m_sweepTimerValue += 8;
+	else
+		m_sweepTimerValue += m_sweepTimerPeriod;
 
-	m_frequencyShadow = m_frequency;
+	if(m_sweepTimerPeriod == 0)
+		return;
 
 	int newFrequency = CalculateFrequency();
 	if(newFrequency > 2047)
@@ -110,6 +112,9 @@ void Sound1::TickSweep()
 		m_channelController->DisableChannel();
 		return;
 	}
+
+	if(m_sweepIncreasing == false)
+		m_hasPerformedDecreasingCalculation = true;
 
 	if(m_sweepShift == 0)
 		return;
@@ -214,9 +219,13 @@ void Sound1::Trigger()
 
 void Sound1::TriggerSweep()
 {
+	m_hasPerformedDecreasingCalculation = false;
+
 	m_frequencyShadow = m_frequency;
 
 	m_sweepTimerValue = m_sweepTimerPeriod;
+	if(m_sweepTimerPeriod == 0)
+		m_sweepTimerValue = 8;
 
 	if(m_sweepTimerPeriod == 0 && m_sweepShift == 0)
 		m_sweepEnabled = false;
@@ -230,6 +239,9 @@ void Sound1::TriggerSweep()
 		{
 			m_channelController->DisableChannel();
 		}
+
+		if(m_sweepIncreasing == false)
+			m_hasPerformedDecreasingCalculation = true;
 	}
 }
 
@@ -240,7 +252,14 @@ void Sound1::WriteSweepRegister(u8 value)
 	if(value & 0x08)
 		m_sweepIncreasing = false;
 	else
+	{
 		m_sweepIncreasing = true;
+
+		if(m_hasPerformedDecreasingCalculation)
+		{
+			m_channelController->DisableChannel();
+		}
+	}
 
 	m_sweepTimerPeriod = (value & 0x70) >> 4;
 }
