@@ -160,9 +160,24 @@ void Sound::Run(int ticks)
 		m_ticksUntilNextSample += m_ticksPerSample;
 
 		float sample = 0.f;
+		int numSources = 0;
 		
 		if(m_channelController[0]->IsChannelEnabled())
-			sample = m_sound1->GetSample();
+		{
+			sample += m_sound1->GetSample();
+			numSources++;
+		}
+
+		if(m_channelController[1]->IsChannelEnabled())
+		{
+			sample += m_sound2->GetSample();
+			numSources++;
+		}
+
+		if(numSources == 0)
+			numSources = 1;
+
+		sample /= (float)numSources;
 
 		sample *= MaxSample;
 		m_activeAudioBuffer->Samples[0][ m_nextSampleIndex ] = (SampleType)sample;

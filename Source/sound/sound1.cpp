@@ -207,6 +207,7 @@ void Sound1::SetNR14(u8 value)
 void Sound1::Trigger()
 {
 	SoundGenerator::Trigger();
+	m_dutyUnit->Trigger();
 	m_envelopeUnit->Trigger();
 	TriggerSweep();
 }

@@ -5,6 +5,7 @@
 class Machine;
 
 #include "soundGenerator.h"
+class DutyUnit;
 
 
 class Sound2 : public SoundGenerator
@@ -42,6 +43,15 @@ public:
 
 
 private:
+
+	virtual void Trigger();
+
+
+	//Sound generation
+
+	DutyUnit* m_dutyUnit;
+	int m_frequency;
+
 
 	//Registers
 
