@@ -96,7 +96,6 @@ private:
 
 	float m_ticksPerSample;
 	float m_ticksUntilNextSample;
-	int m_ticksSinceLastSample;
 
 	unsigned int m_nextSampleIndex;
 
@@ -120,7 +119,7 @@ private:
 	Sound3* m_sound3;
 	Sound4* m_sound4;
 
-	ChannelController* m_channelDisabler[4];
+	ChannelController* m_channelController[4];
 
 
 	//Registers

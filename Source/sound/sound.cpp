@@ -31,7 +31,7 @@ Sound::Sound()
 	m_hasPower = true;
 
 	for(int i=0;i<4;i++)
-		m_channelDisabler[i] = new ChannelController(m_nr52, i);
+		m_channelController[i] = new ChannelController(m_nr52, i);
 
 	m_sound1 = new Sound1();
 	m_sound2 = new Sound2();
@@ -47,7 +47,7 @@ Sound::~Sound()
 	delete m_sound4;
 
 	for(int i=0;i<4;i++)
-		delete m_channelDisabler[i];
+		delete m_channelController[i];
 
 	DeleteCriticalSection((LPCRITICAL_SECTION)m_audioBufferLock);
 	delete (LPCRITICAL_SECTION)m_audioBufferLock;
@@ -69,10 +69,10 @@ void Sound::Initialize()
 	SetNR51(0x00);
 	SetNR52(0xf0);
 
-	m_sound1->Initialize(m_channelDisabler[0]);
-	m_sound2->Initialize(m_channelDisabler[1]);
-	m_sound3->Initialize(m_channelDisabler[2]);
-	m_sound4->Initialize(m_channelDisabler[3]);
+	m_sound1->Initialize(m_channelController[0]);
+	m_sound2->Initialize(m_channelController[1]);
+	m_sound3->Initialize(m_channelController[2]);
+	m_sound4->Initialize(m_channelController[3]);
 }
 
 void Sound::SetMachine(Machine* machine)
@@ -82,7 +82,6 @@ void Sound::SetMachine(Machine* machine)
 
 	m_ticksPerSample = (float)machine->GetTicksPerSecond() / (float)SamplesPerSecond;
 	m_ticksUntilNextSample = m_ticksPerSample;
-	m_ticksSinceLastSample = 0;
 
 	m_memory->SetRegisterLocation(0x24, &m_nr50, false);
 	m_memory->SetRegisterLocation(0x25, &m_nr51, false);
@@ -151,6 +150,42 @@ void Sound::Run(int ticks)
 	m_sound2->Run(ticks);
 	m_sound3->Run(ticks);
 	m_sound4->Run(ticks);
+
+
+	//Get a sample
+
+	m_ticksUntilNextSample -= ticks;
+	while(m_ticksUntilNextSample < 0.f+1e-5)
+	{
+		m_ticksUntilNextSample += m_ticksPerSample;
+
+		float sample = 0.f;
+		
+		if(m_channelController[0]->IsChannelEnabled())
+			sample = m_sound1->GetSample();
+
+		sample *= MaxSample;
+		m_activeAudioBuffer->Samples[0][ m_nextSampleIndex ] = (SampleType)sample;
+		m_activeAudioBuffer->Samples[1][ m_nextSampleIndex ] = (SampleType)sample;
+
+
+		//Update the sample index
+
+		m_nextSampleIndex++;
+		if(m_nextSampleIndex >= AudioBuffer::BufferSizeSamples)
+		{
+			m_nextSampleIndex = 0;
+
+			//Swap buffers
+			EnterCriticalSection((LPCRITICAL_SECTION)m_audioBufferLock);
+				AudioBuffer* temp = m_stableAudioBuffer;
+				m_stableAudioBuffer = m_activeAudioBuffer;
+				m_activeAudioBuffer = temp;
+			LeaveCriticalSection((LPCRITICAL_SECTION)m_audioBufferLock);
+
+			m_audioBufferCount++;
+		}
+	}
 }
 
 AudioBuffer Sound::GetStableAudioBuffer()

@@ -32,6 +32,24 @@ void Sound1::Initialize(ChannelController* channelController)
 	m_frequency = 0;
 	m_frequencyShadow = 0;
 
+	m_frequencyTimerValue = 0;
+	m_frequencyTimerPeriod = 0;
+
+	m_dutyMode = 0;
+	m_dutyPosition = 0;
+
+	int dutyTable[4][8] =
+	{
+		{0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,1},
+		{1,0,0,0,0,1,1,1},
+		{0,1,1,1,1,1,1,0}
+	};
+
+	for(int i=0;i<4;i++)
+		for(int j=0;j<8;j++)
+			m_dutyTable[i][j] = dutyTable[i][j];
+
 	SetNR10(0x80);
 	SetNR11(0x3f);
 	SetNR12(0x00);
@@ -73,6 +91,22 @@ void Sound1::PowerOn()
 
 void Sound1::Run(int ticks)
 {
+	m_frequencyTimerPeriod = (2048 - m_frequency) * 4;
+
+	if(m_frequencyTimerPeriod > 0)
+	{
+		m_frequencyTimerValue -= ticks;
+		while(m_frequencyTimerValue <= 0)
+		{
+			m_frequencyTimerValue += m_frequencyTimerPeriod;
+
+			m_dutyPosition++;
+			if(m_dutyPosition > 7)
+				m_dutyPosition = 0;
+		}
+	}
+
+	SoundGenerator::Run(ticks);
 }
 
 
@@ -124,7 +158,13 @@ void Sound1::TickSweep()
 
 float Sound1::GetSample()
 {
-	return 0.f;
+	float sample = 1.f;
+	if(m_dutyTable[ m_dutyMode ][ m_dutyPosition ] == 0)
+		sample = -1.f;
+
+	sample *= m_envelopeUnit->GetCurrentVolume();
+
+	return sample;
 }
 
 
@@ -143,11 +183,12 @@ void Sound1::SetNR10(u8 value)
 
 void Sound1::SetNR11(u8 value)
 {
-	//DMG allows writing this even when the power is off
+	//DMG allows writing length even when the power is off
 	//todo: CGB does not
 
 	if(m_hasPower == true)
 	{
+		m_dutyMode = (value & 0xc0) >> 6;
 		m_nr11 = value & 0xc0;
 	}
 
@@ -182,8 +223,8 @@ void Sound1::SetNR14(u8 value)
 	if(m_hasPower == false)
 		return;
 
-	m_frequency &= ~(0x70);
-	m_frequency |= ((value & 0x07) << 4);
+	m_frequency &= ~(0x700);
+	m_frequency |= ((value & 0x07) << 8);
 
 	WriteTriggerRegister(value);
 
