@@ -5,6 +5,7 @@
 class Machine;
 
 #include "soundGenerator.h"
+class DutyUnit;
 
 
 class Sound1 : public SoundGenerator
@@ -48,14 +49,10 @@ private:
 
 	//Sound generation
 
+	DutyUnit* m_dutyUnit;
+
 	int m_frequency;	///<11-bit frequency
 
-	int m_frequencyTimerValue;
-	int m_frequencyTimerPeriod;
-
-	int m_dutyPosition;
-	int m_dutyMode;
-	int m_dutyTable[4][8];
 
 	virtual void Trigger();
 	void TriggerSweep();

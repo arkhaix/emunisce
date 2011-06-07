@@ -38,6 +38,9 @@
     <ClInclude Include="envelopeUnit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="dutyUnit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sound.cpp">
@@ -65,6 +68,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="envelopeUnit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dutyUnit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
