@@ -43,6 +43,20 @@ public:
 
 private:
 
+	virtual void Trigger();
+
+
+	//Sound generation
+
+	u16 m_lfsr;
+	int m_lfsrTapBit;
+	int m_lfsrFeedbackBit;
+	float m_lfsrOut;
+
+	int m_timerPeriod;
+	int m_timerValue;
+
+
 	//Registers
 
 	u8 m_nr40;	///<ff1f
