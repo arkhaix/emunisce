@@ -4,6 +4,7 @@
 #include "../memory/memory.h"
 
 #include "channelController.h"
+#include "dutyUnit.h"
 #include "envelopeUnit.h"
 #include "lengthUnit.h"
 
@@ -12,6 +13,7 @@ Sound1::Sound1()
 {
 	m_machine = NULL;
 
+	m_dutyUnit = new DutyUnit();
 	m_envelopeUnit = new EnvelopeUnit(this);
 
 	m_lengthUnit->SetMaxValue(64);
@@ -20,6 +22,7 @@ Sound1::Sound1()
 Sound1::~Sound1()
 {
 	delete m_envelopeUnit;
+	delete m_dutyUnit;
 }
 
 
@@ -31,24 +34,6 @@ void Sound1::Initialize(ChannelController* channelController)
 
 	m_frequency = 0;
 	m_frequencyShadow = 0;
-
-	m_frequencyTimerValue = 0;
-	m_frequencyTimerPeriod = 0;
-
-	m_dutyMode = 0;
-	m_dutyPosition = 0;
-
-	int dutyTable[4][8] =
-	{
-		{0,0,0,0,0,0,0,1},
-		{1,0,0,0,0,0,0,1},
-		{1,0,0,0,0,1,1,1},
-		{0,1,1,1,1,1,1,0}
-	};
-
-	for(int i=0;i<4;i++)
-		for(int j=0;j<8;j++)
-			m_dutyTable[i][j] = dutyTable[i][j];
 
 	SetNR10(0x80);
 	SetNR11(0x3f);
@@ -91,20 +76,8 @@ void Sound1::PowerOn()
 
 void Sound1::Run(int ticks)
 {
-	m_frequencyTimerPeriod = (2048 - m_frequency) * 4;
-
-	if(m_frequencyTimerPeriod > 0)
-	{
-		m_frequencyTimerValue -= ticks;
-		while(m_frequencyTimerValue <= 0)
-		{
-			m_frequencyTimerValue += m_frequencyTimerPeriod;
-
-			m_dutyPosition++;
-			if(m_dutyPosition > 7)
-				m_dutyPosition = 0;
-		}
-	}
+	m_dutyUnit->SetFrequency(m_frequency);
+	m_dutyUnit->Run(ticks);
 
 	SoundGenerator::Run(ticks);
 }
@@ -158,9 +131,7 @@ void Sound1::TickSweep()
 
 float Sound1::GetSample()
 {
-	float sample = 1.f;
-	if(m_dutyTable[ m_dutyMode ][ m_dutyPosition ] == 0)
-		sample = -1.f;
+	float sample = m_dutyUnit->GetSample();
 
 	sample *= m_envelopeUnit->GetCurrentVolume();
 
@@ -188,7 +159,7 @@ void Sound1::SetNR11(u8 value)
 
 	if(m_hasPower == true)
 	{
-		m_dutyMode = (value & 0xc0) >> 6;
+		m_dutyUnit->WriteDutyRegister(value & 0xc0);
 		m_nr11 = value & 0xc0;
 	}
 
