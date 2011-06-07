@@ -89,7 +89,14 @@ void Sound1::TickSweep()
 	if(m_sweepTimerPeriod == 0)
 		return;
 
+	m_sweepTimerValue--;
+	if(m_sweepTimerValue > 0)
+		return;
+
+	m_sweepTimerValue += m_sweepTimerPeriod;
+
 	m_frequencyShadow = m_frequency;
+
 	int newFrequency = CalculateFrequency();
 	if(newFrequency > 2047)
 	{
@@ -99,6 +106,9 @@ void Sound1::TickSweep()
 
 	if(m_sweepShift == 0)
 		return;
+
+	if(newFrequency < 0)
+		newFrequency = 0;
 
 	m_frequency = newFrequency;
 	m_frequencyShadow = newFrequency;
@@ -185,7 +195,7 @@ void Sound1::SetNR14(u8 value)
 void Sound1::Trigger()
 {
 	SoundGenerator::Trigger();
-
+	m_envelopeUnit->Trigger();
 	TriggerSweep();
 }
 
@@ -224,14 +234,14 @@ void Sound1::WriteSweepRegister(u8 value)
 
 int Sound1::CalculateFrequency()
 {
+	int delta = m_frequencyShadow >> m_sweepShift;
+
 	int result = m_frequencyShadow;
 
-	result >>= m_sweepShift;
-
-	if(m_sweepIncreasing == false)
-		result = -result;
-
-	result += m_frequencyShadow;
+	if(m_sweepIncreasing == true)
+		result += delta;
+	else
+		result -= delta;
 
 	return result;
 }

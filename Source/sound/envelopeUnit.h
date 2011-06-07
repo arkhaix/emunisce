@@ -12,6 +12,7 @@ public:
 	EnvelopeUnit(SoundGenerator* soundGenerator);
 
 	void Tick();
+	void Trigger();
 
 	void WriteEnvelopeRegister(u8 value);
 
