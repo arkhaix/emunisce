@@ -67,6 +67,7 @@ private:
 	bool m_sweepIncreasing;
 	int m_sweepTimerValue;
 	int m_sweepTimerPeriod;
+	bool m_hasPerformedDecreasingCalculation;
 
 
 
