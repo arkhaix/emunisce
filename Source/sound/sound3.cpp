@@ -12,6 +12,14 @@ Sound3::Sound3()
 	m_machine = NULL;
 
 	m_lengthUnit->SetMaxValue(256);
+
+	m_frequency = 0;
+	m_outputLevelShift = 0;
+
+	m_waveTimerPeriod = 0;
+	m_waveTimerValue = 0;
+
+	m_waveSamplePosition = 0;
 }
 
 
@@ -63,11 +71,48 @@ void Sound3::PowerOn()
 
 void Sound3::Run(int ticks)
 {
+	SoundGenerator::Run(ticks);
+
+	if(m_waveTimerPeriod == 0)
+		return;
+
+	m_waveTimerValue -= ticks;
+	while(m_waveTimerValue <= 0)
+	{
+		m_waveTimerValue += m_waveTimerPeriod;
+
+		m_waveSamplePosition++;
+		if(m_waveSamplePosition > 31)
+			m_waveSamplePosition = 0;
+	}
 }
 
 float Sound3::GetSample()
 {
-	return 0.f;
+	//Find the wave ram address corresponding to the current sample
+	int waveSampleIndex = m_waveSamplePosition / 2;
+	u16 waveSampleAddress = (u16)0xff30 + waveSampleIndex;
+
+	//Read the two samples in that byte
+	u8 waveSampleValue = m_machine->GetMemory()->Read8(waveSampleAddress);
+
+	//Samples at even positions are in the high nibble, samples at odd positions are in the low nibble
+	if(m_waveSamplePosition & 1)
+		waveSampleValue &= 0x0f;
+	else
+		waveSampleValue = (waveSampleValue & 0xf0) >> 4;
+
+	//Volume
+	waveSampleValue >>= m_outputLevelShift;
+
+	//Convert from [0x00,0x0f] integer range to [0,1] float range
+	float sample = (float)waveSampleValue / (float)0x0f;
+
+	//Convert from [0,1] range to [-1,+1] range
+	sample *= 2.f;
+	sample -= 1.f;
+
+	return sample;
 }
 
 
@@ -108,6 +153,12 @@ void Sound3::SetNR32(u8 value)
 	if(m_hasPower == false)
 		return;
 
+	m_outputLevelShift = (value & 0x60) >> 5;
+	if(m_outputLevelShift == 0)
+		m_outputLevelShift = 4;
+	else
+		m_outputLevelShift -= 1;
+
 	m_nr32 = value & 0x60;
 	m_nr32 |= 0x9f;
 }
@@ -117,6 +168,11 @@ void Sound3::SetNR33(u8 value)
 	if(m_hasPower == false)
 		return;
 
+	m_frequency &= ~(0xff);
+	m_frequency |= value;
+
+	m_waveTimerPeriod = (2048 - m_frequency) * 2;
+
 	m_nr33 = 0xff;
 }
 
@@ -125,8 +181,23 @@ void Sound3::SetNR34(u8 value)
 	if(m_hasPower == false)
 		return;
 
+	m_frequency &= ~(0x700);
+	m_frequency |= ((value & 0x07) << 8);
+
+	m_waveTimerPeriod = (2048 - m_frequency) * 2;
+
 	WriteTriggerRegister(value);
 
 	m_nr34 = value & 0x40;
 	m_nr34 |= 0xbf;
+}
+
+
+void Sound3::Trigger()
+{
+	m_waveTimerValue = m_waveTimerPeriod;
+
+	m_waveSamplePosition = 0;
+
+	SoundGenerator::Trigger();
 }

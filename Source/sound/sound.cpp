@@ -37,6 +37,11 @@ Sound::Sound()
 	m_sound2 = new Sound2();
 	m_sound3 = new Sound3();
 	m_sound4 = new Sound4();
+
+	m_soundGenerator[0] = m_sound1;
+	m_soundGenerator[1] = m_sound2;
+	m_soundGenerator[2] = m_sound3;
+	m_soundGenerator[3] = m_sound4;
 }
 
 Sound::~Sound()
@@ -162,16 +167,13 @@ void Sound::Run(int ticks)
 		float sample = 0.f;
 		int numSources = 0;
 		
-		if(m_channelController[0]->IsChannelEnabled())
+		for(int i=0;i<4;i++)
 		{
-			sample += m_sound1->GetSample();
-			numSources++;
-		}
-
-		if(m_channelController[1]->IsChannelEnabled())
-		{
-			sample += m_sound2->GetSample();
-			numSources++;
+			if(m_channelController[i]->IsChannelEnabled())
+			{
+				sample += m_soundGenerator[i]->GetSample();
+				numSources++;
+			}
 		}
 
 		if(numSources == 0)

@@ -3,6 +3,7 @@
 
 #include "../common/types.h"
 
+class SoundGenerator;
 class Sound1;
 class Sound2;
 class Sound3;
@@ -119,6 +120,7 @@ private:
 	Sound3* m_sound3;
 	Sound4* m_sound4;
 
+	SoundGenerator* m_soundGenerator[4];		///<Convenience alias for iterating over m_sound1-4
 	ChannelController* m_channelController[4];
 
 
