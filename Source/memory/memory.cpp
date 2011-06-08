@@ -203,6 +203,11 @@ void Memory::SetDmaStartLocation(u8 value)
 {
 	u16 startAddress = value * 0x0100;
 
+	//Some games use DMA during modes 10 and 11, and expect it to work.
+	//I'm not sure what really goes on yet in the hardware, but for now I'm allowing DMA to bypass the OAM lock.
+	bool preserveOamLock = m_oamLocked;
+	m_oamLocked = false;
+
 	for(int i=0;i<0xa0;i++)
 	{
 		u16 sourceAddress = startAddress + i;
@@ -211,6 +216,8 @@ void Memory::SetDmaStartLocation(u8 value)
 		u8 value = Read8(sourceAddress);
 		Write8(targetAddress, value);
 	}
+
+	m_oamLocked = preserveOamLock;
 }
 
 void Memory::DisableBootRom(u8 value)
