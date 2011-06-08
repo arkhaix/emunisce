@@ -81,6 +81,10 @@ public:
 
 private:
 	
+
+	void MixSamples(float inSamples[4], float (&outSamples)[2]);
+
+
 	//Component
 
 	Machine* m_machine;
@@ -111,6 +115,7 @@ private:
 	//Sound master
 
 	bool m_hasPower;
+	bool m_terminalOutputs[2][4];	///<2 output channels (stereo left/right), 4 component channels (Sound1,2,3,4)
 
 
 	//Sound generators

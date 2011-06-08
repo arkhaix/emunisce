@@ -61,6 +61,9 @@ void Sound4::SetMachine(Machine* machine)
 
 void Sound4::PowerOff()
 {
+	m_lfsr = 0xffff;
+	m_lfsrOut = 0.f;
+
 	SetNR41(0);
 	SetNR42(0);
 	SetNR43(0);

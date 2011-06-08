@@ -30,6 +30,10 @@ Sound::Sound()
 
 	m_hasPower = true;
 
+	for(int outputChannel=0;outputChannel<2;outputChannel++)
+		for(int generatorChannel=0;generatorChannel<4;generatorChannel++)
+			m_terminalOutputs[outputChannel][generatorChannel] = false;
+
 	for(int i=0;i<4;i++)
 		m_channelController[i] = new ChannelController(m_nr52, i);
 
@@ -164,26 +168,37 @@ void Sound::Run(int ticks)
 	{
 		m_ticksUntilNextSample += m_ticksPerSample;
 
-		float sample = 0.f;
-		int numSources = 0;
+
+		//Read the samples from the generators
+
+		float sourceSamples[4] = {0.f, 0.f, 0.f, 0.f};
 		
 		for(int i=0;i<4;i++)
 		{
-			if(m_channelController[i]->IsChannelEnabled())
-			{
-				sample += m_soundGenerator[i]->GetSample();
-				numSources++;
-			}
+			if(m_channelController[i]->IsChannelEnabled() == false)
+				continue;
+
+			sourceSamples[i] = m_soundGenerator[i]->GetSample();
 		}
 
-		if(numSources == 0)
-			numSources = 1;
 
-		sample /= (float)numSources;
+		//Mix the samples together
 
-		sample *= MaxSample;
-		m_activeAudioBuffer->Samples[0][ m_nextSampleIndex ] = (SampleType)sample;
-		m_activeAudioBuffer->Samples[1][ m_nextSampleIndex ] = (SampleType)sample;
+		float outputSamples[2] = {0.f, 0.f};	///<left and right channels
+
+		MixSamples(sourceSamples, outputSamples);
+
+
+		//Output the final samples
+
+		for(int outputChannel=0;outputChannel<2;outputChannel++)
+		{
+			//Expand it to the sample integer range ( [0,255] or [-32768,+32767] )
+			outputSamples[outputChannel] *= (float)MaxSample;
+
+			//Write it to the buffer
+			m_activeAudioBuffer->Samples[outputChannel][m_nextSampleIndex] = (SampleType)outputSamples[outputChannel];
+		}
 
 
 		//Update the sample index
@@ -373,6 +388,19 @@ void Sound::SetNR51(u8 value)
 	if(m_hasPower == false)
 		return;
 
+	for(int i=0;i<4;i++)
+	{
+		if(value & (1<<i))
+			m_terminalOutputs[0][i] = true;
+		else
+			m_terminalOutputs[0][i] = false;
+
+		if(value & (1<<(4+i)))
+			m_terminalOutputs[1][i] = true;
+		else
+			m_terminalOutputs[1][i] = false;
+	}
+
 	m_nr51 = value;
 }
 
@@ -412,4 +440,42 @@ void Sound::SetNR52(u8 value)
 	}
 	
 	m_nr52 = (value & 0x80) | 0x70 | (m_nr52 & 0x0f);
+}
+
+
+void Sound::MixSamples(float samples[4], float (&outSamples)[2])
+{
+	//Mix the samples
+
+	int numSampleValues[2] = {0, 0};
+
+	for(int outputChannel=0;outputChannel<2;outputChannel++)
+	{
+		//Combine the 4 component channels into a final output channel value
+		for(int componentChannel=0;componentChannel<4;componentChannel++)
+		{
+			if(m_terminalOutputs[outputChannel][componentChannel])
+			{
+				outSamples[outputChannel] += samples[componentChannel];
+				numSampleValues[outputChannel]++;
+			}
+		}
+
+		//Play silence if there are no components assigned to a channel
+		if(numSampleValues[outputChannel] == 0)
+		{
+			outSamples[outputChannel] = 0.f;
+			numSampleValues[outputChannel] = 1;
+		}
+
+		//Divide the final value by the number of contributing components to reduce it to [-1,+1] range
+		outSamples[outputChannel] /= (float)numSampleValues[outputChannel];
+
+		//In 8-bits per sample mode, the final value needs to be in the [0,1] range instead of [-1,+1]
+		if(BytesPerSample == 1)
+		{
+			outSamples[outputChannel] /= 2.f;
+			outSamples[outputChannel] += 0.5f;
+		}
+	}
 }

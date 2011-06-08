@@ -21,9 +21,6 @@ EnvelopeUnit::EnvelopeUnit(SoundGenerator* soundGenerator)
 
 void EnvelopeUnit::Tick()
 {
-	if(m_currentVolume == 0 || m_currentVolume == 15)
-		return;
-
 	if(m_enabled == false)
 		return;
 
@@ -39,6 +36,8 @@ void EnvelopeUnit::Tick()
 			m_currentVolume++;
 		else
 			m_currentVolume--;
+
+		m_currentVolume &= 0x0f;
 
 		if(m_currentVolume == 0 || m_currentVolume == 15)
 			m_enabled = false;
