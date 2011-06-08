@@ -73,7 +73,7 @@ public:
 private:
 
 	void UpdateRegister();
-	void Interrupt();
+	void UpdateInterruptFlag();
 
 	Machine* m_machine;
 

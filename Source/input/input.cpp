@@ -25,14 +25,12 @@ void Input::Initialize()
 //External
 void Input::ButtonDown(Buttons::Type button)
 {
-	u8 oldButtonStates = m_buttonStates;
 	m_buttonStates &= ~(1<<button);
 
 	if(m_currentMode == RegisterMode::P14 || m_currentMode == RegisterMode::P15)
 		UpdateRegister();
 
-	if(m_buttonStates != oldButtonStates)
-		Interrupt();
+	UpdateInterruptFlag();
 }
 
 void Input::ButtonUp(Buttons::Type button)
@@ -41,6 +39,8 @@ void Input::ButtonUp(Buttons::Type button)
 
 	if(m_currentMode == RegisterMode::P14 || m_currentMode == RegisterMode::P15)
 		UpdateRegister();
+
+	UpdateInterruptFlag();
 }
 
 //Registers
@@ -72,9 +72,21 @@ void Input::UpdateRegister()
 	}
 }
 
-void Input::Interrupt()
+void Input::UpdateInterruptFlag()
 {
-	u8 interrupts = m_machine->GetMemory()->Read8(REG_IF);
-	interrupts |= IF_INPUT;
-	m_machine->GetMemory()->Write8(REG_IF, interrupts);
+	//Nothing pressed, so clear the interrupt flag
+	if(m_buttonStates == 0xff)
+	{
+		u8 interrupts = m_machine->GetMemory()->Read8(REG_IF);
+		interrupts &= ~(IF_INPUT);
+		m_machine->GetMemory()->Write8(REG_IF, interrupts);
+	}
+
+	//Something's pressed, so set the interrupt flag
+	else
+	{
+		u8 interrupts = m_machine->GetMemory()->Read8(REG_IF);
+		interrupts |= IF_INPUT;
+		m_machine->GetMemory()->Write8(REG_IF, interrupts);
+	}
 }
