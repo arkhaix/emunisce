@@ -14,7 +14,31 @@
     <ClInclude Include="sound.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sound1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sound2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sound3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sound4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="soundGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="channelController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="lengthUnit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="envelopeUnit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dutyUnit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -22,7 +46,31 @@
     <ClCompile Include="sound.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sound1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sound2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sound3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sound4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="soundGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="channelController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="lengthUnit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="envelopeUnit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dutyUnit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
