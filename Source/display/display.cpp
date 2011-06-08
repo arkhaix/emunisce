@@ -180,6 +180,7 @@ void Display::SetLcdControl(u8 value)
 		}
 
 		m_lcdEnabled = true;
+		//CheckCoincidence();	///<Enabling this breaks the prehistorik man title screen
 	}
 	else
 	{
@@ -202,6 +203,8 @@ void Display::SetLcdControl(u8 value)
 			m_currentScanline = 0;
 			m_stateTicksRemaining = 0;
 
+			CheckCoincidence();	///<Disabling this breaks bubsy2
+
 			m_lcdEnabled = false;
 		}
 	}
@@ -209,21 +212,30 @@ void Display::SetLcdControl(u8 value)
 
 void Display::SetLcdStatus(u8 value)
 {
-	m_lcdStatus = value;
+	if(value & STAT_Coincidence)
+		m_lcdStatus &= ~(STAT_Coincidence);
 
-	if(m_currentState == DisplayState::HBlank || m_currentState == DisplayState::VBlank)
-		CheckCoincidence();
+	m_lcdStatus &= ~(0x78);
+	m_lcdStatus |= (value & 0x78);
+
+	m_lcdStatus |= 0x80;
+
+	CheckCoincidence();	///<Enabling or disabling this seems to have no impact?  Probably because writing STAT_Coincidence can only clear it?
 }
 
 void Display::SetCurrentScanline(u8 value)
 {
 	//todo: something about resetting the counter or stopping the display
+	m_currentState = DisplayState::VBlank;
+	SetLcdControl(m_lcdControl & 0x7f);
+	SetLcdControl(m_lcdControl | 0x80);
+	//CheckCoincidence();	///<Enabling or disabling this seems to have no impact?  Why doesn't it break the prehistorik man title?
 }
 
 void Display::SetScanlineCompare(u8 value)
 {
 	m_scanlineCompare = value;
-	CheckCoincidence(); ///<Not sure if this is supposed to be here
+	//CheckCoincidence(); ///<Enabling this causes prehistorik man to hang sooner (beginning of "START" instead of the end)
 }
 
 void Display::Begin_HBlank()
@@ -254,7 +266,7 @@ void Display::Begin_VBlank()
 	m_stateTicksRemaining += 4560;
 
 	m_currentScanline = 144;
-	CheckCoincidence();
+	CheckCoincidence();	///<Disabling this has no impact?  IF_VBLANK is higher priority... but some games might still rely on LCDC LYC=LY only?
 
 	m_vblankScanlineTicksRemaining = m_stateTicksRemaining % 456;
 	if(m_vblankScanlineTicksRemaining == 0)
@@ -296,7 +308,7 @@ void Display::Begin_SpritesLocked()
 	if(m_currentScanline >= 144)	///<After a VBlank, this will be 153.  If we've reached this point, then we've started a new frame.
 		m_currentScanline = 0;
 
-	CheckCoincidence();
+	CheckCoincidence();	///<This one's important.  Disabling it breaks lots of stuff.
 
 	//Set mode 10
 	m_lcdStatus &= ~(STAT_Mode);
@@ -340,7 +352,7 @@ void Display::Run_VBlank(int ticks)
 		m_currentScanline++;
 		m_vblankScanlineTicksRemaining += 456;
 
-		CheckCoincidence();
+		CheckCoincidence();	///<This one's important.  Disabling it breaks things.
 	}
 
 	//End of VBlank
