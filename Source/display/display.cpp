@@ -276,7 +276,7 @@ void Display::Begin_VBlank()
 	m_lcdStatus &= ~(STAT_Mode);
 	m_lcdStatus |= Mode_VBlank;
 
-	//Lock vram and oam
+	//Unlock vram and oam
 	m_memory->SetVramLock(false);
 	m_memory->SetOamLock(false);
 	
@@ -314,8 +314,8 @@ void Display::Begin_SpritesLocked()
 	m_lcdStatus &= ~(STAT_Mode);
 	m_lcdStatus |= Mode_SpriteLock;
 
-	//Lock vram and oam
-	m_memory->SetVramLock(true);
+	//Lock oam only
+	m_memory->SetVramLock(false);
 	m_memory->SetOamLock(true);
 
 	//LCDC interrupt
@@ -336,9 +336,9 @@ void Display::Begin_VideoRamLocked()
 	m_lcdStatus &= ~(STAT_Mode);
 	m_lcdStatus |= Mode_VideoRamLock;
 
-	//Lock vram, but not oam
+	//Lock vram and oam
 	m_memory->SetVramLock(true);
-	m_memory->SetOamLock(false);
+	m_memory->SetOamLock(true);
 
 	//No interrupts for this mode
 }
