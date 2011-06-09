@@ -77,6 +77,8 @@ void Sound3::SetMachine(Machine* machine)
 
 void Sound3::PowerOff()
 {
+	m_waveSamplePosition = 0;
+
 	SetNR30(0);
 	SetNR31(0);
 	SetNR32(0);
@@ -102,20 +104,9 @@ void Sound3::Run(int ticks)
 		return;
 	}
 
-	if(m_sampleReadTimerValue > 0)
-	{
-		m_sampleReadTimerValue -= ticks;
-		if(m_sampleReadTimerValue <= 0)
-		{
-			m_machine->GetMemory()->SetWaveRamLock(WaveRamLock::NoAccess);
-		}
-	}
-
 	m_waveTimerValue -= ticks;
 	while(m_waveTimerValue <= 0)
 	{
-		m_waveTimerValue += m_waveTimerPeriod;
-
 		m_waveSamplePosition++;
 		if(m_waveSamplePosition > 31)
 			m_waveSamplePosition = 0;
@@ -129,7 +120,20 @@ void Sound3::Run(int ticks)
 
 		m_machine->GetMemory()->SetWaveRamLock(WaveRamLock::SingleValue, m_waveSampleValue);
 
-		m_sampleReadTimerValue = 4;	///<wild guess
+		//Which tick did the access happen on?
+		int memoryAccessTick = -m_waveTimerValue;
+		m_sampleReadTimerValue = 6 - memoryAccessTick;	///<The constant here is a wild guess
+
+		m_waveTimerValue += m_waveTimerPeriod;	///<Normally, this would be at the top of the while loop.  It's down here for memoryAccessTick simplification.
+	}
+
+	if(m_sampleReadTimerValue > 0)
+	{
+		m_sampleReadTimerValue -= (ticks/2);
+		if(m_sampleReadTimerValue <= 0)
+		{
+			m_machine->GetMemory()->SetWaveRamLock(WaveRamLock::NoAccess);
+		}
 	}
 }
 
@@ -237,9 +241,9 @@ void Sound3::SetNR34(u8 value)
 
 void Sound3::Trigger()
 {
-	//m_waveTimerValue = m_waveTimerPeriod;
-
-	//m_waveSamplePosition = 0;
+	m_sampleReadTimerValue = 0;
+	m_waveTimerValue = m_waveTimerPeriod;
+	m_waveSamplePosition = 31;	///<Auto-increments.  The first sample read should be the 0th one.
 
 	SoundGenerator::Trigger();
 }
