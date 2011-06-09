@@ -104,6 +104,8 @@ void Sound3::Run(int ticks)
 		return;
 	}
 
+	bool adjustedReadTimer = false;
+
 	m_waveTimerValue -= ticks;
 	while(m_waveTimerValue <= 0)
 	{
@@ -121,19 +123,22 @@ void Sound3::Run(int ticks)
 		m_machine->GetMemory()->SetWaveRamLock(WaveRamLock::SingleValue, m_waveSampleValue);
 
 		//Which tick did the access happen on?
-		int memoryAccessTick = -m_waveTimerValue;
-		m_sampleReadTimerValue = 6 - memoryAccessTick;	///<The constant here is a wild guess
+		int ticksSinceMemoryAccess = -m_waveTimerValue;
+		m_sampleReadTimerValue = 2 - ticksSinceMemoryAccess;	///<The constant here is a wild guess
+		adjustedReadTimer = true;
 
 		m_waveTimerValue += m_waveTimerPeriod;	///<Normally, this would be at the top of the while loop.  It's down here for memoryAccessTick simplification.
 	}
 
-	if(m_sampleReadTimerValue > 0)
+	if(adjustedReadTimer == false && m_sampleReadTimerValue > 0)
 	{
-		m_sampleReadTimerValue -= (ticks/2);
+		m_sampleReadTimerValue -= ticks;
 		if(m_sampleReadTimerValue <= 0)
-		{
 			m_machine->GetMemory()->SetWaveRamLock(WaveRamLock::NoAccess);
-		}
+	}
+	else if(m_sampleReadTimerValue <= 0)
+	{
+		m_machine->GetMemory()->SetWaveRamLock(WaveRamLock::NoAccess);
 	}
 }
 
@@ -178,6 +183,7 @@ void Sound3::SetNR30(u8 value)
 	else
 	{
 		m_dacEnabled = true;
+		m_machine->GetMemory()->SetWaveRamLock(WaveRamLock::NoAccess);
 	}
 
 	m_nr30 = value & 0x80;
