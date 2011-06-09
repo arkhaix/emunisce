@@ -146,7 +146,7 @@ void Machine::Step()
 	unsigned int ticks = m_cpu->Step();
 	m_executingInstruction = false;
 
-	unsigned int totalTicks = ticks;
+	unsigned int ticksThisStep = ticks;
 
 	//If the instruction spent more ticks than its total time (should never happen)
 	// then roll over the spent ticks to the next instruction
@@ -170,7 +170,7 @@ void Machine::Step()
 
 	m_sound->Run(ticks);
 
-	m_frameTicksRemaining -= totalTicks;
+	m_frameTicksRemaining -= ticksThisStep;
 	if(m_frameTicksRemaining<= 0)
 	{
 		m_frameCount++;
