@@ -1,11 +1,11 @@
-#include "sound2.h"
+#include "Sound2.h"
 
-#include "../common/machine.h"
-#include "../memory/memory.h"
+#include "../Common/Machine.h"
+#include "../Memory/Memory.h"
 
-#include "dutyUnit.h"
-#include "envelopeUnit.h"
-#include "lengthUnit.h"
+#include "DutyUnit.h"
+#include "EnvelopeUnit.h"
+#include "LengthUnit.h"
 
 
 Sound2::Sound2()

@@ -1,7 +1,7 @@
-#include "input.h"
+#include "Input.h"
 
-#include "../common/machine.h"
-#include "../memory/memory.h"
+#include "../Common/Machine.h"
+#include "../Memory/Memory.h"
 
 Input::Input()
 {

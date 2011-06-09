@@ -1,9 +1,9 @@
 #include "windows.h"	///<For critical sections.  We need to lock the screen buffer.
 
-#include "display.h"
+#include "Display.h"
 
-#include "../common/machine.h"
-#include "../memory/memory.h"
+#include "../Common/Machine.h"
+#include "../Memory/Memory.h"
 
 
 //70224 t-states per frame (59.7fps)

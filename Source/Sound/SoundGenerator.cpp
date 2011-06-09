@@ -1,10 +1,10 @@
-#include "soundGenerator.h"
+#include "SoundGenerator.h"
 
-#include "../common/machine.h"
+#include "../Common/Machine.h"
 
-#include "channelController.h"
-#include "lengthUnit.h"
-#include "sound.h"
+#include "ChannelController.h"
+#include "LengthUnit.h"
+#include "Sound.h"
 
 
 SoundGenerator::SoundGenerator()

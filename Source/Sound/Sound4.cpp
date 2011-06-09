@@ -1,10 +1,10 @@
-#include "sound4.h"
+#include "Sound4.h"
 
-#include "../common/machine.h"
-#include "../memory/memory.h"
+#include "../Common/Machine.h"
+#include "../Memory/Memory.h"
 
-#include "envelopeUnit.h"
-#include "lengthUnit.h"
+#include "EnvelopeUnit.h"
+#include "LengthUnit.h"
 
 
 Sound4::Sound4()

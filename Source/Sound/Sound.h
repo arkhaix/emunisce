@@ -1,7 +1,7 @@
 #ifndef SOUND_H
 #define SOUND_H
 
-#include "../common/types.h"
+#include "../Common/Types.h"
 
 class SoundGenerator;
 class Sound1;

@@ -1,12 +1,12 @@
-#include "machine.h"
+#include "Machine.h"
 
-#include "types.h"
+#include "Types.h"
 
-#include "../cpu/cpu.h"
-#include "../display/display.h"
-#include "../input/input.h"
-#include "../memory/memory.h"
-#include "../sound/sound.h"
+#include "../Cpu/Cpu.h"
+#include "../Display/Display.h"
+#include "../Input/Input.h"
+#include "../Memory/Memory.h"
+#include "../Sound/Sound.h"
 
 Machine* Machine::Create(const char* filename)
 {

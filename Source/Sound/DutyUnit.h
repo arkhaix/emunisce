@@ -1,7 +1,7 @@
 #ifndef DUTYUNIT_H
 #define DUTYUNIT_H
 
-#include "../common/types.h"
+#include "../Common/Types.h"
 
 class DutyUnit
 {

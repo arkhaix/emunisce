@@ -1,7 +1,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#include "../common/types.h"
+#include "../Common/Types.h"
 
 namespace Buttons
 {

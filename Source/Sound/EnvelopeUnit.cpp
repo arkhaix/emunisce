@@ -1,7 +1,7 @@
-#include "envelopeUnit.h"
+#include "EnvelopeUnit.h"
 
-#include "channelController.h"
-#include "soundGenerator.h"
+#include "ChannelController.h"
+#include "SoundGenerator.h"
 
 
 EnvelopeUnit::EnvelopeUnit(SoundGenerator* soundGenerator)

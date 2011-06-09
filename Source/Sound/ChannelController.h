@@ -1,7 +1,7 @@
 #ifndef CHANNELDISABLER_H
 #define CHANNELDISABLER_H
 
-#include "../common/types.h"
+#include "../Common/Types.h"
 
 
 class ChannelController

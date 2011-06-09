@@ -1,7 +1,7 @@
 #ifndef ENVELOPEUNIT_H
 #define ENVELOPEUNIT_H
 
-#include "../common/types.h"
+#include "../Common/Types.h"
 
 class SoundGenerator;
 

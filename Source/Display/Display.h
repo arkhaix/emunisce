@@ -1,7 +1,7 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#include "../common/types.h"
+#include "../Common/Types.h"
 
 #define PIXEL_NOT_CACHED ((u8)-1)
 #define PIXEL_TRANSPARENT ((u8)-2)

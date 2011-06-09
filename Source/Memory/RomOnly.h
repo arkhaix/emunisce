@@ -1,7 +1,7 @@
 #ifndef ROMONLY_H
 #define ROMONLY_H
 
-#include "memory.h"
+#include "Memory.h"
 
 class RomOnly : public Memory
 {

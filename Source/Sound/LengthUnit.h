@@ -1,7 +1,7 @@
 #ifndef LENGTHUNIT_H
 #define LENGTHUNIT_H
 
-#include "../common/types.h"
+#include "../Common/Types.h"
 
 class SoundGenerator;
 

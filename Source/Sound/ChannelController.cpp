@@ -1,4 +1,4 @@
-#include "channelController.h"
+#include "ChannelController.h"
 
 ChannelController::ChannelController(u8& nr52, int channelBit)
 	: m_nr52(nr52)

@@ -8,10 +8,10 @@
 #include <vector>
 using namespace std;
 
-#include "../cpu/cpu.h"
-#include "../display/display.h"
-#include "../memory/memory.h"
-#include "../input/input.h"
+#include "../Cpu/Cpu.h"
+#include "../Display/Display.h"
+#include "../Memory/Memory.h"
+#include "../Input/Input.h"
 
 class Phoenix;
 class Machine;

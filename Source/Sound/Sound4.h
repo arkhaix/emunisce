@@ -1,10 +1,10 @@
 #ifndef SOUND4_H
 #define SOUND4_H
 
-#include "../common/types.h"
+#include "../Common/Types.h"
 class Machine;
 
-#include "soundGenerator.h"
+#include "SoundGenerator.h"
 
 
 class Sound4 : public SoundGenerator

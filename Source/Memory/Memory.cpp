@@ -1,4 +1,4 @@
-#include "memory.h"
+#include "Memory.h"
 
 //CRT
 #include <ctime>
@@ -8,17 +8,17 @@
 using namespace std;
 
 //Project
-#include "romonly.h"
-#include "mbc1.h"
-#include "mbc3.h"
-#include "mbc5.h"
+#include "RomOnly.h"
+#include "Mbc1.h"
+#include "Mbc3.h"
+#include "Mbc5.h"
 
 //Solution
-#include "../common/machine.h"
-#include "../cpu/cpu.h"
-#include "../display/display.h"
-#include "../input/input.h"
-#include "../sound/sound.h"
+#include "../Common/Machine.h"
+#include "../Cpu/Cpu.h"
+#include "../Display/Display.h"
+#include "../Input/Input.h"
+#include "../Sound/Sound.h"
 
 
 Memory::Memory()
@@ -45,7 +45,7 @@ Memory::~Memory()
 
 void Memory::SetMachine(Machine* machine)
 {
-	//Reset machine-dependent values
+	//Reset Machine-dependent values
 	for(int i=0;i<0x100;i++)
 	{
 		m_registerLocation[i] = NULL;

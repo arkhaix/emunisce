@@ -1,7 +1,7 @@
 #ifndef SOUNDGENERATOR_H
 #define SOUNDGENERATOR_H
 
-#include "../common/types.h"
+#include "../Common/Types.h"
 class Machine;
 
 class ChannelController;

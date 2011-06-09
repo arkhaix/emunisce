@@ -1,7 +1,7 @@
 #ifndef CPU_H
 #define CPU_H
 
-#include "../common/types.h"
+#include "../Common/Types.h"
 
 class Memory;
 

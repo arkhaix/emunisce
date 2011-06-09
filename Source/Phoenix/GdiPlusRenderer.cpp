@@ -1,4 +1,4 @@
-#include "gdiPlusRenderer.h"
+#include "GdiPlusRenderer.h"
 
 //Windows
 #include "windows.h"
@@ -8,13 +8,13 @@
 using namespace Gdiplus;
 
 //Solution
-#include "../common/types.h"
-#include "../common/machine.h"
-#include "../display/display.h"
+#include "../Common/Types.h"
+#include "../Common/Machine.h"
+#include "../Display/Display.h"
 
 //Project
-#include "phoenix.h"
-#include "keyboardInput.h"	///<todo: get rid of this
+#include "Phoenix.h"
+#include "KeyboardInput.h"	///<todo: get rid of this
 
 //Statics
 GdiPlusRenderer* GdiPlusRenderer::m_defaultInstance = NULL;
