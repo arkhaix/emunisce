@@ -1,11 +1,11 @@
 #include "Phoenix.h"
 
-#include "../common/machine.h"
+#include "../Common/Machine.h"
 
-#include "consoledebugger.h"
-#include "gdiPlusRenderer.h"
-#include "keyboardInput.h"
-#include "waveOutSound.h"
+#include "ConsoleDebugger.h"
+#include "GdiPlusRenderer.h"
+#include "KeyboardInput.h"
+#include "WaveOutSound.h"
 
 class Phoenix_Private
 {

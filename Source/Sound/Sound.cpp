@@ -1,16 +1,16 @@
-#include "sound.h"
+#include "Sound.h"
 
 #include "windows.h"	///<For critical sections.  The audio buffer needs to be locked.
 
-#include "../common/machine.h"
-#include "../memory/memory.h"
+#include "../Common/Machine.h"
+#include "../Memory/Memory.h"
 
-#include "sound1.h"
-#include "sound2.h"
-#include "sound3.h"
-#include "sound4.h"
+#include "Sound1.h"
+#include "Sound2.h"
+#include "Sound3.h"
+#include "Sound4.h"
 
-#include "channelController.h"
+#include "ChannelController.h"
 
 #if 0
 #include <cstdio>

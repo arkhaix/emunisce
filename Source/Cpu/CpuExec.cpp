@@ -1,7 +1,7 @@
-#include "cpu.h"
+#include "Cpu.h"
 
-#include "../common/machine.h"
-#include "../memory/memory.h"
+#include "../Common/Machine.h"
+#include "../Memory/Memory.h"
 
 
 int Cpu::Step()

@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "../cpu/cpu.h"
+#include "../Cpu/Cpu.h"
 
 class CPUTest : public ::testing::Test
 {

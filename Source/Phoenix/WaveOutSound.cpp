@@ -2,10 +2,10 @@
 
 #include "windows.h"
 
-#include "phoenix.h"
+#include "Phoenix.h"
 
-#include "../common/machine.h"
-#include "../sound/sound.h"
+#include "../Common/Machine.h"
+#include "../Sound/Sound.h"
 
 #include <iostream>
 #include <queue>

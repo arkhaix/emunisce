@@ -1,10 +1,10 @@
-#include "lengthUnit.h"
+#include "LengthUnit.h"
 
-#include "../common/machine.h"
+#include "../Common/Machine.h"
 
-#include "channelController.h"
-#include "soundGenerator.h"
-#include "sound.h"
+#include "ChannelController.h"
+#include "SoundGenerator.h"
+#include "Sound.h"
 
 
 LengthUnit::LengthUnit(SoundGenerator* soundGenerator)

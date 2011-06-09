@@ -1,7 +1,7 @@
 #ifndef MBC1_H
 #define MBC1_H
 
-#include "memory.h"
+#include "Memory.h"
 
 class MBC1 : public Memory
 {

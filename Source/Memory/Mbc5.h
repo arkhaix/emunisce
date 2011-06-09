@@ -1,7 +1,7 @@
 #ifndef MBC5_H
 #define MBC5_H
 
-#include "mbc1.h"
+#include "Mbc1.h"
 
 class MBC5 : public MBC1
 {

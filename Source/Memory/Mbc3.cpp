@@ -1,4 +1,4 @@
-#include "mbc3.h"
+#include "Mbc3.h"
 
 MBC3::MBC3()
 {

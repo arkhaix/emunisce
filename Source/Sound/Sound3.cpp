@@ -1,10 +1,10 @@
-#include "sound3.h"
+#include "Sound3.h"
 
-#include "../common/machine.h"
-#include "../memory/memory.h"
+#include "../Common/Machine.h"
+#include "../Memory/Memory.h"
 
-#include "channelController.h"
-#include "lengthUnit.h"
+#include "ChannelController.h"
+#include "LengthUnit.h"
 
 
 Sound3::Sound3()

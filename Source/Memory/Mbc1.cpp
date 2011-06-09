@@ -1,4 +1,4 @@
-#include "mbc1.h"
+#include "Mbc1.h"
 
 #include <fstream>
 using namespace std;

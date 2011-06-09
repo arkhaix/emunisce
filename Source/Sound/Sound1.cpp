@@ -1,12 +1,12 @@
-#include "sound1.h"
+#include "Sound1.h"
 
-#include "../common/machine.h"
-#include "../memory/memory.h"
+#include "../Common/Machine.h"
+#include "../Memory/Memory.h"
 
-#include "channelController.h"
-#include "dutyUnit.h"
-#include "envelopeUnit.h"
-#include "lengthUnit.h"
+#include "ChannelController.h"
+#include "DutyUnit.h"
+#include "EnvelopeUnit.h"
+#include "LengthUnit.h"
 
 
 Sound1::Sound1()

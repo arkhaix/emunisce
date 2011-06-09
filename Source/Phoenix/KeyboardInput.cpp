@@ -1,15 +1,15 @@
-#include "keyboardInput.h"
+#include "KeyboardInput.h"
 
 #include "windows.h"
 
 #include <map>
 using namespace std;
 
-#include "../common/types.h"
-#include "../common/machine.h"
-#include "../input/input.h"
+#include "../Common/Types.h"
+#include "../Common/Machine.h"
+#include "../Input/Input.h"
 
-#include "phoenix.h"
+#include "Phoenix.h"
 
 class KeyboardInput_Private
 {

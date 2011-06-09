@@ -1,8 +1,8 @@
 #include "windows.h"
 
-#include "phoenix.h"
-#include "consoledebugger.h"
-#include "gdiPlusRenderer.h"
+#include "Phoenix.h"
+#include "ConsoleDebugger.h"
+#include "GdiPlusRenderer.h"
 
 Phoenix* g_phoenix = NULL;
 

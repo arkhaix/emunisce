@@ -1,4 +1,4 @@
-#include "consoledebugger.h"
+#include "ConsoleDebugger.h"
 
 //Windows
 #include "windows.h"
@@ -13,11 +13,11 @@ using namespace std;
 #include <io.h>
 
 //Solution
-#include "../common/machine.h"
+#include "../Common/Machine.h"
 
 //Project
-#include "phoenix.h"
-#include "waveOutSound.h"
+#include "Phoenix.h"
+#include "WaveOutSound.h"
 
 
 ConsoleDebugger::ConsoleDebugger()
@@ -231,7 +231,7 @@ void ConsoleDebugger::LoadROM(const char* filename)
 		return;
 	}
 
-	//Successfully created a new machine
+	//Successfully created a new Machine
 	Machine* oldMachine = m_machine;
 
 	//Let everyone (including this class) know that the old one is going away

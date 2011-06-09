@@ -1,10 +1,10 @@
 #ifndef SOUND1_H
 #define SOUND1_H
 
-#include "../common/types.h"
+#include "../Common/Types.h"
 class Machine;
 
-#include "soundGenerator.h"
+#include "SoundGenerator.h"
 class DutyUnit;
 
 
