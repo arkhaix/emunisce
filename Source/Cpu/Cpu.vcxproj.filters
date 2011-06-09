@@ -11,15 +11,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cpu.cpp">
+    <ClCompile Include="Cpu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cpuexec.cpp">
+    <ClCompile Include="Cpuexec.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cpu.h">
+    <ClInclude Include="Cpu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

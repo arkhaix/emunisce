@@ -1,21 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "phoenix", "phoenix\phoenix.vcxproj", "{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Phoenix", "Phoenix\Phoenix.vcxproj", "{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cpu", "cpu\cpu.vcxproj", "{15A4AF88-4429-4720-AEF7-700335CF8CF1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cpu", "Cpu\Cpu.vcxproj", "{15A4AF88-4429-4720-AEF7-700335CF8CF1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "common", "common\common.vcxproj", "{5320668F-EDA7-49EB-90FF-EEC79CABC957}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "Common\Common.vcxproj", "{5320668F-EDA7-49EB-90FF-EEC79CABC957}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "memory", "memory\memory.vcxproj", "{316E1001-8C02-460F-AD90-EBB6A9FA5744}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Memory", "Memory\Memory.vcxproj", "{316E1001-8C02-460F-AD90-EBB6A9FA5744}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "display", "display\display.vcxproj", "{E913FAB3-3258-423D-AE0A-3C23B2CA31B5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Display", "Display\Display.vcxproj", "{E913FAB3-3258-423D-AE0A-3C23B2CA31B5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "unit tests", "unit tests\unit tests.vcxproj", "{AF6F751E-BB1D-4BDB-8695-FC955F71E28B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Unit Tests", "Unit Tests\Unit Tests.vcxproj", "{AF6F751E-BB1D-4BDB-8695-FC955F71E28B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "input", "input\input.vcxproj", "{132A61D1-1BA2-4581-B4F9-0740FEB37572}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Input", "Input\Input.vcxproj", "{132A61D1-1BA2-4581-B4F9-0740FEB37572}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sound", "sound\sound.vcxproj", "{6511E5D7-746B-4E84-BD0B-6A960F4DF7E0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sound", "Sound\Sound.vcxproj", "{6511E5D7-746B-4E84-BD0B-6A960F4DF7E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

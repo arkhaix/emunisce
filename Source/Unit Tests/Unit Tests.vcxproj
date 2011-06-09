@@ -68,26 +68,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="cputests.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="CpuTests.cpp" />
+    <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\common\common.vcxproj">
+    <ProjectReference Include="..\Common\Common.vcxproj">
       <Project>{5320668f-eda7-49eb-90ff-eec79cabc957}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\cpu\cpu.vcxproj">
+    <ProjectReference Include="..\Cpu\Cpu.vcxproj">
       <Project>{15a4af88-4429-4720-aef7-700335cf8cf1}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\display\display.vcxproj">
+    <ProjectReference Include="..\Display\Display.vcxproj">
       <Project>{e913fab3-3258-423d-ae0a-3c23b2ca31b5}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\input\input.vcxproj">
+    <ProjectReference Include="..\Input\Input.vcxproj">
       <Project>{132a61d1-1ba2-4581-b4f9-0740feb37572}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\memory\memory.vcxproj">
+    <ProjectReference Include="..\Memory\Memory.vcxproj">
       <Project>{316e1001-8c02-460f-ad90-ebb6a9fa5744}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\sound\sound.vcxproj">
+    <ProjectReference Include="..\Sound\Sound.vcxproj">
       <Project>{6511e5d7-746b-4e84-bd0b-6a960f4df7e0}</Project>
     </ProjectReference>
   </ItemGroup>
