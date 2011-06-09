@@ -60,11 +60,11 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="cpu.cpp" />
-    <ClCompile Include="cpuexec.cpp" />
+    <ClCompile Include="Cpu.cpp" />
+    <ClCompile Include="CpuExec.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cpu.h" />
+    <ClInclude Include="Cpu.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

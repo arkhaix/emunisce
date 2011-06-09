@@ -11,39 +11,39 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="consoledebugger.cpp">
+    <ClCompile Include="ConsoleDebugger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gdiPlusRenderer.cpp">
+    <ClCompile Include="GdiPlusRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="phoenix.cpp">
+    <ClCompile Include="Phoenix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="keyboardInput.cpp">
+    <ClCompile Include="KeyboardInput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="waveOutSound.cpp">
+    <ClCompile Include="WaveOutSound.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="consoledebugger.h">
+    <ClInclude Include="ConsoleDebugger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gdiPlusRenderer.h">
+    <ClInclude Include="GdiPlusRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="phoenix.h">
+    <ClInclude Include="Phoenix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="keyboardInput.h">
+    <ClInclude Include="KeyboardInput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="waveOutSound.h">
+    <ClInclude Include="WaveOutSound.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

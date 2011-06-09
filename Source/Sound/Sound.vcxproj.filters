@@ -11,66 +11,66 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="sound.h">
+    <ClInclude Include="Sound.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sound1.h">
+    <ClInclude Include="Sound1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sound2.h">
+    <ClInclude Include="Sound2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sound3.h">
+    <ClInclude Include="Sound3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sound4.h">
+    <ClInclude Include="Sound4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="soundGenerator.h">
+    <ClInclude Include="SoundGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="channelController.h">
+    <ClInclude Include="ChannelController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lengthUnit.h">
+    <ClInclude Include="LengthUnit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="envelopeUnit.h">
+    <ClInclude Include="EnvelopeUnit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dutyUnit.h">
+    <ClInclude Include="DutyUnit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sound.cpp">
+    <ClCompile Include="Sound.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sound1.cpp">
+    <ClCompile Include="Sound1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sound2.cpp">
+    <ClCompile Include="Sound2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sound3.cpp">
+    <ClCompile Include="Sound3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sound4.cpp">
+    <ClCompile Include="Sound4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="soundGenerator.cpp">
+    <ClCompile Include="SoundGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="channelController.cpp">
+    <ClCompile Include="ChannelController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lengthUnit.cpp">
+    <ClCompile Include="LengthUnit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="envelopeUnit.cpp">
+    <ClCompile Include="EnvelopeUnit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dutyUnit.cpp">
+    <ClCompile Include="DutyUnit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
