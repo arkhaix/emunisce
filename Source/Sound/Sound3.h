@@ -73,6 +73,11 @@ private:
 	int m_waveSamplePosition;
 
 
+	//Memory access
+
+	int m_sampleReadTimerValue;
+
+
 	//Registers
 
 	u8 m_nr30;	///<ff1a

@@ -22,6 +22,20 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "../Common/Types.h"
 
+namespace WaveRamLock
+{
+	typedef int Type;
+
+	enum
+	{
+		Normal = 0,	///<Wave RAM can be written and read normally
+		SingleValue,///<Wave RAM can be written normally, but reads only return one value
+		NoAccess,	///<Wave RAM writes are ignored, and reads return 0xff
+
+		NumWaveRamLockModes
+	};
+}
+
 class Memory
 {
 public:
@@ -44,6 +58,7 @@ public:
 
 	void SetVramLock(bool locked);
 	void SetOamLock(bool locked);
+	void SetWaveRamLock(WaveRamLock::Type lockType, u8 readValue=0xff);	///<readValue is only necessary when locked=false.
 
 	static Memory* CreateFromFile(const char* filename);
 
@@ -87,6 +102,12 @@ protected:
 
 	bool m_vramLocked;
 	bool m_oamLocked;
+
+
+	//Sound features
+
+	WaveRamLock::Type m_waveRamLockMode;
+	u8 m_waveRamReadValue;
 };
 
 #endif

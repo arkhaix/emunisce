@@ -49,6 +49,10 @@ Memory::Memory()
 	m_input = NULL;
 	m_sound = NULL;
 
+	m_oamLocked = false;
+	m_vramLocked = false;
+	m_waveRamLockMode = WaveRamLock::Normal;
+
 	for(int i=0;i<0x100;i++)
 	{
 		m_registerLocation[i] = NULL;
@@ -155,6 +159,17 @@ u8 Memory::Read8(u16 address)
 	{
 		return 0xff;
 	}
+	else if(address >= 0xff30 && address < 0xff40 && m_waveRamLockMode != WaveRamLock::Normal)
+	{
+		if(m_waveRamLockMode == WaveRamLock::NoAccess)
+		{
+			return 0xff;
+		}
+		else //m_waveRamLockMode == WaveRamLock::SingleValue
+		{
+			return m_waveRamReadValue;
+		}
+	}
 	else if(address < 0x100 && m_bootRomEnabled == true)
 	{
 		return m_bootRom[address];
@@ -197,6 +212,8 @@ void Memory::Write8(u16 address, u8 value)
 	if(address >= 0x8000 && address < 0xa000 && m_vramLocked)
 		return;
 	if(address >= 0xfe00 && address < 0xfea0 && m_oamLocked)
+		return;
+	if(address >= 0xff30 && address < 0xff40 && m_waveRamLockMode == WaveRamLock::NoAccess)
 		return;
 
 	//Send notifications when applicable
@@ -258,6 +275,12 @@ void Memory::SetVramLock(bool locked)
 void Memory::SetOamLock(bool locked)
 {
 	m_oamLocked = locked;
+}
+
+void Memory::SetWaveRamLock(WaveRamLock::Type lockType, u8 readValue)
+{
+	m_waveRamLockMode = lockType;
+	m_waveRamReadValue = readValue;
 }
 	
 Memory* Memory::CreateFromFile(const char* filename)
