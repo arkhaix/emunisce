@@ -124,7 +124,7 @@ void Sound3::Run(int ticks)
 
 		//Which tick did the access happen on?
 		int ticksSinceMemoryAccess = -m_waveTimerValue;
-		m_sampleReadTimerValue = 2 - ticksSinceMemoryAccess;	///<The constant here is a wild guess
+		m_sampleReadTimerValue = 2 - ticksSinceMemoryAccess;	///<The constant here is just guesswork.  It represents how long (ticks) the data stays available after a read.
 		adjustedReadTimer = true;
 
 		m_waveTimerValue += m_waveTimerPeriod;	///<Normally, this would be at the top of the while loop.  It's down here for memoryAccessTick simplification.
@@ -184,6 +184,7 @@ void Sound3::SetNR30(u8 value)
 	{
 		m_dacEnabled = true;
 		m_machine->GetMemory()->SetWaveRamLock(WaveRamLock::NoAccess);
+		m_waveTimerValue = m_waveTimerPeriod;
 	}
 
 	m_nr30 = value & 0x80;
@@ -248,8 +249,9 @@ void Sound3::SetNR34(u8 value)
 void Sound3::Trigger()
 {
 	m_sampleReadTimerValue = 0;
-	m_waveTimerValue = m_waveTimerPeriod;
-	m_waveSamplePosition = 31;	///<Auto-increments.  The first sample read should be the 0th one.
+	m_waveSamplePosition = 0;
+
+	m_waveTimerValue = m_waveTimerPeriod + 6;	///<More guesswork here.  The constant represents a delay between triggering and actual playback start.
 
 	SoundGenerator::Trigger();
 }
