@@ -3,16 +3,16 @@
 #include <fstream>
 using namespace std;
 
-MBC1::MBC1()
+Mbc1::Mbc1()
 {
 	m_fiveBitBankCheck = true;
 }
 
-MBC1::~MBC1()
+Mbc1::~Mbc1()
 {
 }
 
-void MBC1::Write8(u16 address, u8 value)
+void Mbc1::Write8(u16 address, u8 value)
 {
 	//RAM Enable/Disable
 	if(address < 0x2000)
@@ -80,7 +80,7 @@ void MBC1::Write8(u16 address, u8 value)
 	Memory::Write8(address, value);
 }
 
-bool MBC1::LoadFile(const char* filename)
+bool Mbc1::LoadFile(const char* filename)
 {
 	//Open the file
 
@@ -158,17 +158,17 @@ bool MBC1::LoadFile(const char* filename)
 	return true;
 }
 
-void MBC1::SwitchROM()
+void Mbc1::SwitchROM()
 {
 	memcpy_s((void*)(&m_memoryData[0x4000]), (0x10000 - 0x4000), (void*)(&m_romBanks[m_selectedRomBank][0]), 0x4000);
 }
 
-void MBC1::SwitchRAM()
+void Mbc1::SwitchRAM()
 {
 	memcpy_s((void*)(&m_memoryData[0xa000]), (0x10000 - 0xa000), (void*)(&m_ramBanks[m_selectedRamBank][0]), 0x2000);
 }
 
-void MBC1::SaveRAM()
+void Mbc1::SaveRAM()
 {
 	u8 cartType = m_memoryData[0x147];
 	u8 batteryTypes[] = { 0x03, 0x06, 0x09, 0x0f, 0x10, 0x13, 0x1b, 0 };

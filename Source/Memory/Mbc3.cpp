@@ -1,11 +1,11 @@
 #include "Mbc3.h"
 
-MBC3::MBC3()
+Mbc3::Mbc3()
 {
 	m_fiveBitBankCheck = false;	///<Tells parent to allow loading into banks 0x20, 0x40, 0x60 during LoadFile.
 }
 
-void MBC3::Write8(u16 address, u8 value)
+void Mbc3::Write8(u16 address, u8 value)
 {
 	//RAM Enable/Disable
 	if(address < 0x2000)

@@ -3,12 +3,12 @@
 
 #include "Memory.h"
 
-class MBC1 : public Memory
+class Mbc1 : public Memory
 {
 public:
 
-	MBC1();
-	~MBC1();
+	Mbc1();
+	~Mbc1();
 
 	virtual void Write8(u16 address, u8 value);
 

@@ -3,11 +3,11 @@
 
 #include "Mbc1.h"
 
-class MBC5 : public MBC1
+class Mbc5 : public Mbc1
 {
 public:
 
-	MBC5();
+	Mbc5();
 
 	virtual void Write8(u16 address, u8 value);
 };
