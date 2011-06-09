@@ -150,6 +150,24 @@ u8 Memory::Read8(u16 address)
 		u8* pRegister = m_registerLocation[offset];
 		if(pRegister != NULL)
 			return *pRegister;
+
+		if(address >= 0xff30 && address < 0xff40)
+		{
+			if(m_waveRamLockMode == WaveRamLock::NoAccess)
+			{
+				//printf("Read(%04X):NoAccess: %02X\n", address, 0xff);
+				return 0xff;
+			}
+			else if(m_waveRamLockMode == WaveRamLock::SingleValue)
+			{
+				//printf("Read(%04X):SingleValue: %02X\n", address, m_waveRamReadValue);
+				return m_waveRamReadValue;
+			}
+			else
+			{
+				//printf("Read(%04X):Normal: %02X\n", address, m_memoryData[address]);
+			}
+		}
 	}
 	else if(address >= 0x8000 && address < 0xa000 && m_vramLocked)
 	{
@@ -158,17 +176,6 @@ u8 Memory::Read8(u16 address)
 	else if(address >= 0xfe00 && address < 0xfea0 && m_oamLocked)
 	{
 		return 0xff;
-	}
-	else if(address >= 0xff30 && address < 0xff40 && m_waveRamLockMode != WaveRamLock::Normal)
-	{
-		if(m_waveRamLockMode == WaveRamLock::NoAccess)
-		{
-			return 0xff;
-		}
-		else //m_waveRamLockMode == WaveRamLock::SingleValue
-		{
-			return m_waveRamReadValue;
-		}
 	}
 	else if(address < 0x100 && m_bootRomEnabled == true)
 	{
@@ -217,9 +224,9 @@ void Memory::Write8(u16 address, u8 value)
 		return;
 
 	//Send notifications when applicable
-	if(address >= 0x8000 && address < 0xa000 && m_display)
+	if(address >= 0x8000 && address < 0xa000)
 		m_display->WriteVram(address, value);
-	if(address >= 0xfe00 && address < 0xfea0 && m_display)
+	if(address >= 0xfe00 && address < 0xfea0)
 		m_display->WriteOam(address, value);
 
 	//Write it

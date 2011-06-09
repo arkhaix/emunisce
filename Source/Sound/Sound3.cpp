@@ -66,6 +66,10 @@ void Sound3::SetMachine(Machine* machine)
 	memory->SetRegisterLocation(0x1c, &m_nr32, false);
 	memory->SetRegisterLocation(0x1d, &m_nr33, false);
 	memory->SetRegisterLocation(0x1e, &m_nr34, false);
+
+	memory->SetWaveRamLock(WaveRamLock::Normal);
+	for(u16 waveRamAddress = 0xff30; waveRamAddress <= 0xff3f; waveRamAddress++)
+		memory->Write8(waveRamAddress, (waveRamAddress & 1) ? 0xff : 0x00);
 }
 
 
@@ -98,10 +102,13 @@ void Sound3::Run(int ticks)
 		return;
 	}
 
-	m_sampleReadTimerValue -= ticks;
-	if(m_sampleReadTimerValue <= 0)
+	if(m_sampleReadTimerValue > 0)
 	{
-		m_machine->GetMemory()->SetWaveRamLock(WaveRamLock::NoAccess);
+		m_sampleReadTimerValue -= ticks;
+		if(m_sampleReadTimerValue <= 0)
+		{
+			m_machine->GetMemory()->SetWaveRamLock(WaveRamLock::NoAccess);
+		}
 	}
 
 	m_waveTimerValue -= ticks;
@@ -116,22 +123,19 @@ void Sound3::Run(int ticks)
 		int waveSampleIndex = m_waveSamplePosition / 2;
 		u16 waveSampleAddress = (u16)0xff30 + waveSampleIndex;
 
-		u8 currentSampleValue = m_machine->GetMemory()->Read8(waveSampleAddress);
+		m_machine->GetMemory()->SetWaveRamLock(WaveRamLock::Normal);
 
-		m_machine->GetMemory()->SetWaveRamLock(WaveRamLock::SingleValue, currentSampleValue);
+		m_waveSampleValue = m_machine->GetMemory()->Read8(waveSampleAddress);
 
-		m_sampleReadTimerValue = 16;	///<wild guess
+		m_machine->GetMemory()->SetWaveRamLock(WaveRamLock::SingleValue, m_waveSampleValue);
+
+		m_sampleReadTimerValue = 4;	///<wild guess
 	}
 }
 
 float Sound3::GetSample()
 {
-	//Find the wave ram address corresponding to the current sample
-	int waveSampleIndex = m_waveSamplePosition / 2;
-	u16 waveSampleAddress = (u16)0xff30 + waveSampleIndex;
-
-	//Read the two samples in that byte
-	u8 waveSampleValue = m_machine->GetMemory()->Read8(waveSampleAddress);
+	u8 waveSampleValue = m_waveSampleValue;	///<Copied locally because of the >>= later.
 
 	//Samples at even positions are in the high nibble, samples at odd positions are in the low nibble
 	if(m_waveSamplePosition & 1)
@@ -233,9 +237,9 @@ void Sound3::SetNR34(u8 value)
 
 void Sound3::Trigger()
 {
-	m_waveTimerValue = m_waveTimerPeriod;
+	//m_waveTimerValue = m_waveTimerPeriod;
 
-	m_waveSamplePosition = 0;
+	//m_waveSamplePosition = 0;
 
 	SoundGenerator::Trigger();
 }

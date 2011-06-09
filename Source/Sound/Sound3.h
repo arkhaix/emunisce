@@ -72,6 +72,8 @@ private:
 
 	int m_waveSamplePosition;
 
+	u8 m_waveSampleValue;
+
 
 	//Memory access
 
