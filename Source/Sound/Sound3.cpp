@@ -92,8 +92,17 @@ void Sound3::Run(int ticks)
 {
 	SoundGenerator::Run(ticks);
 
-	if(m_waveTimerPeriod == 0)
+	if(m_waveTimerPeriod == 0 || m_channelController->IsChannelEnabled() == false)
+	{
+		m_machine->GetMemory()->SetWaveRamLock(WaveRamLock::Normal);
 		return;
+	}
+
+	m_sampleReadTimerValue -= ticks;
+	if(m_sampleReadTimerValue <= 0)
+	{
+		m_machine->GetMemory()->SetWaveRamLock(WaveRamLock::NoAccess);
+	}
 
 	m_waveTimerValue -= ticks;
 	while(m_waveTimerValue <= 0)
@@ -103,6 +112,15 @@ void Sound3::Run(int ticks)
 		m_waveSamplePosition++;
 		if(m_waveSamplePosition > 31)
 			m_waveSamplePosition = 0;
+
+		int waveSampleIndex = m_waveSamplePosition / 2;
+		u16 waveSampleAddress = (u16)0xff30 + waveSampleIndex;
+
+		u8 currentSampleValue = m_machine->GetMemory()->Read8(waveSampleAddress);
+
+		m_machine->GetMemory()->SetWaveRamLock(WaveRamLock::SingleValue, currentSampleValue);
+
+		m_sampleReadTimerValue = 16;	///<wild guess
 	}
 }
 
@@ -147,6 +165,7 @@ void Sound3::SetNR30(u8 value)
 	{
 		m_channelController->DisableChannel();
 		m_dacEnabled = false;
+		m_machine->GetMemory()->SetWaveRamLock(WaveRamLock::Normal);
 	}
 	else
 	{
