@@ -1,11 +1,11 @@
 #include "Mbc5.h"
 
-MBC5::MBC5()
+Mbc5::Mbc5()
 {
 	m_fiveBitBankCheck = false;	///<Tells parent to allow loading into banks 0x20, 0x40, 0x60 during LoadFile.
 }
 
-void MBC5::Write8(u16 address, u8 value)
+void Mbc5::Write8(u16 address, u8 value)
 {
 	//RAM Enable/Disable
 	if(address < 0x2000)

@@ -261,11 +261,11 @@ Memory* Memory::CreateFromFile(const char* filename)
 	if(cartType == 0 || cartType == 8 || cartType == 9)
 		memoryController = new RomOnly();
 	else if(cartType >= 1 && cartType <= 3)
-		memoryController = new MBC1();
+		memoryController = new Mbc1();
 	else if(cartType >= 0x0f && cartType <= 0x13)
-		memoryController = new MBC3();
+		memoryController = new Mbc3();
 	else if(cartType >= 0x19 && cartType <= 0x1e)
-		memoryController = new MBC5();
+		memoryController = new Mbc5();
 
 	if(memoryController != NULL)
 		printf("Cartridge type ok: %d (0x%02X)\n", cartType, cartType);
