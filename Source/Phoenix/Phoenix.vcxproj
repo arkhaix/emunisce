@@ -79,9 +79,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.vcxproj">
-      <Project>{5320668f-eda7-49eb-90ff-eec79cabc957}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\Cpu\Cpu.vcxproj">
       <Project>{15a4af88-4429-4720-aef7-700335cf8cf1}</Project>
     </ProjectReference>
@@ -90,6 +87,9 @@
     </ProjectReference>
     <ProjectReference Include="..\Input\Input.vcxproj">
       <Project>{132a61d1-1ba2-4581-b4f9-0740feb37572}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Machine\Machine.vcxproj">
+      <Project>{5320668f-eda7-49eb-90ff-eec79cabc957}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Memory\Memory.vcxproj">
       <Project>{316e1001-8c02-460f-ad90-ebb6a9fa5744}</Project>

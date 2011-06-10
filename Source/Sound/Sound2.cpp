@@ -19,7 +19,7 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Sound2.h"
 
-#include "../Common/Machine.h"
+#include "../Machine/Machine.h"
 #include "../Memory/Memory.h"
 
 #include "DutyUnit.h"

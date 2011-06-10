@@ -23,7 +23,7 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "Phoenix.h"
 
-#include "../Common/Machine.h"
+#include "../Machine/Machine.h"
 #include "../Sound/Sound.h"
 
 #include <iostream>

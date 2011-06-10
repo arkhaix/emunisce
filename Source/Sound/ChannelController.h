@@ -20,7 +20,7 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CHANNELDISABLER_H
 #define CHANNELDISABLER_H
 
-#include "../Common/Types.h"
+#include "../Machine/Types.h"
 
 
 class ChannelController

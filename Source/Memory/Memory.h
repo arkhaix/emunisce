@@ -20,7 +20,7 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MEMORY_H
 #define MEMORY_H
 
-#include "../Common/Types.h"
+#include "../Machine/Types.h"
 
 namespace WaveRamLock
 {

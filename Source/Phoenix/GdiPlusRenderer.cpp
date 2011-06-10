@@ -27,8 +27,8 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 using namespace Gdiplus;
 
 //Solution
-#include "../Common/Types.h"
-#include "../Common/Machine.h"
+#include "../Machine/Types.h"
+#include "../Machine/Machine.h"
 #include "../Display/Display.h"
 
 //Project

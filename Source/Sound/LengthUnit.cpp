@@ -19,7 +19,7 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "LengthUnit.h"
 
-#include "../Common/Machine.h"
+#include "../Machine/Machine.h"
 
 #include "ChannelController.h"
 #include "SoundGenerator.h"

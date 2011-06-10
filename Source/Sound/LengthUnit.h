@@ -20,7 +20,7 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef LENGTHUNIT_H
 #define LENGTHUNIT_H
 
-#include "../Common/Types.h"
+#include "../Machine/Types.h"
 
 class SoundGenerator;
 

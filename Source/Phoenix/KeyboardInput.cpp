@@ -24,8 +24,8 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 #include <map>
 using namespace std;
 
-#include "../Common/Types.h"
-#include "../Common/Machine.h"
+#include "../Machine/Types.h"
+#include "../Machine/Machine.h"
 #include "../Input/Input.h"
 
 #include "Phoenix.h"
