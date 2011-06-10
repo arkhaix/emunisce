@@ -19,8 +19,6 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Sound.h"
 
-#include "windows.h"	///<For critical sections.  The audio buffer needs to be locked.
-
 #include "../Machine/Machine.h"
 #include "../Memory/Memory.h"
 
@@ -43,9 +41,6 @@ Sound::Sound()
 {
 	m_activeAudioBuffer = &m_audioBuffer[0];
 	m_stableAudioBuffer = &m_audioBuffer[1];
-
-	m_audioBufferLock = (void*)new CRITICAL_SECTION();
-	InitializeCriticalSection((LPCRITICAL_SECTION)m_audioBufferLock);
 
 	m_hasPower = true;
 
@@ -76,9 +71,6 @@ Sound::~Sound()
 
 	for(int i=0;i<4;i++)
 		delete m_channelController[i];
-
-	DeleteCriticalSection((LPCRITICAL_SECTION)m_audioBufferLock);
-	delete (LPCRITICAL_SECTION)m_audioBufferLock;
 }
 
 void Sound::Initialize()
@@ -228,11 +220,9 @@ void Sound::Run(int ticks)
 			m_nextSampleIndex = 0;
 
 			//Swap buffers
-			EnterCriticalSection((LPCRITICAL_SECTION)m_audioBufferLock);
-				AudioBuffer* temp = m_stableAudioBuffer;
-				m_stableAudioBuffer = m_activeAudioBuffer;
-				m_activeAudioBuffer = temp;
-			LeaveCriticalSection((LPCRITICAL_SECTION)m_audioBufferLock);
+			AudioBuffer* temp = m_stableAudioBuffer;
+			m_stableAudioBuffer = m_activeAudioBuffer;
+			m_activeAudioBuffer = temp;
 
 			m_audioBufferCount++;
 		}
@@ -241,11 +231,7 @@ void Sound::Run(int ticks)
 
 AudioBuffer Sound::GetStableAudioBuffer()
 {
-	EnterCriticalSection((LPCRITICAL_SECTION)m_audioBufferLock);
-		AudioBuffer result = *m_stableAudioBuffer;
-	LeaveCriticalSection((LPCRITICAL_SECTION)m_audioBufferLock);
-
-	return result;
+	return *m_stableAudioBuffer;
 }
 
 int Sound::GetAudioBufferCount()

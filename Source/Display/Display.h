@@ -68,6 +68,7 @@ public:
 
 	//External
 	ScreenBuffer GetStableScreenBuffer();
+	int GetScreenBufferCount();	///<Returns the id of the current screen buffer.  Not guaranteed to be unique or sequential, so use != when polling for changes.
 
 
 	//Gameboy registers
@@ -124,7 +125,7 @@ private:
 	ScreenBuffer m_screenBuffer2;
 	ScreenBuffer* m_activeScreenBuffer;	///<The screen buffer currently being rendered to by the gameboy
 	ScreenBuffer* m_stableScreenBuffer;	///<The screen buffer ready to be displayed on the pc
-	void* m_screenBufferLock;
+	int m_screenBufferCount;
 
 	int m_nextPixelToRenderX;	///<X-position of the last pixel rendered during this scanline
 	int m_ticksSpentThisScanline;	///<How many ticks have passed during this scanline.  So we know how many pixels to render.

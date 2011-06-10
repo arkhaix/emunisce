@@ -115,7 +115,6 @@ private:
 	AudioBuffer m_audioBuffer[2];
 	AudioBuffer* m_activeAudioBuffer;
 	AudioBuffer* m_stableAudioBuffer;
-	void* m_audioBufferLock;
 	int m_audioBufferCount;
 
 	float m_ticksPerSample;
