@@ -21,7 +21,7 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "windows.h"	///<For critical sections.  The audio buffer needs to be locked.
 
-#include "../Common/Machine.h"
+#include "../Machine/Machine.h"
 #include "../Memory/Memory.h"
 
 #include "Sound1.h"

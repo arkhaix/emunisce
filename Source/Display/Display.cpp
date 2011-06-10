@@ -21,7 +21,7 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "Display.h"
 
-#include "../Common/Machine.h"
+#include "../Machine/Machine.h"
 #include "../Memory/Memory.h"
 
 

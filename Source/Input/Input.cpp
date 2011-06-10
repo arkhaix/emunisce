@@ -19,7 +19,7 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Input.h"
 
-#include "../Common/Machine.h"
+#include "../Machine/Machine.h"
 #include "../Memory/Memory.h"
 
 Input::Input()

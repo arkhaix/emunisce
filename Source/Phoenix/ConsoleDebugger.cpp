@@ -32,7 +32,7 @@ using namespace std;
 #include <io.h>
 
 //Solution
-#include "../Common/Machine.h"
+#include "../Machine/Machine.h"
 
 //Project
 #include "Phoenix.h"

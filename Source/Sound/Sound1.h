@@ -20,7 +20,7 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef SOUND1_H
 #define SOUND1_H
 
-#include "../Common/Types.h"
+#include "../Machine/Types.h"
 class Machine;
 
 #include "SoundGenerator.h"

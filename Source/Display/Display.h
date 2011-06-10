@@ -20,7 +20,7 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#include "../Common/Types.h"
+#include "../Machine/Types.h"
 
 #define PIXEL_NOT_CACHED ((u8)-1)
 #define PIXEL_TRANSPARENT ((u8)-2)

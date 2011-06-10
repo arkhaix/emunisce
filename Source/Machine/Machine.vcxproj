@@ -63,6 +63,23 @@
   <ItemGroup>
     <ClCompile Include="Machine.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cpu\Cpu.vcxproj">
+      <Project>{15a4af88-4429-4720-aef7-700335cf8cf1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Display\Display.vcxproj">
+      <Project>{e913fab3-3258-423d-ae0a-3c23b2ca31b5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Input\Input.vcxproj">
+      <Project>{132a61d1-1ba2-4581-b4f9-0740feb37572}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Memory\Memory.vcxproj">
+      <Project>{316e1001-8c02-460f-ad90-ebb6a9fa5744}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Sound\Sound.vcxproj">
+      <Project>{6511e5d7-746b-4e84-bd0b-6a960f4df7e0}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

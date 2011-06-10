@@ -33,7 +33,7 @@ using namespace std;
 #include "Mbc5.h"
 
 //Solution
-#include "../Common/Machine.h"
+#include "../Machine/Machine.h"
 #include "../Cpu/Cpu.h"
 #include "../Display/Display.h"
 #include "../Input/Input.h"

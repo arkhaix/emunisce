@@ -19,7 +19,7 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Phoenix.h"
 
-#include "../Common/Machine.h"
+#include "../Machine/Machine.h"
 
 #include "ConsoleDebugger.h"
 #include "GdiPlusRenderer.h"
