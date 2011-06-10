@@ -248,6 +248,31 @@ void Sound3::SetNR34(u8 value)
 
 void Sound3::Trigger()
 {
+	//Wave ram gets corrupted if a trigger occurs during a read
+	if(m_sampleReadTimerValue > 0 && m_dacEnabled == true)
+	{
+		u16 waveRamAddress = 0xff30;
+
+		//If it's reading one of the first four bytes, then the first byte gets overwritten
+		if(m_waveSamplePosition < 8)
+		{
+			m_machine->GetMemory()->Write8(waveRamAddress, m_waveSampleValue);
+		}
+
+		//Otherwise, the first four bytes get overwritten with the four aligned bytes currently being accessed
+		else
+		{
+			u16 currentSampleAddress = 0xff30 + (m_waveSamplePosition / 2);
+			u16 alignedSampleAddress = currentSampleAddress - (currentSampleAddress % 4);
+
+			for(int i=0;i<4;i++)
+			{
+				u8 newValue = m_machine->GetMemory()->Read8(waveRamAddress + i);
+				m_machine->GetMemory()->Write8(alignedSampleAddress + i, newValue);
+			}
+		}
+	}
+
 	m_sampleReadTimerValue = 0;
 	m_waveSamplePosition = 0;
 
