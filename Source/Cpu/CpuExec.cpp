@@ -36,16 +36,17 @@ int Cpu::Step()
 	u8 interruptFlags = m_memory->Read8(REG_IF);
 	interruptFlags &= 0x1f;	///<Only bits 0-4 signal valid interrupts.
 
-	if(interruptFlags != 0)
+	u8 interruptEnableFlags = m_memory->Read8(REG_IE);
+	interruptEnableFlags &= 0x1f;
+
+	if( (interruptFlags & interruptEnableFlags) != 0 )
 		m_halted = false;
 
 	if(interruptFlags & IF_INPUT)
 		m_stopped = false;
 
 	if( m_masterInterruptsEnabled && m_delayNextInterrupt == false && interruptFlags != 0)
-	{
-		u8 interruptEnableFlags = m_memory->Read8(REG_IE);
-		
+	{		
 		if( (interruptFlags & IF_VBLANK) && (interruptEnableFlags & IF_VBLANK) && !m_stopped )
 		{
 			m_masterInterruptsEnabled = false;
