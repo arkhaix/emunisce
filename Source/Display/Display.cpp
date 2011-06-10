@@ -17,8 +17,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "windows.h"	///<For critical sections.  We need to lock the screen buffer.
-
 #include "Display.h"
 
 #include "../Machine/Machine.h"
@@ -63,8 +61,7 @@ Display::Display()
 	m_activeScreenBuffer = &m_screenBuffer;
 	m_stableScreenBuffer = &m_screenBuffer2;
 
-	m_screenBufferLock = (void*)(new CRITICAL_SECTION());
-	InitializeCriticalSection((LPCRITICAL_SECTION)m_screenBufferLock);
+	m_screenBufferCount = 0;
 
 	m_vramOffset = 0x8000;
 	m_oamOffset = 0xfe00;
@@ -84,8 +81,6 @@ Display::Display()
 
 Display::~Display()
 {
-	DeleteCriticalSection((LPCRITICAL_SECTION)m_screenBufferLock);
-	delete (LPCRITICAL_SECTION)m_screenBufferLock;
 }
 
 void Display::SetMachine(Machine* machine)
@@ -176,11 +171,12 @@ void Display::WriteOam(u16 address, u8 value)
 
 ScreenBuffer Display::GetStableScreenBuffer()
 {
-	EnterCriticalSection( (LPCRITICAL_SECTION)m_screenBufferLock );
-		ScreenBuffer result = *m_stableScreenBuffer;
-	LeaveCriticalSection( (LPCRITICAL_SECTION)m_screenBufferLock );
+	return *m_stableScreenBuffer;
+}
 
-	return result;
+int Display::GetScreenBufferCount()
+{
+	return m_screenBufferCount;
 }
 
 
@@ -378,11 +374,11 @@ void Display::Run_VBlank(int ticks)
 	if(m_stateTicksRemaining <= ticks)
 	{
 		//Swap buffers
-		EnterCriticalSection( (LPCRITICAL_SECTION)m_screenBufferLock );
-			ScreenBuffer* temp = m_stableScreenBuffer;
-			m_stableScreenBuffer = m_activeScreenBuffer;
-			m_activeScreenBuffer = temp;
-		LeaveCriticalSection( (LPCRITICAL_SECTION)m_screenBufferLock );
+		ScreenBuffer* temp = m_stableScreenBuffer;
+		m_stableScreenBuffer = m_activeScreenBuffer;
+		m_activeScreenBuffer = temp;
+
+		m_screenBufferCount++;
 
 		//Clear caches
 		for(int y=0;y<144;y++)

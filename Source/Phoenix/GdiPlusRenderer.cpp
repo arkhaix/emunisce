@@ -276,14 +276,14 @@ public:
 		if(_Machine == NULL || _Machine->GetDisplay() == NULL)
 			return;
 
-		if(_LastFrameRendered == _Machine->GetFrameCount())
-			return;
-
 		Display* display = _Machine->GetDisplay();
+
+		if(_LastFrameRendered == display->GetScreenBufferCount())
+			return;
 
 		ScreenBuffer screen = display->GetStableScreenBuffer();
 
-		_LastFrameRendered = _Machine->GetFrameCount();
+		_LastFrameRendered = display->GetScreenBufferCount();
 
 		BitmapData bitmapData;
 		Gdiplus::Rect bitmapRect(0, 0, _Bitmap->GetWidth(), _Bitmap->GetHeight());
