@@ -44,7 +44,12 @@ void Input::Initialize()
 //External
 void Input::ButtonDown(Buttons::Type button)
 {
+	u8 oldButtonStates = m_buttonStates;
+	
 	m_buttonStates &= ~(1<<button);
+
+	if(m_buttonStates == oldButtonStates)
+		return;
 
 	if(m_currentMode == RegisterMode::P14 || m_currentMode == RegisterMode::P15)
 		UpdateRegister();
@@ -54,7 +59,12 @@ void Input::ButtonDown(Buttons::Type button)
 
 void Input::ButtonUp(Buttons::Type button)
 {
+	u8 oldButtonStates = m_buttonStates;
+
 	m_buttonStates |= 1<<button;
+
+	if(m_buttonStates == oldButtonStates)
+		return;
 
 	if(m_currentMode == RegisterMode::P14 || m_currentMode == RegisterMode::P15)
 		UpdateRegister();
