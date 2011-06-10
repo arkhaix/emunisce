@@ -9,6 +9,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{4c97c863-181b-41a7-85ed-ed846b218502}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Types.h">
@@ -16,6 +19,12 @@
     </ClInclude>
     <ClInclude Include="Machine.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IUserToMachine.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="IMachineToUser.h">
+      <Filter>Interfaces</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
