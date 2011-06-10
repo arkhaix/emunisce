@@ -55,8 +55,10 @@
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="IMachineToUser.h" />
     <ClInclude Include="Machine.h" />
     <ClInclude Include="Types.h" />
+    <ClInclude Include="IUserToMachine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Machine.cpp" />
