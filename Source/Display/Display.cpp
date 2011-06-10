@@ -227,6 +227,7 @@ void Display::SetLcdControl(u8 value)
 
 void Display::SetLcdStatus(u8 value)
 {
+	//Writing to bit 3 clears it in this register
 	if(value & STAT_Coincidence)
 		m_lcdStatus &= ~(STAT_Coincidence);
 
@@ -236,6 +237,17 @@ void Display::SetLcdStatus(u8 value)
 	m_lcdStatus |= 0x80;
 
 	CheckCoincidence();	///<Enabling or disabling this seems to have no impact?  Probably because writing STAT_Coincidence can only clear it?
+
+	//"STAT bug" causes an interrupt to fire if this register is written to during h-blank or v-blank
+	if(m_lcdEnabled == true)
+	{
+		if(m_currentState == DisplayState::HBlank || m_currentState == DisplayState::VBlank)
+		{
+			u8 interrupts = m_memory->Read8(REG_IF);
+			interrupts |= IF_LCDC;
+			m_memory->Write8(REG_IF, interrupts);
+		}
+	}
 }
 
 void Display::SetCurrentScanline(u8 value)
@@ -250,7 +262,7 @@ void Display::SetCurrentScanline(u8 value)
 void Display::SetScanlineCompare(u8 value)
 {
 	m_scanlineCompare = value;
-	//CheckCoincidence(); ///<Enabling this causes prehistorik man to hang sooner (beginning of "START" instead of the end)
+	//CheckCoincidence(); ///<Enabling this causes prehistorik man to hang
 }
 
 void Display::Begin_HBlank()
