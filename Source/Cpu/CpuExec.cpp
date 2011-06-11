@@ -40,10 +40,7 @@ int Cpu::Step()
 	interruptEnableFlags &= 0x1f;
 
 	if( (interruptFlags & interruptEnableFlags) != 0 )
-	{
 		m_halted = false;
-		m_masterInterruptsEnabled = true;
-	}
 
 	if(interruptFlags & IF_INPUT)
 		m_stopped = false;
@@ -970,6 +967,7 @@ int Cpu::Step()
 	case 0x76:
 		//76		HALT			4	1	1	(repeated till next int)
 		m_halted = true;
+		m_masterInterruptsEnabled = true;
 		instructionTime += 4;
 	break;
 
