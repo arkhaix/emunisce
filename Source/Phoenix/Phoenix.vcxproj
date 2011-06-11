@@ -106,6 +106,9 @@
     <ProjectReference Include="..\WaveOutSound\WaveOutSound.vcxproj">
       <Project>{b47d9786-8300-4349-ab06-5fce239da5c5}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Window\Window.vcxproj">
+      <Project>{df0ad806-8fba-455f-bc42-0218f957d281}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConsoleDebugger.cpp" />
