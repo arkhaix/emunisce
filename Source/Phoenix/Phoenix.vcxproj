@@ -85,8 +85,14 @@
     <ProjectReference Include="..\Display\Display.vcxproj">
       <Project>{e913fab3-3258-423d-ae0a-3c23b2ca31b5}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\GdiPlusRenderer\GdiPlusRenderer.vcxproj">
+      <Project>{ec091f82-1e1c-4b24-a41e-899cf6458295}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Input\Input.vcxproj">
       <Project>{132a61d1-1ba2-4581-b4f9-0740feb37572}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\KeyboardInput\KeyboardInput.vcxproj">
+      <Project>{05e90435-3f0e-4575-8b8f-a1da99c34b58}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Machine\Machine.vcxproj">
       <Project>{5320668f-eda7-49eb-90ff-eec79cabc957}</Project>
@@ -97,21 +103,18 @@
     <ProjectReference Include="..\Sound\Sound.vcxproj">
       <Project>{6511e5d7-746b-4e84-bd0b-6a960f4df7e0}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\WaveOutSound\WaveOutSound.vcxproj">
+      <Project>{b47d9786-8300-4349-ab06-5fce239da5c5}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConsoleDebugger.cpp" />
-    <ClCompile Include="GdiPlusRenderer.cpp" />
-    <ClCompile Include="KeyboardInput.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Phoenix.cpp" />
-    <ClCompile Include="WaveOutSound.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConsoleDebugger.h" />
-    <ClInclude Include="GdiPlusRenderer.h" />
-    <ClInclude Include="KeyboardInput.h" />
     <ClInclude Include="Phoenix.h" />
-    <ClInclude Include="WaveOutSound.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

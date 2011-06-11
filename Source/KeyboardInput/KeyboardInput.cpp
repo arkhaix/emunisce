@@ -28,7 +28,7 @@ using namespace std;
 #include "../Machine/Machine.h"
 #include "../Input/Input.h"
 
-#include "Phoenix.h"
+#include "../Phoenix/Phoenix.h"	///<todo: this is basically unused.  refactor this.
 
 class KeyboardInput_Private
 {

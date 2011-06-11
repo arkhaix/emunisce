@@ -21,7 +21,7 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "windows.h"
 
-#include "Phoenix.h"
+#include "../Phoenix/Phoenix.h"	///<todo: this is just here for requesting shutdown?  refactor this.
 
 #include "../Machine/Machine.h"
 #include "../Sound/Sound.h"
