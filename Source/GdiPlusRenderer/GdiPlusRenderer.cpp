@@ -26,14 +26,14 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 #include "gdiplus.h"
 using namespace Gdiplus;
 
-//Solution
+//Machine
 #include "../Machine/Types.h"
 #include "../Machine/Machine.h"
 #include "../Display/Display.h"
 
-//Project
-#include "Phoenix.h"
-#include "KeyboardInput.h"	///<todo: get rid of this
+//Application
+#include "../Phoenix/Phoenix.h"	///<todo: this is just here for requesting shutdown and getting a pointer to KeyboardInput.  Refactor this.
+#include "../KeyboardInput/KeyboardInput.h"	///<todo: get rid of this
 
 //Statics
 GdiPlusRenderer* GdiPlusRenderer::m_defaultInstance = NULL;

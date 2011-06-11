@@ -21,7 +21,7 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "Phoenix.h"
 #include "ConsoleDebugger.h"
-#include "GdiPlusRenderer.h"
+#include "../GdiPlusRenderer/GdiPlusRenderer.h"
 
 Phoenix* g_phoenix = NULL;
 

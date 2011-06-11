@@ -22,9 +22,9 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Machine/Machine.h"
 
 #include "ConsoleDebugger.h"
-#include "GdiPlusRenderer.h"
-#include "KeyboardInput.h"
-#include "WaveOutSound.h"
+#include "../GdiPlusRenderer/GdiPlusRenderer.h"
+#include "../KeyboardInput/KeyboardInput.h"
+#include "../WaveOutSound/WaveOutSound.h"
 
 class Phoenix_Private
 {

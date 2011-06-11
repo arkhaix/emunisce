@@ -36,7 +36,7 @@ using namespace std;
 
 //Project
 #include "Phoenix.h"
-#include "WaveOutSound.h"
+#include "../WaveOutSound/WaveOutSound.h"
 
 
 ConsoleDebugger::ConsoleDebugger()
