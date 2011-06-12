@@ -28,12 +28,12 @@ Mutex::~Mutex()
 }
 
 
-void Mutex::Lock()
+void Mutex::Acquire()
 {
 	EnterCriticalSection(m_private->CriticalSection);
 }
 
-void Mutex::Unlock()
+void Mutex::Release()
 {
 	LeaveCriticalSection(m_private->CriticalSection);
 }

@@ -19,6 +19,8 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Phoenix.h"
 
+#include "../WindowsPlatform/Window.h"
+
 #include "../Machine/Machine.h"
 
 #include "ConsoleDebugger.h"
@@ -29,6 +31,8 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 class Phoenix_Private
 {
 public:
+
+	Window* _Window;
 
 	Machine* _Machine;
 
@@ -42,6 +46,8 @@ public:
 	Phoenix_Private()
 	{
 		_ShutdownRequested = false;
+
+		_Window = new Window();
 
 		_Machine = NULL;
 
@@ -69,12 +75,17 @@ public:
 		{
 			Machine::Release(_Machine);
 		}
+
+		delete _Window;
 	}
 };
 
 Phoenix::Phoenix()
 {
 	m_private = new Phoenix_Private();
+
+	m_private->_Window->Create(640, 480, "PhoenixGB2", "PhoenixGB2");
+	//m_private->_Window->Show();
 
 	m_private->_Debugger->Initialize(this);
 	m_private->_Renderer->Initialize(this);
@@ -84,6 +95,8 @@ Phoenix::Phoenix()
 
 Phoenix::~Phoenix()
 {
+	m_private->_Window->Destroy();
+
 	delete m_private;
 }
 
