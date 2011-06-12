@@ -20,12 +20,14 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef PHOENIX_H
 #define PHOENIX_H
 
+class Window;
+
+class Machine;
+
 class ConsoleDebugger;
 class GdiPlusRenderer;
 class KeyboardInput;
 class WaveOutSound;
-
-class Machine;
 
 class Phoenix
 {
@@ -41,6 +43,7 @@ public:
 	bool ShutdownRequested();
 	void RequestShutdown();
 
+	Window* GetWindow();
 	ConsoleDebugger* GetDebugger();
 	GdiPlusRenderer* GetRenderer();
 	KeyboardInput* GetInput();
