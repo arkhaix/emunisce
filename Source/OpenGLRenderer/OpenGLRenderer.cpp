@@ -175,6 +175,8 @@ public:
 		glMatrixMode(GL_MODELVIEW);
 		glPopMatrix();
 
+		SwapBuffers(_DeviceContext);
+
 		RestorePreservedContext();
 	}
 
