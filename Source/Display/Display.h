@@ -25,6 +25,12 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 #define PIXEL_NOT_CACHED ((u8)-1)
 #define PIXEL_TRANSPARENT ((u8)-2)
 
+struct ScreenResolution
+{
+	int width;
+	int height;
+};
+
 struct ScreenBuffer
 {
 	u8 Pixels[160*144];
@@ -67,6 +73,7 @@ public:
 
 
 	//External
+	ScreenResolution GetScreenResolution();
 	ScreenBuffer GetStableScreenBuffer();
 	int GetScreenBufferCount();	///<Returns the id of the current screen buffer.  Not guaranteed to be unique or sequential, so use != when polling for changes.
 

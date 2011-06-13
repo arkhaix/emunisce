@@ -36,6 +36,8 @@ public:
 	Phoenix();
 	~Phoenix();
 
+	void RunWindow();	///<Pumps messages on the window until shutdown is requested.  Blocks until shutdown.
+
 	void NotifyMachineChanged(Machine* newMachine);
 
 	Machine* GetMachine();
