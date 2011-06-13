@@ -11,6 +11,7 @@ Mutex Window_Private::m_hwndInstanceMapLock;
 Window_Private::Window_Private()
 {
 	m_needsDestroy = false;
+	m_requestingExit = false;
 
 	m_windowHandle = NULL;
 
@@ -51,7 +52,7 @@ void Window_Private::Create(int width, int height, const char* title, const char
 	m_windowHandle = CreateWindow(
 		className,   // window class name
 		title,  // window caption
-		WS_OVERLAPPEDWINDOW,      // window style
+		WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,      // window style
 		m_position.x,            // initial x position
 		m_position.y,            // initial y position
 		m_size.width,            // initial x size
@@ -71,6 +72,9 @@ void Window_Private::Create(int width, int height, const char* title, const char
 
 void Window_Private::Destroy()
 {
+	m_requestingExit = true;
+	Sleep(15);
+
 	CloseWindow(m_windowHandle);
 	DestroyWindow(m_windowHandle);
 
@@ -126,19 +130,27 @@ void Window_Private::UnsubscribeListener(IWindowMessageListener* listener)
 void Window_Private::PumpMessages()
 {
 	MSG msg;
+	m_requestingExit = false;
 
-	while(PeekMessage(&msg, m_windowHandle, 0, 0, PM_REMOVE))
+	while(m_requestingExit == false && PeekMessage(&msg, m_windowHandle, 0, 0, PM_REMOVE))
 	{
 		if(msg.message == WM_QUIT)
 		{
 			ScopedMutex scopedMutex(m_listenersLock);
 			for(auto iter = m_listeners.begin(); iter != m_listeners.end(); ++iter)
 				(*iter)->Closed();
+
+			break;
 		}
 
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
+}
+
+void Window_Private::RequestExit()
+{
+	m_requestingExit = true;
 }
 
 

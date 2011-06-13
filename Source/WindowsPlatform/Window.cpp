@@ -36,6 +36,28 @@ void Window::Hide()
 }
 
 
+WindowSize Window::GetSize()
+{
+	return m_private->GetSize();
+}
+
+void Window::SetSize(WindowSize size)
+{
+	m_private->SetSize(size);
+}
+
+
+WindowPosition Window::GetPosition()
+{
+	return m_private->GetPosition();
+}
+
+void Window::SetPosition(WindowPosition position)
+{
+	m_private->SetPosition(position);
+}
+
+
 void* Window::GetHandle()
 {
 	return m_private->GetHandle();
@@ -56,4 +78,9 @@ void Window::UnsubscribeListener(IWindowMessageListener* listener)
 void Window::PumpMessages()
 {
 	m_private->PumpMessages();
+}
+
+void Window::RequestExit()
+{
+	m_private->RequestExit();
 }
