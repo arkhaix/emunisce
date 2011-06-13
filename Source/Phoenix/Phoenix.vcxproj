@@ -100,6 +100,9 @@
     <ProjectReference Include="..\Memory\Memory.vcxproj">
       <Project>{316e1001-8c02-460f-ad90-ebb6a9fa5744}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\OpenGLRenderer\OpenGLRenderer.vcxproj">
+      <Project>{4913cbb4-2d7d-4d39-b3c2-1440ebff3953}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Sound\Sound.vcxproj">
       <Project>{6511e5d7-746b-4e84-bd0b-6a960f4df7e0}</Project>
     </ProjectReference>

@@ -26,6 +26,7 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 #include "ConsoleDebugger.h"
 #include "../GdiPlusRenderer/GdiPlusRenderer.h"
 #include "../KeyboardInput/KeyboardInput.h"
+#include "../OpenGLRenderer/OpenGLRenderer.h"
 #include "../WaveOutSound/WaveOutSound.h"
 
 class Phoenix_Private : public IWindowMessageListener
@@ -38,6 +39,7 @@ public:
 
 	ConsoleDebugger* _Debugger;
 	GdiPlusRenderer* _Renderer;
+	//OpenGLRenderer* _Renderer;
 	KeyboardInput* _Input;
 	WaveOutSound* _Sound;
 
@@ -53,6 +55,7 @@ public:
 
 		_Debugger = new ConsoleDebugger();
 		_Renderer = new GdiPlusRenderer();
+		//_Renderer = new OpenGLRenderer();
 		_Input = new KeyboardInput();
 		_Sound = new WaveOutSound();
 	}
@@ -238,6 +241,9 @@ bool Phoenix::ShutdownRequested()
 void Phoenix::RequestShutdown()
 {
 	m_private->_ShutdownRequested = true;
+
+	if(m_private->_Window != NULL)
+		m_private->_Window->RequestExit();
 }
 
 Window* Phoenix::GetWindow()
@@ -252,7 +258,8 @@ ConsoleDebugger* Phoenix::GetDebugger()
 
 GdiPlusRenderer* Phoenix::GetRenderer()
 {
-	return m_private->_Renderer;
+	return NULL;
+	//return m_private->_Renderer;
 }
 
 KeyboardInput* Phoenix::GetInput()

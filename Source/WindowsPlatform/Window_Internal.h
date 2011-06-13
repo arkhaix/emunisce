@@ -27,6 +27,7 @@ public:
 	void UnsubscribeListener(IWindowMessageListener* listener);
 
 	void PumpMessages();
+	void RequestExit();
 
 	void Show();
 	void Hide();
@@ -46,6 +47,7 @@ private:
 	LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 	bool m_needsDestroy;
+	bool m_requestingExit;
 
 	HWND m_windowHandle;
 

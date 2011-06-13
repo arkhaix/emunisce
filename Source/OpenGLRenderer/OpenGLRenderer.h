@@ -27,6 +27,9 @@ class OpenGLRenderer
 {
 public:
 
+	OpenGLRenderer();
+	~OpenGLRenderer();
+
 	void Initialize(Phoenix* phoenix);
 	void Shutdown();
 

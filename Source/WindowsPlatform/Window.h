@@ -43,6 +43,7 @@ public:
 	void UnsubscribeListener(IWindowMessageListener* listener);
 
 	void PumpMessages();
+	void RequestExit();
 
 	void Show();
 	void Hide();
