@@ -31,6 +31,60 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Phoenix/Phoenix.h"
 
 
+union OpenGLPixel
+{
+	GLubyte RGB[4];
+
+	struct
+	{
+		GLubyte R;
+		GLubyte G;
+		GLubyte B;
+		GLubyte A;
+	} Elements;
+
+	OpenGLPixel(GLubyte r, GLubyte g, GLubyte b, GLubyte a=255)
+	{
+		Elements.R = r;
+		Elements.G = g;
+		Elements.B = b;
+		Elements.A = a;
+	}
+};
+
+struct OpenGLScreenBuffer
+{
+	int Width;
+	int Height;
+	OpenGLPixel* Pixels;
+
+	OpenGLScreenBuffer()
+	{
+		Width = -1;
+		Height = -1;
+		Pixels = NULL;
+	}
+
+	OpenGLScreenBuffer(int width, int height)
+	{
+		Width = width;
+		Height = height;
+		Pixels = (OpenGLPixel*)malloc(width * height * sizeof(OpenGLPixel));
+	}
+
+	~OpenGLScreenBuffer()
+	{
+		if(Pixels != NULL)
+		{
+			free((void*)Pixels);
+			Pixels = NULL;
+
+			Width = -1;
+			Height = -1;
+		}
+	}
+};
+
 class OpenGLRenderer_Private : public IWindowMessageListener
 {
 public:
@@ -48,6 +102,9 @@ public:
 	HDC _PreservedDeviceContext;
 	HGLRC _PreservedRenderContext;
 
+	OpenGLScreenBuffer* _ScreenBuffer;
+	int _LastFrameRendered;
+
 	OpenGLRenderer_Private()
 	{
 		_Phoenix = NULL;
@@ -62,6 +119,9 @@ public:
 
 		_PreservedDeviceContext = NULL;
 		_PreservedRenderContext = NULL;
+
+		_ScreenBuffer = NULL;
+		_LastFrameRendered = -1;
 	}
 
 	void InitializeOpenGL()
@@ -93,12 +153,8 @@ public:
 		PreserveExistingContext();
 		wglMakeCurrent(_DeviceContext, _RenderContext);
 
-		glShadeModel(GL_SMOOTH);
+		glShadeModel(GL_FLAT);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		glClearDepth(1.0f);
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LEQUAL);
-		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
 		RestorePreservedContext();
 	}
@@ -127,10 +183,51 @@ public:
 
 	void UpdateTexture()
 	{
+		if(_Display == NULL)
+			return;
+
+		if(_Display->GetScreenBufferCount() == _LastFrameRendered)
+			return;
+
+		_LastFrameRendered = _Display->GetScreenBufferCount();
+
+		ScreenResolution displayResolution = _Display->GetScreenResolution();
+		if(_ScreenBuffer == NULL || _ScreenBuffer->Width != displayResolution.width || _ScreenBuffer->Height != displayResolution.height)
+		{
+			if(_ScreenBuffer != NULL)
+				delete _ScreenBuffer;
+
+			_ScreenBuffer = new OpenGLScreenBuffer(displayResolution.width, displayResolution.height);
+		}
+
+		OpenGLPixel palette[4] =
+		{
+			OpenGLPixel(255, 255, 255),
+			OpenGLPixel(170, 170, 170),
+			OpenGLPixel(85, 85, 85),
+			OpenGLPixel(0, 0, 0)
+		};
+
+		ScreenBuffer displayScreen = _Display->GetStableScreenBuffer();
+
+		for(int y=0;y<displayResolution.height;y++)
+		{
+			for(int x=0;x<displayResolution.width;x++)
+			{
+				u8 pixelValue = displayScreen.GetPixel(x,y);
+				if(pixelValue < 0 || pixelValue > 3)
+					continue;
+
+				_ScreenBuffer->Pixels[ (y * displayResolution.width) + x ] = palette[ displayScreen.GetPixel(x,y) ];
+			}
+		}
 	}
 
 	void RenderToWindow()
 	{
+		if(_ScreenBuffer == NULL || _ScreenBuffer->Width <= 0 || _ScreenBuffer->Height <= 0)
+			return;
+
 		if(_Phoenix->GetWindow() == NULL)
 			return;
 
@@ -138,43 +235,24 @@ public:
 		wglMakeCurrent(_DeviceContext, _RenderContext);
 
 		//Make sure we're covering the whole window (even after resize)
-		WindowSize windowSize = _Phoenix->GetWindow()->GetSize();
-		glViewport(0, 0, windowSize.width, windowSize.height);
-
-		//Setup 2D projection
-		int viewPort[4];
-
-		glGetIntegerv(GL_VIEWPORT, viewPort);
+		RECT clientRect;
+		GetClientRect(_WindowHandle, &clientRect);
+		int clientWidth = clientRect.right - clientRect.left;
+		int clientHeight = clientRect.bottom - clientRect.top;
+		glViewport(0, 0, clientWidth, clientHeight);
 
 		glMatrixMode(GL_PROJECTION);
-		glPushMatrix();
 		glLoadIdentity();
-
-		glOrtho(0, viewPort[2], 0, viewPort[3], -1, 1);
+		glOrtho(0.0, (GLdouble)clientWidth, 0.0, (GLdouble)clientHeight, -1.0, 1.0);
 		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
 		glLoadIdentity();
 
-		//2D projection is done.  Now clear the screen so we can start fresh.
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glLoadIdentity();
-
-		//Do more stuff...
-		glBegin(GL_TRIANGLES);
-			glColor3ub(255, 0, 0);
-			glVertex2d(0, 0);
-			glColor3ub(0, 255, 0);
-			glVertex2d(100,0);
-			glColor3ub(0, 0, 255);
-			glVertex2d(50, 50);
-		glEnd();
-
-		//Done doing stuff
-		glMatrixMode(GL_PROJECTION);
-		glPopMatrix();   
-		glMatrixMode(GL_MODELVIEW);
-		glPopMatrix();
-
+		//Render
+		glRasterPos2i(0, 0);
+		glDrawPixels(_ScreenBuffer->Width, _ScreenBuffer->Height, GL_RGBA, GL_UNSIGNED_BYTE, _ScreenBuffer->Pixels);
+		glFlush();
+		
+		//Display the rendered frame to the window
 		SwapBuffers(_DeviceContext);
 
 		RestorePreservedContext();
