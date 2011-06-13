@@ -32,6 +32,8 @@ public:
 
 	void SetMachine(Machine* machine);
 
+	int GetLastFrameRendered();
+
 private:
 
 	class GdiPlusRenderer_Private* m_private;

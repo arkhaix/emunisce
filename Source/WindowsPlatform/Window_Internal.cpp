@@ -205,6 +205,8 @@ LRESULT CALLBACK Window_Private::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPA
 		for(auto iter = m_listeners.begin(); iter != m_listeners.end(); ++iter)
 			(*iter)->Draw();
 
+		ValidateRect(m_windowHandle, NULL);
+
 		return 0;
 	}
 
