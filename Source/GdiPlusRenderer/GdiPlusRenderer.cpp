@@ -226,8 +226,3 @@ void GdiPlusRenderer::SetMachine(Machine* machine)
 	//todo: lock things to prevent crashing
 	m_private->_Machine = machine;
 }
-
-HWND GdiPlusRenderer::GetTargetWindow()
-{
-	return m_private->_WindowHandle;
-}

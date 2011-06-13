@@ -35,7 +35,7 @@ void Window_Private::Create(int width, int height, const char* title, const char
 
 	WNDCLASS            wndClass;
 
-	wndClass.style          = CS_HREDRAW | CS_VREDRAW;
+	wndClass.style          = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wndClass.lpfnWndProc    = Window_Private::StaticWndProc;
 	wndClass.cbClsExtra     = 0;
 	wndClass.cbWndExtra     = 0;

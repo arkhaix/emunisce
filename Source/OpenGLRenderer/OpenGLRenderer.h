@@ -17,13 +17,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef GDIPLUSRENDERER_H
-#define GDIPLUSRENDERER_H
+#ifndef OPENGLRENDERER_H
+#define OPENGLRENDERER_H
 
 class Phoenix;
 class Machine;
 
-class GdiPlusRenderer
+class OpenGLRenderer
 {
 public:
 
@@ -34,7 +34,7 @@ public:
 
 private:
 
-	class GdiPlusRenderer_Private* m_private;
+	class OpenGLRenderer_Private* m_private;
 };
 
 #endif
