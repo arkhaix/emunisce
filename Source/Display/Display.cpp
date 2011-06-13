@@ -169,6 +169,16 @@ void Display::WriteOam(u16 address, u8 value)
 	m_oamCache[address - m_oamOffset] = value;
 }
 
+
+ScreenResolution Display::GetScreenResolution()
+{
+	ScreenResolution resolution;
+	resolution.width = 160;
+	resolution.height = 144;
+
+	return resolution;
+}
+
 ScreenBuffer Display::GetStableScreenBuffer()
 {
 	return *m_stableScreenBuffer;

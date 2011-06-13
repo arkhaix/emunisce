@@ -21,9 +21,6 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "../WindowsPlatform/Window.h"
 
-#include "../Machine/Machine.h"
-#include "../Display/Display.h"
-
 #include "Phoenix.h"
 #include "ConsoleDebugger.h"
 #include "../GdiPlusRenderer/GdiPlusRenderer.h"
@@ -44,28 +41,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, PSTR, INT iCmdShow)
 
 	HANDLE emulationThreadHandle = CreateThread(NULL, 0, EmulationThread, NULL, 0, NULL);
 	
-	int lastFrameRendered = -1;
-
-	while(g_phoenix->ShutdownRequested() == false)
-	{
-		Machine* machine = g_phoenix->GetMachine();
-		if(machine)
-		{
-			if(machine->GetDisplay()->GetScreenBufferCount() != lastFrameRendered)
-			{
-				HWND hwnd = (HWND)g_phoenix->GetWindow()->GetHandle();
-				RECT clientRect;
-
-				GetClientRect(hwnd, &clientRect);
-				InvalidateRect(hwnd, &clientRect, true);
-				UpdateWindow(hwnd);
-			}
-		}
-
-		g_phoenix->GetWindow()->PumpMessages();
-
-		Sleep(10);
-	}
+	g_phoenix->RunWindow();	///<Blocks until shutdown is requested
 
 	WaitForSingleObject(emulationThreadHandle, 1000);
 

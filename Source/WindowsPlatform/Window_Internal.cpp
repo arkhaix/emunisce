@@ -14,11 +14,11 @@ Window_Private::Window_Private()
 
 	m_windowHandle = NULL;
 
-	m_size.width = 640;
-	m_size.height = 480;
+	m_size.width = 320;
+	m_size.height = 240;
 
-	m_position.x = 0;
-	m_position.y = 0;
+	m_position.x = CW_USEDEFAULT;
+	m_position.y = CW_USEDEFAULT;
 }
 
 Window_Private::~Window_Private()

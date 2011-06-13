@@ -28,7 +28,7 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 #include "../KeyboardInput/KeyboardInput.h"
 #include "../WaveOutSound/WaveOutSound.h"
 
-class Phoenix_Private
+class Phoenix_Private : public IWindowMessageListener
 {
 public:
 
@@ -78,6 +78,91 @@ public:
 
 		delete _Window;
 	}
+
+
+	void AdjustWindowSize()
+	{
+		//Resize the window so that the client area is a whole multiple of the display resolution
+
+		if(_Machine == NULL)
+			return;
+
+		if(_Window == NULL)
+			return;
+
+		HWND windowHandle = (HWND)_Window->GetHandle();
+
+		ScreenResolution resolution = _Machine->GetDisplay()->GetScreenResolution();
+		int nativeWidth = resolution.width;
+		int nativeHeight = resolution.height;
+
+		RECT clientRect;
+		GetClientRect(windowHandle, &clientRect);
+		int clientWidth = clientRect.right - clientRect.left;
+		int clientHeight = clientRect.bottom - clientRect.top;
+
+		if( (clientWidth % nativeWidth) != 0 || (clientHeight % nativeHeight) != 0 )
+		{
+			//Figure out what the new client area should be.
+			// Adjust to the nearest multiple.
+			// Assuming the native width is 160...
+			//  If we're at 161, we want to decrease to 160
+			//  But if we're at 319, we want to increase to 320
+
+			int newWidth = clientWidth;
+			if(clientWidth < nativeWidth)		///<Only support 1x scale or greater for now
+				newWidth = nativeWidth;
+			else if(clientWidth % nativeWidth < 80)
+				newWidth = clientWidth - (clientWidth % nativeWidth);	///<Nearest multiple is smaller than the current width
+			else
+				newWidth = clientWidth + (nativeWidth - (clientWidth % nativeWidth));	///<Nearest multiple is larger than the current width
+
+			int newHeight = nativeHeight * (newWidth / nativeWidth);
+
+
+			//Figure out what we need to add to the original size in order to get our new target size
+
+			int deltaWidth = newWidth - clientWidth;
+			int deltaHeight = newHeight - clientHeight;
+
+
+			//Apply the deltas to the window size
+			// The client size is the drawable area
+			// The window size is the drawable area plus the title bar, borders, etc
+
+			RECT windowRect;
+			GetWindowRect(windowHandle, &windowRect);
+			windowRect.right += deltaWidth;
+			windowRect.bottom += deltaHeight;
+
+			MoveWindow(windowHandle, windowRect.left, windowRect.top, (windowRect.right - windowRect.left), (windowRect.bottom - windowRect.top), TRUE);
+		}
+	}
+
+
+	// IWindowMessageListener
+
+	void Closed()
+	{
+		_ShutdownRequested = true;
+	}
+
+	void Draw()
+	{
+	}
+
+	void Resize()
+	{
+		AdjustWindowSize();
+	}
+	
+	void KeyDown(int key)
+	{
+	}
+
+	void KeyUp(int key)
+	{
+	}
 };
 
 Phoenix::Phoenix()
@@ -86,6 +171,7 @@ Phoenix::Phoenix()
 
 	m_private->_Window->Create(320, 240, "PhoenixGB", "PhoenixGB_RenderWindow");
 	m_private->_Window->Show();
+	m_private->_Window->SubscribeListener(m_private);
 
 	m_private->_Debugger->Initialize(this);
 	m_private->_Renderer->Initialize(this);
@@ -95,9 +181,36 @@ Phoenix::Phoenix()
 
 Phoenix::~Phoenix()
 {
+	m_private->_Window->UnsubscribeListener(m_private);
 	m_private->_Window->Destroy();
 
 	delete m_private;
+}
+
+void Phoenix::RunWindow()
+{
+	int lastFrameRendered = -1;
+
+	while(ShutdownRequested() == false)
+	{
+		Machine* machine = GetMachine();
+		if(machine)
+		{
+			if(machine->GetDisplay()->GetScreenBufferCount() != lastFrameRendered)
+			{
+				HWND hwnd = (HWND)GetWindow()->GetHandle();
+				RECT clientRect;
+
+				GetClientRect(hwnd, &clientRect);
+				InvalidateRect(hwnd, &clientRect, true);
+				UpdateWindow(hwnd);
+			}
+		}
+
+		GetWindow()->PumpMessages();
+
+		Sleep(10);
+	}
 }
 
 void Phoenix::NotifyMachineChanged(Machine* newMachine)
@@ -108,6 +221,8 @@ void Phoenix::NotifyMachineChanged(Machine* newMachine)
 	m_private->_Renderer->SetMachine(newMachine);
 	m_private->_Input->SetMachine(newMachine);
 	m_private->_Sound->SetMachine(newMachine);
+
+	m_private->AdjustWindowSize();
 }
 
 Machine* Phoenix::GetMachine()
