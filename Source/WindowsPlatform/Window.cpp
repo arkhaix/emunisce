@@ -52,3 +52,8 @@ void Window::UnsubscribeListener(IWindowMessageListener* listener)
 	m_private->UnsubscribeListener(listener);
 }
 
+
+void Window::PumpMessages()
+{
+	m_private->PumpMessages();
+}

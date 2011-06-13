@@ -4,6 +4,7 @@
 #include "windows.h"
 
 #include <list>
+#include <map>
 #include <set>
 using namespace std;
 
@@ -25,6 +26,8 @@ public:
 	void SubscribeListener(IWindowMessageListener* listener);
 	void UnsubscribeListener(IWindowMessageListener* listener);
 
+	void PumpMessages();
+
 	void Show();
 	void Hide();
 
@@ -37,19 +40,20 @@ public:
 private:
 
 	static LRESULT CALLBACK StaticWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-	static set<Window_Private*> m_validInstances;
-	static Mutex m_validInstancesLock;
+	static map<HWND, Window_Private*> m_hwndInstanceMap;
+	static Mutex m_hwndInstanceMapLock;
 
 	LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 	bool m_needsDestroy;
 
-	HWND m_handle;
+	HWND m_windowHandle;
 
 	WindowSize m_size;
 	WindowPosition m_position;
 
 	list<IWindowMessageListener*> m_listeners;
+	Mutex m_listenersLock;
 };
 
 #endif

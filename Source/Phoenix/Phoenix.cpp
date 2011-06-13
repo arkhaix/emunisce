@@ -84,8 +84,8 @@ Phoenix::Phoenix()
 {
 	m_private = new Phoenix_Private();
 
-	m_private->_Window->Create(640, 480, "PhoenixGB2", "PhoenixGB2");
-	//m_private->_Window->Show();
+	m_private->_Window->Create(320, 240, "PhoenixGB", "PhoenixGB_RenderWindow");
+	m_private->_Window->Show();
 
 	m_private->_Debugger->Initialize(this);
 	m_private->_Renderer->Initialize(this);
@@ -110,6 +110,11 @@ void Phoenix::NotifyMachineChanged(Machine* newMachine)
 	m_private->_Sound->SetMachine(newMachine);
 }
 
+Machine* Phoenix::GetMachine()
+{
+	return m_private->_Machine;
+}
+
 bool Phoenix::ShutdownRequested()
 {
 	return m_private->_ShutdownRequested;
@@ -118,6 +123,11 @@ bool Phoenix::ShutdownRequested()
 void Phoenix::RequestShutdown()
 {
 	m_private->_ShutdownRequested = true;
+}
+
+Window* Phoenix::GetWindow()
+{
+	return m_private->_Window;
 }
 
 ConsoleDebugger* Phoenix::GetDebugger()
