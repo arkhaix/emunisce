@@ -38,8 +38,8 @@ public:
 	Machine* _Machine;
 
 	ConsoleDebugger* _Debugger;
-	GdiPlusRenderer* _Renderer;
-	//OpenGLRenderer* _Renderer;
+	//GdiPlusRenderer* _Renderer;
+	OpenGLRenderer* _Renderer;
 	KeyboardInput* _Input;
 	WaveOutSound* _Sound;
 
@@ -54,8 +54,8 @@ public:
 		_Machine = NULL;
 
 		_Debugger = new ConsoleDebugger();
-		_Renderer = new GdiPlusRenderer();
-		//_Renderer = new OpenGLRenderer();
+		//_Renderer = new GdiPlusRenderer();
+		_Renderer = new OpenGLRenderer();
 		_Input = new KeyboardInput();
 		_Sound = new WaveOutSound();
 	}
