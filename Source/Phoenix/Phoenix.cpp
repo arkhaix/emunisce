@@ -36,6 +36,7 @@ public:
 	Window* _Window;
 
 	Machine* _Machine;
+	Machine* _PendingMachine;
 
 	ConsoleDebugger* _Debugger;
 	//GdiPlusRenderer* _Renderer;
@@ -52,6 +53,7 @@ public:
 		_Window = new Window();
 
 		_Machine = NULL;
+		_PendingMachine = NULL;
 
 		_Debugger = new ConsoleDebugger();
 		//_Renderer = new GdiPlusRenderer();
@@ -196,10 +198,26 @@ void Phoenix::RunWindow()
 
 	while(ShutdownRequested() == false)
 	{
+		if(m_private->_PendingMachine != NULL)
+		{
+			Machine* newMachine = m_private->_PendingMachine;
+
+			m_private->_Machine = newMachine;
+
+			m_private->_Debugger->SetMachine(newMachine);
+			m_private->_Renderer->SetMachine(newMachine);
+			m_private->_Input->SetMachine(newMachine);
+			m_private->_Sound->SetMachine(newMachine);
+
+			m_private->AdjustWindowSize();
+
+			m_private->_PendingMachine = NULL;
+		}
+
 		Machine* machine = GetMachine();
 		if(machine)
 		{
-			while(m_private->_Renderer->GetLastFrameRendered() != machine->GetDisplay()->GetScreenBufferCount() && ShutdownRequested() == false)
+			if(m_private->_Renderer->GetLastFrameRendered() != machine->GetDisplay()->GetScreenBufferCount() && ShutdownRequested() == false)
 			{
 				HWND hwnd = (HWND)GetWindow()->GetHandle();
 				RECT clientRect;
@@ -209,7 +227,7 @@ void Phoenix::RunWindow()
 				UpdateWindow(hwnd);
 			}
 
-			while(m_private->_Renderer->GetLastFrameRendered() == machine->GetDisplay()->GetScreenBufferCount() && ShutdownRequested() == false)
+			if(m_private->_Renderer->GetLastFrameRendered() == machine->GetDisplay()->GetScreenBufferCount() && ShutdownRequested() == false)
 			{
 				GetWindow()->PumpMessages();
 				Sleep(15);
@@ -225,14 +243,10 @@ void Phoenix::RunWindow()
 
 void Phoenix::NotifyMachineChanged(Machine* newMachine)
 {
-	m_private->_Machine = newMachine;
-
-	m_private->_Debugger->SetMachine(newMachine);
-	m_private->_Renderer->SetMachine(newMachine);
-	m_private->_Input->SetMachine(newMachine);
-	m_private->_Sound->SetMachine(newMachine);
-
-	m_private->AdjustWindowSize();
+	//RunWindow must handle machine changes (rendering things have to happen on that thread)
+	m_private->_PendingMachine = newMachine;
+	while(m_private->_PendingMachine != NULL)
+		Sleep(10);
 }
 
 Machine* Phoenix::GetMachine()

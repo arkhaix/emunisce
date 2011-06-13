@@ -31,10 +31,13 @@ using namespace std;
 #include <fcntl.h>
 #include <io.h>
 
-//Solution
+//Platform
+#include "../WindowsPlatform/Window.h"
+
+//Machine
 #include "../Machine/Machine.h"
 
-//Project
+//Application
 #include "Phoenix.h"
 #include "../WaveOutSound/WaveOutSound.h"
 
@@ -264,6 +267,8 @@ void ConsoleDebugger::LoadROM(const char* filename)
 
 	printf("Success\n");
 	Sleep(500);
+
+	RunMachine();
 }
 
 void ConsoleDebugger::Reset()
@@ -292,6 +297,12 @@ void ConsoleDebugger::RunMachine()
 	printf("%s\n", __FUNCTION__);
 
 	printf("Press any key to pause execution...\n");
+
+	if(m_breakpointsEnabled == false)
+	{
+		SetForegroundWindow((HWND)m_phoenix->GetWindow()->GetHandle());
+		SetFocus((HWND)m_phoenix->GetWindow()->GetHandle());
+	}
 
 	int syncsPerSecond = 20;
 
