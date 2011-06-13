@@ -33,7 +33,7 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 
 union OpenGLPixel
 {
-	GLubyte RGB[4];
+	GLubyte RGBA[4];
 
 	struct
 	{
@@ -105,6 +105,8 @@ public:
 	OpenGLScreenBuffer* _ScreenBuffer;
 	int _LastFrameRendered;
 
+	GLuint _ScreenTexture;
+
 	OpenGLRenderer_Private()
 	{
 		_Phoenix = NULL;
@@ -122,6 +124,8 @@ public:
 
 		_ScreenBuffer = NULL;
 		_LastFrameRendered = -1;
+
+		_ScreenTexture = 0;
 	}
 
 	void InitializeOpenGL()
@@ -154,7 +158,8 @@ public:
 		wglMakeCurrent(_DeviceContext, _RenderContext);
 
 		glShadeModel(GL_FLAT);
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glDisable(GL_DEPTH_TEST);
+		glClearColor(0.0f, 0.0f, 1.0f, 0.0f);
 
 		RestorePreservedContext();
 	}
@@ -221,6 +226,25 @@ public:
 				_ScreenBuffer->Pixels[ (y * displayResolution.width) + x ] = palette[ displayScreen.GetPixel(x,y) ];
 			}
 		}
+
+		PreserveExistingContext();
+		wglMakeCurrent(_DeviceContext, _RenderContext);
+
+		if(_ScreenTexture != 0)
+		{
+			glDeleteTextures(1, &_ScreenTexture);
+		}
+
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glPixelStorei(GL_PACK_ALIGNMENT, 1);
+		glGenTextures(1, &_ScreenTexture);
+		glBindTexture(GL_TEXTURE_2D, _ScreenTexture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+		//todo: power of 2 problems?
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, displayResolution.width, displayResolution.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)_ScreenBuffer->Pixels);
+
+		RestorePreservedContext();
 	}
 
 	void RenderToWindow()
@@ -241,17 +265,48 @@ public:
 		int clientHeight = clientRect.bottom - clientRect.top;
 		glViewport(0, 0, clientWidth, clientHeight);
 
+		//Setup 2D projection
+		int viewPort[4];
+
+		glGetIntegerv(GL_VIEWPORT, viewPort);
+
 		glMatrixMode(GL_PROJECTION);
+		glPushMatrix();
 		glLoadIdentity();
-		glOrtho(0.0, (GLdouble)clientWidth, 0.0, (GLdouble)clientHeight, -1.0, 1.0);
+
+		glOrtho(0, viewPort[2], 0, viewPort[3], -1, 1);
 		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix();
+		glLoadIdentity();
+
+		//2D projection is done.  Clear the screen.
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glLoadIdentity();
 
 		//Render
-		glRasterPos2i(0, 0);
-		glDrawPixels(_ScreenBuffer->Width, _ScreenBuffer->Height, GL_RGBA, GL_UNSIGNED_BYTE, _ScreenBuffer->Pixels);
-		glFlush();
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, _ScreenTexture);
+		glBegin(GL_TRIANGLE_STRIP);
+			glTexCoord2f(0.0, 1.0);
+			glVertex2f(-1.0,-1.0);
+
+			glTexCoord2f(1.0, 1.0);
+			glVertex2f((GLfloat)clientWidth, -1.0);
+
+			glTexCoord2f(0.0, 0.0);
+			glVertex2f(-1.0, (GLfloat)clientHeight);
+
+			glTexCoord2f(1.0, 0.0);
+			glVertex2f((GLfloat)clientWidth, (GLfloat)clientHeight);
+		glEnd();
+		glDisable(GL_TEXTURE_2D);
 		
+		//Clean up the matrix stack
+		glMatrixMode(GL_PROJECTION);
+		glPopMatrix();   
+		glMatrixMode(GL_MODELVIEW);
+		glPopMatrix();
+
 		//Display the rendered frame to the window
 		SwapBuffers(_DeviceContext);
 
