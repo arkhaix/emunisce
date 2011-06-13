@@ -24,13 +24,15 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 #include <map>
 using namespace std;
 
+#include "../WindowsPlatform/Window.h"
+
 #include "../Machine/Types.h"
 #include "../Machine/Machine.h"
 #include "../Input/Input.h"
 
 #include "../Phoenix/Phoenix.h"	///<todo: this is basically unused.  refactor this.
 
-class KeyboardInput_Private
+class KeyboardInput_Private : public IWindowMessageListener
 {
 public:
 
@@ -46,6 +48,62 @@ public:
 		_Phoenix = NULL;
 		_Machine = NULL;
 		_Input = NULL;
+
+		_KeyMap[VK_UP] = Buttons::Up;
+		_KeyMap[VK_DOWN] = Buttons::Down;
+		_KeyMap[VK_LEFT] = Buttons::Left;
+		_KeyMap[VK_RIGHT] = Buttons::Right;
+
+		_KeyMap['Q'] = Buttons::B;
+		_KeyMap['A'] = Buttons::B;
+		_KeyMap['Z'] = Buttons::B;
+
+		_KeyMap['W'] = Buttons::A;
+		_KeyMap['S'] = Buttons::A;
+		_KeyMap['X'] = Buttons::A;
+
+		_KeyMap['V'] = Buttons::Select;
+		_KeyMap['B'] = Buttons::Start;
+
+		_KeyMap[VK_LSHIFT] = Buttons::Select;
+		_KeyMap[VK_RSHIFT] = Buttons::Select;
+		_KeyMap[VK_RETURN] = Buttons::Start;
+
+		_KeyMap[VK_OEM_4] = Buttons::Select;
+		_KeyMap[VK_OEM_6] = Buttons::Start;
+	}
+
+
+	void Closed()
+	{
+	}
+
+	void Draw()
+	{
+	}
+
+
+	void Resize()
+	{
+	}
+
+
+	void KeyDown(int key)
+	{
+		auto keyIter = _KeyMap.find(key);
+		if(keyIter == _KeyMap.end())
+			return;
+
+		_Input->ButtonDown(keyIter->second);
+	}
+
+	void KeyUp(int key)
+	{
+		auto keyIter = _KeyMap.find(key);
+		if(keyIter == _KeyMap.end())
+			return;
+
+		_Input->ButtonUp(keyIter->second);
 	}
 };
 
@@ -57,61 +115,17 @@ KeyboardInput::KeyboardInput()
 void KeyboardInput::Initialize(Phoenix* phoenix)
 {
 	m_private->_Phoenix = phoenix;
-
-	m_private->_KeyMap[VK_UP] = Buttons::Up;
-	m_private->_KeyMap[VK_DOWN] = Buttons::Down;
-	m_private->_KeyMap[VK_LEFT] = Buttons::Left;
-	m_private->_KeyMap[VK_RIGHT] = Buttons::Right;
-
-	m_private->_KeyMap['Q'] = Buttons::B;
-	m_private->_KeyMap['A'] = Buttons::B;
-	m_private->_KeyMap['Z'] = Buttons::B;
-
-	m_private->_KeyMap['W'] = Buttons::A;
-	m_private->_KeyMap['S'] = Buttons::A;
-	m_private->_KeyMap['X'] = Buttons::A;
-
-	m_private->_KeyMap['V'] = Buttons::Select;
-	m_private->_KeyMap['B'] = Buttons::Start;
-
-	m_private->_KeyMap[VK_LSHIFT] = Buttons::Select;
-	m_private->_KeyMap[VK_RSHIFT] = Buttons::Select;
-	m_private->_KeyMap[VK_RETURN] = Buttons::Start;
-
-	m_private->_KeyMap[VK_OEM_4] = Buttons::Select;
-	m_private->_KeyMap[VK_OEM_6] = Buttons::Start;
+	
+	phoenix->GetWindow()->SubscribeListener(m_private);
 }
 
 void KeyboardInput::Shutdown()
 {
+	m_private->_Phoenix->GetWindow()->UnsubscribeListener(m_private);
 }
 
 void KeyboardInput::SetMachine(Machine* machine)
 {
 	m_private->_Machine = machine;
 	m_private->_Input = machine->GetInput();
-}
-
-void KeyboardInput::KeyDown(int key)
-{
-	if(m_private->_Input == NULL)
-		return;
-
-	auto keyIter = m_private->_KeyMap.find(key);
-	if(keyIter == m_private->_KeyMap.end())
-		return;
-
-	m_private->_Input->ButtonDown(keyIter->second);
-}
-
-void KeyboardInput::KeyUp(int key)
-{
-	if(m_private->_Input == NULL)
-		return;
-
-	auto keyIter = m_private->_KeyMap.find(key);
-	if(keyIter == m_private->_KeyMap.end())
-		return;
-
-	m_private->_Input->ButtonUp(keyIter->second);
 }

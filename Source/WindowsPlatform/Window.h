@@ -5,6 +5,8 @@ class IWindowMessageListener
 {
 public:
 
+	virtual void Closed() = 0;
+
 	virtual void Draw() = 0;
 
 	virtual void Resize() = 0;
@@ -39,6 +41,8 @@ public:
 
 	void SubscribeListener(IWindowMessageListener* listener);
 	void UnsubscribeListener(IWindowMessageListener* listener);
+
+	void PumpMessages();
 
 	void Show();
 	void Hide();
