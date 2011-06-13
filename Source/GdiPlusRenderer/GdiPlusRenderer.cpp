@@ -102,7 +102,7 @@ public:
 		if(_Machine == NULL)
 			return;
 
-		if(_LastFrameRendered == _Machine->GetFrameCount())
+		if(_LastFrameRendered == _Machine->GetDisplay()->GetScreenBufferCount())
 			return;
 
 
@@ -225,4 +225,10 @@ void GdiPlusRenderer::SetMachine(Machine* machine)
 {
 	//todo: lock things to prevent crashing
 	m_private->_Machine = machine;
+}
+
+
+int GdiPlusRenderer::GetLastFrameRendered()
+{
+	return m_private->_LastFrameRendered;
 }

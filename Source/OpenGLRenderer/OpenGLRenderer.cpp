@@ -381,3 +381,8 @@ void OpenGLRenderer::SetMachine(Machine* machine)
 	m_private->_Display = machine->GetDisplay();
 }
 
+
+int OpenGLRenderer::GetLastFrameRendered()
+{
+	return m_private->_LastFrameRendered;
+}

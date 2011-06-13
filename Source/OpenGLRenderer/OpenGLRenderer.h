@@ -35,6 +35,8 @@ public:
 
 	void SetMachine(Machine* machine);
 
+	int GetLastFrameRendered();
+
 private:
 
 	class OpenGLRenderer_Private* m_private;

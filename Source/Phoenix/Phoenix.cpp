@@ -199,7 +199,7 @@ void Phoenix::RunWindow()
 		Machine* machine = GetMachine();
 		if(machine)
 		{
-			if(machine->GetDisplay()->GetScreenBufferCount() != lastFrameRendered)
+			while(m_private->_Renderer->GetLastFrameRendered() != machine->GetDisplay()->GetScreenBufferCount() && ShutdownRequested() == false)
 			{
 				HWND hwnd = (HWND)GetWindow()->GetHandle();
 				RECT clientRect;
@@ -208,11 +208,18 @@ void Phoenix::RunWindow()
 				InvalidateRect(hwnd, &clientRect, true);
 				UpdateWindow(hwnd);
 			}
+
+			while(m_private->_Renderer->GetLastFrameRendered() == machine->GetDisplay()->GetScreenBufferCount() && ShutdownRequested() == false)
+			{
+				GetWindow()->PumpMessages();
+				Sleep(15);
+			}
 		}
-
-		GetWindow()->PumpMessages();
-
-		Sleep(10);
+		else
+		{
+			GetWindow()->PumpMessages();
+			Sleep(100);
+		}
 	}
 }
 
