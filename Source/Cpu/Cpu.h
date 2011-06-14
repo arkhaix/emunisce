@@ -109,6 +109,7 @@ private:
 
 	bool m_halted;
 	bool m_stopped;
+	bool m_haltBug;
 
 	//Registers
 	u8 m_interruptsEnabled;		///<0xffff - Interrupt Enable.  Which interrupts are currently enabled.  Slaves to the IME flag.

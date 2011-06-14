@@ -76,6 +76,7 @@ void Cpu::Initialize()
 
 	m_halted = false;
 	m_stopped = false;
+	m_haltBug = false;
 
 
 	af = 0x01b0;
