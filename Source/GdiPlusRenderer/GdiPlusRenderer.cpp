@@ -141,7 +141,9 @@ public:
 
 		if(_Bitmap == NULL || _Bitmap->GetWidth() != screenWidth || _Bitmap->GetHeight() != screenHeight)
 		{
-			delete _Bitmap;	///<Safe with NULL
+			if(_Bitmap != NULL)
+				delete _Bitmap;
+
 			_Bitmap = new Bitmap(screenWidth, screenHeight, PixelFormat32bppARGB);
 		}
 
@@ -153,14 +155,14 @@ public:
 
 		for(int y=0;y<screenHeight;y++)
 		{
-			UINT* pixel = (UINT*)bitmapData.Scan0;
+			u32* pixel = (u32*)bitmapData.Scan0;
 			pixel += bitmapData.Stride * y / 4;
 
 			for(int x=0;x<screenWidth;x++)
 			{
 				DisplayPixel screenPixel = screen->GetPixels()[y * screenWidth + x];
 
-				*pixel = (UINT)screenPixel;
+				*pixel = (u32)screenPixel;
 
 				pixel++;
 			}
