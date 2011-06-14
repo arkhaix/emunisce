@@ -136,6 +136,10 @@ public:
 
 				EnterCriticalSection(&_PendingBufferQueueLock);
 					_PendingBufferQueue.push(buffer);
+
+					//Only keep the 3 most recent buffers.  This keeps sound from lagging too far behind (and staying that way).
+					while(_PendingBufferQueue.size() > 3)
+						_PendingBufferQueue.pop();
 				LeaveCriticalSection(&_PendingBufferQueueLock);
 
 				_LastFrameQueued = _Machine->GetSound()->GetAudioBufferCount();
