@@ -49,7 +49,6 @@ public:
 	HWND _WindowHandle;
 
 	Bitmap* _Bitmap;
-	Color* _Palette[4];
 
 	int _LastFrameRendered;
 
@@ -77,19 +76,11 @@ public:
 		GdiplusStartup(&_GdiplusToken, &_GdiplusStartupInput, NULL);
 
 		_Bitmap = new Bitmap(160, 144, PixelFormat32bppARGB);
-
-		_Palette[3] = new Color(0, 0, 0);
-		_Palette[2] = new Color(85, 85, 85);
-		_Palette[1] = new Color(170, 170, 170);
-		_Palette[0] = new Color(255, 255, 255);
 	}
 
 	void ShutdownGdiPlus()
 	{
 		delete _Bitmap;
-
-		for(int i=0;i<4;i++)
-			delete _Palette[i];
 
 		GdiplusShutdown(_GdiplusToken);
 	}
@@ -155,15 +146,9 @@ public:
 
 			for(int x=0;x<160;x++)
 			{
-				u8 screenPixel = screen.GetPixel(x,y);
-				if(screenPixel > 3)
-					continue;
+				DisplayPixel screenPixel = screen.GetPixel(x,y);
 
-				u8* argb = (u8*)pixel;
-				argb[0] = _Palette[screenPixel]->GetB();
-				argb[1] = _Palette[screenPixel]->GetG();
-				argb[2] = _Palette[screenPixel]->GetR();
-				argb[3] = _Palette[screenPixel]->GetA();
+				*pixel = (UINT)screenPixel;
 
 				pixel++;
 			}
