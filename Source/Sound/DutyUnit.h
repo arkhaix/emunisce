@@ -36,6 +36,8 @@ public:
 
 	float GetSample();
 
+	void SetUseFancyStuff(bool fancyStuff);
+
 private:
 
 	int m_timerPeriod;
@@ -44,6 +46,12 @@ private:
 	int m_dutyPosition;
 	int m_dutyMode;
 	int m_dutyTable[4][8];
+
+	bool m_hasTransitioned;
+	bool m_hitNyquist;
+	int m_ticksSinceLastSample;
+	int m_sumSinceLastSample;
+	bool m_useFancyStuff;
 };
 
 #endif

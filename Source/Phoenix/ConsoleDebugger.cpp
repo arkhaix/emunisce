@@ -36,6 +36,7 @@ using namespace std;
 
 //Machine
 #include "../Machine/Machine.h"
+#include "../Sound/Sound.h"
 
 //Application
 #include "Phoenix.h"
@@ -50,6 +51,7 @@ ConsoleDebugger::ConsoleDebugger()
 	m_memory = NULL;
 
 	m_muteSound = false;
+	m_fancySound = false;
 
 	m_breakpointsEnabled = false;
 }
@@ -71,6 +73,8 @@ void ConsoleDebugger::SetMachine(Machine* machine)
 	m_cpu = machine->GetCpu();
 	m_display = machine->GetDisplay();
 	m_memory = machine->GetMemory();
+
+	machine->GetSound()->SetUseFancyStuff(m_fancySound);
 }
 
 void ConsoleDebugger::Run()
@@ -205,6 +209,8 @@ void ConsoleDebugger::FetchCommand()
 	COMMAND0("audio", ToggleMute())
 	COMMAND0("mute", ToggleMute())
 	COMMAND0("sound", ToggleMute())
+
+	COMMAND0("fancy", ToggleFancySound())
 
 	else
 	{
@@ -468,4 +474,12 @@ void ConsoleDebugger::ToggleMute()
 
 	m_muteSound = !m_muteSound;
 	m_phoenix->GetSound()->SetMute(m_muteSound);
+}
+
+void ConsoleDebugger::ToggleFancySound()
+{
+	printf("%s\n", __FUNCTION__);
+
+	m_fancySound = !m_fancySound;
+	m_machine->GetSound()->SetUseFancyStuff(m_fancySound);
 }

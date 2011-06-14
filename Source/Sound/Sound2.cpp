@@ -72,6 +72,11 @@ void Sound2::SetMachine(Machine* machine)
 	memory->SetRegisterLocation(0x19, &m_nr24, false);
 }
 
+void Sound2::SetUseFancyStuff(bool useFancyStuff)
+{
+	m_dutyUnit->SetUseFancyStuff(useFancyStuff);
+}
+
 
 //Sound generation
 

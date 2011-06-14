@@ -75,6 +75,11 @@ void Sound1::SetMachine(Machine* machine)
 	memory->SetRegisterLocation(0x14, &m_nr14, false);
 }
 
+void Sound1::SetUseFancyStuff(bool useFancyStuff)
+{
+	m_dutyUnit->SetUseFancyStuff(useFancyStuff);
+}
+
 
 //Sound generation
 void Sound1::PowerOff()
