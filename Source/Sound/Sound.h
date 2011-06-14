@@ -44,7 +44,7 @@ typedef s16 SampleType;
 
 struct AudioBuffer
 {
-	static const unsigned int BufferSizeSamples = SamplesPerSecond / 20;	///<Constant is frames per second
+	static const unsigned int BufferSizeSamples = SamplesPerSecond / 30;	///<Constant is frames per second
 	static const unsigned int BufferSizeBytes = BufferSizeSamples * BytesPerSample;
 
 	SampleType Samples[2][BufferSizeSamples];	///<2 channels
