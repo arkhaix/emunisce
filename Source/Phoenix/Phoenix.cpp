@@ -225,6 +225,8 @@ void Phoenix::RunWindow()
 				GetClientRect(hwnd, &clientRect);
 				InvalidateRect(hwnd, &clientRect, true);
 				UpdateWindow(hwnd);
+
+				GetWindow()->PumpMessages();
 			}
 
 			if(m_private->_Renderer->GetLastFrameRendered() == machine->GetDisplay()->GetScreenBufferCount() && ShutdownRequested() == false)

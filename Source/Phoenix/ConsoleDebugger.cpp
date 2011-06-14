@@ -36,7 +36,6 @@ using namespace std;
 
 //Machine
 #include "../Machine/Machine.h"
-#include "../Sound/Sound.h"
 
 //Application
 #include "Phoenix.h"
@@ -53,6 +52,9 @@ ConsoleDebugger::ConsoleDebugger()
 	m_muteSound = false;
 
 	m_breakpointsEnabled = false;
+
+	m_squareSynthesisMethod = SquareSynthesisMethod::LinearInterpolation;
+	m_displayFilter = DisplayFilter::None;
 }
 
 void ConsoleDebugger::Initialize(Phoenix* phoenix)
@@ -72,6 +74,9 @@ void ConsoleDebugger::SetMachine(Machine* machine)
 	m_cpu = machine->GetCpu();
 	m_display = machine->GetDisplay();
 	m_memory = machine->GetMemory();
+
+	machine->GetSound()->SetSquareSynthesisMethod(m_squareSynthesisMethod);
+	machine->GetDisplay()->SetFilter(m_displayFilter);
 }
 
 void ConsoleDebugger::Run()
@@ -207,7 +212,12 @@ void ConsoleDebugger::FetchCommand()
 	COMMAND0("mute", ToggleMute())
 	COMMAND0("sound", ToggleMute())
 
-	COMMAND0("square", SetSquareSynthesisMethod(args[1].c_str()))
+	COMMAND1("square", SetSquareSynthesisMethod(args[1].c_str()))
+
+	COMMAND1("displayfilter", SetDisplayFilter(args[1].c_str()))
+	COMMAND1("display", SetDisplayFilter(args[1].c_str()))
+	COMMAND1("filter", SetDisplayFilter(args[1].c_str()))
+	COMMAND1("df", SetDisplayFilter(args[1].c_str()))
 
 	else
 	{
@@ -491,4 +501,34 @@ void ConsoleDebugger::SetSquareSynthesisMethod(const char* strMethod)
 		method = SquareSynthesisMethod::Naive;
 
 	m_machine->GetSound()->SetSquareSynthesisMethod(method);
+	m_squareSynthesisMethod = method;
+}
+
+void ConsoleDebugger::SetDisplayFilter(const char* strFilter)
+{
+	printf("%s\n", __FUNCTION__);
+
+	if(strFilter == NULL || strlen(strFilter) == 0)
+		strFilter = "none";
+
+	DisplayFilter::Type filter = DisplayFilter::None;
+
+	if( _stricmp(strFilter, "none") == 0 || _stricmp(strFilter, "0") == 0 ||
+		_stricmp(strFilter, "1") == 0 )
+		filter = DisplayFilter::None;
+
+	else if( _stricmp(strFilter, "hq2x") == 0 || _stricmp(strFilter, "2x") == 0 ||
+		_stricmp(strFilter, "2") == 0 )
+		filter = DisplayFilter::Hq2x;
+
+	else if( _stricmp(strFilter, "hq3x") == 0 || _stricmp(strFilter, "3x") == 0 ||
+		_stricmp(strFilter, "3") == 0 )
+		filter = DisplayFilter::Hq3x;
+
+	else if( _stricmp(strFilter, "hq4x") == 0 || _stricmp(strFilter, "4x") == 0 ||
+		_stricmp(strFilter, "4") == 0 )
+		filter = DisplayFilter::Hq4x;
+
+	m_machine->GetDisplay()->SetFilter(filter);
+	m_displayFilter = filter;
 }

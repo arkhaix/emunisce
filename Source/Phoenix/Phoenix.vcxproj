@@ -88,6 +88,9 @@
     <ProjectReference Include="..\GdiPlusRenderer\GdiPlusRenderer.vcxproj">
       <Project>{ec091f82-1e1c-4b24-a41e-899cf6458295}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\HqNx\HqNx.vcxproj">
+      <Project>{f80ec023-b987-4b57-b756-95dc6a8447bd}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Input\Input.vcxproj">
       <Project>{132a61d1-1ba2-4581-b4f9-0740feb37572}</Project>
     </ProjectReference>

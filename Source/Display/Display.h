@@ -22,8 +22,27 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "../Machine/Types.h"
 
-#define PIXEL_NOT_CACHED (DisplayPixelFromRGBA((u8)0, (u8)0, (u8)0, (u8)1))
-#define PIXEL_TRANSPARENT (DisplayPixelFromRGBA((u8)0, (u8)0, (u8)0, (u8)0))
+#include "stdlib.h"
+
+
+namespace DisplayFilter
+{
+	typedef int Type;
+
+	enum
+	{
+		None = 0,
+
+		Hq2x,
+		Hq3x,
+		Hq4x,
+
+		NumDisplayFilters
+	};
+}
+
+#define PIXEL_NOT_CACHED (DisplayPixelFromRGBA((u8)254, (u8)0, (u8)254, (u8)255))
+#define PIXEL_TRANSPARENT (DisplayPixelFromRGBA((u8)255, (u8)0, (u8)255, (u8)255))
 
 struct ScreenResolution
 {
@@ -31,26 +50,94 @@ struct ScreenResolution
 	int height;
 };
 
-struct ScreenBuffer
+class ScreenBuffer
 {
-	DisplayPixel Pixels[160*144];
+public:
+
+	virtual ~ScreenBuffer() { }
+
+	virtual int GetWidth() = 0;
+	virtual int GetHeight() = 0;
+
+	virtual DisplayPixel* GetPixels() = 0;
+};
+
+template<int TWidth, int THeight>
+class TScreenBuffer : public ScreenBuffer
+{
+public:
+
+	DisplayPixel Pixels[TWidth * THeight];
 
 	inline DisplayPixel GetPixel(int x, int y)
 	{
-		if(x<0 || x>=160 || y<0 || y>=144)
+		if(x<0 || x>=TWidth || y<0 || y>=THeight)
 			return (DisplayPixel)0;
 
-		return Pixels[y*160+x];
+		return Pixels[y*TWidth + x];
 	}
 
 	inline void SetPixel(int x, int y, DisplayPixel value)
 	{
-		if(x<0 || x>=160 || y<0 || y>=144)
+		if(x<0 || x>=TWidth || y<0 || y>=THeight)
 			return;
 
-		Pixels[y*160+x] = value;
+		Pixels[y*TWidth+x] = value;
+	}
+
+	virtual int GetWidth()
+	{
+		return TWidth;
+	}
+
+	virtual int GetHeight()
+	{
+		return THeight;
+	}
+
+	virtual DisplayPixel* GetPixels()
+	{
+		return &Pixels[0];
 	}
 };
+
+class DynamicScreenBuffer : public ScreenBuffer
+{
+public:
+
+	DisplayPixel* Pixels;
+	int Width;
+	int Height;
+
+	DynamicScreenBuffer(int width, int height)
+	{
+		Width = width;
+		Height = height;
+		Pixels = (DisplayPixel*)malloc(width * height * sizeof(DisplayPixel));
+	}
+
+	~DynamicScreenBuffer()
+	{
+		free(Pixels);
+	}
+
+	virtual int GetWidth()
+	{
+		return Width;
+	}
+
+	virtual int GetHeight()
+	{
+		return Height;
+	}
+
+	virtual DisplayPixel* GetPixels()
+	{
+		return Pixels;
+	}
+};
+
+typedef TScreenBuffer<160, 144> GameboyScreenBuffer;
 
 class Display
 {
@@ -74,8 +161,10 @@ public:
 
 	//External
 	ScreenResolution GetScreenResolution();
-	ScreenBuffer GetStableScreenBuffer();
+	ScreenBuffer* GetStableScreenBuffer();
 	int GetScreenBufferCount();	///<Returns the id of the current screen buffer.  Not guaranteed to be unique or sequential, so use != when polling for changes.
+
+	void SetFilter(DisplayFilter::Type filter);
 
 
 	//Gameboy registers
@@ -128,11 +217,18 @@ private:
 	Machine* m_machine;
 	Memory* m_memory;
 
-	ScreenBuffer m_screenBuffer;
-	ScreenBuffer m_screenBuffer2;
-	ScreenBuffer* m_activeScreenBuffer;	///<The screen buffer currently being rendered to by the gameboy
-	ScreenBuffer* m_stableScreenBuffer;	///<The screen buffer ready to be displayed on the pc
+	GameboyScreenBuffer m_screenBuffer;
+	GameboyScreenBuffer m_screenBuffer2;
+	GameboyScreenBuffer* m_activeScreenBuffer;	///<The screen buffer currently being rendered to by the gameboy
+	GameboyScreenBuffer* m_stableScreenBuffer;	///<The screen buffer ready to be displayed on the pc
 	int m_screenBufferCount;
+
+	DisplayFilter::Type m_displayFilter;
+
+	GameboyScreenBuffer m_screenBufferCopy;	///<This buffer is always updated by and returned through GetStableScreenBuffer
+	int m_screenBufferCopyId;	///<The value of m_screenBufferCount at the time the most recent copy was made
+	DisplayFilter::Type m_screenBufferCopyFilter;	///<The selected filter type at the time the most recent copy was made
+	ScreenBuffer* m_filteredScreenBufferCopy;
 
 	DisplayPixel m_displayPalette[4];	///<Maps 2-bit pixel values to DisplayPixel values
 
@@ -152,17 +248,17 @@ private:
 
 	// Background data
 
-	ScreenBuffer m_frameBackgroundData;
+	GameboyScreenBuffer m_frameBackgroundData;
 
 
 	// Window data
 
-	ScreenBuffer m_frameWindowData;
+	GameboyScreenBuffer m_frameWindowData;
 
 
 	// Sprite data
 
-	ScreenBuffer m_frameSpriteData;
+	GameboyScreenBuffer m_frameSpriteData;
 
 
 	// Tile data

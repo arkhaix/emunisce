@@ -68,6 +68,11 @@
   <ItemGroup>
     <ClCompile Include="Display.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HqNx\HqNx.vcxproj">
+      <Project>{f80ec023-b987-4b57-b756-95dc6a8447bd}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -26,6 +26,8 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 #include "gdiplus.h"
 using namespace Gdiplus;
 
+#include "stdio.h"
+
 //Platform
 #include "../WindowsPlatform/Window.h"
 
@@ -75,7 +77,7 @@ public:
 	{
 		GdiplusStartup(&_GdiplusToken, &_GdiplusStartupInput, NULL);
 
-		_Bitmap = new Bitmap(160, 144, PixelFormat32bppARGB);
+		_Bitmap = NULL;
 	}
 
 	void ShutdownGdiPlus()
@@ -129,24 +131,34 @@ public:
 		if(_LastFrameRendered == display->GetScreenBufferCount())
 			return;
 
-		ScreenBuffer screen = display->GetStableScreenBuffer();
-
 		_LastFrameRendered = display->GetScreenBufferCount();
 
+
+		ScreenBuffer* screen = display->GetStableScreenBuffer();
+
+		int screenWidth = screen->GetWidth();
+		int screenHeight = screen->GetHeight();
+
+		if(_Bitmap == NULL || _Bitmap->GetWidth() != screenWidth || _Bitmap->GetHeight() != screenHeight)
+		{
+			delete _Bitmap;	///<Safe with NULL
+			_Bitmap = new Bitmap(screenWidth, screenHeight, PixelFormat32bppARGB);
+		}
+
 		BitmapData bitmapData;
-		Gdiplus::Rect bitmapRect(0, 0, _Bitmap->GetWidth(), _Bitmap->GetHeight());
+		Gdiplus::Rect bitmapRect(0, 0, screenWidth, screenHeight);
 		Status lockResult = _Bitmap->LockBits(&bitmapRect, ImageLockModeWrite, PixelFormat32bppARGB, &bitmapData);
 		if(lockResult != Ok)
 			return;
 
-		for(int y=0;y<144;y++)
+		for(int y=0;y<screenHeight;y++)
 		{
 			UINT* pixel = (UINT*)bitmapData.Scan0;
 			pixel += bitmapData.Stride * y / 4;
 
-			for(int x=0;x<160;x++)
+			for(int x=0;x<screenWidth;x++)
 			{
-				DisplayPixel screenPixel = screen.GetPixel(x,y);
+				DisplayPixel screenPixel = screen->GetPixels()[y * screenWidth + x];
 
 				*pixel = (UINT)screenPixel;
 
