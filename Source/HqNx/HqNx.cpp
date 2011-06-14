@@ -66,6 +66,11 @@ public:
 
 		free(rgb15Screen);
 
+		int disableAlpha = 0xff000000;
+		for(int y=0;y<newHeight;y++)
+			for(int x=0;x<newWidth;x++)
+				newPixels[y * newWidth + x] |= disableAlpha;
+
 		return result;
 	}
 };
