@@ -120,7 +120,11 @@ int Cpu::Step()
 	else
 	{
 		opcode = m_memory->Read8(pc);
-		pc++;
+
+		if(m_haltBug == false)
+			pc++;
+		else
+			m_haltBug = false;	///<Skips incrementing the pc once
 	}
 
 	switch(opcode)
@@ -969,6 +973,8 @@ int Cpu::Step()
 	case 0x76:
 		//76		HALT			4	1	1	(repeated till next int)
 		m_halted = true;
+		if(m_masterInterruptsEnabled == false)
+			m_haltBug = true;
 		instructionTime += 4;
 	break;
 
