@@ -39,15 +39,17 @@ int Cpu::Step()
 	u8 interruptEnableFlags = m_memory->Read8(REG_IE);
 	interruptEnableFlags &= 0x1f;
 
-	if( (interruptFlags & interruptEnableFlags) != 0 )
+	u8 maskedInterruptFlags = interruptFlags & interruptEnableFlags;
+
+	if( maskedInterruptFlags != 0 )
 		m_halted = false;
 
 	if(interruptFlags & IF_INPUT)
 		m_stopped = false;
 
-	if( m_masterInterruptsEnabled && m_delayNextInterrupt == false && interruptFlags != 0)
+	if( m_masterInterruptsEnabled && m_delayNextInterrupt == false && maskedInterruptFlags != 0)
 	{		
-		if( (interruptFlags & IF_VBLANK) && (interruptEnableFlags & IF_VBLANK) && !m_stopped )
+		if( (maskedInterruptFlags & IF_VBLANK) && !m_stopped )
 		{
 			m_masterInterruptsEnabled = false;
 
@@ -58,7 +60,7 @@ int Cpu::Step()
 			instructionTime += 16;
 			return instructionTime;
 		}
-		else if( (interruptFlags & IF_LCDC) && (interruptEnableFlags & IF_LCDC) && !m_stopped )
+		else if( (maskedInterruptFlags & IF_LCDC) && !m_stopped )
 		{
 			m_masterInterruptsEnabled = false;
 
@@ -69,7 +71,7 @@ int Cpu::Step()
 			instructionTime += 16;
 			return instructionTime;
 		}
-		else if( (interruptFlags & IF_TIMER) && (interruptEnableFlags & IF_TIMER) && !m_stopped )
+		else if( (maskedInterruptFlags & IF_TIMER) && !m_stopped )
 		{
 			m_masterInterruptsEnabled = false;
 
@@ -80,7 +82,7 @@ int Cpu::Step()
 			instructionTime += 16;
 			return instructionTime;
 		}
-		else if( (interruptFlags & IF_SERIAL) && (interruptEnableFlags & IF_SERIAL) && !m_stopped )
+		else if( (maskedInterruptFlags & IF_SERIAL) && !m_stopped )
 		{
 			m_masterInterruptsEnabled = false;
 
@@ -91,7 +93,7 @@ int Cpu::Step()
 			instructionTime += 16;
 			return instructionTime;
 		}
-		else if( (interruptFlags & IF_INPUT) && (interruptEnableFlags & IF_INPUT) )
+		else if(maskedInterruptFlags & IF_INPUT)
 		{
 			m_masterInterruptsEnabled = false;
 			m_stopped = false;
@@ -967,7 +969,6 @@ int Cpu::Step()
 	case 0x76:
 		//76		HALT			4	1	1	(repeated till next int)
 		m_halted = true;
-		m_masterInterruptsEnabled = true;
 		instructionTime += 4;
 	break;
 
