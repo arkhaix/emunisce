@@ -51,7 +51,6 @@ ConsoleDebugger::ConsoleDebugger()
 	m_memory = NULL;
 
 	m_muteSound = false;
-	m_fancySound = false;
 
 	m_breakpointsEnabled = false;
 }
@@ -73,8 +72,6 @@ void ConsoleDebugger::SetMachine(Machine* machine)
 	m_cpu = machine->GetCpu();
 	m_display = machine->GetDisplay();
 	m_memory = machine->GetMemory();
-
-	machine->GetSound()->SetUseFancyStuff(m_fancySound);
 }
 
 void ConsoleDebugger::Run()
@@ -210,7 +207,7 @@ void ConsoleDebugger::FetchCommand()
 	COMMAND0("mute", ToggleMute())
 	COMMAND0("sound", ToggleMute())
 
-	COMMAND0("fancy", ToggleFancySound())
+	COMMAND0("square", SetSquareSynthesisMethod(args[1].c_str()))
 
 	else
 	{
@@ -476,10 +473,22 @@ void ConsoleDebugger::ToggleMute()
 	m_phoenix->GetSound()->SetMute(m_muteSound);
 }
 
-void ConsoleDebugger::ToggleFancySound()
+void ConsoleDebugger::SetSquareSynthesisMethod(const char* strMethod)
 {
 	printf("%s\n", __FUNCTION__);
 
-	m_fancySound = !m_fancySound;
-	m_machine->GetSound()->SetUseFancyStuff(m_fancySound);
+	if(strMethod == NULL || strlen(strMethod) == 0)
+		strMethod = "linear";
+
+	SquareSynthesisMethod::Type method = SquareSynthesisMethod::LinearInterpolation;
+
+	if( _stricmp(strMethod, "linear") == 0 || _stricmp(strMethod, "interpolation") == 0 ||
+		_stricmp(strMethod, "interp") == 0 || _stricmp(strMethod, "1") == 0 )
+		method = SquareSynthesisMethod::LinearInterpolation;
+
+	else if( _stricmp(strMethod, "naive") == 0 || _stricmp(strMethod, "simple") == 0 ||
+			_stricmp(strMethod, "0") == 0 )
+		method = SquareSynthesisMethod::Naive;
+
+	m_machine->GetSound()->SetSquareSynthesisMethod(method);
 }

@@ -21,6 +21,7 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 #define DUTYUNIT_H
 
 #include "../Machine/Types.h"
+#include "Sound.h"	///<for SquareSynthesisMethod
 
 class DutyUnit
 {
@@ -36,7 +37,7 @@ public:
 
 	float GetSample();
 
-	void SetUseFancyStuff(bool fancyStuff);
+	void SetSynthesisMethod(SquareSynthesisMethod::Type method);
 
 private:
 
@@ -47,11 +48,12 @@ private:
 	int m_dutyMode;
 	int m_dutyTable[4][8];
 
+	SquareSynthesisMethod::Type m_synthesisMethod;
+
 	bool m_hasTransitioned;
 	bool m_hitNyquist;
 	int m_ticksSinceLastSample;
 	int m_sumSinceLastSample;
-	bool m_useFancyStuff;
 };
 
 #endif

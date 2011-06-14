@@ -30,7 +30,7 @@ class Sound4;
 
 class ChannelController;
 
-static const unsigned int SamplesPerSecond = 48000;
+static const unsigned int SamplesPerSecond = 44100;
 
 //static const unsigned int BytesPerSample = 1;
 //typedef u8 SampleType;
@@ -44,11 +44,24 @@ typedef s16 SampleType;
 
 struct AudioBuffer
 {
-	static const unsigned int BufferSizeSamples = SamplesPerSecond / 30;	///<Constant is frames per second
+	static const unsigned int BufferSizeSamples = SamplesPerSecond / 20;	///<Constant is frames (full buffers) per second
 	static const unsigned int BufferSizeBytes = BufferSizeSamples * BytesPerSample;
 
 	SampleType Samples[2][BufferSizeSamples];	///<2 channels
 };
+
+namespace SquareSynthesisMethod
+{
+	typedef int Type;
+
+	enum
+	{
+		Naive = 0,
+		LinearInterpolation,
+
+		NumSquareSynthesisMethods
+	};
+}
 
 class Sound
 {
@@ -66,7 +79,8 @@ public:
 	//External
 	AudioBuffer GetStableAudioBuffer();
 	int GetAudioBufferCount();
-	void SetUseFancyStuff(bool usefancyStuff);
+
+	void SetSquareSynthesisMethod(SquareSynthesisMethod::Type method);
 
 	//Internal (for the sound generators)
 	int GetFrameSequencerPosition();

@@ -75,7 +75,7 @@ private:
 	void PrintMemory(int address, int length);
 
 	void ToggleMute();
-	void ToggleFancySound();
+	void SetSquareSynthesisMethod(const char* strMethod);
 
 
 	//Properties
@@ -94,7 +94,6 @@ private:
 	set<u16> m_breakpoints;
 
 	bool m_muteSound;
-	bool m_fancySound;
 };
 
 #endif

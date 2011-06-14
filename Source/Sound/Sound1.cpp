@@ -75,9 +75,9 @@ void Sound1::SetMachine(Machine* machine)
 	memory->SetRegisterLocation(0x14, &m_nr14, false);
 }
 
-void Sound1::SetUseFancyStuff(bool useFancyStuff)
+void Sound1::SetSynthesisMethod(SquareSynthesisMethod::Type method)
 {
-	m_dutyUnit->SetUseFancyStuff(useFancyStuff);
+	m_dutyUnit->SetSynthesisMethod(method);
 }
 
 

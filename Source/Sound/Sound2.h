@@ -23,6 +23,7 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Machine/Types.h"
 class Machine;
 
+#include "Sound.h"	///<for SquareSynthesisMethod
 #include "SoundGenerator.h"
 class DutyUnit;
 
@@ -40,7 +41,7 @@ public:
 	virtual void Initialize(ChannelController* channelController);
 	void SetMachine(Machine* machine);
 
-	void SetUseFancyStuff(bool useFancyStuff);
+	void SetSynthesisMethod(SquareSynthesisMethod::Type method);
 
 
 	//Sound generation
