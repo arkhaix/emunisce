@@ -40,6 +40,8 @@ public:
 	virtual void Initialize(ChannelController* channelController);
 	void SetMachine(Machine* machine);
 
+	void SetUseFancyStuff(bool useFancyStuff);
+
 
 	//Sound generation
 

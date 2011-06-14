@@ -239,6 +239,12 @@ int Sound::GetAudioBufferCount()
 	return m_audioBufferCount;
 }
 
+void Sound::SetUseFancyStuff(bool useFancyStuff)
+{
+	m_sound1->SetUseFancyStuff(useFancyStuff);
+	m_sound2->SetUseFancyStuff(useFancyStuff);
+}
+
 
 int Sound::GetFrameSequencerPosition()
 {

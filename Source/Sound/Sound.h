@@ -66,6 +66,7 @@ public:
 	//External
 	AudioBuffer GetStableAudioBuffer();
 	int GetAudioBufferCount();
+	void SetUseFancyStuff(bool usefancyStuff);
 
 	//Internal (for the sound generators)
 	int GetFrameSequencerPosition();
