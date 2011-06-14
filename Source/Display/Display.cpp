@@ -22,6 +22,8 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Machine/Machine.h"
 #include "../Memory/Memory.h"
 
+#include "../HqNx/HqNx.h"
+
 
 //70224 t-states per frame (59.7fps)
 //4560 t-states per v-blank (mode 01)
@@ -82,6 +84,12 @@ Display::Display()
 	m_displayPalette[1] = DisplayPixelFromRGBA(0.67f, 0.67f, 0.67f);
 	m_displayPalette[2] = DisplayPixelFromRGBA(0.33f, 0.33f, 0.33f);
 	m_displayPalette[3] = DisplayPixelFromRGBA(0.00f, 0.00f, 0.00f);
+
+	m_displayFilter = DisplayFilter::None;
+
+	m_screenBufferCopyId = -1;
+	m_screenBufferCopyFilter = m_displayFilter;
+	m_filteredScreenBufferCopy = NULL;
 }
 
 Display::~Display()
@@ -184,14 +192,39 @@ ScreenResolution Display::GetScreenResolution()
 	return resolution;
 }
 
-ScreenBuffer Display::GetStableScreenBuffer()
+ScreenBuffer* Display::GetStableScreenBuffer()
 {
-	return *m_stableScreenBuffer;
+	if(m_screenBufferCopyId == m_screenBufferCount && m_screenBufferCopyFilter == m_displayFilter)
+		return &m_screenBufferCopy;
+
+	if(m_filteredScreenBufferCopy != NULL && m_filteredScreenBufferCopy != &m_screenBufferCopy)
+	{
+		delete m_filteredScreenBufferCopy;
+		m_filteredScreenBufferCopy = NULL;
+	}
+
+	m_screenBufferCopy = *m_stableScreenBuffer;
+	m_filteredScreenBufferCopy = &m_screenBufferCopy;
+
+	if(m_displayFilter == DisplayFilter::Hq2x)
+		m_filteredScreenBufferCopy = HqNx::Hq2x(&m_screenBufferCopy);
+	else if(m_displayFilter == DisplayFilter::Hq3x)
+		m_filteredScreenBufferCopy = HqNx::Hq3x(&m_screenBufferCopy);
+	else if(m_displayFilter == DisplayFilter::Hq4x)
+		m_filteredScreenBufferCopy = HqNx::Hq4x(&m_screenBufferCopy);
+
+	return m_filteredScreenBufferCopy;
 }
 
 int Display::GetScreenBufferCount()
 {
 	return m_screenBufferCount;
+}
+
+
+void Display::SetFilter(DisplayFilter::Type filter)
+{
+	m_displayFilter = filter;
 }
 
 
@@ -224,7 +257,7 @@ void Display::SetLcdControl(u8 value)
 					m_frameBackgroundData.SetPixel(x, y, PIXEL_NOT_CACHED);
 					m_frameWindowData.SetPixel(x, y, PIXEL_NOT_CACHED);
 					m_frameSpriteData.SetPixel(x, y, PIXEL_NOT_CACHED);
-					m_activeScreenBuffer->SetPixel(x, y, 0);
+					m_activeScreenBuffer->SetPixel(x, y, m_displayPalette[0]);
 				}
 			}
 
@@ -401,7 +434,7 @@ void Display::Run_VBlank(int ticks)
 	if(m_stateTicksRemaining <= ticks)
 	{
 		//Swap buffers
-		ScreenBuffer* temp = m_stableScreenBuffer;
+		GameboyScreenBuffer* temp = m_stableScreenBuffer;
 		m_stableScreenBuffer = m_activeScreenBuffer;
 		m_activeScreenBuffer = temp;
 
@@ -415,7 +448,7 @@ void Display::Run_VBlank(int ticks)
 				m_frameBackgroundData.SetPixel(x, y, PIXEL_NOT_CACHED);
 				m_frameWindowData.SetPixel(x, y, PIXEL_NOT_CACHED);
 				m_frameSpriteData.SetPixel(x, y, PIXEL_NOT_CACHED);
-				m_activeScreenBuffer->SetPixel(x, y, 0);
+				m_activeScreenBuffer->SetPixel(x, y, m_displayPalette[0]);
 			}
 		}
 	}
@@ -500,7 +533,7 @@ void Display::RenderSpritePixel(int screenX, int screenY)
 		return;
 
 	//Check priority
-	if(m_spriteHasPriority[screenX] == false && m_activeScreenBuffer->GetPixel(screenX, screenY) != 0)
+	if(m_spriteHasPriority[screenX] == false && m_activeScreenBuffer->GetPixel(screenX, screenY) != m_displayPalette[0])
 		return;
 
 	//RenderSprites fills m_frameSpriteData.  If there's no value there at this pixel, then there's no sprite at this pixel.
@@ -651,7 +684,7 @@ void Display::RenderSprites(int screenY)
 		while(tileX <= 7)
 		{
 			//Have we already drawn a sprite at this pixel?
-			u8 cachedValue = m_frameSpriteData.GetPixel(cacheScreenX, cacheScreenY);
+			DisplayPixel cachedValue = m_frameSpriteData.GetPixel(cacheScreenX, cacheScreenY);
 			if(cachedValue != PIXEL_NOT_CACHED && cachedValue != PIXEL_TRANSPARENT)
 			{
 				tileX++;

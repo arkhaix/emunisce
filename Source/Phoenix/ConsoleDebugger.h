@@ -31,6 +31,7 @@ using namespace std;
 #include "../Display/Display.h"
 #include "../Memory/Memory.h"
 #include "../Input/Input.h"
+#include "../Sound/Sound.h"
 
 class Phoenix;
 class Machine;
@@ -77,6 +78,8 @@ private:
 	void ToggleMute();
 	void SetSquareSynthesisMethod(const char* strMethod);
 
+	void SetDisplayFilter(const char* strFilter);
+
 
 	//Properties
 
@@ -94,6 +97,9 @@ private:
 	set<u16> m_breakpoints;
 
 	bool m_muteSound;
+
+	SquareSynthesisMethod::Type m_squareSynthesisMethod;
+	DisplayFilter::Type m_displayFilter;
 };
 
 #endif

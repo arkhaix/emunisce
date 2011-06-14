@@ -204,24 +204,27 @@ public:
 
 		_LastFrameRendered = _Display->GetScreenBufferCount();
 
-		ScreenResolution displayResolution = _Display->GetScreenResolution();
-		if(_ScreenBuffer == NULL || _ScreenBuffer->Width != displayResolution.width || _ScreenBuffer->Height != displayResolution.height)
+
+		ScreenBuffer* displayScreen = _Display->GetStableScreenBuffer();
+
+		int displayWidth = displayScreen->GetWidth();
+		int displayHeight = displayScreen->GetHeight();
+
+		if(_ScreenBuffer == NULL || _ScreenBuffer->Width != displayWidth || _ScreenBuffer->Height != displayHeight)
 		{
 			if(_ScreenBuffer != NULL)
 				delete _ScreenBuffer;
 
-			_ScreenBuffer = new OpenGLScreenBuffer(displayResolution.width, displayResolution.height);
+			_ScreenBuffer = new OpenGLScreenBuffer(displayWidth, displayHeight);
 		}
 
-		ScreenBuffer displayScreen = _Display->GetStableScreenBuffer();
-
-		for(int y=0;y<displayResolution.height;y++)
+		for(int y=0;y<displayHeight;y++)
 		{
-			for(int x=0;x<displayResolution.width;x++)
+			for(int x=0;x<displayWidth;x++)
 			{
-				DisplayPixel pixelValue = displayScreen.GetPixel(x,y);
+				DisplayPixel pixelValue = displayScreen->GetPixels()[y * displayWidth + x];
 
-				_ScreenBuffer->Pixels[ (y * displayResolution.width) + x ] = pixelValue;
+				_ScreenBuffer->Pixels[y * displayWidth + x] = pixelValue;
 			}
 		}
 
@@ -241,7 +244,7 @@ public:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 		//todo: power of 2 problems?
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, displayResolution.width, displayResolution.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)_ScreenBuffer->Pixels);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, displayWidth, displayHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)_ScreenBuffer->Pixels);
 
 		RestorePreservedContext();
 	}
