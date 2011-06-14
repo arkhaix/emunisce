@@ -33,6 +33,8 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 
 union OpenGLPixel
 {
+	u32 RGBA32;
+
 	GLubyte RGBA[4];
 
 	struct
@@ -42,6 +44,12 @@ union OpenGLPixel
 		GLubyte B;
 		GLubyte A;
 	} Elements;
+
+	inline OpenGLPixel& operator=(const DisplayPixel& rhs)
+	{
+		RGBA32 = (u32)rhs;
+		return *this;
+	}
 
 	OpenGLPixel(GLubyte r, GLubyte g, GLubyte b, GLubyte a=255)
 	{
@@ -205,25 +213,15 @@ public:
 			_ScreenBuffer = new OpenGLScreenBuffer(displayResolution.width, displayResolution.height);
 		}
 
-		OpenGLPixel palette[4] =
-		{
-			OpenGLPixel(255, 255, 255),
-			OpenGLPixel(170, 170, 170),
-			OpenGLPixel(85, 85, 85),
-			OpenGLPixel(0, 0, 0)
-		};
-
 		ScreenBuffer displayScreen = _Display->GetStableScreenBuffer();
 
 		for(int y=0;y<displayResolution.height;y++)
 		{
 			for(int x=0;x<displayResolution.width;x++)
 			{
-				u8 pixelValue = displayScreen.GetPixel(x,y);
-				if(pixelValue < 0 || pixelValue > 3)
-					continue;
+				DisplayPixel pixelValue = displayScreen.GetPixel(x,y);
 
-				_ScreenBuffer->Pixels[ (y * displayResolution.width) + x ] = palette[ displayScreen.GetPixel(x,y) ];
+				_ScreenBuffer->Pixels[ (y * displayResolution.width) + x ] = pixelValue;
 			}
 		}
 
@@ -239,7 +237,8 @@ public:
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
 		glGenTextures(1, &_ScreenTexture);
 		glBindTexture(GL_TEXTURE_2D, _ScreenTexture);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 		//todo: power of 2 problems?
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, displayResolution.width, displayResolution.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)_ScreenBuffer->Pixels);

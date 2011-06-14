@@ -77,6 +77,11 @@ Display::Display()
 	}
 
 	m_nextPixelToRenderX = 0;
+
+	m_displayPalette[0] = DisplayPixelFromRGBA(1.00f, 1.00f, 1.00f);
+	m_displayPalette[1] = DisplayPixelFromRGBA(0.67f, 0.67f, 0.67f);
+	m_displayPalette[2] = DisplayPixelFromRGBA(0.33f, 0.33f, 0.33f);
+	m_displayPalette[3] = DisplayPixelFromRGBA(0.00f, 0.00f, 0.00f);
 }
 
 Display::~Display()
@@ -422,7 +427,7 @@ void Display::RenderBackgroundPixel(int screenX, int screenY)
 		return;
 
 	//Cached?
-	u8 cachedValue = m_frameBackgroundData.GetPixel(screenX, screenY);
+	DisplayPixel cachedValue = m_frameBackgroundData.GetPixel(screenX, screenY);
 	if(cachedValue != PIXEL_NOT_CACHED)
 	{
 		m_activeScreenBuffer->SetPixel(screenX, screenY, cachedValue);
@@ -474,9 +479,10 @@ void Display::RenderBackgroundPixel(int screenX, int screenY)
 		//Ok...so we have our pixel.  Now we still have to look it up in the palette.
 		int bgPixelPaletteShift = bgPixelValue * 2;	///<2 bits per entry
 		u8 bgPixelPaletteValue = (m_backgroundPalette & (0x03 << bgPixelPaletteShift)) >> bgPixelPaletteShift;
+		DisplayPixel finalValue = m_displayPalette[ bgPixelPaletteValue ];
 
 		//Done
-		m_frameBackgroundData.SetPixel(cacheScreenX, screenY, bgPixelPaletteValue);
+		m_frameBackgroundData.SetPixel(cacheScreenX, screenY, finalValue);
 
 		tilePixelX++;
 		cacheScreenX++;
@@ -498,7 +504,7 @@ void Display::RenderSpritePixel(int screenX, int screenY)
 		return;
 
 	//RenderSprites fills m_frameSpriteData.  If there's no value there at this pixel, then there's no sprite at this pixel.
-	u8 cachedValue = m_frameSpriteData.GetPixel(screenX, screenY);
+	DisplayPixel cachedValue = m_frameSpriteData.GetPixel(screenX, screenY);
 	if(cachedValue != PIXEL_NOT_CACHED && cachedValue != PIXEL_TRANSPARENT)
 		m_activeScreenBuffer->SetPixel(screenX, screenY, cachedValue);
 }
@@ -513,7 +519,7 @@ void Display::RenderWindowPixel(int screenX, int screenY)
 		return;
 	
 	//Cached?
-	u8 cachedValue = m_frameWindowData.GetPixel(screenX, screenY);
+	DisplayPixel cachedValue = m_frameWindowData.GetPixel(screenX, screenY);
 	if(cachedValue != PIXEL_NOT_CACHED)
 	{
 		m_activeScreenBuffer->SetPixel(screenX, screenY, cachedValue);
@@ -565,9 +571,10 @@ void Display::RenderWindowPixel(int screenX, int screenY)
 		//Ok...so we have our pixel.  Now we still have to look it up in the palette.
 		int pixelPaletteShift = pixelValue * 2;	///<2 bits per entry
 		u8 pixelPaletteValue = (m_backgroundPalette & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
+		DisplayPixel finalValue = m_displayPalette[ pixelPaletteValue ];
 
 		//Done
-		m_frameWindowData.SetPixel(cacheScreenX, screenY, pixelPaletteValue);
+		m_frameWindowData.SetPixel(cacheScreenX, screenY, finalValue);
 
 		tilePixelX++;
 		cacheScreenX++;
@@ -678,8 +685,10 @@ void Display::RenderSprites(int screenY)
 				if(spriteFlags & (1<<4))	///<Use sprite palette 1 if set
 					pixelPaletteValue = (m_spritePalette1 & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
 
+				DisplayPixel finalValue = m_displayPalette[ pixelPaletteValue ];
+
 				//Write the pixel
-				m_frameSpriteData.SetPixel(cacheScreenX, cacheScreenY, pixelPaletteValue);
+				m_frameSpriteData.SetPixel(cacheScreenX, cacheScreenY, finalValue);
 
 				//Save the priority
 				if(spriteFlags & (1<<7))	///<Lower priority if set, higher priority otherwise

@@ -22,8 +22,8 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "../Machine/Types.h"
 
-#define PIXEL_NOT_CACHED ((u8)-1)
-#define PIXEL_TRANSPARENT ((u8)-2)
+#define PIXEL_NOT_CACHED (DisplayPixelFromRGBA((u8)0, (u8)0, (u8)0, (u8)1))
+#define PIXEL_TRANSPARENT (DisplayPixelFromRGBA((u8)0, (u8)0, (u8)0, (u8)0))
 
 struct ScreenResolution
 {
@@ -33,17 +33,17 @@ struct ScreenResolution
 
 struct ScreenBuffer
 {
-	u8 Pixels[160*144];
+	DisplayPixel Pixels[160*144];
 
-	u8 GetPixel(int x, int y)
+	inline DisplayPixel GetPixel(int x, int y)
 	{
 		if(x<0 || x>=160 || y<0 || y>=144)
-			return (u8)0;
+			return (DisplayPixel)0;
 
 		return Pixels[y*160+x];
 	}
 
-	void SetPixel(int x, int y, u8 value)
+	inline void SetPixel(int x, int y, DisplayPixel value)
 	{
 		if(x<0 || x>=160 || y<0 || y>=144)
 			return;
@@ -133,6 +133,8 @@ private:
 	ScreenBuffer* m_activeScreenBuffer;	///<The screen buffer currently being rendered to by the gameboy
 	ScreenBuffer* m_stableScreenBuffer;	///<The screen buffer ready to be displayed on the pc
 	int m_screenBufferCount;
+
+	DisplayPixel m_displayPalette[4];	///<Maps 2-bit pixel values to DisplayPixel values
 
 	int m_nextPixelToRenderX;	///<X-position of the last pixel rendered during this scanline
 	int m_ticksSpentThisScanline;	///<How many ticks have passed during this scanline.  So we know how many pixels to render.
