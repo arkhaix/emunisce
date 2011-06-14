@@ -239,10 +239,10 @@ int Sound::GetAudioBufferCount()
 	return m_audioBufferCount;
 }
 
-void Sound::SetUseFancyStuff(bool useFancyStuff)
+void Sound::SetSquareSynthesisMethod(SquareSynthesisMethod::Type method)
 {
-	m_sound1->SetUseFancyStuff(useFancyStuff);
-	m_sound2->SetUseFancyStuff(useFancyStuff);
+	m_sound1->SetSynthesisMethod(method);
+	m_sound2->SetSynthesisMethod(method);
 }
 
 

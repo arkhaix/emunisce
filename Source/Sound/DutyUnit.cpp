@@ -40,7 +40,7 @@ DutyUnit::DutyUnit()
 		for(int j=0;j<8;j++)
 			m_dutyTable[i][j] = dutyTable[i][j];
 
-	m_useFancyStuff = false;
+	m_synthesisMethod = SquareSynthesisMethod::LinearInterpolation;
 	m_hasTransitioned = false;
 	m_hitNyquist = false;
 	m_ticksSinceLastSample = 0;
@@ -53,7 +53,7 @@ void DutyUnit::Run(int ticks)
 	if(m_timerPeriod == 0)
 		return;
 
-	if(m_useFancyStuff == false)
+	if(m_synthesisMethod == SquareSynthesisMethod::Naive)
 	{
 		m_timerValue -= ticks;
 		while(m_timerValue <= 0)
@@ -68,45 +68,52 @@ void DutyUnit::Run(int ticks)
 		return;
 	}
 
-	if(m_hitNyquist == true)
-		return;
-
-	m_ticksSinceLastSample += ticks;
-
-	if(m_timerValue > ticks)
+	else if(m_synthesisMethod == SquareSynthesisMethod::LinearInterpolation)
 	{
-		m_timerValue -= ticks;
+		if(m_hitNyquist == true)
+			return;
+
+		m_ticksSinceLastSample += ticks;
+
+		if(m_timerValue > ticks)
+		{
+			m_timerValue -= ticks;
+
+			int sampleValue = 1;
+			if(m_dutyTable[ m_dutyMode ][ m_dutyPosition ] == 0)
+				sampleValue = -1;
+
+			m_sumSinceLastSample += sampleValue * ticks;
+			return;
+		}
+
+		if(m_hasTransitioned == true)
+		{
+			m_hitNyquist = true;
+			return;
+		}
+
+		m_hasTransitioned = true;
 
 		int sampleValue = 1;
 		if(m_dutyTable[ m_dutyMode ][ m_dutyPosition ] == 0)
 			sampleValue = -1;
 
-		m_sumSinceLastSample += sampleValue * ticks;
-		return;
+		m_sumSinceLastSample += sampleValue * m_timerValue;
+
+		m_dutyPosition++;
+		if(m_dutyPosition > 7)
+			m_dutyPosition = 0;
+
+		ticks -= m_timerValue;
+		m_timerValue = m_timerPeriod;
+
+		return Run(ticks);
 	}
 
-	if(m_hasTransitioned == true)
-	{
-		m_hitNyquist = true;
-		return;
-	}
+	//else
 
-	m_hasTransitioned = true;
-
-	int sampleValue = 1;
-	if(m_dutyTable[ m_dutyMode ][ m_dutyPosition ] == 0)
-		sampleValue = -1;
-
-	m_sumSinceLastSample += sampleValue * m_timerValue;
-
-	m_dutyPosition++;
-	if(m_dutyPosition > 7)
-		m_dutyPosition = 0;
-
-	ticks -= m_timerValue;
-	m_timerValue = m_timerPeriod;
-
-	return Run(ticks);
+	return;
 }
 
 void DutyUnit::Trigger()
@@ -129,7 +136,7 @@ void DutyUnit::WriteDutyRegister(u8 value)
 
 float DutyUnit::GetSample()
 {
-	if(m_useFancyStuff == false)
+	if(m_synthesisMethod == SquareSynthesisMethod::Naive)
 	{
 		if(m_dutyTable[ m_dutyMode ][ m_dutyPosition ] == 0)
 			return -1.f;
@@ -137,21 +144,31 @@ float DutyUnit::GetSample()
 		return 1.f;
 	}
 
-	float result = 0.f;
+	else if(m_synthesisMethod == SquareSynthesisMethod::LinearInterpolation)
+	{
+		float result = 0.f;
+		
+		if(m_ticksSinceLastSample > 0 && m_hitNyquist == false)
+			result = (float)m_sumSinceLastSample / (float)m_ticksSinceLastSample;
+
+		m_hasTransitioned = false;
+		m_hitNyquist = false;
+		m_ticksSinceLastSample = 0;
+		m_sumSinceLastSample = 0;
+
+		return result;
+	}
+
+	//else
 	
-	if(m_ticksSinceLastSample > 0 && m_hitNyquist == false)
-		result = (float)m_sumSinceLastSample / (float)m_ticksSinceLastSample;
-
-	m_hasTransitioned = false;
-	m_hitNyquist = false;
-	m_ticksSinceLastSample = 0;
-	m_sumSinceLastSample = 0;
-
-	return result;
+	return 0.f;
 }
 
 
-void DutyUnit::SetUseFancyStuff(bool fancyStuff)
+void DutyUnit::SetSynthesisMethod(SquareSynthesisMethod::Type method)
 {
-	m_useFancyStuff = fancyStuff;
+	m_synthesisMethod = method;
+
+	if(method < 0 || method >= SquareSynthesisMethod::NumSquareSynthesisMethods)
+		m_synthesisMethod = SquareSynthesisMethod::LinearInterpolation;
 }
