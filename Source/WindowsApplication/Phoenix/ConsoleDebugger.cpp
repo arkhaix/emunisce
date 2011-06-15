@@ -341,22 +341,9 @@ void ConsoleDebugger::RunMachine()
 	{
 		LARGE_INTEGER curCount;
 
-		int curFrame = m_machine->GetFrameCount();
+		m_machine->RunOneFrame();
 
-		while(m_machine->GetFrameCount() == curFrame)
-		{
-			m_machine->RunOneFrame();
-
-			//StepInto();
-
-			//if(m_breakpointsEnabled == true && m_breakpoints.find( m_cpu->pc ) != m_breakpoints.end())
-			//{
-			//	keepGoing = false;
-			//	break;
-			//}
-		}
-
-		ticksUntilSync -= 69905;	///<ish
+		ticksUntilSync -= 69905;	///<Machine frame (60fps), not display frame (59.7fps)
 		if(ticksUntilSync <= 0)
 		{
 			do

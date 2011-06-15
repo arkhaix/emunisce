@@ -29,6 +29,9 @@ class GdiPlusRenderer;
 class KeyboardInput;
 class WaveOutSound;
 
+class UserInterface;
+
+
 class Phoenix
 {
 public:
@@ -46,6 +49,9 @@ public:
 	void RequestShutdown();
 
 	Window* GetWindow();
+
+	UserInterface* GetUserInterface();
+
 	ConsoleDebugger* GetDebugger();
 	GdiPlusRenderer* GetRenderer();
 	KeyboardInput* GetInput();
