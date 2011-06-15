@@ -11,74 +11,70 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{5320668F-EDA7-49EB-90FF-EEC79CABC957}</ProjectGuid>
-    <SccProjectName>
-    </SccProjectName>
-    <SccAuxPath>
-    </SccAuxPath>
-    <SccLocalPath>
-    </SccLocalPath>
-    <SccProvider>
-    </SccProvider>
+    <ProjectGuid>{6A47E539-4CFD-423B-B93A-B7CB5B1CE7D1}</ProjectGuid>
+    <RootNamespace>Machine</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup>
-    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
-    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
-    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
-    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
-    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
-  </PropertyGroup>
-  <ItemDefinitionGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Gameboy</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Gameboy</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="IMachineToUser.h" />
-    <ClInclude Include="Machine.h" />
-    <ClInclude Include="Types.h" />
-    <ClInclude Include="IUserToMachine.h" />
+    <ClInclude Include="IEmulatedDisplay.h" />
+    <ClInclude Include="IEmulatedInput.h" />
+    <ClInclude Include="IEmulatedMachine.h" />
+    <ClInclude Include="IEmulatedMemory.h" />
+    <ClInclude Include="IEmulatedProcessor.h" />
+    <ClInclude Include="IEmulatedSound.h" />
+    <ClInclude Include="MachineFactory.h" />
+    <ClInclude Include="MachineIncludes.h" />
+    <ClInclude Include="MachineTypes.h" />
+    <ClInclude Include="ScreenBuffer.h" />
+    <ClInclude Include="TScreenBuffer.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Machine.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Cpu\Cpu.vcxproj">
-      <Project>{15a4af88-4429-4720-aef7-700335cf8cf1}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Display\Display.vcxproj">
-      <Project>{e913fab3-3258-423d-ae0a-3c23b2ca31b5}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Input\Input.vcxproj">
-      <Project>{132a61d1-1ba2-4581-b4f9-0740feb37572}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Memory\Memory.vcxproj">
-      <Project>{316e1001-8c02-460f-ad90-ebb6a9fa5744}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Sound\Sound.vcxproj">
-      <Project>{6511e5d7-746b-4e84-bd0b-6a960f4df7e0}</Project>
-    </ProjectReference>
+    <ClCompile Include="MachineFactory.cpp" />
+    <ClCompile Include="ScreenBuffer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
