@@ -120,7 +120,7 @@ void Display::Initialize()
 	m_activeScreenBuffer = &m_screenBuffer;
 	m_stableScreenBuffer = &m_screenBuffer2;
 
-	SetLcdControl(0x91);
+	SetLcdControl(0x00);	///<Enabled explicitly by the bios, but it's off before that
 	m_lcdStatus = 0x00;	//???
 
 	m_scrollY = 0;
