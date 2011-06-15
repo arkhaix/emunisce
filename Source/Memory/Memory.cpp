@@ -229,6 +229,10 @@ void Memory::Write8(u16 address, u8 value)
 	if(address >= 0xfe00 && address < 0xfea0)
 		m_display->WriteOam(address, value);
 
+	//[$e000,$fdff] is mirrored to [$c000,$ddff]
+	if(address >= 0xe000 && address < 0xfe00)
+		Write8(address - 0x2000, value);
+
 	//Write it
 	m_memoryData[address] = value;
 }
