@@ -110,7 +110,7 @@ public:
 	virtual void DisplayImportantMessage(MessageType::Type messageType, const char* message);	///<Displays a message to the user and blocks until the message is acknowledged.
 	virtual PromptResult::Type DisplayPrompt(PromptType::Type promptType, const char* title, const char* message, void** extraResult);	///<Displays a prompt the user and blocks until the prompt is answered.  extraResult is for responses from the user that can't be returned as PromptResult values.
 
-	virtual bool SelectFile(char** result, const char* fileMask);	///<Prompts the user to select a file.  Allocates result, sets it to the absolute path to the file, and returns yet on success.  On cancellation, failure, or an invalid file selection, result is unchanged and the function returns false.
+	virtual bool SelectFile(char** result, const char* fileMask = 0);	///<Prompts the user to select a file.  Allocates result, sets it to the absolute path to the file, and returns yet on success.  On cancellation, failure, or an invalid file selection, result is unchanged and the function returns false.
 };
 
 #endif

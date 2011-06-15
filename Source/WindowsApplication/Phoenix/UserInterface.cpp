@@ -115,7 +115,7 @@ bool UserInterface::SelectFile(char** result, const char* fileMask)
 	if(result == NULL)
 		return false;
 
-	char selectedFile[MAX_PATH];
+	char selectedFile[MAX_PATH] = {0};
 
 	OPENFILENAME openDialog;
     ZeroMemory(&openDialog, sizeof(openDialog));

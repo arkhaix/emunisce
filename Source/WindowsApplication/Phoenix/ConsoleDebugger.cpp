@@ -39,6 +39,7 @@ using namespace std;
 
 //Application
 #include "Phoenix.h"
+#include "UserInterface.h"
 #include "../WaveOutSound/WaveOutSound.h"
 
 
@@ -83,13 +84,12 @@ void ConsoleDebugger::Run()
 {
 	SetupConsole();
 
-	while(m_machine == NULL)
-	{
-		printf("\nFile: ");
-		string filename = "";
-		getline(cin, filename);
+	LoadROM(NULL);
 
-		LoadROM(filename.c_str());
+	if(m_machine == NULL)
+	{
+		m_phoenix->RequestShutdown();
+		return;
 	}
 
 	while(m_phoenix->ShutdownRequested() == false)
@@ -163,6 +163,11 @@ void ConsoleDebugger::FetchCommand()
 	COMMAND1("l", LoadROM(line.substr(args[0].size()+1).c_str()))
 	COMMAND1("open", LoadROM(line.substr(args[0].size()+1).c_str()))
 	COMMAND1("o", LoadROM(line.substr(args[0].size()+1).c_str()))
+
+	COMMAND0("load", LoadROM(NULL))
+	COMMAND0("l", LoadROM(NULL))
+	COMMAND0("open", LoadROM(NULL))
+	COMMAND0("o", LoadROM(NULL))
 
 	COMMAND0("reset", Reset())
 
@@ -251,18 +256,28 @@ void ConsoleDebugger::LoadROM(const char* filename)
 {
 	printf("%s(%s)\n", __FUNCTION__, filename);
 
+	//Prompt for a file if one wasn't provided
+	char* selectedFilename = NULL;
 	if(filename == NULL || strlen(filename) == 0)
-		return;
+	{
+		bool fileSelected = m_phoenix->GetUserInterface()->SelectFile(&selectedFilename);
 
-	string sFilename = string("C:/hg/Phoenix/Roms/") + string(filename);
-	if(sFilename.find(".gb") == string::npos && sFilename.find(".GB") == string::npos)
-		sFilename += string(".gb");
+		if(fileSelected == false)
+			return;
 
-	IEmulatedMachine* machine = MachineFactory::CreateMachine(sFilename.c_str());
+		filename = selectedFilename;
+	}
+
+	//Load it
+	IEmulatedMachine* machine = MachineFactory::CreateMachine(filename);
 	if(machine == NULL)
 	{
 		printf("Failed to load the ROM\n");
 		system("pause");
+
+		if(selectedFilename != NULL)
+			free((void*)selectedFilename);
+
 		return;
 	}
 
@@ -282,6 +297,9 @@ void ConsoleDebugger::LoadROM(const char* filename)
 	Sleep(500);
 
 	RunMachine();
+
+	if(selectedFilename != NULL)
+		free((void*)selectedFilename);
 }
 
 void ConsoleDebugger::Reset()
