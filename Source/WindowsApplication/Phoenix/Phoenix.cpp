@@ -23,6 +23,8 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "MachineIncludes.h"
 
+#include "UserInterface.h"
+
 #include "ConsoleDebugger.h"
 #include "../GdiPlusRenderer/GdiPlusRenderer.h"
 #include "../KeyboardInput/KeyboardInput.h"
@@ -34,6 +36,8 @@ class Phoenix_Private : public IWindowMessageListener
 public:
 
 	Window* _Window;
+
+	UserInterface* _UserInterface;
 
 	IEmulatedMachine* _Machine;
 	IEmulatedMachine* _PendingMachine;
@@ -49,6 +53,8 @@ public:
 	Phoenix_Private()
 	{
 		_ShutdownRequested = false;
+
+		_UserInterface = new UserInterface();
 
 		_Window = new Window();
 
@@ -82,6 +88,8 @@ public:
 		}
 
 		delete _Window;
+
+		delete _UserInterface;
 	}
 
 
@@ -272,6 +280,11 @@ void Phoenix::RequestShutdown()
 Window* Phoenix::GetWindow()
 {
 	return m_private->_Window;
+}
+
+UserInterface* Phoenix::GetUserInterface()
+{
+	return m_private->_UserInterface;
 }
 
 ConsoleDebugger* Phoenix::GetDebugger()
