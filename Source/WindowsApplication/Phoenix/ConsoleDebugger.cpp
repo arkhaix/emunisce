@@ -345,7 +345,10 @@ void ConsoleDebugger::RunMachine()
 
 		while(m_machine->GetFrameCount() == curFrame)
 		{
-			StepInto();
+			m_machine->RunOneFrame();
+
+			//StepInto();
+
 			//if(m_breakpointsEnabled == true && m_breakpoints.find( m_cpu->pc ) != m_breakpoints.end())
 			//{
 			//	keepGoing = false;
