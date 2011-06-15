@@ -347,6 +347,11 @@ void Memory::LoadBootRom(const char* filename)
 		//Use default boot rom
 		u8 defaultBootRom[] = 
 		{
+			//Enable the lcd
+			0x3e, 0x91,			//LD A,$91
+			0xe0, 0x40,			//LD ($FF00+$40),A
+
+			//Disable boot rom area
 			0x3e, 0x01,			//LD A, $01
 			0xe0, 0x50,			//LD ($FF50), A
 		};
