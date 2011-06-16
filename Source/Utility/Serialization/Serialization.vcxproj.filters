@@ -17,9 +17,18 @@
     <ClInclude Include="Archive.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SerializeItem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializationIncludes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Archive.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SerializeItem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
