@@ -17,23 +17,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef PLATFORMTYPES_H
-#define PLATFORMTYPES_H
+#ifndef ISERIALIZER_H
+#define ISERIALIZER_H
 
-//todo: ifdef things
+class ISerializer
+{
+public:
 
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef unsigned long long u64;
-
-typedef signed char s8;
-typedef signed short s16;
-typedef signed int s32;
-typedef signed long long s64;
-
-#ifndef NULL
-#define NULL 0
-#endif
+	virtual void Save(unsigned char* data, unsigned int bytes) = 0;
+	virtual void Restore(unsigned char* buffer, unsigned int bytes) = 0;
+};
 
 #endif

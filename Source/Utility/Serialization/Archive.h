@@ -17,23 +17,49 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef PLATFORMTYPES_H
-#define PLATFORMTYPES_H
+#ifndef ARCHIVE_H
+#define ARCHIVE_H
 
-//todo: ifdef things
+#include "PlatformTypes.h"
 
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef unsigned long long u64;
+class ISerializer;
 
-typedef signed char s8;
-typedef signed short s16;
-typedef signed int s32;
-typedef signed long long s64;
+namespace ArchiveMode
+{
+	typedef int Type;
 
-#ifndef NULL
-#define NULL 0
-#endif
+	enum
+	{
+		Saving = 0,
+		Loading,
+
+		NumArchiveModes
+	};
+}
+
+class Archive
+{
+public:
+
+	Archive::Archive(ISerializer* serializer, ArchiveMode::Type archiveMode);
+
+	Archive& operator&(u8& data);
+	Archive& operator&(u16& data);
+	Archive& operator&(u32& data);
+	Archive& operator&(u64& data);
+
+	Archive& operator&(s8& data);
+	Archive& operator&(s16& data);
+	Archive& operator&(s32& data);
+	Archive& operator&(s64& data);
+
+	Archive& operator&(float& data);
+	Archive& operator&(double& data);
+
+protected:
+
+	ISerializer* m_serializer;
+	ArchiveMode::Type m_archiveMode;
+};
 
 #endif
