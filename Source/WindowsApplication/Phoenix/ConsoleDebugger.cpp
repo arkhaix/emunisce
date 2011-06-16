@@ -94,6 +94,8 @@ void ConsoleDebugger::Run()
 		return;
 	}
 
+	RunMachine();
+
 	while(m_phoenix->ShutdownRequested() == false)
 	{
 		UpdateDisplay();
@@ -190,6 +192,9 @@ void ConsoleDebugger::FetchCommand()
 	COMMAND0("r", RunMachine())
 	COMMAND0("go", RunMachine())
 	COMMAND0("g", RunMachine())
+
+	COMMAND0("pause", Pause())
+	COMMAND0("p", Pause())
 
 	COMMAND1("breakpoint", ToggleBreakpoint(strtol(args[1].c_str(), NULL, 16)))
 	COMMAND1("break", ToggleBreakpoint(strtol(args[1].c_str(), NULL, 16)))
@@ -293,13 +298,6 @@ void ConsoleDebugger::RunMachine()
 	}
 
 	m_userInterface->Run();
-
-	while(!_kbhit())
-	{
-		Sleep(100);
-	}
-
-	m_userInterface->Pause();
 }
 
 void ConsoleDebugger::RunMachineTo(int address)
@@ -325,6 +323,11 @@ void ConsoleDebugger::RunMachineTo(int address)
 		if(m_breakpoints.size() == 0)
 			m_breakpointsEnabled = false;
 	}
+}
+
+void ConsoleDebugger::Pause()
+{
+	m_userInterface->Pause();
 }
 
 

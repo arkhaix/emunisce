@@ -60,6 +60,7 @@ public:
 
 	virtual void Run();	///<Runs the machine at the speed defined by SetEmulationSpeed.
 	virtual void Pause();	///<Pauses the machine.  Preserves the SetEmulationSpeed setting.
+	virtual bool IsPaused();
 
 	virtual void StepInstruction();	///<Pauses if necessary, then steps forward one cpu instruction.
 	virtual void StepFrame();	///<Pauses if necessary, then steps forward 1/60th of a second.
@@ -73,7 +74,9 @@ protected:
 	HANDLE m_runnerThread;
 	static DWORD WINAPI StaticRunnerThread(LPVOID param);
 	DWORD RunnerThread();
+
 	void Synchronize();
+	void ResetSynchronizationState();
 
 	bool m_shutdownRequested;
 	bool m_waitRequested;
@@ -84,6 +87,22 @@ protected:
 
 	float m_emulationSpeed;
 	bool m_throttlingEnabled;
+
+	struct SynchronizationInfo
+	{
+		LARGE_INTEGER CountsPerSecond;
+		LARGE_INTEGER CountsPerFrame;
+
+		LARGE_INTEGER RunStartTime;
+
+		LARGE_INTEGER CurrentRealTime;
+		LARGE_INTEGER CurrentMachineTime;
+
+		LARGE_INTEGER ElapsedRealTime;
+		LARGE_INTEGER ElapsedMachineTime;
+	};
+
+	SynchronizationInfo m_syncState;
 };
 
 #endif

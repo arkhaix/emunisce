@@ -304,8 +304,14 @@ bool Phoenix::LoadRom(const char* filename)
 	//Successfully created a new Machine
 	IEmulatedMachine* oldMachine = m_private->_Machine;
 
+	bool wasPaused = m_private->_Runner->IsPaused();
+	m_private->_Runner->Pause();
+
 	//Let everyone know that the old one is going away
 	NotifyMachineChanged(machine);
+
+	if(wasPaused == false)
+		m_private->_Runner->Run();
 
 	//Release the old one
 	if(oldMachine != NULL)
