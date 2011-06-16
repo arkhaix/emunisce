@@ -196,6 +196,9 @@ void ConsoleDebugger::FetchCommand()
 	COMMAND0("pause", Pause())
 	COMMAND0("p", Pause())
 
+	COMMAND1("speed", Speed((float)strtod(args[1].c_str(), NULL)))
+	COMMAND1("sp", Speed((float)strtod(args[1].c_str(), NULL)))
+
 	COMMAND1("breakpoint", ToggleBreakpoint(strtol(args[1].c_str(), NULL, 16)))
 	COMMAND1("break", ToggleBreakpoint(strtol(args[1].c_str(), NULL, 16)))
 	COMMAND1("b", ToggleBreakpoint(strtol(args[1].c_str(), NULL, 16)))
@@ -325,9 +328,16 @@ void ConsoleDebugger::RunMachineTo(int address)
 	}
 }
 
+
 void ConsoleDebugger::Pause()
 {
 	m_userInterface->Pause();
+}
+
+
+void ConsoleDebugger::Speed(float multiplier)
+{
+	m_userInterface->SetEmulationSpeed(multiplier);
 }
 
 

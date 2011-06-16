@@ -84,9 +84,9 @@ void MachineRunner::SetMachine(IEmulatedMachine* machine)
 
 // Machine runner
 
-void MachineRunner::SetEmulationSpeed(float speed)
+void MachineRunner::SetEmulationSpeed(float multiplier)
 {
-	m_emulationSpeed = speed;
+	m_emulationSpeed = multiplier;
 }
 
 
@@ -182,11 +182,15 @@ void MachineRunner::Synchronize()
 	if(m_throttlingEnabled == false)
 		return;
 
+	if(m_emulationSpeed < +1e-5)
+		return;
+		
+
 	//Note: This function assumes it's being called 60 times per second (defined by CountsPerFrame).
 	//		It will synchronize itself to that rate.
 
 	QueryPerformanceCounter(&m_syncState.CurrentRealTime);
-	m_syncState.CurrentMachineTime.QuadPart += m_syncState.CountsPerFrame.QuadPart;
+	m_syncState.CurrentMachineTime.QuadPart += (LONGLONG)((double)m_syncState.CountsPerFrame.QuadPart * (1.0 / (double)m_emulationSpeed));
 
 	m_syncState.ElapsedRealTime.QuadPart = m_syncState.CurrentRealTime.QuadPart - m_syncState.RunStartTime.QuadPart;
 	m_syncState.ElapsedMachineTime.QuadPart = m_syncState.CurrentMachineTime.QuadPart - m_syncState.RunStartTime.QuadPart;
