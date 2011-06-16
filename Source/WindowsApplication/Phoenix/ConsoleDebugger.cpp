@@ -61,6 +61,8 @@ ConsoleDebugger::ConsoleDebugger()
 void ConsoleDebugger::Initialize(Phoenix* phoenix)
 {
 	m_phoenix = phoenix;
+	m_userInterface = phoenix->GetUserInterface();
+
 	phoenix->GetSound()->SetMute(m_muteSound);
 }
 
@@ -256,65 +258,22 @@ void ConsoleDebugger::LoadROM(const char* filename)
 {
 	printf("%s(%s)\n", __FUNCTION__, filename);
 
-	//Prompt for a file if one wasn't provided
-	char* selectedFilename = NULL;
-	if(filename == NULL || strlen(filename) == 0)
-	{
-		bool fileSelected = m_phoenix->GetUserInterface()->SelectFile(&selectedFilename);
-
-		if(fileSelected == false)
-			return;
-
-		filename = selectedFilename;
-	}
-
-	//Load it
-	IEmulatedMachine* machine = MachineFactory::CreateMachine(filename);
-	if(machine == NULL)
-	{
-		printf("Failed to load the ROM\n");
-		system("pause");
-
-		if(selectedFilename != NULL)
-			free((void*)selectedFilename);
-
-		return;
-	}
-
-	//Successfully created a new Machine
-	IEmulatedMachine* oldMachine = m_machine;
-
-	//Let everyone (including this class) know that the old one is going away
-	m_phoenix->NotifyMachineChanged(machine);
-
-	m_lastFileLoaded = filename;
-
-	//Release the old one
-	if(oldMachine != NULL)
-		MachineFactory::ReleaseMachine(oldMachine);
-
-	printf("Success\n");
-	Sleep(500);
-
-	RunMachine();
-
-	if(selectedFilename != NULL)
-		free((void*)selectedFilename);
+	m_userInterface->LoadRom(filename);
 }
 
 void ConsoleDebugger::Reset()
 {
 	printf("%s\n", __FUNCTION__);
 
-	LoadROM(m_lastFileLoaded.c_str());
+	m_userInterface->Reset();
 }
 
 
 void ConsoleDebugger::StepInto()
 {
-	//printf("%s\n", __FUNCTION__);
+	printf("%s\n", __FUNCTION__);
 
-	m_machine->Step();
+	m_userInterface->StepInstruction();
 }
 
 void ConsoleDebugger::StepOver()
@@ -327,60 +286,20 @@ void ConsoleDebugger::RunMachine()
 {
 	printf("%s\n", __FUNCTION__);
 
-	printf("Press any key to pause execution...\n");
-
 	if(m_breakpointsEnabled == false)
 	{
 		SetForegroundWindow((HWND)m_phoenix->GetWindow()->GetHandle());
 		SetFocus((HWND)m_phoenix->GetWindow()->GetHandle());
 	}
 
-	int syncsPerSecond = 20;
+	m_userInterface->Run();
 
-	LARGE_INTEGER performanceFrequency;
-	LARGE_INTEGER countsPerSync;
-	QueryPerformanceFrequency(&performanceFrequency);
-	countsPerSync.QuadPart = performanceFrequency.QuadPart / (LONGLONG)syncsPerSecond;
-
-	double countsPerMillisecond = performanceFrequency.QuadPart / 1000.0;
-	double millisecondsPerCount = 1.0 / countsPerMillisecond;
-
-	int ticksPerSecond = 4194304;
-	int ticksPerSync = ticksPerSecond / syncsPerSecond;
-
-	int ticksUntilSync = ticksPerSync;
-
-	LARGE_INTEGER syncPeriodStartCount;
-	QueryPerformanceCounter(&syncPeriodStartCount);
-
-
-	bool keepGoing = true;
-	while(keepGoing)
+	while(!_kbhit())
 	{
-		LARGE_INTEGER curCount;
-
-		m_machine->RunOneFrame();
-
-		ticksUntilSync -= 69905;	///<Machine frame (60fps), not display frame (59.7fps)
-		if(ticksUntilSync <= 0)
-		{
-			do
-			{
-				QueryPerformanceCounter(&curCount);
-				LONGLONG countsTooFast = countsPerSync.QuadPart - (curCount.QuadPart - syncPeriodStartCount.QuadPart);
-				if(countsTooFast <= 0)
-					break;
-				double millisecondsTooFast = millisecondsPerCount * countsTooFast;
-				Sleep((DWORD)millisecondsTooFast);
-			} while(curCount.QuadPart - syncPeriodStartCount.QuadPart < countsPerSync.QuadPart);
-
-			syncPeriodStartCount.QuadPart = curCount.QuadPart;
-			ticksUntilSync += ticksPerSync;
-		}
-
-		if(_kbhit())
-			keepGoing = false;
+		Sleep(100);
 	}
+
+	m_userInterface->Pause();
 }
 
 void ConsoleDebugger::RunMachineTo(int address)

@@ -44,6 +44,7 @@ public:
 	//Machine info
 	virtual unsigned int GetFrameCount();
 	virtual unsigned int GetTicksPerSecond();
+	virtual unsigned int GetTicksUntilNextFrame();
 
 	//Execution
 	virtual void Step();

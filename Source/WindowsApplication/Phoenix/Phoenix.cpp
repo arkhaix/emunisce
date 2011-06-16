@@ -19,13 +19,17 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Phoenix.h"
 
+#include <string>
+
 #include "PlatformIncludes.h"
 
 #include "MachineIncludes.h"
 
 #include "UserInterface.h"
 
+#include "MachineRunner.h"
 #include "ConsoleDebugger.h"
+
 #include "../GdiPlusRenderer/GdiPlusRenderer.h"
 #include "../KeyboardInput/KeyboardInput.h"
 #include "../OpenGLRenderer/OpenGLRenderer.h"
@@ -35,18 +39,22 @@ class Phoenix_Private : public IWindowMessageListener
 {
 public:
 
-	Window* _Window;
-
 	UserInterface* _UserInterface;
+
+	Window* _Window;
 
 	IEmulatedMachine* _Machine;
 	IEmulatedMachine* _PendingMachine;
 
+	MachineRunner* _Runner;
 	ConsoleDebugger* _Debugger;
+
 	//GdiPlusRenderer* _Renderer;
 	OpenGLRenderer* _Renderer;
 	KeyboardInput* _Input;
 	WaveOutSound* _Sound;
+
+	std::string _LastRomLoaded;
 
 	bool _ShutdownRequested;
 
@@ -61,7 +69,9 @@ public:
 		_Machine = NULL;
 		_PendingMachine = NULL;
 
+		_Runner = new MachineRunner();
 		_Debugger = new ConsoleDebugger();
+
 		//_Renderer = new GdiPlusRenderer();
 		_Renderer = new OpenGLRenderer();
 		_Input = new KeyboardInput();
@@ -75,12 +85,17 @@ public:
 		_Sound->Shutdown();
 		_Input->Shutdown();
 		_Renderer->Shutdown();
+
 		_Debugger->Shutdown();
+		_Runner->Shutdown();
+		_UserInterface->Shutdown();
 
 		delete _Sound;
 		delete _Input;
 		delete _Renderer;
+
 		delete _Debugger;
+		delete _Runner;
 
 		if(_Machine)
 		{
@@ -186,7 +201,10 @@ Phoenix::Phoenix()
 	m_private->_Window->Show();
 	m_private->_Window->SubscribeListener(m_private);
 
+	m_private->_UserInterface->Initialize(this);
+	m_private->_Runner->Initialize(this);
 	m_private->_Debugger->Initialize(this);
+
 	m_private->_Renderer->Initialize(this);
 	m_private->_Input->Initialize(this);
 	m_private->_Sound->Initialize(this);
@@ -212,7 +230,10 @@ void Phoenix::RunWindow()
 
 			m_private->_Machine = newMachine;
 
+			m_private->_UserInterface->SetMachine(newMachine);
+			m_private->_Runner->SetMachine(newMachine);
 			m_private->_Debugger->SetMachine(newMachine);
+
 			m_private->_Renderer->SetMachine(newMachine);
 			m_private->_Input->SetMachine(newMachine);
 			m_private->_Sound->SetMachine(newMachine);
@@ -251,6 +272,54 @@ void Phoenix::RunWindow()
 	}
 }
 
+void Phoenix::ResetRom()
+{
+	LoadRom(m_private->_LastRomLoaded.c_str());
+}
+
+bool Phoenix::LoadRom(const char* filename)
+{
+	//Prompt for a file if one wasn't provided
+	char* selectedFilename = NULL;
+	if(filename == NULL || strlen(filename) == 0)
+	{
+		bool fileSelected = m_private->_UserInterface->SelectFile(&selectedFilename);
+
+		if(fileSelected == false)
+			return false;
+
+		filename = selectedFilename;
+	}
+
+	//Load it
+	IEmulatedMachine* machine = MachineFactory::CreateMachine(filename);
+	if(machine == NULL)
+	{
+		if(selectedFilename != NULL)
+			free((void*)selectedFilename);
+
+		return false;
+	}
+
+	//Successfully created a new Machine
+	IEmulatedMachine* oldMachine = m_private->_Machine;
+
+	//Let everyone know that the old one is going away
+	NotifyMachineChanged(machine);
+
+	//Release the old one
+	if(oldMachine != NULL)
+		MachineFactory::ReleaseMachine(oldMachine);
+
+	//Remember the file used so we can reset later if necessary
+	m_private->_LastRomLoaded = filename;
+
+	if(selectedFilename != NULL)
+		free((void*)selectedFilename);
+
+	return true;
+}
+
 void Phoenix::NotifyMachineChanged(IEmulatedMachine* newMachine)
 {
 	//RunWindow must handle machine changes (rendering things have to happen on that thread)
@@ -285,6 +354,11 @@ Window* Phoenix::GetWindow()
 UserInterface* Phoenix::GetUserInterface()
 {
 	return m_private->_UserInterface;
+}
+
+MachineRunner* Phoenix::GetMachineRunner()
+{
+	return m_private->_Runner;
 }
 
 ConsoleDebugger* Phoenix::GetDebugger()
