@@ -38,6 +38,10 @@ MachineRunner::MachineRunner()
 
 	m_emulationSpeed = 1.f;
 	m_throttlingEnabled = true;
+
+	QueryPerformanceFrequency(&m_syncState.CountsPerSecond);
+	m_syncState.CountsPerFrame.QuadPart = m_syncState.CountsPerSecond.QuadPart / 60;	///<todo: this is bad. When CountsPerSecond is 1000, this will be 16.66667 rounded down to 16, throwing everything off by two-thirds of a millisecond per frame (40 milliseconds per second).
+	ResetSynchronizationState();
 }
 
 
@@ -101,6 +105,11 @@ void MachineRunner::Pause()
 		Sleep(1);
 }
 
+bool MachineRunner::IsPaused()
+{
+	return m_waiting;
+}
+
 
 void MachineRunner::StepInstruction()
 {
@@ -141,6 +150,7 @@ DWORD MachineRunner::RunnerThread()
 		{
 			m_waiting = true;
 			WaitForSingleObject(m_waitEvent, INFINITE);
+			ResetSynchronizationState();
 			m_waiting = false;
 		}
 
@@ -172,46 +182,50 @@ void MachineRunner::Synchronize()
 	if(m_throttlingEnabled == false)
 		return;
 
-	return;
+	//Note: This function assumes it's being called 60 times per second (defined by CountsPerFrame).
+	//		It will synchronize itself to that rate.
 
-	int syncsPerSecond = 20;
+	QueryPerformanceCounter(&m_syncState.CurrentRealTime);
+	m_syncState.CurrentMachineTime.QuadPart += m_syncState.CountsPerFrame.QuadPart;
 
-	LARGE_INTEGER performanceFrequency;
-	LARGE_INTEGER countsPerSync;
-	QueryPerformanceFrequency(&performanceFrequency);
-	countsPerSync.QuadPart = performanceFrequency.QuadPart / (LONGLONG)syncsPerSecond;
+	m_syncState.ElapsedRealTime.QuadPart = m_syncState.CurrentRealTime.QuadPart - m_syncState.RunStartTime.QuadPart;
+	m_syncState.ElapsedMachineTime.QuadPart = m_syncState.CurrentMachineTime.QuadPart - m_syncState.RunStartTime.QuadPart;
 
-	double countsPerMillisecond = performanceFrequency.QuadPart / 1000.0;
-	double millisecondsPerCount = 1.0 / countsPerMillisecond;
-
-	int ticksPerSecond = m_machine->GetTicksPerSecond();
-	int ticksPerSync = ticksPerSecond / syncsPerSecond;
-	int ticksPerFrame = ticksPerSecond / 60;	///<Machine frame (60fps), not display frame (59.7fps)
-
-	int ticksUntilSync = ticksPerSync;
-
-	LARGE_INTEGER syncPeriodStartCount;
-	QueryPerformanceCounter(&syncPeriodStartCount);
-
-
-	LARGE_INTEGER curCount;
-
-	m_machine->RunOneFrame();
-
-	ticksUntilSync -= ticksPerFrame;	
-	if(ticksUntilSync <= 0)
+	if(m_syncState.ElapsedRealTime.QuadPart > m_syncState.ElapsedMachineTime.QuadPart)
 	{
-		do
-		{
-			QueryPerformanceCounter(&curCount);
-			LONGLONG countsTooFast = countsPerSync.QuadPart - (curCount.QuadPart - syncPeriodStartCount.QuadPart);
-			if(countsTooFast <= 0)
-				break;
-			double millisecondsTooFast = millisecondsPerCount * countsTooFast;
-			Sleep((DWORD)millisecondsTooFast);
-		} while(curCount.QuadPart - syncPeriodStartCount.QuadPart < countsPerSync.QuadPart);
-
-		syncPeriodStartCount.QuadPart = curCount.QuadPart;
-		ticksUntilSync += ticksPerSync;
+		//Real time is ahead of the machine time, so the emulator is running too slow already.
+		return;
 	}
+
+	LARGE_INTEGER timeDifference;
+	timeDifference.QuadPart = m_syncState.ElapsedMachineTime.QuadPart - m_syncState.ElapsedRealTime.QuadPart;
+
+	double secondsAhead = (double)timeDifference.QuadPart / (double)m_syncState.CountsPerSecond.QuadPart;
+	int millisecondsAhead = (int)((secondsAhead * 1000.0) + 0.5);	///< +0.5 = Round up
+
+	//The constant in the if-check below is arbitrary.
+	//Using a small value (less than ~15 or so) may result in the OS sleeping for longer than expected 
+	// due to the minimum timer resolution being higher than the specified sleep value.  If the emulator is running
+	// fast enough to catch up (and if it doesn't cause too many thread context switches), then that's probably okay.
+	//Using a high value (greater than ~50 or so) may result in noticeable jitter.
+	if(millisecondsAhead >= 5)
+	{
+		Sleep(millisecondsAhead);
+	}
+
+	return;
+}
+
+void MachineRunner::ResetSynchronizationState()
+{
+	LARGE_INTEGER now;
+	QueryPerformanceCounter(&now);
+
+	m_syncState.RunStartTime = now;
+
+	m_syncState.CurrentRealTime = now;
+	m_syncState.CurrentMachineTime = now;
+
+	m_syncState.ElapsedRealTime.QuadPart = 0;
+	m_syncState.ElapsedMachineTime.QuadPart = 0;
 }

@@ -64,6 +64,7 @@ private:
 	void StepOver();
 	void RunMachine();
 	void RunMachineTo(int address);
+	void Pause();
 
 	void ToggleBreakpoint(int address);
 	void ListBreakpoints();
