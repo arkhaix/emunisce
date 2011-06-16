@@ -30,6 +30,7 @@ using namespace std;
 #include "MachineIncludes.h"
 
 class Phoenix;
+class UserInterface;
 
 class ConsoleDebugger
 {
@@ -79,6 +80,7 @@ private:
 	//Properties
 
 	Phoenix* m_phoenix;
+	UserInterface* m_userInterface;
 
 	IEmulatedMachine* m_machine;
 	IEmulatedProcessor* m_cpu;

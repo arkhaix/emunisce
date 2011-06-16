@@ -70,6 +70,11 @@ unsigned int Gameboy::GetTicksPerSecond()
 	return m_ticksPerSecond;
 }
 
+unsigned int Gameboy::GetTicksUntilNextFrame()
+{
+	return m_frameTicksRemaining;
+}
+
 
 //Execution
 void Gameboy::Step()

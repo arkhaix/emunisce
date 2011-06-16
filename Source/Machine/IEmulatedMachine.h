@@ -39,12 +39,11 @@ public:
 	//Machine info
 	virtual unsigned int GetFrameCount() = 0;
 	virtual unsigned int GetTicksPerSecond() = 0;
+	virtual unsigned int GetTicksUntilNextFrame() = 0;
 
 	//Execution
 	virtual void Step() = 0;
 	virtual void RunOneFrame() = 0;
-	virtual void Run() = 0;
-	virtual void Stop() = 0;
 
 	//Persistence
 	virtual bool SaveState(const char* filename) = 0;

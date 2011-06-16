@@ -24,7 +24,9 @@ class Window;
 
 class IEmulatedMachine;
 
+class MachineRunner;
 class ConsoleDebugger;
+
 class GdiPlusRenderer;
 class KeyboardInput;
 class WaveOutSound;
@@ -41,8 +43,10 @@ public:
 
 	void RunWindow();	///<Pumps messages on the window until shutdown is requested.  Blocks until shutdown.
 
-	void NotifyMachineChanged(IEmulatedMachine* newMachine);
+	bool LoadRom(const char* filename);
+	void ResetRom();
 
+	void NotifyMachineChanged(IEmulatedMachine* newMachine);
 	IEmulatedMachine* GetMachine();
 
 	bool ShutdownRequested();
@@ -52,7 +56,9 @@ public:
 
 	UserInterface* GetUserInterface();
 
+	MachineRunner* GetMachineRunner();
 	ConsoleDebugger* GetDebugger();
+
 	GdiPlusRenderer* GetRenderer();
 	KeyboardInput* GetInput();
 	WaveOutSound* GetSound();

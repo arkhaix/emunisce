@@ -21,6 +21,38 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "windows.h"
 
+#include "Phoenix.h"
+#include "MachineRunner.h"
+
+
+// Application component
+
+UserInterface::UserInterface()
+{
+	m_phoenix = NULL;
+	m_runner = NULL;
+}
+
+UserInterface::~UserInterface()
+{
+}
+
+
+void UserInterface::Initialize(Phoenix* phoenix)
+{
+	m_phoenix = phoenix;
+	m_runner = phoenix->GetMachineRunner();
+}
+
+void UserInterface::Shutdown()
+{
+}
+
+void UserInterface::SetMachine(IEmulatedMachine* machine)
+{
+}
+
+
 
 // User to application
 
@@ -29,11 +61,12 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 
 bool UserInterface::LoadRom(const char* filename)
 {
-	return false;
+	return m_phoenix->LoadRom(filename);
 }
 
 void UserInterface::Reset()
 {
+	m_phoenix->ResetRom();
 }
 
 
@@ -41,24 +74,29 @@ void UserInterface::Reset()
 
 void UserInterface::SetEmulationSpeed(float speed)
 {
+	m_runner->SetEmulationSpeed(speed);
 }
 
 
 void UserInterface::Run()
 {
+	m_runner->Run();
 }
 
 void UserInterface::Pause()
 {
+	m_runner->Pause();
 }
 
 
 void UserInterface::StepInstruction()
 {
+	m_runner->StepInstruction();
 }
 
 void UserInterface::StepFrame()
 {
+	m_runner->StepFrame();
 }
 
 

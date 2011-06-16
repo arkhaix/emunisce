@@ -27,7 +27,7 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 
 Phoenix* g_phoenix = NULL;
 
-DWORD WINAPI EmulationThread(LPVOID param)
+DWORD WINAPI ConsoleThread(LPVOID param)
 {
 	ConsoleDebugger* debugger = g_phoenix->GetDebugger();
 	debugger->Run();
@@ -39,7 +39,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, PSTR, INT iCmdShow)
 {
 	g_phoenix = new Phoenix();
 
-	HANDLE emulationThreadHandle = CreateThread(NULL, 0, EmulationThread, NULL, 0, NULL);
+	HANDLE emulationThreadHandle = CreateThread(NULL, 0, ConsoleThread, NULL, 0, NULL);
 	
 	g_phoenix->RunWindow();	///<Blocks until shutdown is requested
 
