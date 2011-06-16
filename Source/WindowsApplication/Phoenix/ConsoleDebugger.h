@@ -64,7 +64,10 @@ private:
 	void StepOver();
 	void RunMachine();
 	void RunMachineTo(int address);
+
 	void Pause();
+
+	void Speed(float multiplier);
 
 	void ToggleBreakpoint(int address);
 	void ListBreakpoints();

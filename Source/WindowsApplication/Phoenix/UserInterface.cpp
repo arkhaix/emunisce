@@ -72,9 +72,9 @@ void UserInterface::Reset()
 
 //Emulation
 
-void UserInterface::SetEmulationSpeed(float speed)
+void UserInterface::SetEmulationSpeed(float multiplier)
 {
-	m_runner->SetEmulationSpeed(speed);
+	m_runner->SetEmulationSpeed(multiplier);
 }
 
 

@@ -56,7 +56,7 @@ public:
 
 	// Machine runner
 
-	virtual void SetEmulationSpeed(float speed);	///<1.0 = normal, 0.0 = stopped, 2.0 = twice normal, any negative value = unlimited
+	virtual void SetEmulationSpeed(float speed);	///<1.0 = normal, 0.5 = half normal, 2.0 = twice normal, any value less than or equal to 0 = no throttle (max speed)
 
 	virtual void Run();	///<Runs the machine at the speed defined by SetEmulationSpeed.
 	virtual void Pause();	///<Pauses the machine.  Preserves the SetEmulationSpeed setting.
