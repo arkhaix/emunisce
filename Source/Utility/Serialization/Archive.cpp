@@ -30,6 +30,12 @@ Archive::Archive(ISerializer* serializer, ArchiveMode::Type archiveMode)
 }
 
 
+ArchiveMode::Type Archive::GetArchiveMode()
+{
+	return m_archiveMode;
+}
+
+
 Archive& Archive::operator&(u8& data)
 {
 	if(m_archiveMode == ArchiveMode::Saving)

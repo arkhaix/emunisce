@@ -47,6 +47,8 @@ public:
 
 	Archive::Archive(ISerializer* serializer, ArchiveMode::Type archiveMode);
 
+	ArchiveMode::Type GetArchiveMode();
+
 	Archive& operator&(u8& data);
 	Archive& operator&(u16& data);
 	Archive& operator&(u32& data);
