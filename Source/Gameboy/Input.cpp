@@ -22,6 +22,9 @@ using namespace Emunisce;
 
 #include "GameboyIncludes.h"
 
+#include "Serialization/SerializationIncludes.h"
+
+
 Input::Input()
 {
 }
@@ -39,6 +42,13 @@ void Input::Initialize()
 
 	m_currentMode = RegisterMode::MachineType;
 	m_joypadRegister = 0xff;
+}
+
+void Input::Serialize(Archive& archive)
+{
+	SerializeItem(archive, m_currentMode);
+	SerializeItem(archive, m_buttonStates);
+	SerializeItem(archive, m_joypadRegister);
 }
 
 //External

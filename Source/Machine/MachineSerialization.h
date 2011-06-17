@@ -17,47 +17,16 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef MBC1_H
-#define MBC1_H
-
-#include "Memory.h"
-
+#ifndef MACHINESERIALIZATION_H
+#define MACHINESERIALIZATION_H
 
 namespace Emunisce
 {
 
-class Mbc1 : public Memory
-{
-public:
+class Archive;
+class ScreenBuffer;
 
-	Mbc1();
-	~Mbc1();
-
-	virtual void Serialize(Archive& archive);
-
-	virtual void Write8(u16 address, u8 value);
-
-protected:
-
-	virtual bool LoadFile(const char* filename);
-
-	void SwitchROM();
-	void SwitchRAM();
-
-	void SaveRAM();
-
-	char m_romFilename[1024];
-	char m_sramFilename[1024];
-
-	u8 m_romBanks[0x200][0x4000];
-	u8 m_ramBanks[0x10][0x2000];
-
-	int m_selectedRomBank;
-	int m_selectedRamBank;
-	int m_modeSelect;	///<0 = ROM banking, 1 = RAM banking
-
-	bool m_fiveBitBankCheck;	///<Always true for MBC1.  Disables loading into banks 0x20, 0x40, and 0x60 during LoadFile.
-};
+void SerializeItem(Archive& archive, ScreenBuffer& data);
 
 }	//namespace Emunisce
 

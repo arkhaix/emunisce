@@ -23,6 +23,9 @@ using namespace Emunisce;
 #include <fstream>
 using namespace std;
 
+#include "Serialization/SerializationIncludes.h"
+
+
 Mbc1::Mbc1()
 {
 	m_fiveBitBankCheck = true;
@@ -30,6 +33,18 @@ Mbc1::Mbc1()
 
 Mbc1::~Mbc1()
 {
+}
+
+void Mbc1::Serialize(Archive& archive)
+{
+	//ROM banks will be loaded from the cart and can't change, so just save the ram banks
+	for(int i=0;i<0x10;i++)
+		for(int j=0;j<0x2000;j++)
+			SerializeItem(archive, m_ramBanks[i][j]);
+
+	SerializeItem(archive, m_selectedRomBank);
+	SerializeItem(archive, m_selectedRamBank);
+	SerializeItem(archive, m_modeSelect);
 }
 
 void Mbc1::Write8(u16 address, u8 value)

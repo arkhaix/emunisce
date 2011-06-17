@@ -100,6 +100,8 @@ public:
 
 	bool IsStopped();
 
+	virtual void Serialize(Archive& archive);
+	
 	//Registers
 	void SetTimerDivider(u8 value);
 	void SetTimerControl(u8 value);

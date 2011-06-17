@@ -35,6 +35,7 @@ using namespace std;
 
 //Solution
 #include "GameboyIncludes.h"
+#include "Serialization/SerializationIncludes.h"
 
 
 Memory::Memory()
@@ -131,6 +132,32 @@ void Memory::Initialize()
 	//Tell the cpu to skip the bootrom if there isn't one loaded
 	if(m_bootRomEnabled == false && m_cpu)
 		m_cpu->pc = 0x100;
+}
+
+void Memory::Serialize(Archive& archive)
+{
+	SerializeItem(archive, m_bootRomEnabled);
+
+
+	//Memory
+
+	for(int address = 0; address < 0x10000; address++)
+		SerializeItem(archive, m_memoryData[address]);
+
+
+	//Registers are set up by the components and don't need to be serialized here
+
+
+	//Display features
+
+	SerializeItem(archive, m_vramLocked);
+	SerializeItem(archive, m_oamLocked);
+
+
+	//Sound features
+
+	SerializeItem(archive, m_waveRamLockMode);
+	SerializeItem(archive, m_waveRamReadValue);
 }
 
 void Memory::SetRegisterLocation(u8 registerOffset, u8* pRegister, bool writeable)

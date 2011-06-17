@@ -23,6 +23,7 @@ using namespace Emunisce;
 #include "GameboyIncludes.h"
 
 #include "HqNx/HqNx.h"	///<from Utility
+#include "Serialization/SerializationIncludes.h"
 
 
 //70224 t-states per frame (59.7fps)
@@ -185,6 +186,92 @@ void Display::Run(int ticks)
 		else //m_currentState == DisplayState::HBlank
 			Begin_SpritesLocked();	///<This will trigger VBlank when appropriate
 	}
+}
+
+void Display::Serialize(Archive& archive)
+{
+	SerializeItem(archive, m_currentState);
+	SerializeItem(archive, m_stateTicksRemaining);
+	SerializeItem(archive, m_vblankScanlineTicksRemaining);
+
+	//SerializeItem(archive, m_screenBuffer);
+	//SerializeItem(archive, m_screenBuffer2);
+
+	int activeScreenBufferId = 1;
+	if(m_activeScreenBuffer == &m_screenBuffer2)
+		activeScreenBufferId = 2;
+
+	SerializeItem(archive, activeScreenBufferId);
+
+	if(activeScreenBufferId == 1)
+	{
+		m_activeScreenBuffer = &m_screenBuffer;
+		m_stableScreenBuffer = &m_screenBuffer2;
+	}
+	else
+	{
+		m_activeScreenBuffer = &m_screenBuffer2;
+		m_stableScreenBuffer = &m_screenBuffer;
+	}
+	
+	SerializeItem(archive, m_screenBufferCount);
+
+	SerializeItem(archive, m_displayFilter);
+
+	m_screenBufferCopyId = -1;
+	SerializeItem(archive, m_screenBufferCopyFilter);
+
+	SerializeItem(archive, m_nextPixelToRenderX);
+	SerializeItem(archive, m_ticksSpentThisScanline);
+	
+	for(int i=0;i<160;i++)
+		SerializeItem(archive, m_spriteHasPriority[i]);
+
+
+	// Caches
+
+	for(int i=0;i<0x2000;i++)
+		SerializeItem(archive, m_vramCache[i]);
+
+	SerializeItem(archive, m_vramOffset);
+
+	for(int i=0;i<0xa0;i++)
+		SerializeItem(archive, m_oamCache[i]);
+
+	SerializeItem(archive, m_oamOffset);
+
+
+	//SerializeItem(archive, m_frameBackgroundData);
+	//SerializeItem(archive, m_frameWindowData);
+	//SerializeItem(archive, m_frameSpriteData);
+
+	const int tileDataSize = (8*8) * (0x1800/16);
+	for(int i=0;i<tileDataSize;i++)
+		SerializeItem(archive, m_tileData[i]);
+
+
+	// Registers
+
+	SerializeItem(archive, m_lcdControl);
+	SerializeItem(archive, m_lcdStatus);
+
+	SerializeItem(archive, m_scrollY);
+	SerializeItem(archive, m_scrollX);
+
+	SerializeItem(archive, m_currentScanline);
+	SerializeItem(archive, m_scanlineCompare);
+
+	SerializeItem(archive, m_backgroundPalette);
+	SerializeItem(archive, m_spritePalette0);
+	SerializeItem(archive, m_spritePalette1);
+
+	SerializeItem(archive, m_windowX);
+	SerializeItem(archive, m_windowY);
+
+
+	// Properties from registers
+
+	SerializeItem(archive, m_lcdEnabled);
 }
 
 void Display::WriteVram(u16 address, u8 value)

@@ -22,6 +22,8 @@ using namespace Emunisce;
 
 #include "GameboyIncludes.h"
 
+#include "Serialization/SerializationIncludes.h"
+
 
 Cpu::Cpu()
 : a(*(((u8*)&af)+1))
@@ -94,6 +96,53 @@ bool Cpu::IsStopped()
 {
 	return m_stopped;
 }
+
+
+void Cpu::Serialize(Archive& archive)
+{
+	SerializeItem(archive, pc);
+	SerializeItem(archive, sp);
+
+	SerializeItem(archive, af);
+	SerializeItem(archive, bc);
+	SerializeItem(archive, de);
+	SerializeItem(archive, hl);
+
+	SerializeItem(archive, a);
+	SerializeItem(archive, f);
+	SerializeItem(archive, b);
+	SerializeItem(archive, c);
+	SerializeItem(archive, d);
+	SerializeItem(archive, e);
+	SerializeItem(archive, h);
+	SerializeItem(archive, l);
+
+
+	SerializeItem(archive, m_masterInterruptsEnabled);
+	SerializeItem(archive, m_delayNextInterrupt);
+
+	SerializeItem(archive, m_halted);
+	SerializeItem(archive, m_stopped);
+	SerializeItem(archive, m_haltBug);
+
+	//Registers
+	SerializeItem(archive, m_interruptsEnabled);
+	SerializeItem(archive, m_interruptFlags);
+
+	SerializeItem(archive, m_timerDivider);
+	SerializeItem(archive, m_ticksPerDividerIncrement);
+	SerializeItem(archive, m_ticksUntilDividerIncrement);
+
+	SerializeItem(archive, m_timerModulo);
+
+	SerializeItem(archive, m_timerCounter);
+	SerializeItem(archive, m_ticksPerCounterIncrement);
+	SerializeItem(archive, m_ticksUntilCounterIncrement);
+
+	SerializeItem(archive, m_timerControl);
+	SerializeItem(archive, m_timerEnabled);
+}
+
 
 void Cpu::SetTimerDivider(u8 value)
 {

@@ -105,15 +105,12 @@ void Gameboy::Stop()
 //Persistence
 void Gameboy::SaveState(Archive& ar)
 {
-	u32 x = 7;
-	SerializeItem(ar, x);
+	Serialize(ar);
 }
 
 void Gameboy::LoadState(Archive& ar)
 {
-	u32 x;
-	SerializeItem(ar, x);
-	volatile u32 y = x;
+	Serialize(ar);
 }
 
 
@@ -276,4 +273,19 @@ void Gameboy::InternalStep()
 		m_frameCount++;
 		m_frameTicksRemaining += m_ticksPerFrame;
 	}
+}
+
+
+void Gameboy::Serialize(Archive& archive)
+{
+	SerializeItem(archive, m_frameCount);
+
+	SerializeItem(archive, m_ticksPerSecond);
+	SerializeItem(archive, m_ticksPerFrame);
+	SerializeItem(archive, m_frameTicksRemaining);
+
+	m_cpu->Serialize(archive);
+	m_display->Serialize(archive);
+	m_input->Serialize(archive);
+	m_memory->Serialize(archive);
 }

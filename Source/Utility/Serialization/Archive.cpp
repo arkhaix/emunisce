@@ -120,6 +120,16 @@ Archive& Archive::operator&(s64& data)
 }
 
 
+Archive& Archive::operator&(bool& data)
+{
+	if(m_archiveMode == ArchiveMode::Saving)
+		m_serializer->Save((unsigned char*)&data, sizeof(data));
+	else
+		m_serializer->Restore((unsigned char*)&data, sizeof(data));
+
+	return *this;
+}
+
 Archive& Archive::operator&(float& data)
 {
 	if(m_archiveMode == ArchiveMode::Saving)
