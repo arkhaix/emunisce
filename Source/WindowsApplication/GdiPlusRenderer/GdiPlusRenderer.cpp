@@ -47,7 +47,7 @@ class GdiPlusRenderer_Private : public IWindowMessageListener
 {
 public:
 
-	Phoenix* _Phoenix;
+	EmunisceApplication* _Phoenix;
 	
 	Window* _Window;
 	HWND _WindowHandle;
@@ -201,7 +201,7 @@ public:
 
 }	//namespace Emunisce
 
-void GdiPlusRenderer::Initialize(Phoenix* phoenix)
+void GdiPlusRenderer::Initialize(EmunisceApplication* phoenix)
 {
 	m_private = new GdiPlusRenderer_Private();
 	m_private->_Phoenix = phoenix;

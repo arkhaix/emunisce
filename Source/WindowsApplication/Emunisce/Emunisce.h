@@ -38,12 +38,12 @@ class WaveOutSound;
 class UserInterface;
 
 
-class Phoenix
+class EmunisceApplication
 {
 public:
 
-	Phoenix();
-	~Phoenix();
+	EmunisceApplication();
+	~EmunisceApplication();
 
 	void RunWindow();	///<Pumps messages on the window until shutdown is requested.  Blocks until shutdown.
 

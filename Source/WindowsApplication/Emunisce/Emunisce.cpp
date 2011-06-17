@@ -201,7 +201,7 @@ public:
 }	//namespace Emunisce
 
 
-Phoenix::Phoenix()
+EmunisceApplication::EmunisceApplication()
 {
 	m_private = new Phoenix_Private();
 
@@ -218,7 +218,7 @@ Phoenix::Phoenix()
 	m_private->_Sound->Initialize(this);
 }
 
-Phoenix::~Phoenix()
+EmunisceApplication::~EmunisceApplication()
 {
 	m_private->_Window->UnsubscribeListener(m_private);
 	m_private->_Window->Destroy();
@@ -226,7 +226,7 @@ Phoenix::~Phoenix()
 	delete m_private;
 }
 
-void Phoenix::RunWindow()
+void EmunisceApplication::RunWindow()
 {
 	int lastFrameRendered = -1;
 
@@ -280,12 +280,12 @@ void Phoenix::RunWindow()
 	}
 }
 
-void Phoenix::ResetRom()
+void EmunisceApplication::ResetRom()
 {
 	LoadRom(m_private->_LastRomLoaded.c_str());
 }
 
-bool Phoenix::LoadRom(const char* filename)
+bool EmunisceApplication::LoadRom(const char* filename)
 {
 	//Prompt for a file if one wasn't provided
 	char* selectedFilename = NULL;
@@ -334,7 +334,7 @@ bool Phoenix::LoadRom(const char* filename)
 	return true;
 }
 
-void Phoenix::NotifyMachineChanged(IEmulatedMachine* newMachine)
+void EmunisceApplication::NotifyMachineChanged(IEmulatedMachine* newMachine)
 {
 	//RunWindow must handle machine changes (rendering things have to happen on that thread)
 	m_private->_PendingMachine = newMachine;
@@ -342,17 +342,17 @@ void Phoenix::NotifyMachineChanged(IEmulatedMachine* newMachine)
 		Sleep(10);
 }
 
-IEmulatedMachine* Phoenix::GetMachine()
+IEmulatedMachine* EmunisceApplication::GetMachine()
 {
 	return m_private->_Machine;
 }
 
-bool Phoenix::ShutdownRequested()
+bool EmunisceApplication::ShutdownRequested()
 {
 	return m_private->_ShutdownRequested;
 }
 
-void Phoenix::RequestShutdown()
+void EmunisceApplication::RequestShutdown()
 {
 	m_private->_ShutdownRequested = true;
 
@@ -360,38 +360,38 @@ void Phoenix::RequestShutdown()
 		m_private->_Window->RequestExit();
 }
 
-Window* Phoenix::GetWindow()
+Window* EmunisceApplication::GetWindow()
 {
 	return m_private->_Window;
 }
 
-UserInterface* Phoenix::GetUserInterface()
+UserInterface* EmunisceApplication::GetUserInterface()
 {
 	return m_private->_UserInterface;
 }
 
-MachineRunner* Phoenix::GetMachineRunner()
+MachineRunner* EmunisceApplication::GetMachineRunner()
 {
 	return m_private->_Runner;
 }
 
-ConsoleDebugger* Phoenix::GetDebugger()
+ConsoleDebugger* EmunisceApplication::GetDebugger()
 {
 	return m_private->_Debugger;
 }
 
-GdiPlusRenderer* Phoenix::GetRenderer()
+GdiPlusRenderer* EmunisceApplication::GetRenderer()
 {
 	return NULL;
 	//return m_private->_Renderer;
 }
 
-KeyboardInput* Phoenix::GetInput()
+KeyboardInput* EmunisceApplication::GetInput()
 {
 	return m_private->_Input;
 }
 
-WaveOutSound* Phoenix::GetSound()
+WaveOutSound* EmunisceApplication::GetSound()
 {
 	return m_private->_Sound;
 }

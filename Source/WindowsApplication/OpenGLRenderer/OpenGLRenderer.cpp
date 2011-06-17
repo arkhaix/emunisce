@@ -101,7 +101,7 @@ class OpenGLRenderer_Private : public IWindowMessageListener
 {
 public:
 
-	Phoenix* _Phoenix;
+	EmunisceApplication* _Phoenix;
 
 	IEmulatedMachine* _Machine;
 	IEmulatedDisplay* _Display;
@@ -364,7 +364,7 @@ OpenGLRenderer::~OpenGLRenderer()
 }
 
 
-void OpenGLRenderer::Initialize(Phoenix* phoenix)
+void OpenGLRenderer::Initialize(EmunisceApplication* phoenix)
 {
 	m_private->_Phoenix = phoenix;
 	m_private->_WindowHandle = (HWND)phoenix->GetWindow()->GetHandle();

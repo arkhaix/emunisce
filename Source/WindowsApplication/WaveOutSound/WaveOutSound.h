@@ -24,7 +24,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class Phoenix;
+class EmunisceApplication;
 class IEmulatedMachine;
 
 class WaveOutSound
@@ -34,7 +34,7 @@ public:
 	WaveOutSound();
 	~WaveOutSound();
 
-	void Initialize(Phoenix* phoenix);
+	void Initialize(EmunisceApplication* phoenix);
 	void Shutdown();
 
 	void SetMachine(IEmulatedMachine* machine);

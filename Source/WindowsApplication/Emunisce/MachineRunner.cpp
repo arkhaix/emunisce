@@ -49,7 +49,7 @@ MachineRunner::MachineRunner()
 
 // Application component
 
-void MachineRunner::Initialize(Phoenix* phoenix)
+void MachineRunner::Initialize(EmunisceApplication* phoenix)
 {
 	m_waitEvent = CreateEvent(NULL, FALSE, TRUE, NULL);
 

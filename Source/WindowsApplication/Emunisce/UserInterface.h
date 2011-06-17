@@ -25,7 +25,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class Phoenix;
+class EmunisceApplication;
 class MachineRunner;
 
 class IEmulatedMachine;
@@ -102,7 +102,7 @@ public:
 	UserInterface();
 	virtual ~UserInterface();
 
-	virtual void Initialize(Phoenix* phoenix);
+	virtual void Initialize(EmunisceApplication* phoenix);
 	virtual void Shutdown();
 
 	virtual void SetMachine(IEmulatedMachine* machine);
@@ -135,7 +135,7 @@ public:
 
 protected:
 
-	Phoenix* m_phoenix;
+	EmunisceApplication* m_phoenix;
 	MachineRunner* m_runner;
 };
 
