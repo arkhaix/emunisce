@@ -17,24 +17,48 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef ISERIALIZER_H
-#define ISERIALIZER_H
+#ifndef FILESERIALIZER_H
+#define FILESERIALIZER_H
+
+#include "ISerializer.h"
+
+#include <fstream>
+
 
 namespace Emunisce
 {
 
-class Archive;
-
-class ISerializer
+class FileSerializer : public ISerializer
 {
 public:
 
-	virtual void SetArchive(Archive* archive) = 0;
+	// FileSerializer
 
-	virtual void Save(unsigned char* data, unsigned int bytes) = 0;
-	virtual void Restore(unsigned char* buffer, unsigned int bytes) = 0;
+	FileSerializer();
+	~FileSerializer();
+
+	virtual void SetFile(const char* filename);
+	virtual void CloseFile();
+
+
+	// ISerializer
+
+	virtual void SetArchive(Archive* archive);
+
+	virtual void Save(unsigned char* data, unsigned int bytes);
+	virtual void Restore(unsigned char* buffer, unsigned int bytes);
+
+
+protected:
+
+	void OpenStream();
+
+	std::fstream* m_fileStream;
+
+	int m_archiveMode;
+	char m_filename[1024];
 };
 
-}
+}	//namespace Emunisce
 
 #endif

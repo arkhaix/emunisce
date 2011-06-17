@@ -61,12 +61,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Archive.h" />
+    <ClInclude Include="FileSerializer.h" />
     <ClInclude Include="ISerializer.h" />
+    <ClInclude Include="MemorySerializer.h" />
     <ClInclude Include="SerializationIncludes.h" />
     <ClInclude Include="SerializeItem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Archive.cpp" />
+    <ClCompile Include="FileSerializer.cpp" />
+    <ClCompile Include="MemorySerializer.cpp" />
     <ClCompile Include="SerializeItem.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

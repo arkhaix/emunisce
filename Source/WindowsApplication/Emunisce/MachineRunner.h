@@ -1,4 +1,3 @@
-
 /*
 Copyright (C) 2011 by Andrew Gray
 arkhaix@emunisce.com

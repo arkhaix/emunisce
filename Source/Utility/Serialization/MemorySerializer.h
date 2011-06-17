@@ -17,24 +17,46 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef ISERIALIZER_H
-#define ISERIALIZER_H
+#ifndef MEMORYSERIALIZER_H
+#define MEMORYSERIALIZER_H
+
+#include "ISerializer.h"
 
 namespace Emunisce
 {
 
-class Archive;
-
-class ISerializer
+class MemorySerializer : public ISerializer
 {
 public:
 
-	virtual void SetArchive(Archive* archive) = 0;
+	// MemorySerializer
 
-	virtual void Save(unsigned char* data, unsigned int bytes) = 0;
-	virtual void Restore(unsigned char* buffer, unsigned int bytes) = 0;
+	MemorySerializer();
+	virtual ~MemorySerializer();
+
+	virtual unsigned char* GetBuffer();
+	virtual unsigned int GetBufferSize();
+
+
+	// ISerializer
+
+	virtual void SetArchive(Archive* archive);
+
+	virtual void Save(unsigned char* data, unsigned int bytes);
+	virtual void Restore(unsigned char* buffer, unsigned int bytes);
+
+
+protected:
+
+	unsigned char* m_buffer;
+
+	unsigned int m_usedSize;
+	unsigned int m_reservedSize;
+	float m_reserveMultiplier;
+
+	unsigned int m_restorePosition;
 };
 
-}
+}	//namespace Emunisce
 
 #endif
