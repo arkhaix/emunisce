@@ -36,7 +36,7 @@ using namespace Gdiplus;
 #include "MachineIncludes.h"
 
 //Application
-#include "../Phoenix/Phoenix.h"	///<todo: this is just here for requesting shutdown.  Refactor this.
+#include "../Emunisce/Emunisce.h"	///<todo: this is just here for requesting shutdown.  Refactor this.
 
 
 

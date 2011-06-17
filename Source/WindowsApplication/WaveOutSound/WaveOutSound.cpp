@@ -22,7 +22,7 @@ using namespace Emunisce;
 
 #include "windows.h"
 
-#include "../Phoenix/Phoenix.h"	///<todo: this is just here for requesting shutdown?  refactor this.
+#include "../Emunisce/Emunisce.h"	///<todo: this is just here for requesting shutdown?  refactor this.
 
 #include "MachineIncludes.h"
 

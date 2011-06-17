@@ -21,7 +21,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "../WindowsPlatform/Window.h"
 
-#include "Phoenix.h"
+#include "Emunisce.h"
 #include "ConsoleDebugger.h"
 #include "../GdiPlusRenderer/GdiPlusRenderer.h"
 using namespace Emunisce;

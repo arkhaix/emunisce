@@ -25,13 +25,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGLRenderer", "WindowsAp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WaveOutSound", "WindowsApplication\WaveOutSound\WaveOutSound.vcxproj", "{B47D9786-8300-4349-AB06-5FCE239DA5C5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PhoenixGB", "WindowsApplication\Phoenix\Phoenix.vcxproj", "{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Platform", "Platform\Platform.vcxproj", "{D7E7C4F1-5404-450C-AD82-BD9883635D1C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HqNx", "Utility\HqNx\HqNx.vcxproj", "{F80EC023-B987-4B57-B756-95DC6A8447BD}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Serialization", "Utility\Serialization\Serialization.vcxproj", "{7DA30EA8-57A1-46F1-AF7A-C9DDEA094396}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Emunisce", "WindowsApplication\Emunisce\Emunisce.vcxproj", "{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,10 +67,6 @@ Global
 		{B47D9786-8300-4349-AB06-5FCE239DA5C5}.Debug|Win32.Build.0 = Debug|Win32
 		{B47D9786-8300-4349-AB06-5FCE239DA5C5}.Release|Win32.ActiveCfg = Release|Win32
 		{B47D9786-8300-4349-AB06-5FCE239DA5C5}.Release|Win32.Build.0 = Release|Win32
-		{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}.Debug|Win32.ActiveCfg = Debug|Win32
-		{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}.Debug|Win32.Build.0 = Debug|Win32
-		{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}.Release|Win32.ActiveCfg = Release|Win32
-		{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}.Release|Win32.Build.0 = Release|Win32
 		{D7E7C4F1-5404-450C-AD82-BD9883635D1C}.Debug|Win32.ActiveCfg = Debug|Win32
 		{D7E7C4F1-5404-450C-AD82-BD9883635D1C}.Debug|Win32.Build.0 = Debug|Win32
 		{D7E7C4F1-5404-450C-AD82-BD9883635D1C}.Release|Win32.ActiveCfg = Release|Win32
@@ -83,6 +79,10 @@ Global
 		{7DA30EA8-57A1-46F1-AF7A-C9DDEA094396}.Debug|Win32.Build.0 = Debug|Win32
 		{7DA30EA8-57A1-46F1-AF7A-C9DDEA094396}.Release|Win32.ActiveCfg = Release|Win32
 		{7DA30EA8-57A1-46F1-AF7A-C9DDEA094396}.Release|Win32.Build.0 = Release|Win32
+		{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}.Debug|Win32.ActiveCfg = Debug|Win32
+		{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}.Debug|Win32.Build.0 = Debug|Win32
+		{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}.Release|Win32.ActiveCfg = Release|Win32
+		{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
