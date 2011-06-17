@@ -33,7 +33,7 @@ using namespace std;
 namespace Emunisce
 {
 
-class Phoenix;
+class EmunisceApplication;
 class UserInterface;
 
 
@@ -43,7 +43,7 @@ public:
 
 	ConsoleDebugger();
 
-	void Initialize(Phoenix* phoenix);
+	void Initialize(EmunisceApplication* phoenix);
 	void Shutdown();
 
 	void SetMachine(IEmulatedMachine* machine);
@@ -88,7 +88,7 @@ private:
 
 	//Properties
 
-	Phoenix* m_phoenix;
+	EmunisceApplication* m_phoenix;
 	UserInterface* m_userInterface;
 
 	IEmulatedMachine* m_machine;

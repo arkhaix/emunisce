@@ -38,7 +38,7 @@ class KeyboardInput_Private : public IWindowMessageListener
 {
 public:
 
-	Phoenix* _Phoenix;
+	EmunisceApplication* _Phoenix;
 
 	IEmulatedMachine* _Machine;
 	IEmulatedInput* _Input;
@@ -116,7 +116,7 @@ KeyboardInput::KeyboardInput()
 	m_private = new KeyboardInput_Private();
 }
 
-void KeyboardInput::Initialize(Phoenix* phoenix)
+void KeyboardInput::Initialize(EmunisceApplication* phoenix)
 {
 	m_private->_Phoenix = phoenix;
 	

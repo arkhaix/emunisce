@@ -39,7 +39,7 @@ UserInterface::~UserInterface()
 }
 
 
-void UserInterface::Initialize(Phoenix* phoenix)
+void UserInterface::Initialize(EmunisceApplication* phoenix)
 {
 	m_phoenix = phoenix;
 	m_runner = phoenix->GetMachineRunner();

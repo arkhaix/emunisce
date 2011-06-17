@@ -59,7 +59,7 @@ ConsoleDebugger::ConsoleDebugger()
 	m_displayFilter = DisplayFilter::None;
 }
 
-void ConsoleDebugger::Initialize(Phoenix* phoenix)
+void ConsoleDebugger::Initialize(EmunisceApplication* phoenix)
 {
 	m_phoenix = phoenix;
 	m_userInterface = phoenix->GetUserInterface();

@@ -38,7 +38,7 @@ class WaveOutSound_Private
 {
 public:
 
-	Phoenix* _Phoenix;
+	EmunisceApplication* _Phoenix;
 
 	IEmulatedMachine* _Machine;
 	unsigned int _LastFrameQueued;
@@ -297,7 +297,7 @@ WaveOutSound::~WaveOutSound()
 	delete m_private;
 }
 
-void WaveOutSound::Initialize(Phoenix* phoenix)
+void WaveOutSound::Initialize(EmunisceApplication* phoenix)
 {
 	m_private->_Phoenix = phoenix;
 

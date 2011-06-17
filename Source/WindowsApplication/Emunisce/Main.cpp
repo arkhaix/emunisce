@@ -26,7 +26,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "../GdiPlusRenderer/GdiPlusRenderer.h"
 using namespace Emunisce;
 
-Phoenix* g_phoenix = NULL;
+EmunisceApplication* g_phoenix = NULL;
 
 DWORD WINAPI ConsoleThread(LPVOID param)
 {
@@ -38,7 +38,7 @@ DWORD WINAPI ConsoleThread(LPVOID param)
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, PSTR, INT iCmdShow)
 {
-	g_phoenix = new Phoenix();
+	g_phoenix = new EmunisceApplication();
 
 	HANDLE emulationThreadHandle = CreateThread(NULL, 0, ConsoleThread, NULL, 0, NULL);
 	
