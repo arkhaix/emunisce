@@ -1,7 +1,7 @@
 
 /*
 Copyright (C) 2011 by Andrew Gray
-arkhaix@arkhaix.com
+arkhaix@emunisce.com
 
 This file is part of Emunisce.
 
