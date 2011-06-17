@@ -63,6 +63,8 @@ public:
 	void SetMachine(Gameboy* machine);
 	void Initialize();
 
+	virtual void Serialize(Archive& archive);
+
 	//Registers
 	void SetJoypadMode(u8 value);
 

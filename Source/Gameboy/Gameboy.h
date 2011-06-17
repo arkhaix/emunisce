@@ -89,6 +89,8 @@ protected:
 
 	void InternalStep();	///<Non-virtual Step.
 
+	virtual void Serialize(Archive& archive);
+
 	Cpu* m_cpu;
 	Memory* m_memory;
 	Display* m_display;

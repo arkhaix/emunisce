@@ -39,7 +39,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Gameboy</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Utility;$(SolutionDir)Gameboy</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -51,7 +51,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Gameboy</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Utility;$(SolutionDir)Gameboy</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -68,12 +68,14 @@
     <ClInclude Include="IEmulatedSound.h" />
     <ClInclude Include="MachineFactory.h" />
     <ClInclude Include="MachineIncludes.h" />
+    <ClInclude Include="MachineSerialization.h" />
     <ClInclude Include="MachineTypes.h" />
     <ClInclude Include="ScreenBuffer.h" />
     <ClInclude Include="TScreenBuffer.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MachineFactory.cpp" />
+    <ClCompile Include="MachineSerialization.cpp" />
     <ClCompile Include="ScreenBuffer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

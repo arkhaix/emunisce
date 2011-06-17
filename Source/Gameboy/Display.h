@@ -61,6 +61,8 @@ public:
 
 	void Run(int ticks);
 
+	virtual void Serialize(Archive& archive);
+
 
 	//Notifications
 	void WriteVram(u16 address, u8 value);

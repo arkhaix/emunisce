@@ -68,6 +68,11 @@ void SerializeItem(Archive& archive, s64& data)
 }
 
 
+void SerializeItem(Archive& archive, bool& data)
+{
+	archive & data;
+}
+
 void SerializeItem(Archive& archive, float& data)
 {
 	archive & data;

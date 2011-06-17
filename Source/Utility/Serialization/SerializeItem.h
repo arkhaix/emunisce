@@ -37,6 +37,7 @@ void SerializeItem(Archive& archive, s16& data);
 void SerializeItem(Archive& archive, s32& data);
 void SerializeItem(Archive& archive, s64& data);
 
+void SerializeItem(Archive& archive, bool& data);
 void SerializeItem(Archive& archive, float& data);
 void SerializeItem(Archive& archive, double& data);
 

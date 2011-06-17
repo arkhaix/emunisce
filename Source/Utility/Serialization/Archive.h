@@ -59,6 +59,7 @@ public:
 	Archive& operator&(s32& data);
 	Archive& operator&(s64& data);
 
+	Archive& operator&(bool& data);
 	Archive& operator&(float& data);
 	Archive& operator&(double& data);
 
