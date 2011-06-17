@@ -20,11 +20,18 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "Emunisce.h"
 using namespace Emunisce;
 
+#include "windows.h"
+#include "shlobj.h"
+#include "shlwapi.h"
+
 #include <string>
 
 #include "PlatformIncludes.h"
 
 #include "MachineIncludes.h"
+
+#include "Serialization/SerializationIncludes.h"
+#include "Serialization/FileSerializer.h"
 
 #include "UserInterface.h"
 
@@ -172,6 +179,37 @@ public:
 		}
 	}
 
+	std::string GetBaseSaveStateFolder()
+	{
+		char path[MAX_PATH];
+		SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, path);
+		PathAppend(path, "Emunisce");
+		PathAppend(path, "SaveStates");
+		SHCreateDirectoryEx(NULL, path, NULL);
+		return std::string(path);
+	}
+
+	std::string GetCurrentSaveStateFolder()
+	{
+		//todo: append machine name and game name
+		return GetBaseSaveStateFolder();
+	}
+
+	std::string GetCurrentSaveStateFile(unsigned int id)
+	{
+		char file[MAX_PATH] = {0};
+
+		std::string path = GetCurrentSaveStateFolder();
+		strcpy_s(file, MAX_PATH, path.c_str());
+
+		char idStr[MAX_PATH];
+		sprintf_s(idStr, MAX_PATH, "%d.ess", id);
+
+		PathAppend(file, idStr);
+
+		return std::string(file);
+	}
+
 
 	// IWindowMessageListener
 
@@ -280,11 +318,6 @@ void EmunisceApplication::RunWindow()
 	}
 }
 
-void EmunisceApplication::ResetRom()
-{
-	LoadRom(m_private->_LastRomLoaded.c_str());
-}
-
 bool EmunisceApplication::LoadRom(const char* filename)
 {
 	//Prompt for a file if one wasn't provided
@@ -332,6 +365,39 @@ bool EmunisceApplication::LoadRom(const char* filename)
 		free((void*)selectedFilename);
 
 	return true;
+}
+
+void EmunisceApplication::ResetRom()
+{
+	LoadRom(m_private->_LastRomLoaded.c_str());
+}
+
+void EmunisceApplication::SaveState(unsigned int id)
+{
+	std::string file = m_private->GetCurrentSaveStateFile(id);
+
+	FileSerializer fs;
+	fs.SetFile(file.c_str());
+
+	Archive ar(&fs, ArchiveMode::Saving);
+
+	m_private->_Machine->SaveState(ar);
+
+	fs.CloseFile();
+}
+
+void EmunisceApplication::LoadState(unsigned int id)
+{
+	std::string file = m_private->GetCurrentSaveStateFile(id);
+
+	FileSerializer fs;
+	fs.SetFile(file.c_str());
+
+	Archive ar(&fs, ArchiveMode::Loading);
+
+	m_private->_Machine->LoadState(ar);
+
+	fs.CloseFile();
 }
 
 void EmunisceApplication::NotifyMachineChanged(IEmulatedMachine* newMachine)

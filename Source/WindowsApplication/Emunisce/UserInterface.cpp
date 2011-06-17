@@ -101,6 +101,17 @@ void UserInterface::StepFrame()
 }
 
 
+void UserInterface::SaveState(unsigned int id)
+{
+	m_phoenix->SaveState(id);
+}
+
+void UserInterface::LoadState(unsigned int id)
+{
+	m_phoenix->LoadState(id);
+}
+
+
 
 // Application to user
 

@@ -23,6 +23,9 @@ using namespace Emunisce;
 //Gameboy
 #include "GameboyIncludes.h"
 
+//Serialization
+#include "Serialization/SerializationIncludes.h"
+
 
 // IEmulatedMachine
 
@@ -100,14 +103,19 @@ void Gameboy::Stop()
 
 
 //Persistence
-bool Gameboy::SaveState(const char* filename)
+bool Gameboy::SaveState(Archive& ar)
 {
-	return false;
+	u32 x = 7;
+	SerializeItem(ar, x);
+	return true;
 }
 
-bool Gameboy::LoadState(const char* filename)
+bool Gameboy::LoadState(Archive& ar)
 {
-	return false;
+	u32 x;
+	SerializeItem(ar, x);
+	volatile u32 y = x;
+	return true;
 }
 
 
