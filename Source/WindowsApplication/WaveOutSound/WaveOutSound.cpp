@@ -23,6 +23,7 @@ using namespace Emunisce;
 #include "windows.h"
 
 #include "../Emunisce/Emunisce.h"	///<todo: this is just here for requesting shutdown?  refactor this.
+#include "../Emunisce/MachineRunner.h"
 
 #include "MachineIncludes.h"
 
@@ -61,6 +62,7 @@ public:
 	HANDLE _PlaybackThreadHandle;
 
 	queue<AudioBuffer> _PendingBufferQueue;
+	queue<bool> _PendingBufferIsOverflow;
 	CRITICAL_SECTION _PendingBufferQueueLock;
 	HANDLE _MonitorThreadHandle;
 
@@ -140,10 +142,23 @@ public:
 
 				EnterCriticalSection(&_PendingBufferQueueLock);
 					_PendingBufferQueue.push(buffer);
+					_PendingBufferIsOverflow.push(false);
+
+					while(_PendingBufferIsOverflow.empty() == false && _PendingBufferIsOverflow.front() == true)
+					{
+						_PendingBufferIsOverflow.pop();
+						_PendingBufferQueue.pop();
+					}
 
 					//Only keep the 3 most recent buffers.  This keeps sound from lagging too far behind (and staying that way).
-					while(_PendingBufferQueue.size() > 3)
-						_PendingBufferQueue.pop();
+					if(_Phoenix->GetMachineRunner()->GetEmulationSpeed() >= (1.0 - 1e-5))
+					{
+						while(_PendingBufferQueue.size() > 3)
+						{
+							_PendingBufferQueue.pop();
+							_PendingBufferIsOverflow.pop();
+						}
+					}
 				LeaveCriticalSection(&_PendingBufferQueueLock);
 
 				_LastFrameQueued = _Machine->GetSound()->GetAudioBufferCount();
@@ -226,13 +241,66 @@ public:
 					{
 						waveOutUnprepareHeader(_WaveOut, &_WaveHeader[j], sizeof(WAVEHDR));
 
+						bool pendingBufferQueueEmpty = false;
+
 						EnterCriticalSection(&_PendingBufferQueueLock);
 							_AudioBuffer[j] = _PendingBufferQueue.front();
 							_PendingBufferQueue.pop();
+
+							bool isOverflow = _PendingBufferIsOverflow.front();
+							_PendingBufferIsOverflow.pop();
+
+							pendingBufferQueueEmpty = _PendingBufferQueue.empty();
 						LeaveCriticalSection(&_PendingBufferQueueLock);
 
-						InterleaveAudioBuffer(j);
-						PlayAudioBuffer(j);
+						float emulationSpeed = _Phoenix->GetMachineRunner()->GetEmulationSpeed();
+						if(emulationSpeed < 1.f && pendingBufferQueueEmpty == true && isOverflow == false)
+						{
+							AudioBuffer overflowBuffer;
+							overflowBuffer.NumSamples = 0;
+
+							float oldSamplesPerNewSample = emulationSpeed;
+							float fOldSampleIndex = 0.f;
+							unsigned int oldSampleIndex = 0;
+
+							unsigned int newSampleIndex = 0;
+
+							EnterCriticalSection(&_PendingBufferQueueLock);
+
+							while(oldSampleIndex < _AudioBuffer[j].NumSamples)
+							{
+								overflowBuffer.Samples[0][newSampleIndex] = _AudioBuffer[j].Samples[0][oldSampleIndex];
+								overflowBuffer.Samples[1][newSampleIndex] = _AudioBuffer[j].Samples[1][oldSampleIndex];
+
+								fOldSampleIndex += oldSamplesPerNewSample;
+								oldSampleIndex = (int)fOldSampleIndex;
+								newSampleIndex++;
+
+								if(newSampleIndex >= AudioBuffer::BufferSizeSamples)
+								{
+									overflowBuffer.NumSamples = AudioBuffer::BufferSizeSamples;
+									_PendingBufferQueue.push(overflowBuffer);
+									_PendingBufferIsOverflow.push(true);
+									newSampleIndex = 0;
+								}
+							}
+
+							if(newSampleIndex > 0)
+							{
+								overflowBuffer.NumSamples = newSampleIndex;
+								_PendingBufferQueue.push(overflowBuffer);
+								_PendingBufferIsOverflow.push(true);
+							}
+
+							LeaveCriticalSection(&_PendingBufferQueueLock);
+
+							SetEvent(_BufferFinishedEvent);
+						}
+						else
+						{
+							InterleaveAudioBuffer(j);
+							PlayAudioBuffer(j);
+						}
 
 						break;
 					}
@@ -254,7 +322,7 @@ public:
 
 	void InterleaveAudioBuffer(int index)
 	{
-		for(int i=0;i<AudioBuffer::BufferSizeSamples;i++)
+		for(unsigned int i=0;i<_AudioBuffer[index].NumSamples;i++)
 		{
 			if(_NumOutputChannels == 1)
 			{
@@ -276,7 +344,7 @@ public:
 	{
 		WAVEHDR* header = &_WaveHeader[index];
 		ZeroMemory(header, sizeof(WAVEHDR));
-		header->dwBufferLength = AudioBuffer::BufferSizeBytes * _NumOutputChannels;
+		header->dwBufferLength = BytesPerSample * _AudioBuffer[index].NumSamples * _NumOutputChannels;
 		header->lpData = (LPSTR)&_InterleavedBuffer[index][0];
 
 		waveOutPrepareHeader(_WaveOut, header, sizeof(WAVEHDR));

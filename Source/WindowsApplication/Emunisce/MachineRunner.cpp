@@ -85,6 +85,11 @@ void MachineRunner::SetMachine(IEmulatedMachine* machine)
 
 // Machine runner
 
+float MachineRunner::GetEmulationSpeed()
+{
+	return m_emulationSpeed;
+}
+
 void MachineRunner::SetEmulationSpeed(float multiplier)
 {
 	m_emulationSpeed = multiplier;
