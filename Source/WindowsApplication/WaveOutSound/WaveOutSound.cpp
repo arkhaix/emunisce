@@ -151,7 +151,8 @@ public:
 					}
 
 					//Only keep the 3 most recent buffers.  This keeps sound from lagging too far behind (and staying that way).
-					if(_Phoenix->GetMachineRunner()->GetEmulationSpeed() >= (1.0 - 1e-5))
+					float emulationSpeed = _Phoenix->GetMachineRunner()->GetEmulationSpeed();
+					if(emulationSpeed <= (0.0 + 1e-5) || emulationSpeed >= (1.0 - 1e-5))
 					{
 						while(_PendingBufferQueue.size() > 3)
 						{
@@ -254,7 +255,7 @@ public:
 						LeaveCriticalSection(&_PendingBufferQueueLock);
 
 						float emulationSpeed = _Phoenix->GetMachineRunner()->GetEmulationSpeed();
-						if(emulationSpeed < 1.f && pendingBufferQueueEmpty == true && isOverflow == false)
+						if(emulationSpeed > 0.f && emulationSpeed < 1.f && pendingBufferQueueEmpty == true && isOverflow == false)
 						{
 							AudioBuffer overflowBuffer;
 							overflowBuffer.NumSamples = 0;

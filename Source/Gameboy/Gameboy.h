@@ -57,8 +57,8 @@ public:
 	virtual void Stop();
 
 	//Persistence
-	virtual bool SaveState(Archive& archive);
-	virtual bool LoadState(Archive& archive);
+	virtual void SaveState(Archive& archive);
+	virtual void LoadState(Archive& archive);
 
 	//Debugging
 	virtual void EnableBreakpoint(int address);

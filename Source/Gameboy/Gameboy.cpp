@@ -103,19 +103,17 @@ void Gameboy::Stop()
 
 
 //Persistence
-bool Gameboy::SaveState(Archive& ar)
+void Gameboy::SaveState(Archive& ar)
 {
 	u32 x = 7;
 	SerializeItem(ar, x);
-	return true;
 }
 
-bool Gameboy::LoadState(Archive& ar)
+void Gameboy::LoadState(Archive& ar)
 {
 	u32 x;
 	SerializeItem(ar, x);
 	volatile u32 y = x;
-	return true;
 }
 
 

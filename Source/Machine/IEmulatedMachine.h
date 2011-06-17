@@ -52,8 +52,8 @@ public:
 	virtual void RunOneFrame() = 0;
 
 	//Persistence
-	virtual bool SaveState(Archive& archive) = 0;
-	virtual bool LoadState(Archive& archive) = 0;
+	virtual void SaveState(Archive& archive) = 0;
+	virtual void LoadState(Archive& archive) = 0;
 
 	//Debugging
 	virtual void EnableBreakpoint(int address) = 0;
