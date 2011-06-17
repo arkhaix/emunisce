@@ -2,22 +2,23 @@
 Copyright (C) 2011 by Andrew Gray
 arkhaix@arkhaix.com
 
-This file is part of PhoenixGB.
+This file is part of Emunisce.
 
-PhoenixGB is free software; you can redistribute it and/or
+Emunisce is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 version 2 as published by the Free Software Foundation.
 The full license is available at http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
 
-PhoenixGB is distributed in the hope that it will be useful,
+Emunisce is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
+along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Phoenix.h"
+using namespace Emunisce;
 
 #include <string>
 
@@ -34,6 +35,10 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 #include "../KeyboardInput/KeyboardInput.h"
 #include "../OpenGLRenderer/OpenGLRenderer.h"
 #include "../WaveOutSound/WaveOutSound.h"
+
+
+namespace Emunisce
+{
 
 class Phoenix_Private : public IWindowMessageListener
 {
@@ -193,11 +198,14 @@ public:
 	}
 };
 
+}	//namespace Emunisce
+
+
 Phoenix::Phoenix()
 {
 	m_private = new Phoenix_Private();
 
-	m_private->_Window->Create(320, 240, "PhoenixGB", "PhoenixGB_RenderWindow");
+	m_private->_Window->Create(320, 240, "Emunisce", "Emunisce_RenderWindow");
 	m_private->_Window->Show();
 	m_private->_Window->SubscribeListener(m_private);
 

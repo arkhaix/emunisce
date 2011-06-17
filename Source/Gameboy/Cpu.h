@@ -2,20 +2,20 @@
 Copyright (C) 2011 by Andrew Gray
 arkhaix@arkhaix.com
 
-This file is part of PhoenixGB.
+This file is part of Emunisce.
 
-PhoenixGB is free software; you can redistribute it and/or
+Emunisce is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 version 2 as published by the Free Software Foundation.
 The full license is available at http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
 
-PhoenixGB is distributed in the hope that it will be useful,
+Emunisce is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
+along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifndef CPU_H
 #define CPU_H
@@ -24,6 +24,10 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "MachineIncludes.h"
 #include "GameboyTypes.h"
+
+
+namespace Emunisce
+{
 
 //Flag positions
 #define BIT_Z (7)
@@ -227,48 +231,7 @@ private:
 	void ExecXOR(u8 value);
 };
 
+}	//namespace Emunisce
 
-/*
-
- Opcode List
--===========-
-		
-08		LD   (nn),SP
-
-10		STOP
-
-22		LDI  (HL),A
-2A		LDI  A,(HL)
-
-32		LDD  (HL),A
-3A		LDD  A,(HL)
-
-D3		<unused>
-D9		RETI
-DB		<unused>
-DD		<unused>
-
-E0		LD   (FF00+n),A
-E2		LD   (FF00+C),A
-E3		<unused>
-E4		<unused>
-E8		ADD  SP,dd
-EA		LD   (nn),A
-EB		<unused>
-EC		<unused>
-ED		<unused>
-
-F0		LD   A,(FF00+n)
-F2		LD   A,(FF00+C)
-F4		<unused>
-F8		LD   HL,SP+dd
-FA		LD   A,(nn)
-FC		<unused>
-FD		<unused>
-
-CB3X	SWAP r/(HL)
-
-
-*/
 
 #endif
