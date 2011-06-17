@@ -50,6 +50,9 @@ public:
 	bool LoadRom(const char* filename);
 	void ResetRom();
 
+	void SaveState(unsigned int id);
+	void LoadState(unsigned int id);
+
 	void NotifyMachineChanged(IEmulatedMachine* newMachine);
 	IEmulatedMachine* GetMachine();
 

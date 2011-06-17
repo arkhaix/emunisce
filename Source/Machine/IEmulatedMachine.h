@@ -26,6 +26,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
+class Archive;
+
 class IEmulatedMachine
 {
 public:
@@ -50,8 +52,8 @@ public:
 	virtual void RunOneFrame() = 0;
 
 	//Persistence
-	virtual bool SaveState(const char* filename) = 0;
-	virtual bool LoadState(const char* filename) = 0;
+	virtual bool SaveState(Archive& archive) = 0;
+	virtual bool LoadState(Archive& archive) = 0;
 
 	//Debugging
 	virtual void EnableBreakpoint(int address) = 0;

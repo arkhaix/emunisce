@@ -57,8 +57,8 @@ public:
 	virtual void Stop();
 
 	//Persistence
-	virtual bool SaveState(const char* filename);
-	virtual bool LoadState(const char* filename);
+	virtual bool SaveState(Archive& archive);
+	virtual bool LoadState(Archive& archive);
 
 	//Debugging
 	virtual void EnableBreakpoint(int address);

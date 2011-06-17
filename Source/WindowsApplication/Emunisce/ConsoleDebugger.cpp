@@ -200,6 +200,11 @@ void ConsoleDebugger::FetchCommand()
 	COMMAND1("speed", Speed((float)strtod(args[1].c_str(), NULL)))
 	COMMAND1("sp", Speed((float)strtod(args[1].c_str(), NULL)))
 
+	COMMAND1("savestate", SaveState(strtol(args[1].c_str(), NULL, 10)))
+	COMMAND1("ss", SaveState(strtol(args[1].c_str(), NULL, 10)))
+	COMMAND1("loadstate", LoadState(strtol(args[1].c_str(), NULL, 10)))
+	COMMAND1("ls", LoadState(strtol(args[1].c_str(), NULL, 10)))
+
 	COMMAND1("breakpoint", ToggleBreakpoint(strtol(args[1].c_str(), NULL, 16)))
 	COMMAND1("break", ToggleBreakpoint(strtol(args[1].c_str(), NULL, 16)))
 	COMMAND1("b", ToggleBreakpoint(strtol(args[1].c_str(), NULL, 16)))
@@ -339,6 +344,17 @@ void ConsoleDebugger::Pause()
 void ConsoleDebugger::Speed(float multiplier)
 {
 	m_userInterface->SetEmulationSpeed(multiplier);
+}
+
+
+void ConsoleDebugger::SaveState(unsigned int id)
+{
+	m_userInterface->SaveState(id);
+}
+
+void ConsoleDebugger::LoadState(unsigned int id)
+{
+	m_userInterface->LoadState(id);
 }
 
 

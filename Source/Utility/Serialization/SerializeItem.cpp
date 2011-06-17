@@ -23,6 +23,9 @@ using namespace Emunisce;
 #include "Archive.h"
 
 
+namespace Emunisce
+{
+
 void SerializeItem(Archive& archive, u8& data)
 {
 	archive & data;
@@ -74,4 +77,7 @@ void SerializeItem(Archive& archive, double& data)
 {
 	archive & data;
 }
+
+
+}	//namespace Emunisce
 

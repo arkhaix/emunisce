@@ -27,6 +27,8 @@ Archive::Archive(ISerializer* serializer, ArchiveMode::Type archiveMode)
 {
 	m_serializer = serializer;
 	m_archiveMode = archiveMode;
+
+	m_serializer->SetArchive(this);
 }
 
 
