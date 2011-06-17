@@ -39,7 +39,7 @@ using namespace std;
 #include "MachineIncludes.h"
 
 //Application
-#include "Phoenix.h"
+#include "Emunisce.h"
 #include "UserInterface.h"
 #include "../WaveOutSound/WaveOutSound.h"
 
