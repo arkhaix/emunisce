@@ -26,6 +26,11 @@ using namespace Emunisce;
 namespace Emunisce
 {
 
+void SerializeBuffer(Archive& archive, unsigned char* buffer, unsigned int bytes)
+{
+	archive.SerializeBuffer(buffer, bytes);
+}
+
 void SerializeItem(Archive& archive, u8& data)
 {
 	archive & data;

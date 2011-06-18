@@ -29,6 +29,9 @@ using namespace std;
 Mbc1::Mbc1()
 {
 	m_fiveBitBankCheck = true;
+
+	m_numRomBanks = 0;
+	m_numRamBanks = 0;
 }
 
 Mbc1::~Mbc1()
@@ -40,13 +43,17 @@ void Mbc1::Serialize(Archive& archive)
 	Memory::Serialize(archive);
 
 	//ROM banks will be loaded from the cart and can't change, so just save the ram banks
-	for(int i=0;i<0x10;i++)
-		for(int j=0;j<0x2000;j++)
-			SerializeItem(archive, m_ramBanks[i][j]);
+	SerializeBuffer(archive, &m_ramBanks[0][0], 0x2000 * m_numRamBanks);
 
 	SerializeItem(archive, m_selectedRomBank);
 	SerializeItem(archive, m_selectedRamBank);
 	SerializeItem(archive, m_modeSelect);
+
+	if(archive.GetArchiveMode() == ArchiveMode::Loading)
+	{
+		//Memory doesn't save out the ROM area, so we have to restore the bank-switched part
+		SwitchROM();
+	}
 }
 
 void Mbc1::Write8(u16 address, u8 value)
@@ -172,16 +179,40 @@ bool Mbc1::LoadFile(const char* filename)
 	}
 
 
+	//Get the relevant cartridge header info
+
+	u8 romSize = m_memoryData[0x0148];
+	if(romSize == 0)
+		m_numRomBanks = 0;
+	else if(romSize < 8)
+		m_numRomBanks = 2 << romSize;
+	else if(romSize == 0x52)
+		m_numRomBanks = 72;
+	else if(romSize == 0x53)
+		m_numRomBanks = 80;
+	else if(romSize == 0x54)
+		m_numRomBanks = 96;
+	else
+		m_numRomBanks = 0;
+
+	u8 ramSize = m_memoryData[0x0149];
+	if(ramSize <= 1)
+		m_numRamBanks = 0;
+	else if(ramSize == 2)
+		m_numRamBanks = 4;
+	else if(ramSize == 3)
+		m_numRamBanks = 16;
+
+
 	//Load battery-backed RAM if applicable
 
 	ifstream sramFile(m_sramFilename, ios::in | ios::binary);
 	if(sramFile.good())
 	{
-		for(int i=0;i<0x10;i++)
+		for(int i=0;i<m_numRamBanks;i++)
 			sramFile.read((char*)(&m_ramBanks[i][0]), 0x2000);
 		sramFile.close();
 	}
-
 
 
 	//Copy the first RAM bank to active memory
@@ -221,7 +252,7 @@ void Mbc1::SaveRAM()
 	ofstream sramFile(m_sramFilename, ios::out | ios::binary);
 	if(sramFile.good())
 	{
-		for(int i=0;i<0x10;i++)
+		for(int i=0;i<m_numRamBanks;i++)
 			sramFile.write((char*)(&m_ramBanks[i][0]), 0x2000);
 		sramFile.close();
 	}

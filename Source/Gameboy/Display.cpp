@@ -193,30 +193,10 @@ void Display::Serialize(Archive& archive)
 	SerializeItem(archive, m_currentState);
 	SerializeItem(archive, m_stateTicksRemaining);
 	SerializeItem(archive, m_vblankScanlineTicksRemaining);
-
-	SerializeItem(archive, m_screenBuffer);
-	SerializeItem(archive, m_screenBuffer2);
-
-	int activeScreenBufferId = 1;
-	if(m_activeScreenBuffer == &m_screenBuffer2)
-		activeScreenBufferId = 2;
-
-	SerializeItem(archive, activeScreenBufferId);
-
-	if(activeScreenBufferId == 1)
-	{
-		m_activeScreenBuffer = &m_screenBuffer;
-		m_stableScreenBuffer = &m_screenBuffer2;
-	}
-	else
-	{
-		m_activeScreenBuffer = &m_screenBuffer2;
-		m_stableScreenBuffer = &m_screenBuffer;
-	}
 	
 	SerializeItem(archive, m_screenBufferCount);
 
-	SerializeItem(archive, m_displayFilter);
+	//SerializeItem(archive, m_displayFilter);
 
 	m_screenBufferCopyId = -1;
 	SerializeItem(archive, m_screenBufferCopyFilter);
@@ -230,24 +210,8 @@ void Display::Serialize(Archive& archive)
 
 	// Caches
 
-	for(int i=0;i<0x2000;i++)
-		SerializeItem(archive, m_vramCache[i]);
-
 	SerializeItem(archive, m_vramOffset);
-
-	for(int i=0;i<0xa0;i++)
-		SerializeItem(archive, m_oamCache[i]);
-
 	SerializeItem(archive, m_oamOffset);
-
-
-	SerializeItem(archive, m_frameBackgroundData);
-	SerializeItem(archive, m_frameWindowData);
-	SerializeItem(archive, m_frameSpriteData);
-
-	const int tileDataSize = (8*8) * (0x1800/16);
-	for(int i=0;i<tileDataSize;i++)
-		SerializeItem(archive, m_tileData[i]);
 
 
 	// Registers
