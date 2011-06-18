@@ -39,6 +39,9 @@ public:
 	virtual EmulatedMachine::Type GetType();
 	virtual const char* GetRomTitle();
 
+	//Application interface
+	virtual void SetApplicationInterface(IMachineToApplication* applicationInterface);
+
 	//Component access
 	virtual IEmulatedDisplay* GetDisplay();
 	virtual IEmulatedInput* GetInput();
@@ -72,6 +75,9 @@ public:
 	static Gameboy* Create(const char* filename);
 	static void Release(Gameboy* machine);
 
+	//Application interface
+	IMachineToApplication* GetApplicationInterface();
+
 	//Gameboy Components (non-virtual functions, direct concrete types)
 	Cpu* GetGbCpu();
 	Memory* GetGbMemory();
@@ -91,6 +97,8 @@ protected:
 	void InternalStep();	///<Non-virtual Step.
 
 	virtual void Serialize(Archive& archive);
+
+	IMachineToApplication* m_applicationInterface;
 
 	Cpu* m_cpu;
 	Memory* m_memory;

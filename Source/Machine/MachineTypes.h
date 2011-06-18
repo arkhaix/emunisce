@@ -26,6 +26,9 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
+//Application interface
+class IMachineToApplication;
+
 //Component forward-declarations
 class IEmulatedMachine;
 class IEmulatedDisplay;

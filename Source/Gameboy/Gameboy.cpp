@@ -41,6 +41,13 @@ const char* Gameboy::GetRomTitle()
 }
 
 
+//Application interface
+void Gameboy::SetApplicationInterface(IMachineToApplication* applicationInterface)
+{
+	m_applicationInterface = applicationInterface;
+}
+
+
 //Component access
 IEmulatedDisplay* Gameboy::GetDisplay()
 {
@@ -154,6 +161,13 @@ void Gameboy::Release(Gameboy* machine)
 }
 
 
+//Application interface
+IMachineToApplication* Gameboy::GetApplicationInterface()
+{
+	return m_applicationInterface;
+}
+
+
 //Gameboy Components (non-functions, direct concrete types)
 Cpu* Gameboy::GetGbCpu()
 {
@@ -202,6 +216,8 @@ void Gameboy::RunDuringInstruction(unsigned int ticks)
 
 Gameboy::Gameboy(Memory* memory)
 {
+	m_applicationInterface = NULL;
+
 	m_memory = memory;
 	m_cpu = new Cpu();
 	m_display = new Display();

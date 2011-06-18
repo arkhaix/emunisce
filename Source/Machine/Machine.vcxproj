@@ -66,6 +66,7 @@
     <ClInclude Include="IEmulatedMemory.h" />
     <ClInclude Include="IEmulatedProcessor.h" />
     <ClInclude Include="IEmulatedSound.h" />
+    <ClInclude Include="IMachineToApplication.h" />
     <ClInclude Include="MachineFactory.h" />
     <ClInclude Include="MachineIncludes.h" />
     <ClInclude Include="MachineSerialization.h" />

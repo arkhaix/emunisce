@@ -47,7 +47,7 @@ using namespace Emunisce;
 namespace Emunisce
 {
 
-class Phoenix_Private : public IWindowMessageListener
+class Phoenix_Private : public IMachineToApplication, public IWindowMessageListener
 {
 public:
 
@@ -179,13 +179,26 @@ public:
 		}
 	}
 
-	std::string GetBaseSaveStateFolder()
+	std::string GetDataFolder()
 	{
 		char path[MAX_PATH];
 
 		SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, path);
 
 		PathAppend(path, "Emunisce");
+
+		SHCreateDirectoryEx(NULL, path, NULL);
+
+		return std::string(path);
+	}
+
+	std::string GetBaseSaveStateFolder()
+	{
+		char path[MAX_PATH];
+
+		std::string dataFolder = GetDataFolder();
+		strcpy_s(path, MAX_PATH, dataFolder.c_str());
+
 		PathAppend(path, "SaveStates");
 
 		SHCreateDirectoryEx(NULL, path, NULL);
@@ -221,6 +234,98 @@ public:
 		PathAppend(file, idStr);
 
 		return std::string(file);
+	}
+
+	std::string GetBaseRomDataFolder()
+	{
+		char path[MAX_PATH];
+
+		std::string dataFolder = GetDataFolder();
+		strcpy_s(path, MAX_PATH, dataFolder.c_str());
+
+		PathAppend(path, "RomData");
+
+		SHCreateDirectoryEx(NULL, path, NULL);
+
+		return std::string(path);
+	}
+
+	std::string GetCurrentRomDataFolder()
+	{
+		char path[MAX_PATH] = {0};
+
+		std::string basePath = GetBaseRomDataFolder();
+		strcpy_s(path, MAX_PATH, basePath.c_str());
+
+		PathAppend(path, EmulatedMachine::ToString[ _Machine->GetType() ]);
+		PathAppend(path, _Machine->GetRomTitle());
+
+		SHCreateDirectoryEx(NULL, path, NULL);
+
+		return std::string(path);
+	}
+
+	std::string GetCurrentRomDataFile(const char* name)
+	{
+		char file[MAX_PATH] = {0};
+
+		std::string path = GetCurrentRomDataFolder();
+		strcpy_s(file, MAX_PATH, path.c_str());
+
+		std::string filename = std::string(name) + std::string(".erd");
+		PathAppend(file, filename.c_str());
+
+		return std::string(file);
+	}
+
+
+	// IMachineToApplication
+
+	void SaveRomData(const char* title, unsigned char* buffer, unsigned int bytes)
+	{
+		std::string filename = GetCurrentRomDataFile(title);
+
+		FileSerializer fs;
+		fs.SetFile(filename.c_str());
+
+		Archive ar(&fs, ArchiveMode::Saving);
+
+		SerializeBuffer(ar, buffer, bytes);
+
+		fs.CloseFile();
+	}
+
+	unsigned int GetRomDataSize(const char* title)
+	{
+		std::string filename = GetCurrentRomDataFile(title);
+
+		std::ifstream ifile;
+		ifile.open(filename.c_str(), std::ios::in | std::ios::binary);
+
+		if(ifile.good() == false)
+			return 0;
+
+		ifile.seekg(0, std::ios::beg);
+		unsigned int beginPosition = (int)ifile.tellg();
+		
+		ifile.seekg(0, std::ios::end);
+		unsigned int endPosition = (int)ifile.tellg();
+
+		return endPosition - beginPosition;
+	}
+
+	void LoadRomData(const char* title, unsigned char* buffer, unsigned int bytes)
+	{
+		std::string filename = GetCurrentRomDataFile(title);
+
+		FileSerializer fs;
+		fs.SetFile(filename.c_str());
+
+		Archive ar(&fs, ArchiveMode::Loading);
+
+		SerializeBuffer(ar, buffer, bytes);
+
+		fs.CloseFile();
 	}
 
 
@@ -298,6 +403,8 @@ void EmunisceApplication::RunWindow()
 			m_private->_Sound->SetMachine(newMachine);
 
 			m_private->AdjustWindowSize();
+
+			m_private->_Machine->SetApplicationInterface(m_private);
 
 			m_private->_PendingMachine = NULL;
 		}

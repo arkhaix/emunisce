@@ -27,6 +27,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "MachineFactory.h"
 #include "MachineSerialization.h"
 
+#include "IMachineToApplication.h"
+
 #include "IEmulatedMachine.h"
 #include "IEmulatedDisplay.h"
 #include "IEmulatedInput.h"

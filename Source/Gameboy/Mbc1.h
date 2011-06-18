@@ -45,9 +45,12 @@ protected:
 	void SwitchRAM();
 
 	void SaveRAM();
+	void LoadRAM();
 
 	char m_romFilename[1024];
 	char m_sramFilename[1024];
+
+	bool m_sramLoaded;
 
 	int m_numRomBanks;
 	u8 m_romBanks[0x200][0x4000];

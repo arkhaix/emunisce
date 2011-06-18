@@ -42,6 +42,8 @@ Memory::Memory()
 {
 	srand((unsigned int)time(NULL));
 
+	m_machine = NULL;
+
 	m_cpu = NULL;
 	m_display = NULL;
 	m_input = NULL;
@@ -66,6 +68,8 @@ Memory::~Memory()
 
 void Memory::SetMachine(Gameboy* machine)
 {
+	m_machine = machine;
+
 	//Reset Machine-dependent values
 	for(int i=0;i<0x100;i++)
 	{
