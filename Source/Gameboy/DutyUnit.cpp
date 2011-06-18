@@ -20,6 +20,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "DutyUnit.h"
 using namespace Emunisce;
 
+#include "Serialization/SerializationIncludes.h"
+
 
 DutyUnit::DutyUnit()
 {
@@ -46,6 +48,23 @@ DutyUnit::DutyUnit()
 	m_hitNyquist = false;
 	m_ticksSinceLastSample = 0;
 	m_sumSinceLastSample = 0;
+}
+
+
+void DutyUnit::Serialize(Archive& archive)
+{
+	SerializeItem(archive, m_timerPeriod);
+	SerializeItem(archive, m_timerValue);
+
+	SerializeItem(archive, m_dutyPosition);
+	SerializeItem(archive, m_dutyMode);
+
+	SerializeItem(archive, m_synthesisMethod);
+
+	SerializeItem(archive, m_hasTransitioned);
+	SerializeItem(archive, m_hitNyquist);
+	SerializeItem(archive, m_ticksSinceLastSample);
+	SerializeItem(archive, m_sumSinceLastSample);
 }
 
 

@@ -22,6 +22,8 @@ using namespace Emunisce;
 
 #include "GameboyIncludes.h"
 
+#include "Serialization/SerializationIncludes.h"
+
 #include "ChannelController.h"
 #include "LengthUnit.h"
 
@@ -70,6 +72,35 @@ void Sound3::SetMachine(Gameboy* machine)
 	memory->SetWaveRamLock(WaveRamLock::Normal);
 	for(u16 waveRamAddress = 0xff30; waveRamAddress <= 0xff3f; waveRamAddress++)
 		memory->Write8(waveRamAddress, (waveRamAddress & 1) ? 0xff : 0x00);
+}
+
+void Sound3::Serialize(Archive& archive)
+{
+	SoundGenerator::Serialize(archive);
+
+	SerializeItem(archive, m_frequency);
+	SerializeItem(archive, m_outputLevelShift);
+
+	SerializeItem(archive, m_waveTimerPeriod);
+	SerializeItem(archive, m_waveTimerValue);
+
+	SerializeItem(archive, m_waveSamplePosition);
+
+	SerializeItem(archive, m_waveSampleValue);
+
+
+	//Memory access
+
+	SerializeItem(archive, m_sampleReadTimerValue);
+
+
+	//Registers
+
+	SerializeItem(archive, m_nr30);
+	SerializeItem(archive, m_nr31);
+	SerializeItem(archive, m_nr32);
+	SerializeItem(archive, m_nr33);
+	SerializeItem(archive, m_nr34);
 }
 
 

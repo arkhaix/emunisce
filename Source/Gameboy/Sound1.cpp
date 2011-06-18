@@ -22,6 +22,8 @@ using namespace Emunisce;
 
 #include "GameboyIncludes.h"
 
+#include "Serialization/SerializationIncludes.h"
+
 #include "ChannelController.h"
 #include "DutyUnit.h"
 #include "EnvelopeUnit.h"
@@ -73,6 +75,33 @@ void Sound1::SetMachine(Gameboy* machine)
 	memory->SetRegisterLocation(0x12, &m_nr12, false);
 	memory->SetRegisterLocation(0x13, &m_nr13, false);
 	memory->SetRegisterLocation(0x14, &m_nr14, false);
+}
+
+void Sound1::Serialize(Archive& archive)
+{
+	SoundGenerator::Serialize(archive);
+
+	m_dutyUnit->Serialize(archive);
+
+	SerializeItem(archive, m_frequency);
+
+	SerializeItem(archive, m_frequencyShadow);
+
+	SerializeItem(archive, m_sweepEnabled);
+	SerializeItem(archive, m_sweepShift);
+	SerializeItem(archive, m_sweepIncreasing);
+	SerializeItem(archive, m_sweepTimerValue);
+	SerializeItem(archive, m_sweepTimerPeriod);
+	SerializeItem(archive, m_hasPerformedDecreasingCalculation);
+
+
+	//Registers
+
+	SerializeItem(archive, m_nr10);
+	SerializeItem(archive, m_nr11);
+	SerializeItem(archive, m_nr12);
+	SerializeItem(archive, m_nr13);
+	SerializeItem(archive, m_nr14);
 }
 
 void Sound1::SetSynthesisMethod(SquareSynthesisMethod::Type method)

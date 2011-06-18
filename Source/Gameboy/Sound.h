@@ -63,6 +63,8 @@ public:
 
 	void Run(int ticks);
 
+	virtual void Serialize(Archive& archive);
+
 	//Internal (for the sound generators)
 	int GetFrameSequencerPosition();
 

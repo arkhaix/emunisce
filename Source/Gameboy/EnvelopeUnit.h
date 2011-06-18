@@ -26,6 +26,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
+class Archive;
 class SoundGenerator;
 
 class EnvelopeUnit
@@ -33,6 +34,8 @@ class EnvelopeUnit
 public:
 
 	EnvelopeUnit(SoundGenerator* soundGenerator);
+
+	void Serialize(Archive& archive);
 
 	void Tick();
 	void Trigger();

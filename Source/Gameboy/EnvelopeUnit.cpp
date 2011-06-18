@@ -20,6 +20,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "EnvelopeUnit.h"
 using namespace Emunisce;
 
+#include "Serialization/SerializationIncludes.h"
+
 #include "ChannelController.h"
 #include "SoundGenerator.h"
 
@@ -36,6 +38,19 @@ EnvelopeUnit::EnvelopeUnit(SoundGenerator* soundGenerator)
 
 	m_timerPeriod = 0;
 	m_timerValue = 0;
+}
+
+
+void EnvelopeUnit::Serialize(Archive& archive)
+{
+	SerializeItem(archive, m_enabled);
+
+	SerializeItem(archive, m_volumeIncreasing);
+	SerializeItem(archive, m_initialVolume);
+	SerializeItem(archive, m_currentVolume);
+	
+	SerializeItem(archive, m_timerValue);
+	SerializeItem(archive, m_timerPeriod);
 }
 
 

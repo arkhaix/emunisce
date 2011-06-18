@@ -22,6 +22,8 @@ using namespace Emunisce;
 
 #include "GameboyIncludes.h"
 
+#include "Serialization/SerializationIncludes.h"
+
 #include "EnvelopeUnit.h"
 #include "LengthUnit.h"
 
@@ -73,6 +75,28 @@ void Sound4::SetMachine(Gameboy* machine)
 	memory->SetRegisterLocation(0x21, &m_nr42, false);
 	memory->SetRegisterLocation(0x22, &m_nr43, false);
 	memory->SetRegisterLocation(0x23, &m_nr44, false);
+}
+
+void Sound4::Serialize(Archive& archive)
+{
+	SoundGenerator::Serialize(archive);
+
+	SerializeItem(archive, m_lfsr);
+	SerializeItem(archive, m_lfsrTapBit);
+	SerializeItem(archive, m_lfsrFeedbackBit);
+	SerializeItem(archive, m_lfsrOut);
+
+	SerializeItem(archive, m_timerPeriod);
+	SerializeItem(archive, m_timerValue);
+
+
+	//Registers
+
+	SerializeItem(archive, m_nr40);
+	SerializeItem(archive, m_nr41);
+	SerializeItem(archive, m_nr42);
+	SerializeItem(archive, m_nr43);
+	SerializeItem(archive, m_nr44);
 }
 
 

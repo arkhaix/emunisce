@@ -26,6 +26,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
+class Archive;
+
 class SoundGenerator;
 
 
@@ -34,6 +36,8 @@ class LengthUnit
 public:
 
 	LengthUnit(SoundGenerator* soundGenerator);
+
+	void Serialize(Archive& archive);
 
 	void SetMaxValue(int maxValue);
 

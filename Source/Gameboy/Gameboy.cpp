@@ -288,4 +288,5 @@ void Gameboy::Serialize(Archive& archive)
 	m_display->Serialize(archive);
 	m_input->Serialize(archive);
 	m_memory->Serialize(archive);
+	m_sound->Serialize(archive);
 }

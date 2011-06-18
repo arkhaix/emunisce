@@ -32,6 +32,8 @@ public:
 
 	DutyUnit();
 
+	void Serialize(Archive& archive);
+
 	void Run(int ticks);
 	void Trigger();
 
