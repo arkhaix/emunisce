@@ -108,16 +108,6 @@ void Cpu::Serialize(Archive& archive)
 	SerializeItem(archive, de);
 	SerializeItem(archive, hl);
 
-	SerializeItem(archive, a);
-	SerializeItem(archive, f);
-	SerializeItem(archive, b);
-	SerializeItem(archive, c);
-	SerializeItem(archive, d);
-	SerializeItem(archive, e);
-	SerializeItem(archive, h);
-	SerializeItem(archive, l);
-
-
 	SerializeItem(archive, m_masterInterruptsEnabled);
 	SerializeItem(archive, m_delayNextInterrupt);
 

@@ -194,8 +194,8 @@ void Display::Serialize(Archive& archive)
 	SerializeItem(archive, m_stateTicksRemaining);
 	SerializeItem(archive, m_vblankScanlineTicksRemaining);
 
-	//SerializeItem(archive, m_screenBuffer);
-	//SerializeItem(archive, m_screenBuffer2);
+	SerializeItem(archive, m_screenBuffer);
+	SerializeItem(archive, m_screenBuffer2);
 
 	int activeScreenBufferId = 1;
 	if(m_activeScreenBuffer == &m_screenBuffer2)
@@ -241,9 +241,9 @@ void Display::Serialize(Archive& archive)
 	SerializeItem(archive, m_oamOffset);
 
 
-	//SerializeItem(archive, m_frameBackgroundData);
-	//SerializeItem(archive, m_frameWindowData);
-	//SerializeItem(archive, m_frameSpriteData);
+	SerializeItem(archive, m_frameBackgroundData);
+	SerializeItem(archive, m_frameWindowData);
+	SerializeItem(archive, m_frameSpriteData);
 
 	const int tileDataSize = (8*8) * (0x1800/16);
 	for(int i=0;i<tileDataSize;i++)

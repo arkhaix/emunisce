@@ -37,6 +37,8 @@ Mbc1::~Mbc1()
 
 void Mbc1::Serialize(Archive& archive)
 {
+	Memory::Serialize(archive);
+
 	//ROM banks will be loaded from the cart and can't change, so just save the ram banks
 	for(int i=0;i<0x10;i++)
 		for(int j=0;j<0x2000;j++)
