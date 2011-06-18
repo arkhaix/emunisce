@@ -30,6 +30,7 @@ MemorySerializer::MemorySerializer()
 {
 	m_usedSize = 0;
 	m_reservedSize = 1024;
+	m_reserveMultiplier = 1.25f;
 
 	m_buffer = (unsigned char*)malloc(m_reservedSize);
 }
@@ -49,6 +50,16 @@ unsigned char* MemorySerializer::GetBuffer()
 unsigned int MemorySerializer::GetBufferSize()
 {
 	return m_usedSize;
+}
+
+
+void MemorySerializer::SetBuffer(unsigned char* buffer, unsigned int size)
+{
+	free(m_buffer);
+	m_reservedSize = size;
+	m_usedSize = 0;
+	m_buffer = (unsigned char*)malloc(m_reservedSize);
+	memcpy_s(m_buffer, m_reservedSize, buffer, size);
 }
 
 

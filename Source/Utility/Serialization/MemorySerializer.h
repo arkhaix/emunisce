@@ -37,6 +37,8 @@ public:
 	virtual unsigned char* GetBuffer();
 	virtual unsigned int GetBufferSize();
 
+	virtual void SetBuffer(unsigned char* buffer, unsigned int size);
+
 
 	// ISerializer
 
