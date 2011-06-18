@@ -141,8 +141,7 @@ void Memory::Serialize(Archive& archive)
 
 	//Memory
 
-	for(int address = 0; address < 0x10000; address++)
-		SerializeItem(archive, m_memoryData[address]);
+	SerializeBuffer(archive, &m_memoryData[0x8000], (0x10000 - 0x8000));
 
 
 	//Registers are set up by the components and don't need to be serialized here
@@ -158,6 +157,20 @@ void Memory::Serialize(Archive& archive)
 
 	SerializeItem(archive, m_waveRamLockMode);
 	SerializeItem(archive, m_waveRamReadValue);
+
+
+	//Update Display caches on load
+	if(archive.GetArchiveMode() == ArchiveMode::Loading)
+	{
+		//The Display doesn't save its vram and oam caches since they're already saved by Memory
+		// so this is here to restore those caches
+
+		for(int address = 0x8000; address < 0xa000; address++)
+			m_display->WriteVram(address, m_memoryData[address]);
+		
+		for(int address = 0xfe00; address < 0xfea0; address++)
+			m_display->WriteOam(address, m_memoryData[address]);
+	}
 }
 
 void Memory::SetRegisterLocation(u8 registerOffset, u8* pRegister, bool writeable)

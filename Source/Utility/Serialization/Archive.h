@@ -49,6 +49,8 @@ public:
 
 	ArchiveMode::Type GetArchiveMode();
 
+	void SerializeBuffer(unsigned char* buffer, unsigned int bytes);
+
 	Archive& operator&(u8& data);
 	Archive& operator&(u16& data);
 	Archive& operator&(u32& data);

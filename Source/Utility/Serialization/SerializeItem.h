@@ -27,6 +27,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
+void SerializeBuffer(Archive& archive, unsigned char* buffer, unsigned int bytes);
+
 void SerializeItem(Archive& archive, u8& data);
 void SerializeItem(Archive& archive, u16& data);
 void SerializeItem(Archive& archive, u32& data);

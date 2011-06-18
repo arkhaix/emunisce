@@ -234,26 +234,6 @@ void Sound::Run(int ticks)
 
 void Sound::Serialize(Archive& archive)
 {
-	for(int i=0;i<2;i++)
-		SerializeItem(archive, m_audioBuffer[i]);
-
-	int activeAudioBufferId = 0;
-	if(m_activeAudioBuffer == &m_audioBuffer[1])
-		activeAudioBufferId = 1;
-
-	SerializeItem(archive, activeAudioBufferId);
-
-	if(activeAudioBufferId == 0)
-	{
-		m_activeAudioBuffer = &m_audioBuffer[0];
-		m_stableAudioBuffer = &m_audioBuffer[1];
-	}
-	else
-	{
-		m_activeAudioBuffer = &m_audioBuffer[1];
-		m_stableAudioBuffer = &m_audioBuffer[0];
-	}
-
 	SerializeItem(archive, m_audioBufferCount);
 
 	SerializeItem(archive, m_ticksPerSample);

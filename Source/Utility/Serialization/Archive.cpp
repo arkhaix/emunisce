@@ -38,6 +38,15 @@ ArchiveMode::Type Archive::GetArchiveMode()
 }
 
 
+void Archive::SerializeBuffer(unsigned char* buffer, unsigned int bytes)
+{
+	if(m_archiveMode == ArchiveMode::Saving)
+		m_serializer->Save(buffer, bytes);
+	else
+		m_serializer->Restore(buffer, bytes);
+}
+
+
 Archive& Archive::operator&(u8& data)
 {
 	if(m_archiveMode == ArchiveMode::Saving)

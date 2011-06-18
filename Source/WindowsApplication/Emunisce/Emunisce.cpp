@@ -374,9 +374,6 @@ void EmunisceApplication::ResetRom()
 
 void EmunisceApplication::SaveState(unsigned int id)
 {
-	bool wasPaused = m_private->_Runner->IsPaused();
-	m_private->_Runner->Pause();
-
 	std::string file = m_private->GetCurrentSaveStateFile(id);
 
 	FileSerializer fs;
@@ -384,19 +381,19 @@ void EmunisceApplication::SaveState(unsigned int id)
 
 	Archive ar(&fs, ArchiveMode::Saving);
 
-	m_private->_Machine->SaveState(ar);
+	bool wasPaused = m_private->_Runner->IsPaused();
+	m_private->_Runner->Pause();
 
-	fs.CloseFile();
+	m_private->_Machine->SaveState(ar);
 
 	if(wasPaused == false)
 		m_private->_Runner->Run();
+
+	fs.CloseFile();
 }
 
 void EmunisceApplication::LoadState(unsigned int id)
 {
-	bool wasPaused = m_private->_Runner->IsPaused();
-	m_private->_Runner->Pause();
-
 	std::string file = m_private->GetCurrentSaveStateFile(id);
 
 	FileSerializer fs;
@@ -404,12 +401,15 @@ void EmunisceApplication::LoadState(unsigned int id)
 
 	Archive ar(&fs, ArchiveMode::Loading);
 
-	m_private->_Machine->LoadState(ar);
+	bool wasPaused = m_private->_Runner->IsPaused();
+	m_private->_Runner->Pause();
 
-	fs.CloseFile();
+	m_private->_Machine->LoadState(ar);
 
 	if(wasPaused == false)
 		m_private->_Runner->Run();
+
+	fs.CloseFile();
 }
 
 void EmunisceApplication::NotifyMachineChanged(IEmulatedMachine* newMachine)
