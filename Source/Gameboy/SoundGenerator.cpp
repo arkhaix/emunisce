@@ -22,7 +22,10 @@ using namespace Emunisce;
 
 #include "GameboyIncludes.h"
 
+#include "Serialization/SerializationIncludes.h"
+
 #include "ChannelController.h"
+#include "EnvelopeUnit.h"
 #include "LengthUnit.h"
 #include "Sound.h"
 
@@ -47,6 +50,18 @@ void SoundGenerator::Initialize(ChannelController* channelController)
 void SoundGenerator::SetMachine(Gameboy* machine)
 {
 	m_machine = machine;
+}
+
+
+void SoundGenerator::Serialize(Archive& archive)
+{
+	SerializeItem(archive, m_hasPower);
+	SerializeItem(archive, m_dacEnabled);
+
+	m_lengthUnit->Serialize(archive);
+
+	if(m_envelopeUnit != NULL)
+		m_envelopeUnit->Serialize(archive);
 }
 
 

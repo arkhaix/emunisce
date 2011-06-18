@@ -24,8 +24,10 @@ namespace Emunisce
 {
 
 class Archive;
+struct AudioBuffer;
 class ScreenBuffer;
 
+void SerializeItem(Archive& archive, AudioBuffer& data);
 void SerializeItem(Archive& archive, ScreenBuffer& data);
 
 }	//namespace Emunisce

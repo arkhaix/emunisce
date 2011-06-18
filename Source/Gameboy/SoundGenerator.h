@@ -26,6 +26,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
+class Archive;
+
 class Gameboy;
 class ChannelController;
 
@@ -39,6 +41,8 @@ public:
 
 	virtual void Initialize(ChannelController* channelController);
 	virtual void SetMachine(Gameboy* machine);
+
+	virtual void Serialize(Archive& archive);
 
 	virtual void PowerOff();
 	virtual void PowerOn();

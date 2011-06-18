@@ -22,6 +22,8 @@ using namespace Emunisce;
 
 #include "GameboyIncludes.h"
 
+#include "Serialization/SerializationIncludes.h"
+
 #include "DutyUnit.h"
 #include "EnvelopeUnit.h"
 #include "LengthUnit.h"
@@ -70,6 +72,25 @@ void Sound2::SetMachine(Gameboy* machine)
 	memory->SetRegisterLocation(0x17, &m_nr22, false);
 	memory->SetRegisterLocation(0x18, &m_nr23, false);
 	memory->SetRegisterLocation(0x19, &m_nr24, false);
+}
+
+void Sound2::Serialize(Archive& archive)
+{
+	SoundGenerator::Serialize(archive);
+
+	//Sound generation
+
+	m_dutyUnit->Serialize(archive);
+	SerializeItem(archive, m_frequency);
+
+
+	//Registers
+
+	SerializeItem(archive, m_nr20);
+	SerializeItem(archive, m_nr21);
+	SerializeItem(archive, m_nr22);
+	SerializeItem(archive, m_nr23);
+	SerializeItem(archive, m_nr24);
 }
 
 void Sound2::SetSynthesisMethod(SquareSynthesisMethod::Type method)

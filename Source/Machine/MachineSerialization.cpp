@@ -25,7 +25,17 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Emunisce
 {
-	
+
+void SerializeItem(Archive& archive, AudioBuffer& data)
+{
+	SerializeItem(archive, data.NumSamples);
+	for(unsigned int i=0;i<data.NumSamples;i++)
+	{
+		SerializeItem(archive, data.Samples[0][i]);
+		SerializeItem(archive, data.Samples[1][i]);
+	}
+}
+
 void SerializeItem(Archive& archive, ScreenBuffer& data)
 {
 	int width = data.GetWidth();

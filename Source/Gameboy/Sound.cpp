@@ -22,6 +22,8 @@ using namespace Emunisce;
 
 #include "GameboyIncludes.h"
 
+#include "Serialization/SerializationIncludes.h"
+
 #include "Sound1.h"
 #include "Sound2.h"
 #include "Sound3.h"
@@ -228,6 +230,66 @@ void Sound::Run(int ticks)
 		}
 	}
 }
+
+
+void Sound::Serialize(Archive& archive)
+{
+	for(int i=0;i<2;i++)
+		SerializeItem(archive, m_audioBuffer[i]);
+
+	int activeAudioBufferId = 0;
+	if(m_activeAudioBuffer == &m_audioBuffer[1])
+		activeAudioBufferId = 1;
+
+	SerializeItem(archive, activeAudioBufferId);
+
+	if(activeAudioBufferId == 0)
+	{
+		m_activeAudioBuffer = &m_audioBuffer[0];
+		m_stableAudioBuffer = &m_audioBuffer[1];
+	}
+	else
+	{
+		m_activeAudioBuffer = &m_audioBuffer[1];
+		m_stableAudioBuffer = &m_audioBuffer[0];
+	}
+
+	SerializeItem(archive, m_audioBufferCount);
+
+	SerializeItem(archive, m_ticksPerSample);
+	SerializeItem(archive, m_ticksUntilNextSample);
+
+	SerializeItem(archive, m_nextSampleIndex);
+
+
+	//Frame sequencer
+
+	SerializeItem(archive, m_frameSequencerTimer);
+	SerializeItem(archive, m_frameSequencerPeriod);
+	SerializeItem(archive, m_frameSequencerPosition);
+
+
+	//Sound master
+
+	SerializeItem(archive, m_hasPower);
+	for(int i=0;i<2;i++)
+		for(int j=0;j<4;j++)
+			SerializeItem(archive, m_terminalOutputs[i][j]);
+
+
+	//Sound generators
+
+	for(int i=0;i<4;i++)
+		m_soundGenerator[i]->Serialize(archive);
+
+
+	//Registers
+
+	SerializeItem(archive, m_nr50);
+	SerializeItem(archive, m_nr51);
+	SerializeItem(archive, m_nr52);
+}
+
 
 AudioBuffer Sound::GetStableAudioBuffer()
 {

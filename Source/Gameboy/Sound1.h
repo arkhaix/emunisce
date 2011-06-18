@@ -46,6 +46,8 @@ public:
 	virtual void Initialize(ChannelController* channelController);
 	void SetMachine(Gameboy* machine);
 
+	virtual void Serialize(Archive& archive);
+
 	void SetSynthesisMethod(SquareSynthesisMethod::Type method);
 
 
