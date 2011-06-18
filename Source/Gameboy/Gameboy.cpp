@@ -35,6 +35,11 @@ EmulatedMachine::Type Gameboy::GetType()
 	return EmulatedMachine::Gameboy;
 }
 
+const char* Gameboy::GetRomTitle()
+{
+	return m_romTitle;
+}
+
 
 //Component access
 IEmulatedDisplay* Gameboy::GetDisplay()
@@ -203,6 +208,9 @@ Gameboy::Gameboy(Memory* memory)
 	m_input = new Input();
 	m_sound = new Sound();
 
+	for(int i=0;i<16;i++)
+		m_romTitle[i] = 0;
+
 	m_frameCount = 0;
 
 	m_ticksPerSecond = 4194304;
@@ -235,6 +243,16 @@ void Gameboy::Initialize()
 	m_display->Initialize();
 	m_input->Initialize();
 	m_sound->Initialize();
+
+	//Get the rom title
+	for(int i=0;i<11;i++)
+	{
+		char ch = m_memory->Read8(0x0134 + i);
+		if( (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9') || (ch == ' ') )
+			m_romTitle[i] = ch;
+		else
+			m_romTitle[i] = 0;
+	}
 }
 
 void Gameboy::InternalStep()

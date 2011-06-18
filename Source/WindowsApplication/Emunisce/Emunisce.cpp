@@ -182,17 +182,30 @@ public:
 	std::string GetBaseSaveStateFolder()
 	{
 		char path[MAX_PATH];
+
 		SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, path);
+
 		PathAppend(path, "Emunisce");
 		PathAppend(path, "SaveStates");
+
 		SHCreateDirectoryEx(NULL, path, NULL);
+
 		return std::string(path);
 	}
 
 	std::string GetCurrentSaveStateFolder()
 	{
-		//todo: append machine name and game name
-		return GetBaseSaveStateFolder();
+		char path[MAX_PATH] = {0};
+
+		std::string basePath = GetBaseSaveStateFolder();
+		strcpy_s(path, MAX_PATH, basePath.c_str());
+
+		PathAppend(path, EmulatedMachine::ToString[ _Machine->GetType() ]);
+		PathAppend(path, _Machine->GetRomTitle());
+
+		SHCreateDirectoryEx(NULL, path, NULL);
+
+		return std::string(path);
 	}
 
 	std::string GetCurrentSaveStateFile(unsigned int id)

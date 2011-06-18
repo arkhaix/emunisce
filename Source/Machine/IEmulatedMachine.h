@@ -34,6 +34,7 @@ public:
 
 	//Machine type
 	virtual EmulatedMachine::Type GetType() = 0;
+	virtual const char* GetRomTitle() = 0;
 
 	//Component access
 	virtual IEmulatedDisplay* GetDisplay() = 0;
