@@ -37,6 +37,7 @@ public:
 
 	//Machine type
 	virtual EmulatedMachine::Type GetType();
+	virtual const char* GetRomTitle();
 
 	//Component access
 	virtual IEmulatedDisplay* GetDisplay();
@@ -96,6 +97,8 @@ protected:
 	Display* m_display;
 	Input* m_input;
 	Sound* m_sound;
+
+	char m_romTitle[16];
 
 	unsigned int m_frameCount;
 
