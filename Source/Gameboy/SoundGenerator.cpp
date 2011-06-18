@@ -33,6 +33,7 @@ using namespace Emunisce;
 SoundGenerator::SoundGenerator()
 {
 	m_lengthUnit = new LengthUnit(this);
+	m_envelopeUnit = NULL;
 	m_hasPower = true;
 }
 

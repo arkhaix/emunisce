@@ -25,6 +25,8 @@ using namespace std;
 
 #include "Serialization/SerializationIncludes.h"
 
+#include "Gameboy.h"
+
 
 Mbc1::Mbc1()
 {
@@ -32,6 +34,8 @@ Mbc1::Mbc1()
 
 	m_numRomBanks = 0;
 	m_numRamBanks = 0;
+
+	m_sramLoaded = false;
 }
 
 Mbc1::~Mbc1()
@@ -63,6 +67,8 @@ void Mbc1::Write8(u16 address, u8 value)
 	{
 		if((value & 0x0a) != 0x0a)
 			SaveRAM();
+		else if(m_sramLoaded == false)
+			LoadRAM();
 
 		return;
 	}
@@ -165,20 +171,6 @@ bool Mbc1::LoadFile(const char* filename)
 	SwitchROM();
 
 
-	//Randomize the RAM banks
-
-	for(u16 address=0;address<0x2000;address++)
-	{
-		int randomNumber = rand();
-		u8 randomByte[4] = { (u8)(randomNumber>>24), (u8)(randomNumber>>16), (u8)(randomNumber>>8), (u8)randomNumber };
-
-		m_ramBanks[0][address] = randomByte[0];
-		m_ramBanks[1][address] = randomByte[1];
-		m_ramBanks[2][address] = randomByte[2];
-		m_ramBanks[3][address] = randomByte[3];
-	}
-
-
 	//Get the relevant cartridge header info
 
 	u8 romSize = m_memoryData[0x0148];
@@ -204,15 +196,11 @@ bool Mbc1::LoadFile(const char* filename)
 		m_numRamBanks = 16;
 
 
-	//Load battery-backed RAM if applicable
+	//Randomize the RAM banks
 
-	ifstream sramFile(m_sramFilename, ios::in | ios::binary);
-	if(sramFile.good())
-	{
-		for(int i=0;i<m_numRamBanks;i++)
-			sramFile.read((char*)(&m_ramBanks[i][0]), 0x2000);
-		sramFile.close();
-	}
+	for(int i=0;i<m_numRamBanks;i++)
+		for(u16 address=0;address<0x2000;address++)
+			m_ramBanks[i][address] = rand();
 
 
 	//Copy the first RAM bank to active memory
@@ -249,11 +237,35 @@ void Mbc1::SaveRAM()
 	if(isBatteryType == false)
 		return;
 	
-	ofstream sramFile(m_sramFilename, ios::out | ios::binary);
-	if(sramFile.good())
+	IMachineToApplication* applicationInterface = m_machine->GetApplicationInterface();
+	if(applicationInterface != NULL)
 	{
-		for(int i=0;i<m_numRamBanks;i++)
-			sramFile.write((char*)(&m_ramBanks[i][0]), 0x2000);
-		sramFile.close();
+		applicationInterface->SaveRomData("sram", &m_ramBanks[0][0], 0x2000 * m_numRamBanks);
+		m_sramLoaded = true;	///<So we don't wind up re-loading this data we just wrote
+	}
+}
+
+void Mbc1::LoadRAM()
+{
+	if(m_sramLoaded == true)
+		return;
+
+	u8 cartType = m_memoryData[0x147];
+	u8 batteryTypes[] = { 0x03, 0x06, 0x09, 0x0f, 0x10, 0x13, 0x1b, 0 };
+
+	bool isBatteryType = false;
+	for(u8* batteryType = batteryTypes; *batteryType != 0; batteryType++)
+		if(*batteryType == cartType)
+			isBatteryType = true;
+
+	if(isBatteryType == false)
+		return;
+
+	IMachineToApplication* applicationInterface = m_machine->GetApplicationInterface();
+	if(applicationInterface != NULL)
+	{
+		applicationInterface->LoadRomData("sram", &m_ramBanks[0][0], 0x2000 * m_numRamBanks);
+		m_sramLoaded = true;
+		SwitchRAM();
 	}
 }

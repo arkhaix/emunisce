@@ -48,6 +48,9 @@
     <ClInclude Include="MachineSerialization.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IMachineToApplication.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MachineFactory.cpp">

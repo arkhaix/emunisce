@@ -83,6 +83,8 @@ protected:
 
 	//Component pointers for handling registers.
 
+	Gameboy* m_machine;
+
 	Cpu* m_cpu;
 	Display* m_display;
 	Input* m_input;
