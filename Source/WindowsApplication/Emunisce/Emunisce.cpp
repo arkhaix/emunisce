@@ -35,6 +35,8 @@ using namespace Emunisce;
 
 #include "UserInterface.h"
 
+#include "MachineFeatures.h"
+
 #include "MachineRunner.h"
 #include "ConsoleDebugger.h"
 
@@ -55,7 +57,8 @@ public:
 
 	Window* _Window;
 
-	IEmulatedMachine* _Machine;
+	MachineFeatures* _Machine;
+	IEmulatedMachine* _WrappedMachine;
 	IEmulatedMachine* _PendingMachine;
 
 	MachineRunner* _Runner;
@@ -78,7 +81,8 @@ public:
 
 		_Window = new Window();
 
-		_Machine = NULL;
+		_Machine = new MachineFeatures();
+		_WrappedMachine = NULL;
 		_PendingMachine = NULL;
 
 		_Runner = new MachineRunner();
@@ -109,9 +113,11 @@ public:
 		delete _Debugger;
 		delete _Runner;
 
-		if(_Machine)
+		delete _Machine;
+
+		if(_WrappedMachine)
 		{
-			MachineFactory::ReleaseMachine(_Machine);
+			MachineFactory::ReleaseMachine(_WrappedMachine);
 		}
 
 		delete _Window;
@@ -124,7 +130,7 @@ public:
 	{
 		//Resize the window so that the client area is a whole multiple of the display resolution
 
-		if(_Machine == NULL)
+		if(_WrappedMachine == NULL)
 			return;
 
 		if(_Window == NULL)
@@ -392,15 +398,16 @@ void EmunisceApplication::RunWindow()
 		{
 			IEmulatedMachine* newMachine = m_private->_PendingMachine;
 
-			m_private->_Machine = newMachine;
+			m_private->_Machine->SetMachine(newMachine);
+			m_private->_WrappedMachine = newMachine;
 
-			m_private->_UserInterface->SetMachine(newMachine);
-			m_private->_Runner->SetMachine(newMachine);
-			m_private->_Debugger->SetMachine(newMachine);
+			m_private->_UserInterface->SetMachine(m_private->_Machine);
+			m_private->_Runner->SetMachine(m_private->_Machine);
+			m_private->_Debugger->SetMachine(m_private->_Machine);
 
-			m_private->_Renderer->SetMachine(newMachine);
-			m_private->_Input->SetMachine(newMachine);
-			m_private->_Sound->SetMachine(newMachine);
+			m_private->_Renderer->SetMachine(m_private->_Machine);
+			m_private->_Input->SetMachine(m_private->_Machine);
+			m_private->_Sound->SetMachine(m_private->_Machine);
 
 			m_private->AdjustWindowSize();
 
@@ -410,7 +417,7 @@ void EmunisceApplication::RunWindow()
 		}
 
 		IEmulatedMachine* machine = GetMachine();
-		if(machine)
+		if(machine && m_private->_WrappedMachine)
 		{
 			if(m_private->_Renderer->GetLastFrameRendered() != machine->GetDisplay()->GetScreenBufferCount() && ShutdownRequested() == false)
 			{
@@ -463,7 +470,7 @@ bool EmunisceApplication::LoadRom(const char* filename)
 	}
 
 	//Successfully created a new Machine
-	IEmulatedMachine* oldMachine = m_private->_Machine;
+	IEmulatedMachine* oldMachine = m_private->_WrappedMachine;
 
 	bool wasPaused = m_private->_Runner->IsPaused();
 	m_private->_Runner->Pause();
