@@ -51,12 +51,27 @@ void Input::Serialize(Archive& archive)
 	SerializeItem(archive, m_joypadRegister);
 }
 
+
 //External
-void Input::ButtonDown(Buttons::Type button)
+
+unsigned int Input::NumButtons()
+{
+	return GameboyButtons::NumGameboyButtons;
+}
+
+const char* Input::GetButtonName(unsigned int index)
+{
+	if(index >= GameboyButtons::NumGameboyButtons)
+		return NULL;
+
+	return GameboyButtons::ToString[ index ];
+}
+
+void Input::ButtonDown(unsigned int index)
 {
 	u8 oldButtonStates = m_buttonStates;
 	
-	m_buttonStates &= ~(1<<button);
+	m_buttonStates &= ~(1<<index);
 
 	if(m_buttonStates == oldButtonStates)
 		return;
@@ -67,11 +82,11 @@ void Input::ButtonDown(Buttons::Type button)
 	UpdateInterruptFlag();
 }
 
-void Input::ButtonUp(Buttons::Type button)
+void Input::ButtonUp(unsigned int index)
 {
 	u8 oldButtonStates = m_buttonStates;
 
-	m_buttonStates |= 1<<button;
+	m_buttonStates |= 1<<index;
 
 	if(m_buttonStates == oldButtonStates)
 		return;

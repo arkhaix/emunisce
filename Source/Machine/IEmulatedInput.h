@@ -24,49 +24,17 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-namespace Buttons
-{
-	typedef int Type;
-
-	enum
-	{
-		Right = 0,
-		Left,
-		Up,
-		Down,
-
-		A,
-		B,
-		Select,
-		Start,
-
-		NumButtons
-	};
-
-	static const char* ToString[] =
-	{
-		"Right",
-		"Left",
-		"Up",
-		"Down",
-
-		"A",
-		"B",
-		"Select",
-		"Start",
-
-		"NumButtons"
-	};
-
-}	//namespace Buttons
-
-
 class IEmulatedInput
 {
 public:
 
-	virtual void ButtonDown(Buttons::Type button) = 0;
-	virtual void ButtonUp(Buttons::Type button) = 0;
+	//Digital buttons
+
+	virtual unsigned int NumButtons() = 0;
+	virtual const char* GetButtonName(unsigned int index) = 0;
+
+	virtual void ButtonDown(unsigned int index) = 0;
+	virtual void ButtonUp(unsigned int index) = 0;
 };
 
 }	//namespace Emunisce
