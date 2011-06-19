@@ -43,7 +43,7 @@ public:
 	IEmulatedMachine* _Machine;
 	IEmulatedInput* _Input;
 
-	map<int, Buttons::Type> _KeyMap;
+	map<int, unsigned int> _KeyMap;
 
 	KeyboardInput_Private()
 	{
@@ -51,28 +51,42 @@ public:
 		_Machine = NULL;
 		_Input = NULL;
 
-		_KeyMap[VK_UP] = Buttons::Up;
-		_KeyMap[VK_DOWN] = Buttons::Down;
-		_KeyMap[VK_LEFT] = Buttons::Left;
-		_KeyMap[VK_RIGHT] = Buttons::Right;
+		/*
+		GameboyButtons
+		{
+		Right = 0,
+		Left,
+		Up,
+		Down,
 
-		_KeyMap['Q'] = Buttons::B;
-		_KeyMap['A'] = Buttons::B;
-		_KeyMap['Z'] = Buttons::B;
+		A,
+		B,
+		Select,
+		Start,
+		}
+		*/
+		_KeyMap[VK_UP] = 2;
+		_KeyMap[VK_DOWN] = 3;
+		_KeyMap[VK_LEFT] = 1;
+		_KeyMap[VK_RIGHT] = 0;
 
-		_KeyMap['W'] = Buttons::A;
-		_KeyMap['S'] = Buttons::A;
-		_KeyMap['X'] = Buttons::A;
+		_KeyMap['Q'] = 5;
+		_KeyMap['A'] = 5;
+		_KeyMap['Z'] = 5;
 
-		_KeyMap['V'] = Buttons::Select;
-		_KeyMap['B'] = Buttons::Start;
+		_KeyMap['W'] = 4;
+		_KeyMap['S'] = 4;
+		_KeyMap['X'] = 4;
 
-		_KeyMap[VK_LSHIFT] = Buttons::Select;
-		_KeyMap[VK_RSHIFT] = Buttons::Select;
-		_KeyMap[VK_RETURN] = Buttons::Start;
+		_KeyMap['V'] = 6;
+		_KeyMap['B'] = 7;
 
-		_KeyMap[VK_OEM_4] = Buttons::Select;
-		_KeyMap[VK_OEM_6] = Buttons::Start;
+		_KeyMap[VK_LSHIFT] = 6;
+		_KeyMap[VK_RSHIFT] = 6;
+		_KeyMap[VK_RETURN] = 7;
+
+		_KeyMap[VK_OEM_4] = 6;
+		_KeyMap[VK_OEM_6] = 7;
 	}
 
 

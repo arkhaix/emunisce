@@ -29,6 +29,41 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
+namespace GameboyButtons
+{
+	typedef int Type;
+
+	enum
+	{
+		Right = 0,
+		Left,
+		Up,
+		Down,
+
+		A,
+		B,
+		Select,
+		Start,
+
+		NumGameboyButtons
+	};
+
+	static const char* ToString[] =
+	{
+		"Right",
+		"Left",
+		"Up",
+		"Down",
+
+		"A",
+		"B",
+		"Select",
+		"Start",
+
+		"NumGameboyButtons"
+	};
+
+}	//namespace Buttons
 
 namespace RegisterMode
 {
@@ -53,8 +88,11 @@ public:
 
 	// IEmulatedInput
 
-	virtual void ButtonDown(Buttons::Type button);
-	virtual void ButtonUp(Buttons::Type button);
+	virtual unsigned int NumButtons();
+	virtual const char* GetButtonName(unsigned int index);
+
+	virtual void ButtonDown(unsigned int index);
+	virtual void ButtonUp(unsigned int index);
 
 
 	// Input
