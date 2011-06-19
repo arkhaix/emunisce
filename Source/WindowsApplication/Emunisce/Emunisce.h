@@ -17,8 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef PHOENIX_H
-#define PHOENIX_H
+#ifndef EMUNISCE_H
+#define EMUNISCE_H
 
 
 namespace Emunisce

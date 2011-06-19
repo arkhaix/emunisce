@@ -114,6 +114,7 @@
   <ItemGroup>
     <ClCompile Include="ConsoleDebugger.cpp" />
     <ClCompile Include="Emunisce.cpp" />
+    <ClCompile Include="MachineFeatures.cpp" />
     <ClCompile Include="MachineRunner.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="UserInterface.cpp" />
@@ -121,6 +122,7 @@
   <ItemGroup>
     <ClInclude Include="ConsoleDebugger.h" />
     <ClInclude Include="Emunisce.h" />
+    <ClInclude Include="MachineFeatures.h" />
     <ClInclude Include="MachineRunner.h" />
     <ClInclude Include="UserInterface.h" />
   </ItemGroup>

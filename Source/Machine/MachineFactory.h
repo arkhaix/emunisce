@@ -32,7 +32,8 @@ namespace EmulatedMachine
 
 	enum
 	{
-		AutoSelect = 0,
+		None = 0,
+		AutoSelect,
 
 		Gameboy,
 		GameboyColor,
@@ -42,6 +43,7 @@ namespace EmulatedMachine
 
 	static const char* ToString[] =
 	{
+		"None",
 		"AutoSelect",
 
 		"Gameboy",

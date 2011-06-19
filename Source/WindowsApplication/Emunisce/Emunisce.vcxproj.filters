@@ -9,6 +9,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="Machine Features">
+      <UniqueIdentifier>{f54322e8-bac2-4e89-9ce5-7f4968d41264}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -26,6 +29,9 @@
     <ClCompile Include="Emunisce.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MachineFeatures.cpp">
+      <Filter>Machine Features</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConsoleDebugger.h">
@@ -39,6 +45,9 @@
     </ClInclude>
     <ClInclude Include="Emunisce.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MachineFeatures.h">
+      <Filter>Machine Features</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
