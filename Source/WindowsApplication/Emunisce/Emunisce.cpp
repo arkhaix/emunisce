@@ -215,15 +215,22 @@ public:
 		_Input->SetMachine(_Machine);
 		_Sound->SetMachine(_Machine);
 
-		//Start out at the native resolution
+		//Start out at the native resolution or 320x240 (adjusted for aspect ratio), whichever is larger.
 		ScreenResolution resolution = _Machine->GetScreenResolution();
 
 		WindowSize size;
-		size.width = resolution.width;
-		size.height = resolution.height;
+		size.width = 320;
+		size.height = 240;
+
+		if(resolution.width >= 320)
+		{
+			size.width = resolution.width;
+			size.height = resolution.height;
+		}
+
 		_Window->SetSize(size);
 
-		//Adjust to make up for borders, titlebar, menu, etc
+		//Adjust to make up for aspect ratio, borders, titlebar, menu, etc
 		AdjustWindowSize();
 
 		_Machine->SetApplicationInterface(this);
