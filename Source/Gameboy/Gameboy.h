@@ -56,7 +56,7 @@ public:
 
 	//Execution
 	virtual void Step();
-	virtual void RunOneFrame();
+	virtual void RunToNextFrame();
 	virtual void Run();
 	virtual void Stop();
 

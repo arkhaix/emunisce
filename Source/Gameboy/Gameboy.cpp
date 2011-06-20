@@ -98,7 +98,7 @@ void Gameboy::Step()
 	InternalStep();
 }
 
-void Gameboy::RunOneFrame()
+void Gameboy::RunToNextFrame()
 {
 	unsigned int currentFrame = m_frameCount;
 	while(m_frameCount == currentFrame)

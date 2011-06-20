@@ -147,12 +147,12 @@ void MachineFeatures::Step()
 	m_wrappedMachine->Step();
 }
 
-void MachineFeatures::RunOneFrame()
+void MachineFeatures::RunToNextFrame()
 {
 	if(m_wrappedMachine == NULL)
 		return;
 
-	m_wrappedMachine->RunOneFrame();
+	m_wrappedMachine->RunToNextFrame();
 }
 
 
