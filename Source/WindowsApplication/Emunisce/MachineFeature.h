@@ -17,8 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef MACHINEFEATURES_H
-#define MACHINEFEATURES_H
+#ifndef MACHINEFEATURE_H
+#define MACHINEFEATURE_H
 
 #include "MachineIncludes.h"
 
@@ -26,14 +26,14 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class MachineFeatures : public IEmulatedMachine
+class MachineFeature : public IEmulatedMachine
 {
 public:
 
 	// MachineFeatures
 
-	MachineFeatures();
-	~MachineFeatures();
+	MachineFeature();
+	~MachineFeature();
 
 	void SetMachine(IEmulatedMachine* wrappedMachine);
 

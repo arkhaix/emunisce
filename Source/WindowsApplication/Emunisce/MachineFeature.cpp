@@ -17,23 +17,23 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "MachineFeatures.h"
+#include "MachineFeature.h"
 using namespace Emunisce;
 
 
 // MachineFeatures
 
-MachineFeatures::MachineFeatures()
+MachineFeature::MachineFeature()
 {
 	m_wrappedMachine = NULL;
 }
 
-MachineFeatures::~MachineFeatures()
+MachineFeature::~MachineFeature()
 {
 }
 
 
-void MachineFeatures::SetMachine(IEmulatedMachine* wrappedMachine)
+void MachineFeature::SetMachine(IEmulatedMachine* wrappedMachine)
 {
 	m_wrappedMachine = wrappedMachine;
 }
@@ -43,7 +43,7 @@ void MachineFeatures::SetMachine(IEmulatedMachine* wrappedMachine)
 // IEmulatedMachine
 
 //Machine type
-EmulatedMachine::Type MachineFeatures::GetType()
+EmulatedMachine::Type MachineFeature::GetType()
 {
 	if(m_wrappedMachine == NULL)
 		return EmulatedMachine::None;
@@ -51,7 +51,7 @@ EmulatedMachine::Type MachineFeatures::GetType()
 	return m_wrappedMachine->GetType();
 }
 
-const char* MachineFeatures::GetRomTitle()
+const char* MachineFeature::GetRomTitle()
 {
 	if(m_wrappedMachine == NULL)
 		return NULL;
@@ -61,7 +61,7 @@ const char* MachineFeatures::GetRomTitle()
 
 
 //Application interface
-void MachineFeatures::SetApplicationInterface(IMachineToApplication* applicationInterface)
+void MachineFeature::SetApplicationInterface(IMachineToApplication* applicationInterface)
 {
 	if(m_wrappedMachine == NULL)
 		return;
@@ -71,7 +71,7 @@ void MachineFeatures::SetApplicationInterface(IMachineToApplication* application
 
 
 //Component access
-IEmulatedDisplay* MachineFeatures::GetDisplay()
+IEmulatedDisplay* MachineFeature::GetDisplay()
 {
 	if(m_wrappedMachine == NULL)
 		return NULL;
@@ -79,7 +79,7 @@ IEmulatedDisplay* MachineFeatures::GetDisplay()
 	return m_wrappedMachine->GetDisplay();
 }
 
-IEmulatedInput* MachineFeatures::GetInput()
+IEmulatedInput* MachineFeature::GetInput()
 {
 	if(m_wrappedMachine == NULL)
 		return NULL;
@@ -87,7 +87,7 @@ IEmulatedInput* MachineFeatures::GetInput()
 	return m_wrappedMachine->GetInput();
 }
 
-IEmulatedMemory* MachineFeatures::GetMemory()
+IEmulatedMemory* MachineFeature::GetMemory()
 {
 	if(m_wrappedMachine == NULL)
 		return NULL;
@@ -95,7 +95,7 @@ IEmulatedMemory* MachineFeatures::GetMemory()
 	return m_wrappedMachine->GetMemory();
 }
 
-IEmulatedProcessor* MachineFeatures::GetProcessor()
+IEmulatedProcessor* MachineFeature::GetProcessor()
 {
 	if(m_wrappedMachine == NULL)
 		return NULL;
@@ -103,7 +103,7 @@ IEmulatedProcessor* MachineFeatures::GetProcessor()
 	return m_wrappedMachine->GetProcessor();
 }
 
-IEmulatedSound* MachineFeatures::GetSound()
+IEmulatedSound* MachineFeature::GetSound()
 {
 	if(m_wrappedMachine == NULL)
 		return NULL;
@@ -113,7 +113,7 @@ IEmulatedSound* MachineFeatures::GetSound()
 
 
 //Machine info
-unsigned int MachineFeatures::GetFrameCount()
+unsigned int MachineFeature::GetFrameCount()
 {
 	if(m_wrappedMachine == NULL)
 		return 0;
@@ -121,7 +121,7 @@ unsigned int MachineFeatures::GetFrameCount()
 	return m_wrappedMachine->GetFrameCount();
 }
 
-unsigned int MachineFeatures::GetTicksPerSecond()
+unsigned int MachineFeature::GetTicksPerSecond()
 {
 	if(m_wrappedMachine == NULL)
 		return 1;
@@ -129,7 +129,7 @@ unsigned int MachineFeatures::GetTicksPerSecond()
 	return m_wrappedMachine->GetTicksPerSecond();
 }
 
-unsigned int MachineFeatures::GetTicksUntilNextFrame()
+unsigned int MachineFeature::GetTicksUntilNextFrame()
 {
 	if(m_wrappedMachine == NULL)
 		return (unsigned int)-1;
@@ -139,7 +139,7 @@ unsigned int MachineFeatures::GetTicksUntilNextFrame()
 
 
 //Execution
-void MachineFeatures::Step()
+void MachineFeature::Step()
 {
 	if(m_wrappedMachine == NULL)
 		return;
@@ -147,7 +147,7 @@ void MachineFeatures::Step()
 	m_wrappedMachine->Step();
 }
 
-void MachineFeatures::RunToNextFrame()
+void MachineFeature::RunToNextFrame()
 {
 	if(m_wrappedMachine == NULL)
 		return;
@@ -157,7 +157,7 @@ void MachineFeatures::RunToNextFrame()
 
 
 //Persistence
-void MachineFeatures::SaveState(Archive& archive)
+void MachineFeature::SaveState(Archive& archive)
 {
 	if(m_wrappedMachine == NULL)
 		return;
@@ -165,7 +165,7 @@ void MachineFeatures::SaveState(Archive& archive)
 	m_wrappedMachine->SaveState(archive);
 }
 
-void MachineFeatures::LoadState(Archive& archive)
+void MachineFeature::LoadState(Archive& archive)
 {
 	if(m_wrappedMachine == NULL)
 		return;
@@ -175,7 +175,7 @@ void MachineFeatures::LoadState(Archive& archive)
 
 
 //Debugging
-void MachineFeatures::EnableBreakpoint(int address)
+void MachineFeature::EnableBreakpoint(int address)
 {
 	if(m_wrappedMachine == NULL)
 		return;
@@ -183,7 +183,7 @@ void MachineFeatures::EnableBreakpoint(int address)
 	m_wrappedMachine->EnableBreakpoint(address);
 }
 
-void MachineFeatures::DisableBreakpoint(int address)
+void MachineFeature::DisableBreakpoint(int address)
 {
 	if(m_wrappedMachine == NULL)
 		return;

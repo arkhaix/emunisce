@@ -29,7 +29,7 @@
     <ClCompile Include="Emunisce.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MachineFeatures.cpp">
+    <ClCompile Include="MachineFeature.cpp">
       <Filter>Machine Features</Filter>
     </ClCompile>
   </ItemGroup>
@@ -46,7 +46,7 @@
     <ClInclude Include="Emunisce.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MachineFeatures.h">
+    <ClInclude Include="MachineFeature.h">
       <Filter>Machine Features</Filter>
     </ClInclude>
   </ItemGroup>
