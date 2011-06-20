@@ -36,6 +36,7 @@ using namespace Emunisce;
 #include "UserInterface.h"
 
 #include "MachineFeature.h"
+#include "Gui.h"
 
 #include "MachineRunner.h"
 #include "ConsoleDebugger.h"
@@ -56,6 +57,8 @@ public:
 	UserInterface* _UserInterface;
 
 	Window* _Window;
+
+	Gui* _Gui;
 
 	MachineFeature* _Machine;
 	IEmulatedMachine* _WrappedMachine;
@@ -81,7 +84,9 @@ public:
 
 		_Window = new Window();
 
-		_Machine = new MachineFeature();
+		_Gui = new Gui();
+
+		_Machine = _Gui;
 		_WrappedMachine = NULL;
 		_PendingMachine = NULL;
 
@@ -92,6 +97,8 @@ public:
 		_Renderer = new OpenGLRenderer();
 		_Input = new KeyboardInput();
 		_Sound = new WaveOutSound();
+
+		AdjustWindowSize();
 	}
 
 	~Phoenix_Private()
@@ -113,7 +120,9 @@ public:
 		delete _Debugger;
 		delete _Runner;
 
-		delete _Machine;
+		//delete _Machine;
+
+		delete _Gui;
 
 		if(_WrappedMachine)
 		{
@@ -130,7 +139,7 @@ public:
 	{
 		//Resize the window so that the client area is a whole multiple of the display resolution
 
-		if(_WrappedMachine == NULL)
+		if(_Machine == NULL)
 			return;
 
 		if(_Window == NULL)
@@ -183,6 +192,43 @@ public:
 
 			MoveWindow(windowHandle, windowRect.left, windowRect.top, (windowRect.right - windowRect.left), (windowRect.bottom - windowRect.top), TRUE);
 		}
+	}
+
+	void HandlePendingMachineChange()
+	{
+		if(_PendingMachine == NULL)
+			return;
+
+		IEmulatedMachine* newMachine = _PendingMachine;
+
+		if(newMachine != _Machine)
+		{
+			_Machine->SetMachine(newMachine);
+			_WrappedMachine = newMachine;
+		}
+
+		_UserInterface->SetMachine(_Machine);
+		_Runner->SetMachine(_Machine);
+		_Debugger->SetMachine(_Machine);
+
+		_Renderer->SetMachine(_Machine);
+		_Input->SetMachine(_Machine);
+		_Sound->SetMachine(_Machine);
+
+		//Start out at the native resolution
+		ScreenResolution resolution = _Machine->GetScreenResolution();
+
+		WindowSize size;
+		size.width = resolution.width;
+		size.height = resolution.height;
+		_Window->SetSize(size);
+
+		//Adjust to make up for borders, titlebar, menu, etc
+		AdjustWindowSize();
+
+		_Machine->SetApplicationInterface(this);
+
+		_PendingMachine = NULL;
 	}
 
 	std::string GetDataFolder()
@@ -378,6 +424,14 @@ EmunisceApplication::EmunisceApplication()
 	m_private->_Renderer->Initialize(this);
 	m_private->_Input->Initialize(this);
 	m_private->_Sound->Initialize(this);
+
+	//Calling HandlePendingMachineChange here with just the MachineFeature components 
+	//(no emulated machine yet) so we don't have to force a LoadROM immediately.
+	if(m_private->_Machine != NULL)
+	{
+		m_private->_PendingMachine = m_private->_Machine;
+		m_private->HandlePendingMachineChange();
+	}
 }
 
 EmunisceApplication::~EmunisceApplication()
@@ -394,30 +448,10 @@ void EmunisceApplication::RunWindow()
 
 	while(ShutdownRequested() == false)
 	{
-		if(m_private->_PendingMachine != NULL)
-		{
-			IEmulatedMachine* newMachine = m_private->_PendingMachine;
-
-			m_private->_Machine->SetMachine(newMachine);
-			m_private->_WrappedMachine = newMachine;
-
-			m_private->_UserInterface->SetMachine(m_private->_Machine);
-			m_private->_Runner->SetMachine(m_private->_Machine);
-			m_private->_Debugger->SetMachine(m_private->_Machine);
-
-			m_private->_Renderer->SetMachine(m_private->_Machine);
-			m_private->_Input->SetMachine(m_private->_Machine);
-			m_private->_Sound->SetMachine(m_private->_Machine);
-
-			m_private->AdjustWindowSize();
-
-			m_private->_Machine->SetApplicationInterface(m_private);
-
-			m_private->_PendingMachine = NULL;
-		}
+		m_private->HandlePendingMachineChange();
 
 		IEmulatedMachine* machine = GetMachine();
-		if(machine && m_private->_WrappedMachine)
+		if(machine)
 		{
 			if(m_private->_Renderer->GetLastFrameRendered() != machine->GetDisplay()->GetScreenBufferCount() && ShutdownRequested() == false)
 			{

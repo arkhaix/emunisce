@@ -87,6 +87,13 @@ void Window_Private::Create(int width, int height, const char* title, const char
 		m_hwndInstanceMapLock.Acquire();
 			m_hwndInstanceMap[m_windowHandle] = this;
 		m_hwndInstanceMapLock.Release();
+
+		RECT windowRect;
+		GetWindowRect(m_windowHandle, &windowRect);
+		m_position.x = windowRect.left;
+		m_position.y = windowRect.top;
+		m_size.width = windowRect.right - windowRect.left;
+		m_size.height = windowRect.bottom - windowRect.top;
 	}
 }
 
