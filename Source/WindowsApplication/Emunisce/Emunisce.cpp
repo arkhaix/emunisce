@@ -35,7 +35,7 @@ using namespace Emunisce;
 
 #include "UserInterface.h"
 
-#include "MachineFeatures.h"
+#include "MachineFeature.h"
 
 #include "MachineRunner.h"
 #include "ConsoleDebugger.h"
@@ -57,7 +57,7 @@ public:
 
 	Window* _Window;
 
-	MachineFeatures* _Machine;
+	MachineFeature* _Machine;
 	IEmulatedMachine* _WrappedMachine;
 	IEmulatedMachine* _PendingMachine;
 
@@ -81,7 +81,7 @@ public:
 
 		_Window = new Window();
 
-		_Machine = new MachineFeatures();
+		_Machine = new MachineFeature();
 		_WrappedMachine = NULL;
 		_PendingMachine = NULL;
 
