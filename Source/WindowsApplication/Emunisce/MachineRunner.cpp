@@ -175,7 +175,7 @@ DWORD MachineRunner::RunnerThread()
 		}
 		else if(m_stepMode == StepMode::Frame)
 		{
-			m_machine->RunOneFrame();
+			m_machine->RunToNextFrame();
 			Synchronize();
 		}
 	}

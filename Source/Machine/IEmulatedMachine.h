@@ -53,7 +53,7 @@ public:
 
 	//Execution
 	virtual void Step() = 0;
-	virtual void RunOneFrame() = 0;
+	virtual void RunToNextFrame() = 0;
 
 	//Persistence
 	virtual void SaveState(Archive& archive) = 0;
