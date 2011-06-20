@@ -265,6 +265,12 @@ void ConsoleDebugger::LoadROM(const char* filename)
 	printf("%s(%s)\n", __FUNCTION__, filename);
 
 	m_userInterface->LoadRom(filename);
+
+	if(m_breakpointsEnabled == false)
+	{
+		SetForegroundWindow((HWND)m_phoenix->GetWindow()->GetHandle());
+		SetFocus((HWND)m_phoenix->GetWindow()->GetHandle());
+	}
 }
 
 void ConsoleDebugger::Reset()
