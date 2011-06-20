@@ -87,14 +87,6 @@ void ConsoleDebugger::Run()
 {
 	SetupConsole();
 
-	LoadROM(NULL);
-
-	if(m_machine == NULL)
-	{
-		m_phoenix->RequestShutdown();
-		return;
-	}
-
 	RunMachine();
 
 	while(m_phoenix->ShutdownRequested() == false)

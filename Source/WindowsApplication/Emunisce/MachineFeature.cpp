@@ -25,7 +25,35 @@ using namespace Emunisce;
 
 MachineFeature::MachineFeature()
 {
+	m_hasFocus = false;
+
 	m_wrappedMachine = NULL;
+
+	m_wrappedDisplay = NULL;
+	m_wrappedInput = NULL;
+	m_wrappedMemory = NULL;
+	m_wrappedProcessor = NULL;
+	m_wrappedSound = NULL;
+
+	m_featureDisplay = NULL;
+	m_featureInput = NULL;
+	m_featureMemory = NULL;
+	m_featureProcessor = NULL;
+	m_featureSound = NULL;
+
+	m_defaultScreenResolution.width = 640;
+	m_defaultScreenResolution.height = 480;
+
+	for(int y=0;y<m_defaultScreenBuffer.GetHeight();y++)
+		for(int x=0;x<m_defaultScreenBuffer.GetWidth();x++)
+			m_defaultScreenBuffer.SetPixel(x, y, (DisplayPixel)0);
+	
+	m_defaultAudioBuffer.NumSamples = m_defaultAudioBuffer.BufferSizeSamples;
+	for(unsigned int i=0;i<m_defaultAudioBuffer.NumSamples;i++)
+	{
+		m_defaultAudioBuffer.Samples[0][i] = SilentSample;
+		m_defaultAudioBuffer.Samples[1][i] = SilentSample;
+	}
 }
 
 MachineFeature::~MachineFeature()
@@ -36,6 +64,23 @@ MachineFeature::~MachineFeature()
 void MachineFeature::SetMachine(IEmulatedMachine* wrappedMachine)
 {
 	m_wrappedMachine = wrappedMachine;
+
+	if(m_wrappedMachine != NULL)
+	{
+		m_wrappedDisplay = wrappedMachine->GetDisplay();
+		m_wrappedInput = wrappedMachine->GetInput();
+		m_wrappedMemory = wrappedMachine->GetMemory();
+		m_wrappedProcessor = wrappedMachine->GetProcessor();
+		m_wrappedSound = wrappedMachine->GetSound();
+	}
+	else
+	{
+		m_wrappedDisplay = NULL;
+		m_wrappedInput = NULL;
+		m_wrappedMemory = NULL;
+		m_wrappedProcessor = NULL;
+		m_wrappedSound = NULL;
+	}
 }
 
 
@@ -73,42 +118,27 @@ void MachineFeature::SetApplicationInterface(IMachineToApplication* applicationI
 //Component access
 IEmulatedDisplay* MachineFeature::GetDisplay()
 {
-	if(m_wrappedMachine == NULL)
-		return NULL;
-
-	return m_wrappedMachine->GetDisplay();
+	return this;
 }
 
 IEmulatedInput* MachineFeature::GetInput()
 {
-	if(m_wrappedMachine == NULL)
-		return NULL;
-
-	return m_wrappedMachine->GetInput();
+	return this;
 }
 
 IEmulatedMemory* MachineFeature::GetMemory()
 {
-	if(m_wrappedMachine == NULL)
-		return NULL;
-
-	return m_wrappedMachine->GetMemory();
+	return this;
 }
 
 IEmulatedProcessor* MachineFeature::GetProcessor()
 {
-	if(m_wrappedMachine == NULL)
-		return NULL;
-
-	return m_wrappedMachine->GetProcessor();
+	return this;
 }
 
 IEmulatedSound* MachineFeature::GetSound()
 {
-	if(m_wrappedMachine == NULL)
-		return NULL;
-
-	return m_wrappedMachine->GetSound();
+	return this;
 }
 
 
@@ -191,3 +221,196 @@ void MachineFeature::DisableBreakpoint(int address)
 	m_wrappedMachine->DisableBreakpoint(address);
 }
 
+
+// IEmulatedDisplay
+
+ScreenResolution MachineFeature::GetScreenResolution()
+{
+	if( (m_hasFocus || m_wrappedDisplay == NULL) && m_featureDisplay != NULL )
+	{
+		return m_featureDisplay->GetScreenResolution();
+	}
+
+	if(m_wrappedDisplay != NULL)
+	{
+		return m_wrappedDisplay->GetScreenResolution();
+	}
+
+	return m_defaultScreenResolution;
+}
+
+ScreenBuffer* MachineFeature::GetStableScreenBuffer()
+{
+	if( (m_hasFocus || m_wrappedDisplay == NULL) && m_featureDisplay != NULL )
+	{
+		return m_featureDisplay->GetStableScreenBuffer();
+	}
+
+	if(m_wrappedDisplay != NULL)
+	{
+		return m_wrappedDisplay->GetStableScreenBuffer();
+	}
+
+	return &m_defaultScreenBuffer;
+}
+
+int MachineFeature::GetScreenBufferCount()
+{
+	if( (m_hasFocus || m_wrappedDisplay == NULL) && m_featureDisplay != NULL )
+	{
+		return m_featureDisplay->GetScreenBufferCount();
+	}
+
+	if(m_wrappedDisplay != NULL)
+	{
+		return m_wrappedDisplay->GetScreenBufferCount();
+	}
+
+	return 0;
+}
+
+
+void MachineFeature::SetFilter(DisplayFilter::Type filter)
+{
+	if( (m_hasFocus || m_wrappedDisplay == NULL) && m_featureDisplay != NULL )
+	{
+		return m_featureDisplay->SetFilter(filter);
+	}
+
+	if(m_wrappedDisplay != NULL)
+	{
+		return m_wrappedDisplay->SetFilter(filter);
+	}
+
+	return;
+}
+
+
+
+// IEmulatedInput
+
+unsigned int MachineFeature::NumButtons()
+{
+	unsigned int result = 0;
+
+	if( (m_hasFocus || m_wrappedInput == NULL) && m_featureInput != NULL )
+	{
+		result += m_featureInput->NumButtons();
+	}
+
+	if(m_wrappedInput != NULL)
+	{
+		result += m_wrappedInput->NumButtons();
+	}
+
+	return result;
+}
+
+const char* MachineFeature::GetButtonName(unsigned int index)
+{
+	if( (m_hasFocus || m_wrappedInput == NULL) && m_featureInput != NULL )
+	{
+		if(index < m_featureInput->NumButtons())
+			return m_featureInput->GetButtonName(index);
+
+		index -= m_featureInput->NumButtons();
+	}
+
+	if(m_wrappedInput != NULL)
+	{
+		return m_wrappedInput->GetButtonName(index);
+	}
+
+	return NULL;
+}
+
+
+void MachineFeature::ButtonDown(unsigned int index)
+{
+	if( (m_hasFocus || m_wrappedInput == NULL) && m_featureInput != NULL )
+	{
+		if(index < m_featureInput->NumButtons())
+			return m_featureInput->ButtonDown(index);
+
+		index -= m_featureInput->NumButtons();
+	}
+
+	if(m_wrappedInput != NULL)
+	{
+		return m_wrappedInput->ButtonDown(index);
+	}
+
+	return;
+}
+
+void MachineFeature::ButtonUp(unsigned int index)
+{
+	if( (m_hasFocus || m_wrappedInput == NULL) && m_featureInput != NULL )
+	{
+		if(index < m_featureInput->NumButtons())
+			return m_featureInput->ButtonUp(index);
+
+		index -= m_featureInput->NumButtons();
+	}
+
+	if(m_wrappedInput != NULL)
+	{
+		return m_wrappedInput->ButtonUp(index);
+	}
+
+	return;
+}
+
+
+
+// IEmulatedMemory
+
+// IEmulatedProcessor
+
+// IEmulatedSound
+
+AudioBuffer MachineFeature::GetStableAudioBuffer()
+{
+	if( (m_hasFocus || m_wrappedSound == NULL) && m_featureSound != NULL )
+	{
+		return m_featureSound->GetStableAudioBuffer();
+	}
+
+	if(m_wrappedSound != NULL)
+	{
+		return m_wrappedSound->GetStableAudioBuffer();
+	}
+
+	return m_defaultAudioBuffer;
+}
+
+int MachineFeature::GetAudioBufferCount()
+{
+	if( (m_hasFocus || m_wrappedSound == NULL) && m_featureSound != NULL )
+	{
+		return m_featureSound->GetAudioBufferCount();
+	}
+
+	if(m_wrappedSound != NULL)
+	{
+		return m_wrappedSound->GetAudioBufferCount();
+	}
+
+	return 0;
+}
+
+
+void MachineFeature::SetSquareSynthesisMethod(SquareSynthesisMethod::Type method)
+{
+	if( (m_hasFocus || m_wrappedSound == NULL) && m_featureSound != NULL )
+	{
+		return m_featureSound->SetSquareSynthesisMethod(method);
+	}
+
+	if(m_wrappedSound != NULL)
+	{
+		return m_wrappedSound->SetSquareSynthesisMethod(method);
+	}
+
+	return;
+}

@@ -32,6 +32,9 @@
     <ClCompile Include="MachineFeature.cpp">
       <Filter>Machine Features</Filter>
     </ClCompile>
+    <ClCompile Include="Gui.cpp">
+      <Filter>Machine Features</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConsoleDebugger.h">
@@ -47,6 +50,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MachineFeature.h">
+      <Filter>Machine Features</Filter>
+    </ClInclude>
+    <ClInclude Include="Gui.h">
       <Filter>Machine Features</Filter>
     </ClInclude>
   </ItemGroup>

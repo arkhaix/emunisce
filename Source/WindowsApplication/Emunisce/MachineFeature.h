@@ -26,16 +26,16 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class MachineFeature : public IEmulatedMachine
+class MachineFeature : public IEmulatedMachine, public IEmulatedDisplay, public IEmulatedInput, public IEmulatedMemory, public IEmulatedProcessor, public IEmulatedSound
 {
 public:
 
-	// MachineFeatures
+	// MachineFeature
 
 	MachineFeature();
-	~MachineFeature();
+	virtual ~MachineFeature();
 
-	void SetMachine(IEmulatedMachine* wrappedMachine);
+	virtual void SetMachine(IEmulatedMachine* wrappedMachine);
 
 
 	// IEmulatedMachine
@@ -72,9 +72,57 @@ public:
 	virtual void DisableBreakpoint(int address);
 
 
-private:
+	// IEmulatedDisplay
+
+	virtual ScreenResolution GetScreenResolution();
+	virtual ScreenBuffer* GetStableScreenBuffer();
+	virtual int GetScreenBufferCount();
+
+	virtual void SetFilter(DisplayFilter::Type filter);
+
+
+	// IEmulatedInput
+
+	virtual unsigned int NumButtons();
+	virtual const char* GetButtonName(unsigned int index);
+
+	virtual void ButtonDown(unsigned int index);
+	virtual void ButtonUp(unsigned int index);
+
+
+	// IEmulatedMemory
+
+	// IEmulatedProcessor
+
+	// IEmulatedSound
+
+	virtual AudioBuffer GetStableAudioBuffer();
+	virtual int GetAudioBufferCount();
+
+	virtual void SetSquareSynthesisMethod(SquareSynthesisMethod::Type method);
+
+
+protected:
+
+	bool m_hasFocus;
 
 	IEmulatedMachine* m_wrappedMachine;
+
+	IEmulatedDisplay* m_wrappedDisplay;
+	IEmulatedInput* m_wrappedInput;
+	IEmulatedMemory* m_wrappedMemory;
+	IEmulatedProcessor* m_wrappedProcessor;
+	IEmulatedSound* m_wrappedSound;
+
+	IEmulatedDisplay* m_featureDisplay;
+	IEmulatedInput* m_featureInput;
+	IEmulatedMemory* m_featureMemory;
+	IEmulatedProcessor* m_featureProcessor;
+	IEmulatedSound* m_featureSound;
+
+	ScreenResolution m_defaultScreenResolution;
+	TScreenBuffer<640, 480> m_defaultScreenBuffer;
+	AudioBuffer m_defaultAudioBuffer;
 };
 
 }	//namespace Emunisce
