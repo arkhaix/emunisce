@@ -74,8 +74,8 @@ private:
 
 	void Speed(float multiplier);
 
-	void SaveState(unsigned int id);
-	void LoadState(unsigned int id);
+	void SaveState(const char* id);
+	void LoadState(const char* id);
 
 	void ToggleBreakpoint(int address);
 	void ListBreakpoints();

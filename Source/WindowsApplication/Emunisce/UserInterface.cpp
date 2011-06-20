@@ -101,12 +101,12 @@ void UserInterface::StepFrame()
 }
 
 
-void UserInterface::SaveState(unsigned int id)
+void UserInterface::SaveState(const char* id)
 {
 	m_phoenix->SaveState(id);
 }
 
-void UserInterface::LoadState(unsigned int id)
+void UserInterface::LoadState(const char* id)
 {
 	m_phoenix->LoadState(id);
 }

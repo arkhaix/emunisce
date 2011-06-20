@@ -227,7 +227,7 @@ public:
 		return std::string(path);
 	}
 
-	std::string GetCurrentSaveStateFile(unsigned int id)
+	std::string GetCurrentSaveStateFile(const char* id)
 	{
 		char file[MAX_PATH] = {0};
 
@@ -235,7 +235,7 @@ public:
 		strcpy_s(file, MAX_PATH, path.c_str());
 
 		char idStr[MAX_PATH];
-		sprintf_s(idStr, MAX_PATH, "%d.ess", id);
+		sprintf_s(idStr, MAX_PATH, "%s.ess", id);
 
 		PathAppend(file, idStr);
 
@@ -499,7 +499,7 @@ void EmunisceApplication::ResetRom()
 	LoadRom(m_private->_LastRomLoaded.c_str());
 }
 
-void EmunisceApplication::SaveState(unsigned int id)
+void EmunisceApplication::SaveState(const char* id)
 {
 	std::string file = m_private->GetCurrentSaveStateFile(id);
 
@@ -519,7 +519,7 @@ void EmunisceApplication::SaveState(unsigned int id)
 	fs.CloseFile();
 }
 
-void EmunisceApplication::LoadState(unsigned int id)
+void EmunisceApplication::LoadState(const char* id)
 {
 	std::string file = m_private->GetCurrentSaveStateFile(id);
 
