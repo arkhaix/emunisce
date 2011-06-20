@@ -200,10 +200,10 @@ void ConsoleDebugger::FetchCommand()
 	COMMAND1("speed", Speed((float)strtod(args[1].c_str(), NULL)))
 	COMMAND1("sp", Speed((float)strtod(args[1].c_str(), NULL)))
 
-	COMMAND1("savestate", SaveState(strtol(args[1].c_str(), NULL, 10)))
-	COMMAND1("ss", SaveState(strtol(args[1].c_str(), NULL, 10)))
-	COMMAND1("loadstate", LoadState(strtol(args[1].c_str(), NULL, 10)))
-	COMMAND1("ls", LoadState(strtol(args[1].c_str(), NULL, 10)))
+	COMMAND1("savestate", SaveState(args[1].c_str()))
+	COMMAND1("ss", SaveState(args[1].c_str()))
+	COMMAND1("loadstate", LoadState(args[1].c_str()))
+	COMMAND1("ls", LoadState(args[1].c_str()))
 
 	COMMAND1("breakpoint", ToggleBreakpoint(strtol(args[1].c_str(), NULL, 16)))
 	COMMAND1("break", ToggleBreakpoint(strtol(args[1].c_str(), NULL, 16)))
@@ -347,12 +347,12 @@ void ConsoleDebugger::Speed(float multiplier)
 }
 
 
-void ConsoleDebugger::SaveState(unsigned int id)
+void ConsoleDebugger::SaveState(const char* id)
 {
 	m_userInterface->SaveState(id);
 }
 
-void ConsoleDebugger::LoadState(unsigned int id)
+void ConsoleDebugger::LoadState(const char* id)
 {
 	m_userInterface->LoadState(id);
 }
