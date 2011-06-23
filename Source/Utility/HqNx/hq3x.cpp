@@ -19,9 +19,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
-#include <string.h>
-#include <windows.h>
 
 static int   LUT16to32[65536];
 static int   RGBtoYUV[65536];
