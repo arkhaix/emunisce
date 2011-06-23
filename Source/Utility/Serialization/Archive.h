@@ -45,7 +45,7 @@ class Archive
 {
 public:
 
-	Archive::Archive(ISerializer* serializer, ArchiveMode::Type archiveMode);
+	Archive(ISerializer* serializer, ArchiveMode::Type archiveMode);
 
 	ArchiveMode::Type GetArchiveMode();
 

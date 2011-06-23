@@ -256,7 +256,7 @@ public:
 		char path[MAX_PATH];
 
 		std::string dataFolder = GetDataFolder();
-		strcpy_s(path, MAX_PATH, dataFolder.c_str());
+		strcpy(path, dataFolder.c_str());
 
 		PathAppend(path, "SaveStates");
 
@@ -270,7 +270,7 @@ public:
 		char path[MAX_PATH] = {0};
 
 		std::string basePath = GetBaseSaveStateFolder();
-		strcpy_s(path, MAX_PATH, basePath.c_str());
+		strcpy(path, basePath.c_str());
 
 		PathAppend(path, EmulatedMachine::ToString[ _Machine->GetType() ]);
 		PathAppend(path, _Machine->GetRomTitle());
@@ -285,10 +285,10 @@ public:
 		char file[MAX_PATH] = {0};
 
 		std::string path = GetCurrentSaveStateFolder();
-		strcpy_s(file, MAX_PATH, path.c_str());
+		strcpy(file, path.c_str());
 
 		char idStr[MAX_PATH];
-		sprintf_s(idStr, MAX_PATH, "%s.ess", id);
+		sprintf(idStr, "%s.ess", id);
 
 		PathAppend(file, idStr);
 
@@ -300,7 +300,7 @@ public:
 		char path[MAX_PATH];
 
 		std::string dataFolder = GetDataFolder();
-		strcpy_s(path, MAX_PATH, dataFolder.c_str());
+		strcpy(path, dataFolder.c_str());
 
 		PathAppend(path, "RomData");
 
@@ -314,7 +314,7 @@ public:
 		char path[MAX_PATH] = {0};
 
 		std::string basePath = GetBaseRomDataFolder();
-		strcpy_s(path, MAX_PATH, basePath.c_str());
+		strcpy(path, basePath.c_str());
 
 		PathAppend(path, EmulatedMachine::ToString[ _Machine->GetType() ]);
 		PathAppend(path, _Machine->GetRomTitle());
@@ -329,7 +329,7 @@ public:
 		char file[MAX_PATH] = {0};
 
 		std::string path = GetCurrentRomDataFolder();
-		strcpy_s(file, MAX_PATH, path.c_str());
+		strcpy(file, path.c_str());
 
 		std::string filename = std::string(name) + std::string(".erd");
 		PathAppend(file, filename.c_str());

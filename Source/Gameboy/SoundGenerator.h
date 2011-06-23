@@ -30,6 +30,8 @@ class Archive;
 
 class Gameboy;
 class ChannelController;
+class EnvelopeUnit;
+class LengthUnit;
 
 
 class SoundGenerator

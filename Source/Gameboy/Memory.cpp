@@ -20,11 +20,11 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "Memory.h"
 using namespace Emunisce;
 
-//CRT
+//System
+#include <cstring>
 #include <ctime>
-
-//STL
 #include <fstream>
+#include <memory.h>
 using namespace std;
 
 //Project
@@ -405,7 +405,7 @@ void Memory::LoadBootRom(const char* filename)
 
 		//Copy the default boot rom to the end of the boot rom space (so that it finishes at 0x100 where the cart starts)
 		int beginAddress = 0x100 - sizeof(defaultBootRom);
-		memcpy_s((void*)(&m_bootRom[beginAddress]), 0x100-beginAddress, (void*)(&defaultBootRom[0]), sizeof(defaultBootRom));
+		memcpy((void*)(&m_bootRom[beginAddress]), (void*)(&defaultBootRom[0]), sizeof(defaultBootRom));
 
 		m_bootRomEnabled = true;
 		return;

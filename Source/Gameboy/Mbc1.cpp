@@ -20,7 +20,10 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "Mbc1.h"
 using namespace Emunisce;
 
+#include <cstdlib>
+#include <cstring>
 #include <fstream>
+#include <memory.h>
 using namespace std;
 
 #include "Serialization/SerializationIncludes.h"
@@ -142,9 +145,9 @@ bool Mbc1::LoadFile(const char* filename)
 
 	//Save the filename
 
-	strcpy_s(m_romFilename, 1024, filename);
-	strcpy_s(m_sramFilename, 1024, filename);
-	strcat_s(m_sramFilename, 1024, ".sram");
+	strcpy(m_romFilename, filename);
+	strcpy(m_sramFilename, filename);
+	strcat(m_sramFilename, ".sram");
 
 
 	//Load all the banks
@@ -165,7 +168,7 @@ bool Mbc1::LoadFile(const char* filename)
 
 	//Copy the first two ROM banks to active memory
 
-	memcpy_s((void*)(&m_memoryData[0x0000]), 0x10000, (void*)(&m_romBanks[0][0]), 0x4000);
+	memcpy((void*)(&m_memoryData[0x0000]), (void*)(&m_romBanks[0][0]), 0x4000);
 
 	m_selectedRomBank = 1;
 	SwitchROM();
@@ -216,12 +219,12 @@ bool Mbc1::LoadFile(const char* filename)
 
 void Mbc1::SwitchROM()
 {
-	memcpy_s((void*)(&m_memoryData[0x4000]), (0x10000 - 0x4000), (void*)(&m_romBanks[m_selectedRomBank][0]), 0x4000);
+	memcpy((void*)(&m_memoryData[0x4000]), (void*)(&m_romBanks[m_selectedRomBank][0]), 0x4000);
 }
 
 void Mbc1::SwitchRAM()
 {
-	memcpy_s((void*)(&m_memoryData[0xa000]), (0x10000 - 0xa000), (void*)(&m_ramBanks[m_selectedRamBank][0]), 0x2000);
+	memcpy((void*)(&m_memoryData[0xa000]), (void*)(&m_ramBanks[m_selectedRamBank][0]), 0x2000);
 }
 
 void Mbc1::SaveRAM()
