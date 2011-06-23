@@ -1,0 +1,24 @@
+# depslib dependency file v1.0
+1308868939 source:/home/aj/emunisce/Source/LinuxPlatform/Mutex.cpp
+	"Mutex.h"
+
+1308867683 /home/aj/emunisce/Source/LinuxPlatform/Mutex.h
+
+1308867683 source:/home/aj/emunisce/Source/LinuxPlatform/Window.cpp
+	"Window.h"
+	"Window_Internal.h"
+
+1308867683 /home/aj/emunisce/Source/LinuxPlatform/Window.h
+
+1308868900 /home/aj/emunisce/Source/LinuxPlatform/Window_Internal.h
+	<list>
+	<map>
+	<set>
+	"Window.h"
+	"Mutex.h"
+
+1308869059 source:/home/aj/emunisce/Source/LinuxPlatform/Window_Internal.cpp
+	"Window_Internal.h"
+	<algorithm>
+	<cstdio>
+

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="Emunisce">
+		<Project filename="Utility/Serialization/Serialization.cbp" />
+		<Project filename="LinuxPlatform/LinuxPlatform.cbp" />
+		<Project filename="Utility/HqNx/HqNx.cbp" />
+		<Project filename="Machine/Machine.cbp" />
+		<Project filename="Gameboy/Gameboy.cbp" active="1" />
+	</Workspace>
+</CodeBlocks_workspace_file>

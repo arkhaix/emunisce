@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Serialization" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="default">
+				<Option output="libSerialization" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+			</Target>
+		</Build>
+		<Compiler>
+			<Add directory="../../LinuxPlatform" />
+		</Compiler>
+		<Unit filename="Archive.cpp" />
+		<Unit filename="Archive.h" />
+		<Unit filename="FileSerializer.cpp" />
+		<Unit filename="FileSerializer.h" />
+		<Unit filename="ISerializer.h" />
+		<Unit filename="MemorySerializer.cpp" />
+		<Unit filename="MemorySerializer.h" />
+		<Unit filename="SerializationIncludes.h" />
+		<Unit filename="SerializeItem.cpp" />
+		<Unit filename="SerializeItem.h" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
