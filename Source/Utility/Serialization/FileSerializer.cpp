@@ -22,12 +22,14 @@ using namespace Emunisce;
 
 #include "Archive.h"
 
+#include <string.h>
+
 
 FileSerializer::FileSerializer()
 {
 	m_fileStream = NULL;
 
-	strcpy_s(m_filename, 1024, "");
+	strcpy(m_filename, "");
 	m_archiveMode = -1;
 }
 
@@ -39,7 +41,7 @@ FileSerializer::~FileSerializer()
 
 void FileSerializer::SetFile(const char* filename)
 {
-	strcpy_s(m_filename, 1024, filename);
+	strcpy(m_filename, filename);
 	OpenStream();
 }
 

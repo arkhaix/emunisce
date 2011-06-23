@@ -245,13 +245,12 @@ vector<string> ConsoleDebugger::SplitCommand(string command)
 	char* input = const_cast<char*>(command.c_str());
 	const char* separators = " \t\n";
 	char* token = NULL;
-	char* context = NULL;
 
-	token = strtok_s(input, separators, &context);
+	token = strtok(input, separators);
 	while(token != NULL)
 	{
 		result.push_back(string(token));
-		token = strtok_s(NULL, separators, &context);
+		token = strtok(NULL, separators);
 	}
 
 	return result;

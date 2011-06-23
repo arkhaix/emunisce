@@ -179,7 +179,7 @@ bool UserInterface::SelectFile(char** result, const char* fileMask)
 	if(GetOpenFileName(&openDialog))
 	{
 		*result = (char*)malloc(MAX_PATH);
-		strcpy_s(*result, MAX_PATH, selectedFile);
+		strcpy(*result, selectedFile);
 		return true;
 	}
 
