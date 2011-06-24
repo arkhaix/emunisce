@@ -31,6 +31,7 @@ using namespace std;
 #include <conio.h>
 #include <fcntl.h>
 #include <io.h>
+#include <stdio.h>
 
 //Platform
 #include "PlatformIncludes.h"
@@ -200,7 +201,7 @@ void ConsoleDebugger::FetchCommand()
 	COMMAND1("breakpoint", ToggleBreakpoint(strtol(args[1].c_str(), NULL, 16)))
 	COMMAND1("break", ToggleBreakpoint(strtol(args[1].c_str(), NULL, 16)))
 	COMMAND1("b", ToggleBreakpoint(strtol(args[1].c_str(), NULL, 16)))
-	
+
 	COMMAND0("breakpoints", ListBreakpoints())
 	COMMAND0("breakpoint", ListBreakpoints())
 	COMMAND0("break", ListBreakpoints())
@@ -358,7 +359,7 @@ void ConsoleDebugger::LoadState(const char* id)
 void ConsoleDebugger::ToggleBreakpoint(int address)
 {
 	printf("%s(%x)\n", __FUNCTION__, address);
-	
+
 	u16 gbAddress = (u16)address;
 	auto iter = m_breakpoints.find(gbAddress);
 	if(iter == m_breakpoints.end())
