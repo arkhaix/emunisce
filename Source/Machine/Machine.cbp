@@ -9,7 +9,7 @@
 			<Target title="Debug">
 				<Option output="libMachine" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj/Debug/" />
+				<Option object_output="obj\Debug\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -21,7 +21,7 @@
 			<Target title="Release">
 				<Option output="libMachine" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj/Release/" />
+				<Option object_output="obj\Release\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -35,10 +35,11 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add directory="../LinuxPlatform" />
-			<Add directory="../Gameboy" />
-			<Add directory="../Machine" />
-			<Add directory="../Utility" />
+			<Add option="-std=c++0x" />
+			<Add directory="..\LinuxPlatform" />
+			<Add directory="..\Gameboy" />
+			<Add directory="..\Machine" />
+			<Add directory="..\Utility" />
 		</Compiler>
 		<Unit filename="IEmulatedDisplay.h" />
 		<Unit filename="IEmulatedInput.h" />
@@ -59,6 +60,7 @@
 		<Extensions>
 			<code_completion />
 			<debugger />
+			<envvars />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

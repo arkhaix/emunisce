@@ -34,5 +34,8 @@
     <ClInclude Include="PlatformTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PlatformIncludes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

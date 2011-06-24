@@ -17,6 +17,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mutex.h" />
+    <ClInclude Include="PlatformIncludes.h" />
     <ClInclude Include="PlatformTypes.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="Window_Internal.h" />
