@@ -18,6 +18,9 @@ You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//todo: ifdef stuff
+//This is a convenience header for pulling in all platform layer types
 
-#include "../WindowsPlatform/Mutex.h"
+#include "PlatformTypes.h"
+
+#include "Mutex.h"
+#include "Window.h"
