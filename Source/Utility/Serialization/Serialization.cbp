@@ -16,7 +16,7 @@
 		</Build>
 		<Compiler>
 			<Add option="-std=c++0x" />
-			<Add directory="..\..\LinuxPlatform" />
+			<Add directory="..\..\Platform" />
 		</Compiler>
 		<Unit filename="Archive.cpp" />
 		<Unit filename="Archive.h" />

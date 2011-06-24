@@ -366,7 +366,7 @@ public:
 
 		ifile.seekg(0, std::ios::beg);
 		unsigned int beginPosition = (int)ifile.tellg();
-		
+
 		ifile.seekg(0, std::ios::end);
 		unsigned int endPosition = (int)ifile.tellg();
 
@@ -403,7 +403,7 @@ public:
 	{
 		AdjustWindowSize();
 	}
-	
+
 	void KeyDown(int key)
 	{
 	}
@@ -432,7 +432,7 @@ EmunisceApplication::EmunisceApplication()
 	m_private->_Input->Initialize(this);
 	m_private->_Sound->Initialize(this);
 
-	//Calling HandlePendingMachineChange here with just the MachineFeature components 
+	//Calling HandlePendingMachineChange here with just the MachineFeature components
 	//(no emulated machine yet) so we don't have to force a LoadROM immediately.
 	if(m_private->_Machine != NULL)
 	{

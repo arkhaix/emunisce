@@ -36,7 +36,7 @@
 		</Build>
 		<Compiler>
 			<Add option="-std=c++0x" />
-			<Add directory="..\..\LinuxPlatform" />
+			<Add directory="..\..\Platform" />
 			<Add directory="..\..\Machine" />
 		</Compiler>
 		<Unit filename="HqNx.cpp" />

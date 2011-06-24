@@ -96,12 +96,12 @@ ScreenBuffer* Display::GetStableScreenBuffer()
 	m_screenBufferCopy = *m_stableScreenBuffer;
 	m_filteredScreenBufferCopy = &m_screenBufferCopy;
 
-	if(m_displayFilter == DisplayFilter::Hq2x)
-		m_filteredScreenBufferCopy = HqNx::Hq2x(&m_screenBufferCopy);
-	else if(m_displayFilter == DisplayFilter::Hq3x)
-		m_filteredScreenBufferCopy = HqNx::Hq3x(&m_screenBufferCopy);
-	else if(m_displayFilter == DisplayFilter::Hq4x)
-		m_filteredScreenBufferCopy = HqNx::Hq4x(&m_screenBufferCopy);
+	//if(m_displayFilter == DisplayFilter::Hq2x)
+	//	m_filteredScreenBufferCopy = HqNx::Hq2x(&m_screenBufferCopy);
+	//else if(m_displayFilter == DisplayFilter::Hq3x)
+	//	m_filteredScreenBufferCopy = HqNx::Hq3x(&m_screenBufferCopy);
+	//else if(m_displayFilter == DisplayFilter::Hq4x)
+	//	m_filteredScreenBufferCopy = HqNx::Hq4x(&m_screenBufferCopy);
 
 	return m_filteredScreenBufferCopy;
 }
@@ -193,7 +193,7 @@ void Display::Serialize(Archive& archive)
 	SerializeItem(archive, m_currentState);
 	SerializeItem(archive, m_stateTicksRemaining);
 	SerializeItem(archive, m_vblankScanlineTicksRemaining);
-	
+
 	SerializeItem(archive, m_screenBufferCount);
 
 	//SerializeItem(archive, m_displayFilter);
@@ -203,7 +203,7 @@ void Display::Serialize(Archive& archive)
 
 	SerializeItem(archive, m_nextPixelToRenderX);
 	SerializeItem(archive, m_ticksSpentThisScanline);
-	
+
 	for(int i=0;i<160;i++)
 		SerializeItem(archive, m_spriteHasPriority[i]);
 
@@ -380,7 +380,7 @@ void Display::Begin_VBlank()
 	//Unlock vram and oam
 	m_memory->SetVramLock(false);
 	m_memory->SetOamLock(false);
-	
+
 	//VBlank interrupt
 	u8 interrupts = m_memory->Read8(REG_IF);
 	interrupts |= IF_VBLANK;
@@ -576,7 +576,7 @@ void Display::RenderWindowPixel(int screenX, int screenY)
 	//Visible?
 	if(screenX + 7 < m_windowX || screenY < m_windowY)
 		return;
-	
+
 	//Cached?
 	DisplayPixel cachedValue = m_frameWindowData.GetPixel(screenX, screenY);
 	if(cachedValue != PIXEL_NOT_CACHED)
@@ -704,8 +704,7 @@ void Display::RenderSprites(int screenY)
 		int tileX = 0;
 		int cacheScreenX = spriteX;
 
-		int tileY = screenY - spriteY;
-		int cacheScreenY = screenY;
+		int cacheScreenY = screenY; ///<todo: This is leftover from when full tiles were cached (as opposed to only the current line).  It's safe to remove this.
 
 		while(tileX <= 7)
 		{
@@ -849,7 +848,7 @@ void Display::UpdateTileData(u16 address, u8 data)
 	int cacheTileAddress = tileIndex * 64;
 	int changedLine = (lineAddress % 16) / 2;	///<16 bytes per tile, 2 bytes per line
 	int cacheLineAddress = cacheTileAddress + (changedLine * 8);	///<Starting address of the line within the cache
-	
+
 	//Update the cache
 	for(int x=0;x<8;x++)
 	{

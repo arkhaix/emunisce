@@ -36,10 +36,13 @@
 		</Build>
 		<Compiler>
 			<Add option="-std=c++0x" />
-			<Add directory="..\LinuxPlatform" />
+			<Add directory="..\Platform" />
 			<Add directory="..\Machine" />
 			<Add directory="..\Utility" />
 		</Compiler>
+		<Linker>
+			<Add library="..\Utility\HqNx\libHqNx.a" />
+		</Linker>
 		<Unit filename="ChannelController.cpp" />
 		<Unit filename="ChannelController.h" />
 		<Unit filename="Cpu.cpp" />
