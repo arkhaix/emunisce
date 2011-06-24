@@ -19,5 +19,10 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 //todo: ifdef stuff
-
-#include "../WindowsPlatform/PlatformTypes.h"
+#if defined __linux__
+    #include "../LinuxPlatform/PlatformTypes.h"
+#elif defined _WIN32 || defined _WIN64
+    #include "../WindowsPlatform/PlatformTypes.h"
+#else
+    #error "unknown platform"
+#endif

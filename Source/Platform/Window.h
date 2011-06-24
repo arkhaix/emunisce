@@ -18,6 +18,11 @@ You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//todo: ifdef stuff
+#if defined __linux__
+    #include "../LinuxPlatform/Window.h"
+#elif defined _WIN32 || defined _WIN64
+    #include "../WindowsPlatform/Window.h"
+#else
+    #error "unknown platform"
+#endif
 
-#include "../WindowsPlatform/Window.h"
