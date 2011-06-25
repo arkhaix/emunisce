@@ -26,8 +26,10 @@
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Compiler>
+					<Add option="-march=core2" />
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-O3" />
 					<Add option="-Wall" />
-					<Add option="-O2" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -36,6 +38,7 @@
 		</Build>
 		<Compiler>
 			<Add option="-std=c++0x" />
+			<Add option="-Wall" />
 			<Add directory="..\Platform" />
 			<Add directory="..\Gameboy" />
 			<Add directory="..\Machine" />

@@ -22,7 +22,6 @@ using namespace Emunisce;
 
 #include "GameboyIncludes.h"
 
-#include "HqNx/HqNx.h"	///<from Utility
 #include "Serialization/SerializationIncludes.h"
 
 
@@ -60,12 +59,6 @@ Display::Display()
 	m_displayPalette[1] = DisplayPixelFromRGBA(0.67f, 0.67f, 0.67f);
 	m_displayPalette[2] = DisplayPixelFromRGBA(0.33f, 0.33f, 0.33f);
 	m_displayPalette[3] = DisplayPixelFromRGBA(0.00f, 0.00f, 0.00f);
-
-	m_displayFilter = DisplayFilter::None;
-
-	m_screenBufferCopyId = -1;
-	m_screenBufferCopyFilter = m_displayFilter;
-	m_filteredScreenBufferCopy = NULL;
 }
 
 Display::~Display()
@@ -84,26 +77,15 @@ ScreenResolution Display::GetScreenResolution()
 
 ScreenBuffer* Display::GetStableScreenBuffer()
 {
-	if(m_screenBufferCopyId == m_screenBufferCount && m_screenBufferCopyFilter == m_displayFilter)
-		return &m_screenBufferCopy;
+    if(m_screenBufferCopyId == m_screenBufferCount)
+        return &m_screenBufferCopy;
 
-	if(m_filteredScreenBufferCopy != NULL && m_filteredScreenBufferCopy != &m_screenBufferCopy)
-	{
-		delete m_filteredScreenBufferCopy;
-		m_filteredScreenBufferCopy = NULL;
-	}
+    m_screenBufferLock.Acquire();
+        m_screenBufferCopy = *m_stableScreenBuffer;
+        m_screenBufferCopyId = m_screenBufferCount;
+    m_screenBufferLock.Release();
 
-	m_screenBufferCopy = *m_stableScreenBuffer;
-	m_filteredScreenBufferCopy = &m_screenBufferCopy;
-
-	//if(m_displayFilter == DisplayFilter::Hq2x)
-	//	m_filteredScreenBufferCopy = HqNx::Hq2x(&m_screenBufferCopy);
-	//else if(m_displayFilter == DisplayFilter::Hq3x)
-	//	m_filteredScreenBufferCopy = HqNx::Hq3x(&m_screenBufferCopy);
-	//else if(m_displayFilter == DisplayFilter::Hq4x)
-	//	m_filteredScreenBufferCopy = HqNx::Hq4x(&m_screenBufferCopy);
-
-	return m_filteredScreenBufferCopy;
+	return &m_screenBufferCopy;
 }
 
 int Display::GetScreenBufferCount()
@@ -114,7 +96,6 @@ int Display::GetScreenBufferCount()
 
 void Display::SetFilter(DisplayFilter::Type filter)
 {
-	m_displayFilter = filter;
 }
 
 void Display::SetMachine(Gameboy* machine)
@@ -195,11 +176,6 @@ void Display::Serialize(Archive& archive)
 	SerializeItem(archive, m_vblankScanlineTicksRemaining);
 
 	SerializeItem(archive, m_screenBufferCount);
-
-	//SerializeItem(archive, m_displayFilter);
-
-	m_screenBufferCopyId = -1;
-	SerializeItem(archive, m_screenBufferCopyFilter);
 
 	SerializeItem(archive, m_nextPixelToRenderX);
 	SerializeItem(archive, m_ticksSpentThisScanline);
@@ -460,11 +436,13 @@ void Display::Run_VBlank(int ticks)
 	if(m_stateTicksRemaining <= ticks)
 	{
 		//Swap buffers
-		GameboyScreenBuffer* temp = m_stableScreenBuffer;
-		m_stableScreenBuffer = m_activeScreenBuffer;
-		m_activeScreenBuffer = temp;
+		m_screenBufferLock.Acquire();
+            GameboyScreenBuffer* temp = m_stableScreenBuffer;
+            m_stableScreenBuffer = m_activeScreenBuffer;
+            m_activeScreenBuffer = temp;
 
-		m_screenBufferCount++;
+            m_screenBufferCount++;
+		m_screenBufferLock.Release();
 
 		//Clear caches
 		for(int y=0;y<144;y++)
