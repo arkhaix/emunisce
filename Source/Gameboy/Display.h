@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#include "PlatformTypes.h"
+#include "PlatformIncludes.h"
 
 #include "MachineIncludes.h"
 #include "GameboyTypes.h"
@@ -125,12 +125,9 @@ private:
 	GameboyScreenBuffer* m_stableScreenBuffer;	///<The screen buffer ready to be displayed on the pc
 	int m_screenBufferCount;
 
-	DisplayFilter::Type m_displayFilter;
-
-	GameboyScreenBuffer m_screenBufferCopy;	///<This buffer is always updated by and returned through GetStableScreenBuffer
-	int m_screenBufferCopyId;	///<The value of m_screenBufferCount at the time the most recent copy was made
-	DisplayFilter::Type m_screenBufferCopyFilter;	///<The selected filter type at the time the most recent copy was made
-	ScreenBuffer* m_filteredScreenBufferCopy;
+	GameboyScreenBuffer m_screenBufferCopy;
+	int m_screenBufferCopyId;
+	Mutex m_screenBufferLock;
 
 	DisplayPixel m_displayPalette[4];	///<Maps 2-bit pixel values to DisplayPixel values
 

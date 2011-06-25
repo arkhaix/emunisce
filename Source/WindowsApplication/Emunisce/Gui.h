@@ -54,7 +54,26 @@ public:
 	virtual ~Gui();
 
 
+	// IEmulatedDisplay
+
+	virtual ScreenBuffer* GetStableScreenBuffer();
+	virtual void SetFilter(DisplayFilter::Type filter);
+
+
 protected:
+
+    //Gui properties
+
+	DynamicScreenBuffer* m_screenBufferCopy;
+	DisplayFilter::Type m_screenBufferCopyFilter;
+	//Mutex m_screenBufferLock;
+
+    ScreenBuffer* m_filteredScreenBuffer;
+    int m_filteredScreenBufferId;
+    DisplayFilter::Type m_displayFilter;
+
+
+    // GuiDisplay
 
 	class GuiDisplay : public IEmulatedDisplay
 	{
@@ -78,6 +97,8 @@ protected:
 	GuiDisplay* m_guiDisplay;
 
 
+    // GuiInput
+
 	class GuiInput : public IEmulatedInput
 	{
 	public:
@@ -90,7 +111,7 @@ protected:
 		virtual void ButtonDown(unsigned int index);
 		virtual void ButtonUp(unsigned int index);
 
-		
+
 	protected:
 
 	};

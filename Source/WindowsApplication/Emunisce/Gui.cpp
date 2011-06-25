@@ -20,14 +20,23 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "Gui.h"
 using namespace Emunisce;
 
+#include "HqNx/HqNx.h"
+
+#include <memory.h>
+
 
 // Gui
 
 Gui::Gui()
 {
+	m_screenBufferCopy = NULL;
+    m_filteredScreenBuffer = NULL;
+	m_filteredScreenBufferId = -1;
+	m_displayFilter = DisplayFilter::None;
+
 	m_guiDisplay = new GuiDisplay();
 	m_featureDisplay = m_guiDisplay;
-	
+
 	m_guiInput = new GuiInput();
 	m_featureInput = m_guiInput;
 }
@@ -39,6 +48,51 @@ Gui::~Gui()
 
 	m_featureInput = NULL;
 	delete m_guiInput;
+
+	if(m_screenBufferCopy != NULL)
+        delete m_screenBufferCopy;
+}
+
+ScreenBuffer* Gui::GetStableScreenBuffer()
+{
+    if(MachineFeature::GetScreenBufferCount() == m_filteredScreenBufferId && m_displayFilter == m_screenBufferCopyFilter)
+        return m_filteredScreenBuffer;
+
+    ScreenBuffer* screenBuffer = MachineFeature::GetStableScreenBuffer();
+
+    bool needToDeleteFilteredBuffer = false;
+    if(m_filteredScreenBuffer != NULL && m_filteredScreenBuffer != m_screenBufferCopy)
+        needToDeleteFilteredBuffer = true;
+
+	if(m_screenBufferCopy != NULL)
+		delete m_screenBufferCopy;
+
+	int width = screenBuffer->GetWidth();
+	int height = screenBuffer->GetHeight();
+
+	m_screenBufferCopy = new DynamicScreenBuffer(width, height);
+	memcpy((void*)m_screenBufferCopy->GetPixels(), (void*)screenBuffer->GetPixels(), width * height * sizeof(DisplayPixel));
+
+    if(needToDeleteFilteredBuffer == true)
+        delete m_filteredScreenBuffer;
+
+    m_filteredScreenBuffer = m_screenBufferCopy;
+    m_filteredScreenBufferId = MachineFeature::GetScreenBufferCount();
+	m_screenBufferCopyFilter = m_displayFilter;
+
+    if(m_displayFilter == DisplayFilter::Hq2x)
+		m_filteredScreenBuffer = HqNx::Hq2x(m_screenBufferCopy);
+	else if(m_displayFilter == DisplayFilter::Hq3x)
+		m_filteredScreenBuffer = HqNx::Hq3x(m_screenBufferCopy);
+	else if(m_displayFilter == DisplayFilter::Hq4x)
+		m_filteredScreenBuffer = HqNx::Hq4x(m_screenBufferCopy);
+
+	return m_filteredScreenBuffer;
+}
+
+void Gui::SetFilter(DisplayFilter::Type filter)
+{
+    m_displayFilter = filter;
 }
 
 
@@ -61,7 +115,7 @@ ScreenBuffer* Gui::GuiDisplay::GetStableScreenBuffer()
 int Gui::GuiDisplay::GetScreenBufferCount()
 {
 	int result = m_screenBufferCount;
-	m_screenBufferCount++;
+	//m_screenBufferCount++;
 	return result;
 }
 
