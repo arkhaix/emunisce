@@ -31,6 +31,22 @@ class MachineRunner;
 class IEmulatedMachine;
 
 
+namespace DisplayFilter
+{
+	typedef int Type;
+
+	enum
+	{
+		None = 0,
+
+		Hq2x,
+		Hq3x,
+		Hq4x,
+
+		NumDisplayFilters
+	};
+}
+
 namespace MessageType
 {
 	typedef int Type;
@@ -126,6 +142,9 @@ public:
 	//State
 	virtual void SaveState(const char* id);	///<Requires that a rom is loaded.  Saves state basd on rom name.  id is a slot identifier (any value is okay).
 	virtual void LoadState(const char* id);	///<Requires that a rom is loaded.  Loads state based on rom name and specified slot id.
+
+	//Display
+	virtual void SetDisplayFilter(DisplayFilter::Type displayFilter);	///<Sets the desired display filter.
 
 
 	//Application to user

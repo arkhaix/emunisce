@@ -112,6 +112,12 @@ void UserInterface::LoadState(const char* id)
 }
 
 
+void UserInterface::SetDisplayFilter(DisplayFilter::Type displayFilter)
+{
+	m_phoenix->SetDisplayFilter(displayFilter);
+}
+
+
 
 // Application to user
 

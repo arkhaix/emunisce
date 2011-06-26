@@ -94,10 +94,6 @@ int Display::GetScreenBufferCount()
 }
 
 
-void Display::SetFilter(DisplayFilter::Type filter)
-{
-}
-
 void Display::SetMachine(Gameboy* machine)
 {
 	m_machine = machine;

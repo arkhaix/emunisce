@@ -92,8 +92,6 @@ public:
 	virtual ScreenBuffer* GetStableScreenBuffer();
 	virtual int GetScreenBufferCount();
 
-	virtual void SetFilter(DisplayFilter::Type filter);
-
 
 	// IEmulatedInput
 
