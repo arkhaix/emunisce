@@ -99,7 +99,7 @@ void Gui::SetFilter(DisplayFilter::Type filter)
 
 Gui::GuiFeature::GuiFeature()
 {
-	m_ticksPerFrame = m_screenBuffer.GetWidth() * m_screenBuffer.GetHeight();
+	m_ticksPerFrame = 10000;	///<How many times to update the attractor per frame
 	m_ticksUntilNextFrame = m_ticksPerFrame;
 	m_frameCount = 0;
 
@@ -107,11 +107,12 @@ Gui::GuiFeature::GuiFeature()
 		for(int x=0;x<m_screenBuffer.GetWidth();x++)
 			m_screenBuffer.SetPixel(x, y, DisplayPixelFromRGBA(0.f, 0.f, 0.f));
 
-	m_x = 0.1; m_y = 0.1;               // starting point
-	m_a = -0.966918;                  // coefficients for "The King's Dream"
-	m_b = 2.879879;
-	m_c = 0.765145;
-	m_d = 0.744728;
+	//"The King's Dream" initial coefficients
+	m_x = 0.1f; m_y = 0.1f;
+	m_a = -4.45f;
+	m_b = 2.879879f;
+	m_c = 0.765145f;
+	m_d = 0.744728f;
 
 	for(int i=0;i<10000;i++)
 		SilentDream();
@@ -137,14 +138,83 @@ unsigned int Gui::GuiFeature::GetTicksUntilNextFrame()
 
 void Gui::GuiFeature::Step()
 {
+	Dream();
+
 	m_ticksUntilNextFrame--;
 	if(m_ticksUntilNextFrame <= 0)
 	{
 		m_ticksUntilNextFrame += m_ticksPerFrame;
 		m_frameCount++;
 
-		for(int i=0;i<1000;i++)	///<Arbitrary constant.  How many pixels are calculated and drawn per frame.  Basically controls how fast it fades in.
-			Dream();
+
+		//Select the next attractor if necessary
+
+		m_framesThisAttractor++;
+		if(m_framesThisAttractor >= 4)	///<Arbitrary constant.  Affects the animation rate and the brightness of the image (larger value = slower animation and brighter image).
+		{
+			m_a += 0.002;	///<Arbitrary constant.  Partially determines the animation rate.
+
+			if(m_a > -0.72f && m_a < 0.f)	///<Bad place.  This range murders the cpu.  Probably throws bad values into sin().
+				m_a += 0.72f;
+
+			if(m_a > 0.85f && m_a < 1.15f)	///<Blank
+				m_a += 0.3f;
+
+			if(m_a > 2.65f && m_a < 3.15f)	///<Blank
+				m_a += 0.5f;
+
+			if(m_a > 4.85f)	///<Arbitrary reset point.
+				m_a = -4.45f;	///<Arbitrary start position.
+
+
+			//Update the display
+
+			DisplayPixel* screenPixels = m_screenBuffer.GetPixels();
+
+			DisplayPixel* attractorPixels[m_numAttractors];
+			for(int i=0;i<m_numAttractors;i++)
+				attractorPixels[i] = m_attractorBuffer[i].GetPixels();
+
+			int numPixels = m_screenBuffer.GetWidth() * m_screenBuffer.GetHeight();
+			u8 r, g, b, a;
+			int nr, ng, nb;
+			for(int i=0;i<numPixels;i++)
+			{
+				nr = 0;
+				ng = 0;
+				nb = 0;
+
+				for(int j=0;j<m_numAttractors;j++)
+				{
+					DisplayPixelToRGBA(attractorPixels[j][i], r, g, b, a);
+					nr += r;
+					ng += g;
+					nb += b;
+				}
+
+				nr /= m_numAttractors;
+				ng /= m_numAttractors;
+				nb /= m_numAttractors;
+
+				screenPixels[i] = DisplayPixelFromRGBA((u8)nr, (u8)ng, (u8)nb);
+			}
+
+
+			m_framesThisAttractor = 0;
+
+			m_currentAttractorBuffer++;
+			if(m_currentAttractorBuffer >= m_numAttractors)
+				m_currentAttractorBuffer = 0;
+
+
+			//Clear the attractor screen buffer
+
+			DisplayPixel black = DisplayPixelFromRGBA((u8)0, (u8)0, (u8)0);
+			numPixels = m_attractorBuffer[ m_currentAttractorBuffer ].GetWidth() * m_attractorBuffer[ m_currentAttractorBuffer ].GetHeight();
+			DisplayPixel* pixels = m_attractorBuffer[ m_currentAttractorBuffer ].GetPixels();
+			for(int i=0;i<numPixels;i++)
+				pixels[i] = black;
+		}
 	}
 }
 
@@ -236,9 +306,9 @@ void Gui::GuiFeature::Dream()
 	int yPos = ((m_y+2.f)/4.f) * height;
 	int index = yPos * width + xPos;
 
-	DisplayPixel* pixels = m_screenBuffer.GetPixels();
+	DisplayPixel* pixels = m_attractorBuffer[ m_currentAttractorBuffer ].GetPixels();
 
-	static DisplayPixel increment = DisplayPixelFromRGBA((u8)1, (u8)1, (u8)1);
+	static DisplayPixel increment = DisplayPixelFromRGBA((u8)5, (u8)5, (u8)5);		///<Arbitrary constant.  Combines with the number of iterations done to determine the brightness of the image.
 	static DisplayPixel mask = DisplayPixelFromRGBA((u8)0, (u8)0, (u8)0, (u8)255);
 
 	pixels[index] += increment;

@@ -120,8 +120,15 @@ protected:
 
 		GuiScreenBuffer m_screenBuffer;
 
+		
+		static const int m_numAttractors = 5;	///<Arbitrary constant.  How many frames to blend together.
+		GuiScreenBuffer m_attractorBuffer[m_numAttractors];
+		int m_currentAttractorBuffer;
+
 		float m_x, m_y;
 		float m_a, m_b, m_c, m_d;
+		int m_framesThisAttractor;
+
 		inline void SilentDream();
 		inline void Dream();
 	};

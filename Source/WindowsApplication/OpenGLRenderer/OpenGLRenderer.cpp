@@ -116,6 +116,7 @@ public:
 
 	OpenGLScreenBuffer* _ScreenBuffer;
 	int _LastFrameRendered;
+	int _LastFrameDrawn;
 
 	GLuint _ScreenTexture;
 
@@ -136,6 +137,7 @@ public:
 
 		_ScreenBuffer = NULL;
 		_LastFrameRendered = -1;
+		_LastFrameDrawn = -1;
 
 		_ScreenTexture = 0;
 	}
@@ -222,16 +224,9 @@ public:
 			_ScreenBuffer = new OpenGLScreenBuffer(displayWidth, displayHeight);
 		}
 
-		for(int y=0;y<displayHeight;y++)
-		{
-			for(int x=0;x<displayWidth;x++)
-			{
-				DisplayPixel pixelValue = displayScreen->GetPixels()[y * displayWidth + x];
-
-				_ScreenBuffer->Pixels[y * displayWidth + x] = pixelValue;
-			}
-		}
-
+		int numPixels = displayWidth * displayHeight;
+		memcpy((void*)_ScreenBuffer->Pixels, (void*)displayScreen->GetPixels(), numPixels * sizeof(DisplayPixel));
+		
 		PreserveExistingContext();
 		wglMakeCurrent(_DeviceContext, _RenderContext);
 
@@ -260,6 +255,11 @@ public:
 
 		if(_Phoenix->GetWindow() == NULL)
 			return;
+
+		if(_LastFrameDrawn == _LastFrameRendered)
+			return;
+
+		_LastFrameDrawn = _LastFrameRendered;
 
 		PreserveExistingContext();
 		wglMakeCurrent(_DeviceContext, _RenderContext);
