@@ -22,7 +22,9 @@ using namespace Emunisce;
 
 #include "HqNx/HqNx.h"
 
+#include <math.h>
 #include <memory.h>
+#include <stdlib.h>
 
 
 // Gui
@@ -285,7 +287,6 @@ void Gui::GuiFeature::ButtonUp(unsigned int index)
 	//todo
 }
 
-#include <math.h>
 void Gui::GuiFeature::SilentDream()
 {
 	float newX = sin(m_y*m_b) + m_c*sin(m_x*m_b);
@@ -306,12 +307,44 @@ void Gui::GuiFeature::Dream()
 	int yPos = ((m_y+2.f)/4.f) * height;
 	int index = yPos * width + xPos;
 
+    static const u8 incZero = 0;
+    static const u8 incOne = 5;
+    static const DisplayPixel increments[8] =
+    {
+        DisplayPixelFromRGBA(incZero, incZero, incOne),
+        DisplayPixelFromRGBA(incZero, incZero, incOne),
+        DisplayPixelFromRGBA(incZero, incOne, incZero),
+        DisplayPixelFromRGBA(incZero, incOne, incOne),
+        DisplayPixelFromRGBA(incOne, incZero, incZero),
+        DisplayPixelFromRGBA(incOne, incZero, incOne),
+        DisplayPixelFromRGBA(incOne, incOne, incZero),
+        DisplayPixelFromRGBA(incOne, incOne, incOne)
+    };
+    static int count = 3000000-1;
+    static int incIndex = 0;
+
 	DisplayPixel* pixels = m_attractorBuffer[ m_currentAttractorBuffer ].GetPixels();
 
 	static DisplayPixel increment = DisplayPixelFromRGBA((u8)5, (u8)5, (u8)5);		///<Arbitrary constant.  Combines with the number of iterations done to determine the brightness of the image.
 	static DisplayPixel mask = DisplayPixelFromRGBA((u8)0, (u8)0, (u8)0, (u8)255);
 
-	pixels[index] += increment;
+	static DisplayPixel randomIncrement = increment;
+
+    //pixels[index] += increment;
+	//pixels[index] += increments[incIndex];
+	pixels[index] += randomIncrement;
 	pixels[index] |= mask;
+
+	count++;
+	if((count % 3000000) == 0)
+	{
+	    incIndex = (incIndex+1) & 7;
+
+	    u8 rr, rg, rb;
+	    rr = rand() % (incOne+1);
+	    rg = rand() % (incOne+1);
+	    rb = rand() % (incOne+1);
+	    randomIncrement = DisplayPixelFromRGBA(rr, rg, rb);
+	}
 }
 
