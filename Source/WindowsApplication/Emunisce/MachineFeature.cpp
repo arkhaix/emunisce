@@ -35,6 +35,8 @@ MachineFeature::MachineFeature()
 	m_wrappedProcessor = NULL;
 	m_wrappedSound = NULL;
 
+	m_featureExecution = NULL;
+
 	m_featureDisplay = NULL;
 	m_featureInput = NULL;
 	m_featureMemory = NULL;
@@ -145,44 +147,55 @@ IEmulatedSound* MachineFeature::GetSound()
 //Machine info
 unsigned int MachineFeature::GetFrameCount()
 {
-	if(m_wrappedMachine == NULL)
-		return 0;
+	if((m_hasFocus || m_wrappedMachine == NULL) && m_featureExecution != NULL)
+		return m_featureExecution->GetFrameCount();
 
-	return m_wrappedMachine->GetFrameCount();
+	if(m_wrappedMachine != NULL)
+		return m_wrappedMachine->GetFrameCount();
+
+	return 0;
 }
 
 unsigned int MachineFeature::GetTicksPerSecond()
 {
-	if(m_wrappedMachine == NULL)
-		return 1;
+	if((m_hasFocus || m_wrappedMachine == NULL) && m_featureExecution != NULL)
+		return m_featureExecution->GetTicksPerSecond();
 
-	return m_wrappedMachine->GetTicksPerSecond();
+	if(m_wrappedMachine != NULL)
+		return m_wrappedMachine->GetTicksPerSecond();
+
+	return 1;
 }
 
 unsigned int MachineFeature::GetTicksUntilNextFrame()
 {
-	if(m_wrappedMachine == NULL)
-		return (unsigned int)-1;
+	if((m_hasFocus || m_wrappedMachine == NULL) && m_featureExecution != NULL)
+		return m_featureExecution->GetTicksUntilNextFrame();
 
-	return m_wrappedMachine->GetTicksUntilNextFrame();
+	if(m_wrappedMachine != NULL)
+		return m_wrappedMachine->GetTicksUntilNextFrame();
+
+	return (unsigned int)-1;
 }
 
 
 //Execution
 void MachineFeature::Step()
 {
-	if(m_wrappedMachine == NULL)
-		return;
+	if((m_hasFocus || m_wrappedMachine == NULL) && m_featureExecution != NULL)
+		m_featureExecution->Step();
 
-	m_wrappedMachine->Step();
+	if(m_wrappedMachine != NULL)
+		m_wrappedMachine->Step();
 }
 
 void MachineFeature::RunToNextFrame()
 {
-	if(m_wrappedMachine == NULL)
-		return;
+	if((m_hasFocus || m_wrappedMachine == NULL) && m_featureExecution != NULL)
+		m_featureExecution->RunToNextFrame();
 
-	m_wrappedMachine->RunToNextFrame();
+	if(m_wrappedMachine != NULL)
+		m_wrappedMachine->RunToNextFrame();
 }
 
 
