@@ -81,7 +81,7 @@ void ConsoleDebugger::SetMachine(IEmulatedMachine* machine)
 	m_memory = NULL;//machine->GetMemory();
 
 	machine->GetSound()->SetSquareSynthesisMethod(m_squareSynthesisMethod);
-	machine->GetDisplay()->SetFilter(m_displayFilter);
+	m_userInterface->SetDisplayFilter(m_displayFilter);
 }
 
 void ConsoleDebugger::Run()
@@ -484,6 +484,6 @@ void ConsoleDebugger::SetDisplayFilter(const char* strFilter)
 		_stricmp(strFilter, "4") == 0 )
 		filter = DisplayFilter::Hq4x;
 
-	m_machine->GetDisplay()->SetFilter(filter);
+	m_userInterface->SetDisplayFilter(filter);
 	m_displayFilter = filter;
 }

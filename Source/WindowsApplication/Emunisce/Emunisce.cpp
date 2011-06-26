@@ -580,6 +580,12 @@ void EmunisceApplication::LoadState(const char* id)
 	fs.CloseFile();
 }
 
+void EmunisceApplication::SetDisplayFilter(DisplayFilter::Type filter)
+{
+	if(m_private->_Gui != NULL)
+		m_private->_Gui->SetDisplayFilter(filter);
+}
+
 void EmunisceApplication::NotifyMachineChanged(IEmulatedMachine* newMachine)
 {
 	//RunWindow must handle machine changes (rendering things have to happen on that thread)

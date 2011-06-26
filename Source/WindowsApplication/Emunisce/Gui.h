@@ -24,6 +24,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "MachineIncludes.h"
 
+#include "UserInterface.h"	///<For DisplayFilter
+
 namespace Emunisce
 {
 
@@ -53,11 +55,12 @@ public:
 	Gui();
 	virtual ~Gui();
 
+	virtual void SetDisplayFilter(DisplayFilter::Type filter);
+
 
 	// IEmulatedDisplay
 
 	virtual ScreenBuffer* GetStableScreenBuffer();
-	virtual void SetFilter(DisplayFilter::Type filter);
 
 
 protected:
@@ -99,8 +102,6 @@ protected:
 		virtual ScreenResolution GetScreenResolution();
 		virtual ScreenBuffer* GetStableScreenBuffer();
 		virtual int GetScreenBufferCount();
-
-		virtual void SetFilter(DisplayFilter::Type filter);
 
 
 		// IEmulatedInput

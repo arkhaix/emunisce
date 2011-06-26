@@ -20,6 +20,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef EMUNISCE_H
 #define EMUNISCE_H
 
+#include "UserInterface.h"	///<For DisplayFilter
+
 
 namespace Emunisce
 {
@@ -34,8 +36,6 @@ class ConsoleDebugger;
 class GdiPlusRenderer;
 class KeyboardInput;
 class WaveOutSound;
-
-class UserInterface;
 
 
 class EmunisceApplication
@@ -52,6 +52,8 @@ public:
 
 	void SaveState(const char* id);
 	void LoadState(const char* id);
+
+	void SetDisplayFilter(DisplayFilter::Type filter);
 
 	void NotifyMachineChanged(IEmulatedMachine* newMachine);
 	IEmulatedMachine* GetMachine();

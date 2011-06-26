@@ -29,12 +29,13 @@ using namespace std;
 
 #include "MachineIncludes.h"
 
+#include "UserInterface.h"	///<For DisplayFilter
+
 
 namespace Emunisce
 {
 
 class EmunisceApplication;
-class UserInterface;
 
 
 class ConsoleDebugger

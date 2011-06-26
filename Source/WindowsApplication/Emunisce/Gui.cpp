@@ -90,7 +90,7 @@ ScreenBuffer* Gui::GetStableScreenBuffer()
 	return m_filteredScreenBuffer;
 }
 
-void Gui::SetFilter(DisplayFilter::Type filter)
+void Gui::SetDisplayFilter(DisplayFilter::Type filter)
 {
     m_displayFilter = filter;
 }
@@ -152,7 +152,7 @@ void Gui::GuiFeature::Step()
 		//Select the next attractor if necessary
 
 		m_framesThisAttractor++;
-		if(m_framesThisAttractor >= 4)	///<Arbitrary constant.  Affects the animation rate and the brightness of the image (larger value = slower animation and brighter image).
+		if(m_framesThisAttractor >= 2)	///<Arbitrary constant.  Affects the animation rate and the brightness of the image (larger value = slower animation and brighter image).
 		{
 			m_a += 0.002;	///<Arbitrary constant.  Partially determines the animation rate.
 
@@ -249,10 +249,6 @@ int Gui::GuiFeature::GetScreenBufferCount()
 }
 
 
-void Gui::GuiFeature::SetFilter(DisplayFilter::Type filter)
-{
-}
-
 
 
 // IEmulatedInput
@@ -308,7 +304,7 @@ void Gui::GuiFeature::Dream()
 	int index = yPos * width + xPos;
 
     static const u8 incZero = 0;
-    static const u8 incOne = 5;
+    static const u8 incOne = 20;
     static const DisplayPixel increments[8] =
     {
         DisplayPixelFromRGBA(incZero, incZero, incOne),
@@ -325,7 +321,7 @@ void Gui::GuiFeature::Dream()
 
 	DisplayPixel* pixels = m_attractorBuffer[ m_currentAttractorBuffer ].GetPixels();
 
-	static DisplayPixel increment = DisplayPixelFromRGBA((u8)5, (u8)5, (u8)5);		///<Arbitrary constant.  Combines with the number of iterations done to determine the brightness of the image.
+	static DisplayPixel increment = DisplayPixelFromRGBA(incOne, incOne, incOne);		///<Arbitrary constant.  Combines with the number of iterations done to determine the brightness of the image.
 	static DisplayPixel mask = DisplayPixelFromRGBA((u8)0, (u8)0, (u8)0, (u8)255);
 
 	static DisplayPixel randomIncrement = increment;

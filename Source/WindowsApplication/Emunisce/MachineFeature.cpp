@@ -283,22 +283,6 @@ int MachineFeature::GetScreenBufferCount()
 }
 
 
-void MachineFeature::SetFilter(DisplayFilter::Type filter)
-{
-	if( (m_hasFocus || m_wrappedDisplay == NULL) && m_featureDisplay != NULL )
-	{
-		return m_featureDisplay->SetFilter(filter);
-	}
-
-	if(m_wrappedDisplay != NULL)
-	{
-		return m_wrappedDisplay->SetFilter(filter);
-	}
-
-	return;
-}
-
-
 
 // IEmulatedInput
 
