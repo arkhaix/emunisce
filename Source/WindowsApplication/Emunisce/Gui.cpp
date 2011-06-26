@@ -34,20 +34,18 @@ Gui::Gui()
 	m_filteredScreenBufferId = -1;
 	m_displayFilter = DisplayFilter::None;
 
-	m_guiDisplay = new GuiDisplay();
-	m_featureDisplay = m_guiDisplay;
-
-	m_guiInput = new GuiInput();
-	m_featureInput = m_guiInput;
+	m_guiFeature = new GuiFeature();
+	m_featureExecution = m_guiFeature;
+	m_featureDisplay = m_guiFeature;
+	m_featureInput = m_guiFeature;
 }
 
 Gui::~Gui()
 {
+	m_featureExecution = NULL;
 	m_featureDisplay = NULL;
-	delete m_guiDisplay;
-
 	m_featureInput = NULL;
-	delete m_guiInput;
+	delete m_guiFeature;
 
 	if(m_screenBufferCopy != NULL)
         delete m_screenBufferCopy;
@@ -97,44 +95,102 @@ void Gui::SetFilter(DisplayFilter::Type filter)
 
 
 
+// GuiFeature
+
+Gui::GuiFeature::GuiFeature()
+{
+	m_ticksPerFrame = m_screenBuffer.GetWidth() * m_screenBuffer.GetHeight();
+	m_ticksUntilNextFrame = m_ticksPerFrame;
+	m_frameCount = 0;
+
+	for(int y=0;y<m_screenBuffer.GetHeight();y++)
+		for(int x=0;x<m_screenBuffer.GetWidth();x++)
+			m_screenBuffer.SetPixel(x, y, DisplayPixelFromRGBA(0.f, 0.f, 0.f));
+
+	m_x = 0.1; m_y = 0.1;               // starting point
+	m_a = -0.966918;                  // coefficients for "The King's Dream"
+	m_b = 2.879879;
+	m_c = 0.765145;
+	m_d = 0.744728;
+
+	for(int i=0;i<10000;i++)
+		SilentDream();
+}
+
+
+// IExecutableFeature
+
+unsigned int Gui::GuiFeature::GetFrameCount()
+{
+	return m_frameCount;
+}
+
+unsigned int Gui::GuiFeature::GetTicksPerSecond()
+{
+	return m_ticksPerFrame * 60;
+}
+
+unsigned int Gui::GuiFeature::GetTicksUntilNextFrame()
+{
+	return m_ticksUntilNextFrame;
+}
+
+void Gui::GuiFeature::Step()
+{
+	m_ticksUntilNextFrame--;
+	if(m_ticksUntilNextFrame <= 0)
+	{
+		m_ticksUntilNextFrame += m_ticksPerFrame;
+		m_frameCount++;
+
+		for(int i=0;i<1000;i++)	///<Arbitrary constant.  How many pixels are calculated and drawn per frame.  Basically controls how fast it fades in.
+			Dream();
+	}
+}
+
+void Gui::GuiFeature::RunToNextFrame()
+{
+	int frameCount = m_frameCount;
+	while(m_frameCount == frameCount)
+		Step();
+}
+
+
 // IEmulatedDisplay
 
-ScreenResolution Gui::GuiDisplay::GetScreenResolution()
+ScreenResolution Gui::GuiFeature::GetScreenResolution()
 {
 	ScreenResolution result;
-	result.width = 640;
-	result.height = 480;
+	result.width = m_screenBuffer.GetWidth();
+	result.height = m_screenBuffer.GetHeight();
 	return result;
 }
 
-ScreenBuffer* Gui::GuiDisplay::GetStableScreenBuffer()
+ScreenBuffer* Gui::GuiFeature::GetStableScreenBuffer()
 {
 	return &m_screenBuffer;
 }
 
-int Gui::GuiDisplay::GetScreenBufferCount()
+int Gui::GuiFeature::GetScreenBufferCount()
 {
-	int result = m_screenBufferCount;
-	//m_screenBufferCount++;
-	return result;
+	return m_frameCount;
 }
 
 
-void Gui::GuiDisplay::SetFilter(DisplayFilter::Type filter)
+void Gui::GuiFeature::SetFilter(DisplayFilter::Type filter)
 {
-	//todo
 }
 
 
 
 // IEmulatedInput
 
-unsigned int Gui::GuiInput::NumButtons()
+unsigned int Gui::GuiFeature::NumButtons()
 {
 	return GuiButtons::NumGuiButtons;
 }
 
-const char* Gui::GuiInput::GetButtonName(unsigned int index)
+const char* Gui::GuiFeature::GetButtonName(unsigned int index)
 {
 	if(index < GuiButtons::NumGuiButtons)
 		return GuiButtons::ToString[index];
@@ -143,7 +199,7 @@ const char* Gui::GuiInput::GetButtonName(unsigned int index)
 }
 
 
-void Gui::GuiInput::ButtonDown(unsigned int index)
+void Gui::GuiFeature::ButtonDown(unsigned int index)
 {
 	if(index >= GuiButtons::NumGuiButtons)
 		return;
@@ -151,11 +207,41 @@ void Gui::GuiInput::ButtonDown(unsigned int index)
 	//todo
 }
 
-void Gui::GuiInput::ButtonUp(unsigned int index)
+void Gui::GuiFeature::ButtonUp(unsigned int index)
 {
 	if(index >= GuiButtons::NumGuiButtons)
 		return;
 
 	//todo
+}
+
+#include <math.h>
+void Gui::GuiFeature::SilentDream()
+{
+	float newX = sin(m_y*m_b) + m_c*sin(m_x*m_b);
+	float newY = sin(m_x*m_a) + m_d*sin(m_y*m_a);
+
+	m_x = newX;
+	m_y = newY;
+}
+
+void Gui::GuiFeature::Dream()
+{
+	SilentDream();
+
+	static const int width = m_screenBuffer.GetWidth();
+	static const int height = m_screenBuffer.GetHeight();
+
+	int xPos = ((m_x+2.f)/4.f) * width;
+	int yPos = ((m_y+2.f)/4.f) * height;
+	int index = yPos * width + xPos;
+
+	DisplayPixel* pixels = m_screenBuffer.GetPixels();
+
+	static DisplayPixel increment = DisplayPixelFromRGBA((u8)1, (u8)1, (u8)1);
+	static DisplayPixel mask = DisplayPixelFromRGBA((u8)0, (u8)0, (u8)0, (u8)255);
+
+	pixels[index] += increment;
+	pixels[index] |= mask;
 }
 

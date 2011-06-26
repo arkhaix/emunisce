@@ -42,7 +42,7 @@ namespace GuiButtons
 	};
 }
 
-typedef TScreenBuffer<640, 480> GuiScreenBuffer;
+typedef TScreenBuffer<320, 240> GuiScreenBuffer;
 
 class Gui : public MachineFeature
 {
@@ -73,11 +73,26 @@ protected:
     DisplayFilter::Type m_displayFilter;
 
 
-    // GuiDisplay
+    // GuiFeature
 
-	class GuiDisplay : public IEmulatedDisplay
+	class GuiFeature : public IExecutableFeature, public IEmulatedDisplay, public IEmulatedInput
 	{
 	public:
+
+		// GuiFeature
+
+		GuiFeature();
+
+
+		// IExecutableFeature
+
+		virtual unsigned int GetFrameCount();
+		virtual unsigned int GetTicksPerSecond();
+		virtual unsigned int GetTicksUntilNextFrame();
+
+		virtual void Step();
+		virtual void RunToNextFrame();
+
 
 		// IEmulatedDisplay
 
@@ -87,21 +102,6 @@ protected:
 
 		virtual void SetFilter(DisplayFilter::Type filter);
 
-
-	protected:
-
-		GuiScreenBuffer m_screenBuffer;
-		int m_screenBufferCount;
-	};
-
-	GuiDisplay* m_guiDisplay;
-
-
-    // GuiInput
-
-	class GuiInput : public IEmulatedInput
-	{
-	public:
 
 		// IEmulatedInput
 
@@ -114,9 +114,19 @@ protected:
 
 	protected:
 
+		int m_ticksPerFrame;
+		int m_ticksUntilNextFrame;
+		int m_frameCount;
+
+		GuiScreenBuffer m_screenBuffer;
+
+		float m_x, m_y;
+		float m_a, m_b, m_c, m_d;
+		inline void SilentDream();
+		inline void Dream();
 	};
 
-	GuiInput* m_guiInput;
+	GuiFeature* m_guiFeature;
 };
 
 }	//namespace Emunisce
