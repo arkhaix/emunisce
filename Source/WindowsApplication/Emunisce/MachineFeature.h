@@ -26,6 +26,20 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
+class IExecutableFeature
+{
+public:
+
+	//Machine info
+	virtual unsigned int GetFrameCount() = 0;
+	virtual unsigned int GetTicksPerSecond() = 0;
+	virtual unsigned int GetTicksUntilNextFrame() = 0;
+
+	//Execution
+	virtual void Step() = 0;
+	virtual void RunToNextFrame() = 0;
+};
+
 class MachineFeature : public IEmulatedMachine, public IEmulatedDisplay, public IEmulatedInput, public IEmulatedMemory, public IEmulatedProcessor, public IEmulatedSound
 {
 public:
@@ -113,6 +127,8 @@ protected:
 	IEmulatedMemory* m_wrappedMemory;
 	IEmulatedProcessor* m_wrappedProcessor;
 	IEmulatedSound* m_wrappedSound;
+
+	IExecutableFeature* m_featureExecution;
 
 	IEmulatedDisplay* m_featureDisplay;
 	IEmulatedInput* m_featureInput;
