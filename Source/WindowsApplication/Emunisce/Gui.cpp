@@ -20,11 +20,11 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "Gui.h"
 using namespace Emunisce;
 
+#include "KingsDream.h"
+
 #include "HqNx/HqNx.h"
 
-#include <math.h>
 #include <memory.h>
-#include <stdlib.h>
 
 
 // Gui
@@ -101,23 +101,14 @@ void Gui::SetDisplayFilter(DisplayFilter::Type filter)
 
 Gui::GuiFeature::GuiFeature()
 {
-	m_ticksPerFrame = 10000;	///<How many times to update the attractor per frame
-	m_ticksUntilNextFrame = m_ticksPerFrame;
+	m_backgroundAnimation = new KingsDream();
+	m_backgroundEnabled = true;
+
+	m_backgroundAnimation->SetScreenResolution( m_screenBuffer.GetWidth(), m_screenBuffer.GetHeight() );
+
+	m_ticksThisFrame = 0;
+	m_ticksPerFrame = m_backgroundAnimation->GetPointsPerFrame() / 2;	///<Only update the background at 30fps.  This is because it uses a bit of cpu.  Don't forget to update the brightness (or points per frame) if you change this.
 	m_frameCount = 0;
-
-	for(int y=0;y<m_screenBuffer.GetHeight();y++)
-		for(int x=0;x<m_screenBuffer.GetWidth();x++)
-			m_screenBuffer.SetPixel(x, y, DisplayPixelFromRGBA(0.f, 0.f, 0.f));
-
-	//"The King's Dream" initial coefficients
-	m_x = 0.1f; m_y = 0.1f;
-	m_a = -4.45f;
-	m_b = 2.879879f;
-	m_c = 0.765145f;
-	m_d = 0.744728f;
-
-	for(int i=0;i<10000;i++)
-		SilentDream();
 }
 
 
@@ -135,89 +126,20 @@ unsigned int Gui::GuiFeature::GetTicksPerSecond()
 
 unsigned int Gui::GuiFeature::GetTicksUntilNextFrame()
 {
-	return m_ticksUntilNextFrame;
+	return m_ticksPerFrame - m_ticksThisFrame;
 }
 
 void Gui::GuiFeature::Step()
 {
-	Dream();
-
-	m_ticksUntilNextFrame--;
-	if(m_ticksUntilNextFrame <= 0)
+	m_ticksThisFrame++;
+	if(m_ticksThisFrame >= m_ticksPerFrame)
 	{
-		m_ticksUntilNextFrame += m_ticksPerFrame;
+		m_ticksThisFrame = 0;
 		m_frameCount++;
-
-
-		//Select the next attractor if necessary
-
-		m_framesThisAttractor++;
-		if(m_framesThisAttractor >= 2)	///<Arbitrary constant.  Affects the animation rate and the brightness of the image (larger value = slower animation and brighter image).
-		{
-			m_a += 0.002;	///<Arbitrary constant.  Partially determines the animation rate.
-
-			if(m_a > -0.72f && m_a < 0.f)	///<Bad place.  This range murders the cpu.  Probably throws bad values into sin().
-				m_a += 0.72f;
-
-			if(m_a > 0.85f && m_a < 1.15f)	///<Blank
-				m_a += 0.3f;
-
-			if(m_a > 2.65f && m_a < 3.15f)	///<Blank
-				m_a += 0.5f;
-
-			if(m_a > 4.85f)	///<Arbitrary reset point.
-				m_a = -4.45f;	///<Arbitrary start position.
-
-
-			//Update the display
-
-			DisplayPixel* screenPixels = m_screenBuffer.GetPixels();
-
-			DisplayPixel* attractorPixels[m_numAttractors];
-			for(int i=0;i<m_numAttractors;i++)
-				attractorPixels[i] = m_attractorBuffer[i].GetPixels();
-
-			int numPixels = m_screenBuffer.GetWidth() * m_screenBuffer.GetHeight();
-			u8 r, g, b, a;
-			int nr, ng, nb;
-			for(int i=0;i<numPixels;i++)
-			{
-				nr = 0;
-				ng = 0;
-				nb = 0;
-
-				for(int j=0;j<m_numAttractors;j++)
-				{
-					DisplayPixelToRGBA(attractorPixels[j][i], r, g, b, a);
-					nr += r;
-					ng += g;
-					nb += b;
-				}
-
-				nr /= m_numAttractors;
-				ng /= m_numAttractors;
-				nb /= m_numAttractors;
-
-				screenPixels[i] = DisplayPixelFromRGBA((u8)nr, (u8)ng, (u8)nb);
-			}
-
-
-			m_framesThisAttractor = 0;
-
-			m_currentAttractorBuffer++;
-			if(m_currentAttractorBuffer >= m_numAttractors)
-				m_currentAttractorBuffer = 0;
-
-
-			//Clear the attractor screen buffer
-
-			DisplayPixel black = DisplayPixelFromRGBA((u8)0, (u8)0, (u8)0);
-			numPixels = m_attractorBuffer[ m_currentAttractorBuffer ].GetWidth() * m_attractorBuffer[ m_currentAttractorBuffer ].GetHeight();
-			DisplayPixel* pixels = m_attractorBuffer[ m_currentAttractorBuffer ].GetPixels();
-			for(int i=0;i<numPixels;i++)
-				pixels[i] = black;
-		}
 	}
+
+	if(m_backgroundEnabled == true)
+		m_backgroundAnimation->UpdateAnimation();
 }
 
 void Gui::GuiFeature::RunToNextFrame()
@@ -240,6 +162,9 @@ ScreenResolution Gui::GuiFeature::GetScreenResolution()
 
 ScreenBuffer* Gui::GuiFeature::GetStableScreenBuffer()
 {
+	if(m_backgroundEnabled == true)
+		return m_backgroundAnimation->GetFrame();
+
 	return &m_screenBuffer;
 }
 
@@ -282,65 +207,3 @@ void Gui::GuiFeature::ButtonUp(unsigned int index)
 
 	//todo
 }
-
-void Gui::GuiFeature::SilentDream()
-{
-	float newX = sin(m_y*m_b) + m_c*sin(m_x*m_b);
-	float newY = sin(m_x*m_a) + m_d*sin(m_y*m_a);
-
-	m_x = newX;
-	m_y = newY;
-}
-
-void Gui::GuiFeature::Dream()
-{
-	SilentDream();
-
-	static const int width = m_screenBuffer.GetWidth();
-	static const int height = m_screenBuffer.GetHeight();
-
-	int xPos = ((m_x+2.f)/4.f) * width;
-	int yPos = ((m_y+2.f)/4.f) * height;
-	int index = yPos * width + xPos;
-
-    static const u8 incZero = 0;
-    static const u8 incOne = 20;
-    static const DisplayPixel increments[8] =
-    {
-        DisplayPixelFromRGBA(incZero, incZero, incOne),
-        DisplayPixelFromRGBA(incZero, incZero, incOne),
-        DisplayPixelFromRGBA(incZero, incOne, incZero),
-        DisplayPixelFromRGBA(incZero, incOne, incOne),
-        DisplayPixelFromRGBA(incOne, incZero, incZero),
-        DisplayPixelFromRGBA(incOne, incZero, incOne),
-        DisplayPixelFromRGBA(incOne, incOne, incZero),
-        DisplayPixelFromRGBA(incOne, incOne, incOne)
-    };
-    static int count = 3000000-1;
-    static int incIndex = 0;
-
-	DisplayPixel* pixels = m_attractorBuffer[ m_currentAttractorBuffer ].GetPixels();
-
-	static DisplayPixel increment = DisplayPixelFromRGBA(incOne, incOne, incOne);		///<Arbitrary constant.  Combines with the number of iterations done to determine the brightness of the image.
-	static DisplayPixel mask = DisplayPixelFromRGBA((u8)0, (u8)0, (u8)0, (u8)255);
-
-	static DisplayPixel randomIncrement = increment;
-
-    //pixels[index] += increment;
-	//pixels[index] += increments[incIndex];
-	pixels[index] += randomIncrement;
-	pixels[index] |= mask;
-
-	count++;
-	if((count % 3000000) == 0)
-	{
-	    incIndex = (incIndex+1) & 7;
-
-	    u8 rr, rg, rb;
-	    rr = rand() % (incOne+1);
-	    rg = rand() % (incOne+1);
-	    rb = rand() % (incOne+1);
-	    randomIncrement = DisplayPixelFromRGBA(rr, rg, rb);
-	}
-}
-

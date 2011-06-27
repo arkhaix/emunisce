@@ -58,3 +58,10 @@ DisplayPixel* DynamicScreenBuffer::GetPixels()
 {
 	return Pixels;
 }
+
+void DynamicScreenBuffer::Clear(DisplayPixel clearColor)
+{
+	int numPixels = Width * Height;
+	for(int i=0;i<numPixels;i++)
+		Pixels[i] = clearColor;
+}

@@ -12,6 +12,9 @@
     <Filter Include="Machine Features">
       <UniqueIdentifier>{f54322e8-bac2-4e89-9ce5-7f4968d41264}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Machine Features\Gui">
+      <UniqueIdentifier>{9c248c18-d2a7-4df9-958f-6c695cc8ca04}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -33,7 +36,10 @@
       <Filter>Machine Features</Filter>
     </ClCompile>
     <ClCompile Include="Gui.cpp">
-      <Filter>Machine Features</Filter>
+      <Filter>Machine Features\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="KingsDream.cpp">
+      <Filter>Machine Features\Gui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -53,7 +59,10 @@
       <Filter>Machine Features</Filter>
     </ClInclude>
     <ClInclude Include="Gui.h">
-      <Filter>Machine Features</Filter>
+      <Filter>Machine Features\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="KingsDream.h">
+      <Filter>Machine Features\Gui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

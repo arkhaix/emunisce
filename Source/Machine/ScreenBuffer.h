@@ -36,6 +36,8 @@ public:
 	virtual int GetHeight() = 0;
 
 	virtual DisplayPixel* GetPixels() = 0;
+
+	virtual void Clear(DisplayPixel clearColor) = 0;
 };
 
 template<int TWidth, int THeight>
@@ -75,6 +77,13 @@ public:
 	{
 		return &Pixels[0];
 	}
+
+	virtual void Clear(DisplayPixel clearColor)
+	{
+		int numPixels = THeight * TWidth;
+		for(int i=0;i<numPixels;i++)
+			Pixels[i] = clearColor;
+	}
 };
 
 class DynamicScreenBuffer : public ScreenBuffer
@@ -92,6 +101,8 @@ public:
 	virtual int GetHeight();
 
 	virtual DisplayPixel* GetPixels();
+
+	virtual void Clear(DisplayPixel clearColor);
 };
 
 }	//namespace Emunisce
