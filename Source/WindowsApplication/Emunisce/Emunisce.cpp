@@ -345,6 +345,49 @@ public:
 	}
 
 
+	std::string GetBaseMovieFolder()
+	{
+		char path[MAX_PATH];
+
+		std::string dataFolder = GetDataFolder();
+		strcpy(path, dataFolder.c_str());
+
+		PathAppend(path, "Movies");
+
+		SHCreateDirectoryEx(NULL, path, NULL);
+
+		return std::string(path);
+	}
+
+	std::string GetCurrentMovieFolder()
+	{
+		char path[MAX_PATH] = {0};
+
+		std::string basePath = GetBaseMovieFolder();
+		strcpy(path, basePath.c_str());
+
+		PathAppend(path, EmulatedMachine::ToString[ _Machine->GetType() ]);
+		PathAppend(path, _Machine->GetRomTitle());
+
+		SHCreateDirectoryEx(NULL, path, NULL);
+
+		return std::string(path);
+	}
+
+	std::string GetCurrentMovieFile(const char* name)
+	{
+		char file[MAX_PATH] = {0};
+
+		std::string path = GetCurrentMovieFolder();
+		strcpy(file, path.c_str());
+
+		std::string filename = std::string(name) + std::string(".eim");
+		PathAppend(file, filename.c_str());
+
+		return std::string(file);
+	}
+
+
 	// IMachineToApplication
 
 	void SaveRomData(const char* title, unsigned char* buffer, unsigned int bytes)
@@ -641,6 +684,35 @@ void EmunisceApplication::StopPlayingInputMovie()
 {
 	if(m_private->_InputRecording != NULL)
 		m_private->_InputRecording->StopPlayback();
+}
+
+
+void EmunisceApplication::SaveInputMovie(const char* id)
+{
+	std::string file = m_private->GetCurrentMovieFile(id);
+
+	FileSerializer fs;
+	fs.SetFile(file.c_str());
+
+	Archive ar(&fs, ArchiveMode::Saving);
+
+	m_private->_InputRecording->SerializeMovie(ar);
+
+	fs.CloseFile();
+}
+
+void EmunisceApplication::LoadInputMovie(const char* id)
+{
+	std::string file = m_private->GetCurrentMovieFile(id);
+
+	FileSerializer fs;
+	fs.SetFile(file.c_str());
+
+	Archive ar(&fs, ArchiveMode::Loading);
+
+	m_private->_InputRecording->SerializeMovie(ar);
+
+	fs.CloseFile();
 }
 
 
