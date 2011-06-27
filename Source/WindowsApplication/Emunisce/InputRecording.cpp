@@ -195,6 +195,33 @@ void InputRecording::ApplicationEvent(unsigned int eventId)
 
 // MachineFeature
 
+void InputRecording::RunToNextFrame()
+{
+	if(m_recording == true && m_wrappedMachine != NULL)
+	{
+		while(m_pendingEvents.empty() == false)
+		{
+			InputEvent& inputEvent = m_pendingEvents.front();
+
+			if(inputEvent.keyDown == true)
+				MachineFeature::ButtonDown(inputEvent.keyIndex);
+			else
+				MachineFeature::ButtonUp(inputEvent.keyIndex);
+
+			inputEvent.frameId = m_wrappedMachine->GetFrameCount();
+			inputEvent.tickId = m_wrappedMachine->GetTickCount();
+
+			m_movie.push_back(inputEvent);
+
+			printf("InputRecording::Record Button(%d) State(%d) at Frame(%d) : Tick(%d)\n", inputEvent.keyIndex, inputEvent.keyDown, inputEvent.frameId - m_recordingStartFrame, inputEvent.tickId);
+
+			m_pendingEvents.pop();
+		}
+	}
+
+	MachineFeature::RunToNextFrame();
+}
+
 #include <stdio.h>
 void InputRecording::ButtonDown(unsigned int index)
 {
@@ -207,17 +234,16 @@ void InputRecording::ButtonDown(unsigned int index)
 	if(m_recording == true && m_wrappedMachine != NULL)
 	{
 		InputEvent inputEvent;
-		inputEvent.frameId = m_wrappedMachine->GetFrameCount();
-		inputEvent.tickId = m_wrappedMachine->GetTickCount();
+
 		inputEvent.keyDown = true;
 		inputEvent.keyIndex = index;
 
-		printf("InputRecording::ButtonDown(%d) at %d : %d\n", index, inputEvent.frameId - m_recordingStartFrame, inputEvent.tickId);
-
-		m_movie.push_back(inputEvent);
+		m_pendingEvents.push(inputEvent);
 	}
-
-	MachineFeature::ButtonDown(index);
+	else
+	{
+		MachineFeature::ButtonDown(index);
+	}
 }
 
 void InputRecording::ButtonUp(unsigned int index)
@@ -231,15 +257,14 @@ void InputRecording::ButtonUp(unsigned int index)
 	if(m_recording == true && m_wrappedMachine != NULL)
 	{
 		InputEvent inputEvent;
-		inputEvent.frameId = m_wrappedMachine->GetFrameCount();
-		inputEvent.tickId = m_wrappedMachine->GetTickCount();
+
 		inputEvent.keyDown = false;
 		inputEvent.keyIndex = index;
 
-		printf("InputRecording::ButtonUp(%d) at %d : %d\n", index, inputEvent.frameId - m_recordingStartFrame, inputEvent.tickId);
-
-		m_movie.push_back(inputEvent);
+		m_pendingEvents.push(inputEvent);
 	}
-
-	MachineFeature::ButtonUp(index);
+	else
+	{
+		MachineFeature::ButtonUp(index);
+	}
 }

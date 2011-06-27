@@ -23,6 +23,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "MachineFeature.h"
 
 #include <map>
+#include <queue>
 #include <vector>
 using namespace std;
 
@@ -54,6 +55,8 @@ public:
 
 	// MachineFeature
 
+	virtual void RunToNextFrame();
+
 	virtual void ButtonDown(unsigned int index);
 	virtual void ButtonUp(unsigned int index);
 
@@ -82,6 +85,8 @@ private:
 	unsigned int m_startStateSize;
 
 	map<unsigned int, bool> m_isButtonDown;
+
+	queue<InputEvent> m_pendingEvents;
 };
 
 }	//namespace Emunisce
