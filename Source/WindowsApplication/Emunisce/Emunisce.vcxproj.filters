@@ -15,7 +15,7 @@
     <Filter Include="Machine Features\Gui">
       <UniqueIdentifier>{9c248c18-d2a7-4df9-958f-6c695cc8ca04}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Machine Features\Recording">
+    <Filter Include="Machine Features\Input Recording">
       <UniqueIdentifier>{05bf6c39-1712-4293-8f26-1a0baefd05c9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -45,7 +45,7 @@
       <Filter>Machine Features\Gui</Filter>
     </ClCompile>
     <ClCompile Include="InputRecording.cpp">
-      <Filter>Machine Features\Recording</Filter>
+      <Filter>Machine Features\Input Recording</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -71,7 +71,7 @@
       <Filter>Machine Features\Gui</Filter>
     </ClInclude>
     <ClInclude Include="InputRecording.h">
-      <Filter>Machine Features\Recording</Filter>
+      <Filter>Machine Features\Input Recording</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

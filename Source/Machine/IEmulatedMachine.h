@@ -28,6 +28,23 @@ namespace Emunisce
 
 class Archive;
 
+struct ApplicationEvent
+{
+	unsigned int eventId;
+	unsigned int frameCount;
+	unsigned int tickCount;
+
+	bool operator< (const ApplicationEvent& rhs)
+	{
+		if(frameCount < rhs.frameCount)
+			return true;
+		else if(frameCount > rhs.frameCount)
+			return false;
+
+		return tickCount < rhs.tickCount;
+	}
+};
+
 class IEmulatedMachine
 {
 public:
@@ -38,6 +55,7 @@ public:
 	
 	//Application interface
 	virtual void SetApplicationInterface(IMachineToApplication* applicationInterface) = 0;
+	virtual void AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount = true) = 0;	///<When this is called, the application is requesting a callback on IMachineToApplication::ApplicationEvent at the specified time (frameCount+tickCount).  If relativeFrameCount is true, then the specified frameCount is relative to the machine's current frameCount.  tickCount is always absolute (relative to the beginning of the frame; never the current tick count).  eventId should be stored and passed back to ApplicationEvent as-is.  eventId is non-sequential and potentially very large.
 
 	//Component access
 	virtual IEmulatedDisplay* GetDisplay() = 0;
@@ -48,6 +66,7 @@ public:
 
 	//Machine info
 	virtual unsigned int GetFrameCount() = 0;
+	virtual unsigned int GetTickCount() = 0;
 	virtual unsigned int GetTicksPerSecond() = 0;
 	virtual unsigned int GetTicksUntilNextFrame() = 0;
 

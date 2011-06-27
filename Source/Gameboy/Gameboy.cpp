@@ -47,6 +47,22 @@ void Gameboy::SetApplicationInterface(IMachineToApplication* applicationInterfac
 	m_applicationInterface = applicationInterface;
 }
 
+void Gameboy::AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount)
+{
+	if(relativeFrameCount == true)
+	{
+		ApplicationEvent eventCopy = applicationEvent;
+		eventCopy.frameCount += m_frameCount;
+		m_applicationEvents.push_back(eventCopy);
+	}
+	else
+	{
+		m_applicationEvents.push_back(applicationEvent);
+	}
+
+	m_nextApplicationEvent = min_element(m_applicationEvents.begin(), m_applicationEvents.end());
+}
+
 
 //Component access
 IEmulatedDisplay* Gameboy::GetDisplay()
@@ -79,6 +95,11 @@ IEmulatedSound* Gameboy::GetSound()
 unsigned int Gameboy::GetFrameCount()
 {
 	return m_frameCount;
+}
+
+unsigned int Gameboy::GetTickCount()
+{
+	return m_ticksPerFrame - m_frameTicksRemaining;
 }
 
 unsigned int Gameboy::GetTicksPerSecond()
@@ -235,6 +256,8 @@ Gameboy::Gameboy(Memory* memory)
 
 	m_executingInstruction = false;
 	m_subInstructionTicksSpent = 0;
+
+	m_nextApplicationEvent = m_applicationEvents.end();
 }
 
 Gameboy::~Gameboy()
@@ -273,6 +296,20 @@ void Gameboy::Initialize()
 
 void Gameboy::InternalStep()
 {
+	if(m_applicationEvents.size() > 0 && m_nextApplicationEvent != m_applicationEvents.end())
+	{
+		ApplicationEvent currentTime;
+		currentTime.frameCount = m_frameCount;
+		currentTime.tickCount = m_ticksPerFrame - m_frameTicksRemaining;
+
+		if( (*m_nextApplicationEvent) < currentTime )
+		{
+			m_applicationInterface->HandleApplicationEvent(m_nextApplicationEvent->eventId);
+			m_applicationEvents.erase(m_nextApplicationEvent);
+			m_nextApplicationEvent = min_element(m_applicationEvents.begin(), m_applicationEvents.end());
+		}
+	}
+
 	m_executingInstruction = true;
 	unsigned int ticks = m_cpu->Step();
 	m_executingInstruction = false;

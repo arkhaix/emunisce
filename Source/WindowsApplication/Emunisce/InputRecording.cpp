@@ -20,7 +20,22 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "InputRecording.h"
 using namespace Emunisce;
 
+#include "Emunisce.h"
+#include "MachineRunner.h"
+
 #include "Serialization/SerializationIncludes.h"
+
+
+// InputEvent
+
+void InputRecording::InputEvent::Serialize(Archive& archive)
+{
+	SerializeItem(archive, frameId);
+	SerializeItem(archive, tickId);
+
+	SerializeItem(archive, keyDown);
+	SerializeItem(archive, keyIndex);
+}
 
 
 // InputRecording
@@ -33,13 +48,13 @@ InputRecording::InputRecording()
 	m_playing = false;
 
 	m_recordingStartFrame = 0;
-	m_playbackStartFrame = 0;
-	m_absoluteFramePlayback = false;
 }
 
 
 void InputRecording::SerializeMovie(Archive& archive)
 {
+	SerializeItem(archive, m_recordingStartFrame);
+
 	unsigned int numEvents = m_movie.size();
 	SerializeItem(archive, numEvents);
 
@@ -49,26 +64,18 @@ void InputRecording::SerializeMovie(Archive& archive)
 
 		for(int i=0;i<numEvents;i++)
 		{
-			unsigned int frame;
-			SerializeItem(archive, frame);
-
 			InputEvent inputEvent;
-			SerializeItem(archive, inputEvent.keyDown);
-			SerializeItem(archive, inputEvent.keyIndex);
+			inputEvent.Serialize(archive);
 
-			m_movie.insert( make_pair(frame, inputEvent) );
+			m_movie.push_back(inputEvent);
 		}
 	}
 	else //archive.GetArchiveMode() == ArchiveMode::Saving
 	{
 		for(auto iter = m_movie.begin(); iter != m_movie.end(); ++iter)
 		{
-			unsigned int frame = iter->first;
-			SerializeItem(archive, frame);
-
-			InputEvent& inputEvent = iter->second;
-			SerializeItem(archive, inputEvent.keyDown);
-			SerializeItem(archive, inputEvent.keyIndex);
+			InputEvent& inputEvent = *iter;
+			inputEvent.Serialize(archive);
 		}
 	}
 }
@@ -78,8 +85,16 @@ void InputRecording::StartRecording()
 {
 	if(m_wrappedMachine != NULL)
 	{
+		bool wasPaused = m_application->GetMachineRunner()->IsPaused();
+		m_application->GetMachineRunner()->Pause();
+
+		m_movie.clear();
+
 		m_recording = true;
 		m_recordingStartFrame = m_wrappedMachine->GetFrameCount();
+
+		if(wasPaused == false)
+			m_application->GetMachineRunner()->Run();
 	}
 }
 
@@ -93,9 +108,26 @@ void InputRecording::StartPlayback(bool absoluteFrames)
 {
 	if(m_wrappedMachine != NULL)
 	{
+		bool wasPaused = m_application->GetMachineRunner()->IsPaused();
+		m_application->GetMachineRunner()->Pause();
+
 		m_playing = true;
-		m_playbackStartFrame = m_wrappedMachine->GetFrameCount();
-		m_absoluteFramePlayback = absoluteFrames;
+
+		for(unsigned int i=0;i<m_movie.size();i++)
+		{
+			Emunisce::ApplicationEvent inputEvent;
+			inputEvent.eventId = m_eventIdOffset + i;
+			inputEvent.frameCount = m_movie[i].frameId;
+			inputEvent.tickCount = m_movie[i].tickId;
+
+			if(absoluteFrames == false)
+				inputEvent.frameCount -= m_recordingStartFrame;
+
+			m_wrappedMachine->AddApplicationEvent(inputEvent, !absoluteFrames);
+		}
+
+		if(wasPaused == false)
+			m_application->GetMachineRunner()->Run();
 	}
 }
 
@@ -105,49 +137,53 @@ void InputRecording::StopPlayback()
 }
 
 
-
-// MachineFeature
-
-void InputRecording::RunToNextFrame()
+void InputRecording::ApplicationEvent(unsigned int eventId)
 {
-	if(m_playing == true && m_wrappedMachine != NULL && m_wrappedInput != NULL)
+	if(m_wrappedInput == NULL)
+		return;
+
+	if(m_playing == false)
+		return;
+
+	eventId -= m_eventIdOffset;
+	if(eventId < m_movie.size())
 	{
-		unsigned int currentFrame = m_wrappedMachine->GetFrameCount();
-
-		int playbackFrameDelta = m_recordingStartFrame - m_playbackStartFrame;
-		if(m_absoluteFramePlayback == false)
-			currentFrame += playbackFrameDelta;
-
-		auto iterRange = m_movie.equal_range(currentFrame);
-		for(auto iter = iterRange.first; iter != iterRange.second; iter++)
+		InputEvent& inputEvent = m_movie[eventId];
+		if(inputEvent.keyDown == true)
 		{
-			InputEvent& inputEvent = iter->second;
-			if(inputEvent.keyDown == true)
-			{
-				m_wrappedInput->ButtonDown(inputEvent.keyIndex);
-			}
-			else //inputEvent.keyDown == false
-			{
-				m_wrappedInput->ButtonUp(inputEvent.keyIndex);
-			}
+			m_wrappedInput->ButtonDown(inputEvent.keyIndex);
+		}
+		else //inputEvent.keyDown == false (keyUp)
+		{
+			m_wrappedInput->ButtonUp(inputEvent.keyIndex);
 		}
 	}
-
-	MachineFeature::RunToNextFrame();
 }
 
 
+
+// MachineFeature
+
+#include <stdio.h>
 void InputRecording::ButtonDown(unsigned int index)
 {
+	auto iter = m_isButtonDown.find(index);
+	if(iter != m_isButtonDown.end() && iter->second == true)
+		return;
+
+	m_isButtonDown[index] = true;
+
 	if(m_recording == true && m_wrappedMachine != NULL)
 	{
-		unsigned int currentFrame = m_wrappedMachine->GetFrameCount();
+		printf("InputRecording::ButtonDown(%d)\n", index);
 
 		InputEvent inputEvent;
+		inputEvent.frameId = m_wrappedMachine->GetFrameCount();
+		inputEvent.tickId = m_wrappedMachine->GetTickCount();
 		inputEvent.keyDown = true;
 		inputEvent.keyIndex = index;
 
-		m_movie.insert( make_pair(currentFrame, inputEvent) );
+		m_movie.push_back(inputEvent);
 	}
 
 	MachineFeature::ButtonDown(index);
@@ -155,15 +191,23 @@ void InputRecording::ButtonDown(unsigned int index)
 
 void InputRecording::ButtonUp(unsigned int index)
 {
+	auto iter = m_isButtonDown.find(index);
+	if(iter != m_isButtonDown.end() && iter->second == false)
+		return;
+
+	m_isButtonDown[index] = false;
+
 	if(m_recording == true && m_wrappedMachine != NULL)
 	{
-		unsigned int currentFrame = m_wrappedMachine->GetFrameCount();
+		printf("InputRecording::ButtonUp(%d)\n", index);
 
 		InputEvent inputEvent;
+		inputEvent.frameId = m_wrappedMachine->GetFrameCount();
+		inputEvent.tickId = m_wrappedMachine->GetTickCount();
 		inputEvent.keyDown = false;
 		inputEvent.keyIndex = index;
 
-		m_movie.insert( make_pair(currentFrame, inputEvent) );
+		m_movie.push_back(inputEvent);
 	}
 
 	MachineFeature::ButtonUp(index);

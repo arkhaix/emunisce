@@ -23,6 +23,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "MachineFeature.h"
 
 #include <map>
+#include <vector>
 using namespace std;
 
 
@@ -47,10 +48,10 @@ public:
 	void StartPlayback(bool absoluteFrames = false);	///<If absoluteFrames is true, playback will only occur when the emulated machine's frame count matches the recorded frame count exactly.  This is only really useful for playback immediately after loading a savestate (rewinding).
 	void StopPlayback();
 
+	void ApplicationEvent(unsigned int eventId);
+
 
 	// MachineFeature
-
-	virtual void RunToNextFrame();
 
 	virtual void ButtonDown(unsigned int index);
 	virtual void ButtonUp(unsigned int index);
@@ -61,16 +62,22 @@ private:
 	bool m_playing;
 
 	unsigned int m_recordingStartFrame;
-	unsigned int m_playbackStartFrame;
-	bool m_absoluteFramePlayback;
 
 	struct InputEvent
 	{
+		unsigned int frameId;
+		unsigned int tickId;
+
 		bool keyDown;			///<true if a key was pressed, false if a key was released
 		unsigned int keyIndex;
+
+		void Serialize(Archive& archive);
 	};
 
-	multimap<unsigned int, InputEvent> m_movie;
+	static const unsigned int m_eventIdOffset = 0x01000000;	///<Each application component that uses events will have a unique offset.  They're allocated sequentially in the high byte.
+	vector<InputEvent> m_movie;
+
+	map<unsigned int, bool> m_isButtonDown;
 };
 
 }	//namespace Emunisce

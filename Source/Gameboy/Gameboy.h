@@ -25,6 +25,10 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "MachineIncludes.h"
 #include "GameboyTypes.h"
 
+#include <algorithm>
+#include <list>
+using namespace std;
+
 
 namespace Emunisce
 {
@@ -41,6 +45,7 @@ public:
 
 	//Application interface
 	virtual void SetApplicationInterface(IMachineToApplication* applicationInterface);
+	virtual void AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount);
 
 	//Component access
 	virtual IEmulatedDisplay* GetDisplay();
@@ -51,6 +56,7 @@ public:
 
 	//Machine info
 	virtual unsigned int GetFrameCount();
+	virtual unsigned int GetTickCount();
 	virtual unsigned int GetTicksPerSecond();
 	virtual unsigned int GetTicksUntilNextFrame();
 
@@ -116,6 +122,9 @@ protected:
 
 	bool m_executingInstruction;
 	unsigned int m_subInstructionTicksSpent;	///<Tracks how many ticks were used during instruction execution
+
+	list<ApplicationEvent> m_applicationEvents;
+	list<ApplicationEvent>::iterator m_nextApplicationEvent;
 };
 
 }	//namespace Emunisce

@@ -394,6 +394,15 @@ public:
 		fs.CloseFile();
 	}
 
+	void HandleApplicationEvent(unsigned int eventId)
+	{
+		if(eventId >= 0x01000000 && eventId < 0x02000000)
+		{
+			if(_InputRecording != NULL)
+				_InputRecording->ApplicationEvent(eventId);
+		}
+	}
+
 
 	// IWindowMessageListener
 
@@ -426,6 +435,9 @@ public:
 EmunisceApplication::EmunisceApplication()
 {
 	m_private = new Phoenix_Private();
+
+	m_private->_Gui->SetApplication(this);
+	m_private->_InputRecording->SetApplication(this);
 
 	m_private->_Window->Create(320, 240, "Emunisce", "Emunisce_RenderWindow");
 	m_private->_Window->Show();
