@@ -29,6 +29,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
+class KingsDream;
+
 namespace GuiButtons
 {
 	typedef int Type;
@@ -115,23 +117,14 @@ protected:
 
 	protected:
 
-		int m_ticksPerFrame;
-		int m_ticksUntilNextFrame;
-		int m_frameCount;
-
 		GuiScreenBuffer m_screenBuffer;
 
-		
-		static const int m_numAttractors = 5;	///<Arbitrary constant.  How many frames to blend together.
-		GuiScreenBuffer m_attractorBuffer[m_numAttractors];
-		int m_currentAttractorBuffer;
+		int m_ticksThisFrame;
+		int m_ticksPerFrame;
+		int m_frameCount;
 
-		float m_x, m_y;
-		float m_a, m_b, m_c, m_d;
-		int m_framesThisAttractor;
-
-		inline void SilentDream();
-		inline void Dream();
+		bool m_backgroundEnabled;
+		KingsDream* m_backgroundAnimation;
 	};
 
 	GuiFeature* m_guiFeature;
