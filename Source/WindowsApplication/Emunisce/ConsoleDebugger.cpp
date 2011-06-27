@@ -246,6 +246,14 @@ void ConsoleDebugger::FetchCommand()
 	COMMAND0("play", TogglePlayback())
 	//COMMAND0("p", TogglePlayback())	///< p = "pause"
 
+	COMMAND1("saverecording", SaveRecording(args[1].c_str()))
+	COMMAND1("saverec", SaveRecording(args[1].c_str()))
+	COMMAND1("sr", SaveRecording(args[1].c_str()))
+
+	COMMAND1("loadrecording", LoadRecording(args[1].c_str()))
+	COMMAND1("loadrec", LoadRecording(args[1].c_str()))
+	COMMAND1("lr", LoadRecording(args[1].c_str()))
+
 	else
 	{
 		printf("Unrecognized command\n");
@@ -548,4 +556,19 @@ void ConsoleDebugger::TogglePlayback()
 	}
 
 	m_playingInput = !m_playingInput;
+}
+
+
+void ConsoleDebugger::SaveRecording(const char* id)
+{
+	printf("%s\n", __FUNCTION__);
+
+	m_userInterface->SaveInputMovie(id);
+}
+
+void ConsoleDebugger::LoadRecording(const char* id)
+{
+	printf("%s\n", __FUNCTION__);
+
+	m_userInterface->LoadInputMovie(id);
 }

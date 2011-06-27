@@ -64,6 +64,18 @@ InputRecording::~InputRecording()
 
 void InputRecording::SerializeMovie(Archive& archive)
 {
+	SerializeItem(archive, m_startStateSize);
+	if(archive.GetArchiveMode() == ArchiveMode::Loading)
+	{
+		if(m_startState)
+			delete m_startState;
+
+		m_startState = (unsigned char*)malloc(m_startStateSize);
+	}
+
+	SerializeBuffer(archive, m_startState, m_startStateSize);
+
+
 	SerializeItem(archive, m_recordingStartFrame);
 
 	unsigned int numEvents = m_movie.size();

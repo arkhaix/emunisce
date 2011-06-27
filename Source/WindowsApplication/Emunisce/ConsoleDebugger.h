@@ -93,6 +93,9 @@ private:
 	void ToggleRecording();
 	void TogglePlayback();
 
+	void SaveRecording(const char* id);
+	void LoadRecording(const char* id);
+
 
 	//Properties
 

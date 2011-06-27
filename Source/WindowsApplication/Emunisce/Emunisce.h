@@ -63,6 +63,9 @@ public:
 	void StartPlayingInputMovie();
 	void StopPlayingInputMovie();
 
+	void SaveInputMovie(const char* id);
+	void LoadInputMovie(const char* id);
+
 	void NotifyMachineChanged(IEmulatedMachine* newMachine);
 	IEmulatedMachine* GetMachine();
 

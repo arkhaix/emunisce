@@ -155,6 +155,9 @@ public:
 	virtual void StartPlayingInputMovie();
 	virtual void StopPlayingInputMovie();
 
+	virtual void SaveInputMovie(const char* id);	///<Requires that a rom is loaded.  Saves movie based on rom name + id.
+	virtual void LoadInputMovie(const char* id);	///<Requires that a rom is loaded.  Loads movie based on rom name + id.
+
 
 	//Application to user
 

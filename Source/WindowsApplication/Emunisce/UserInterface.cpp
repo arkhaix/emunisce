@@ -150,6 +150,17 @@ void UserInterface::StopPlayingInputMovie()
 }
 
 
+void UserInterface::SaveInputMovie(const char* id)
+{
+	m_phoenix->SaveInputMovie(id);
+}
+
+void UserInterface::LoadInputMovie(const char* id)
+{
+	m_phoenix->LoadInputMovie(id);
+}
+
+
 
 
 
