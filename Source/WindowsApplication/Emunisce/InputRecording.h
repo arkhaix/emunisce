@@ -39,6 +39,7 @@ public:
 	// InputRecording
 
 	InputRecording();
+	~InputRecording();
 	
 	void SerializeMovie(Archive& archive);
 
@@ -62,6 +63,7 @@ private:
 	bool m_playing;
 
 	unsigned int m_recordingStartFrame;
+	unsigned int m_playbackStartFrame;
 
 	struct InputEvent
 	{
@@ -76,6 +78,8 @@ private:
 
 	static const unsigned int m_eventIdOffset = 0x01000000;	///<Each application component that uses events will have a unique offset.  They're allocated sequentially in the high byte.
 	vector<InputEvent> m_movie;
+	unsigned char* m_startState;
+	unsigned int m_startStateSize;
 
 	map<unsigned int, bool> m_isButtonDown;
 };

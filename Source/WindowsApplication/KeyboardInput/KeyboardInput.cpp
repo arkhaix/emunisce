@@ -118,13 +118,7 @@ public:
 
 		_KeyStates[key] = true;
 
-		bool wasPaused = _Phoenix->GetMachineRunner()->IsPaused();
-		_Phoenix->GetMachineRunner()->Pause();
-
 		_Input->ButtonDown(keyIter->second);
-
-		if(wasPaused == false)
-			_Phoenix->GetMachineRunner()->Run();
 	}
 
 	void KeyUp(int key)
@@ -139,13 +133,7 @@ public:
 
 		_KeyStates[key] = false;
 
-		bool wasPaused = _Phoenix->GetMachineRunner()->IsPaused();
-		_Phoenix->GetMachineRunner()->Pause();
-
 		_Input->ButtonUp(keyIter->second);
-
-		if(wasPaused == false)
-			_Phoenix->GetMachineRunner()->Run();
 	}
 };
 
