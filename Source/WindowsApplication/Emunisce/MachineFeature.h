@@ -26,12 +26,15 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
+class EmunisceApplication;
+
 class IExecutableFeature
 {
 public:
 
 	//Machine info
 	virtual unsigned int GetFrameCount() = 0;
+	virtual unsigned int GetTickCount() = 0;
 	virtual unsigned int GetTicksPerSecond() = 0;
 	virtual unsigned int GetTicksUntilNextFrame() = 0;
 
@@ -49,6 +52,8 @@ public:
 	MachineFeature();
 	virtual ~MachineFeature();
 
+	virtual void SetApplication(EmunisceApplication* application);
+
 	virtual void SetComponentMachine(IEmulatedMachine* componentMachine);
 	virtual void SetEmulatedMachine(IEmulatedMachine* emulatedMachine);
 
@@ -63,6 +68,7 @@ public:
 	
 	//Application interface
 	virtual void SetApplicationInterface(IMachineToApplication* applicationInterface);
+	virtual void AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount /*= true*/);
 
 	//Component access
 	virtual IEmulatedDisplay* GetDisplay();
@@ -73,6 +79,7 @@ public:
 
 	//Machine info
 	virtual unsigned int GetFrameCount();
+	virtual unsigned int GetTickCount();
 	virtual unsigned int GetTicksPerSecond();
 	virtual unsigned int GetTicksUntilNextFrame();
 
@@ -118,6 +125,8 @@ public:
 
 
 protected:
+
+	EmunisceApplication* m_application;
 
 	bool m_hasFocus;
 

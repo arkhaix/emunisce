@@ -98,6 +98,7 @@ protected:
 		// IExecutableFeature
 
 		virtual unsigned int GetFrameCount();
+		virtual unsigned int GetTickCount();
 		virtual unsigned int GetTicksPerSecond();
 		virtual unsigned int GetTicksUntilNextFrame();
 

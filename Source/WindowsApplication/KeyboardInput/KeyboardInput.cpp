@@ -30,6 +30,7 @@ using namespace std;
 #include "MachineIncludes.h"
 
 #include "../Emunisce/Emunisce.h"	///<todo: this is basically unused.  refactor this.
+#include "../Emunisce/MachineRunner.h"
 
 namespace Emunisce
 {
@@ -44,6 +45,7 @@ public:
 	IEmulatedInput* _Input;
 
 	map<int, unsigned int> _KeyMap;
+	map<int, bool> _KeyStates;
 
 	KeyboardInput_Private()
 	{
@@ -110,7 +112,19 @@ public:
 		if(keyIter == _KeyMap.end())
 			return;
 
+		auto keyStateIter = _KeyStates.find(key);
+		if(keyStateIter != _KeyStates.end() && keyStateIter->second == true)
+			return;
+
+		_KeyStates[key] = true;
+
+		bool wasPaused = _Phoenix->GetMachineRunner()->IsPaused();
+		_Phoenix->GetMachineRunner()->Pause();
+
 		_Input->ButtonDown(keyIter->second);
+
+		if(wasPaused == false)
+			_Phoenix->GetMachineRunner()->Run();
 	}
 
 	void KeyUp(int key)
@@ -119,7 +133,19 @@ public:
 		if(keyIter == _KeyMap.end())
 			return;
 
+		auto keyStateIter = _KeyStates.find(key);
+		if(keyStateIter != _KeyStates.end() && keyStateIter->second == false)
+			return;
+
+		_KeyStates[key] = false;
+
+		bool wasPaused = _Phoenix->GetMachineRunner()->IsPaused();
+		_Phoenix->GetMachineRunner()->Pause();
+
 		_Input->ButtonUp(keyIter->second);
+
+		if(wasPaused == false)
+			_Phoenix->GetMachineRunner()->Run();
 	}
 };
 

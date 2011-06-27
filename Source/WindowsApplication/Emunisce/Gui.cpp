@@ -141,6 +141,11 @@ unsigned int Gui::GuiFeature::GetFrameCount()
 	return m_frameCount;
 }
 
+unsigned int Gui::GuiFeature::GetTickCount()
+{
+	return m_ticksThisFrame;
+}
+
 unsigned int Gui::GuiFeature::GetTicksPerSecond()
 {
 	return m_ticksPerFrame * 60;

@@ -25,6 +25,8 @@ using namespace Emunisce;
 
 MachineFeature::MachineFeature()
 {
+	m_application = NULL;
+
 	m_hasFocus = false;
 
 	m_wrappedMachine = NULL;
@@ -61,6 +63,12 @@ MachineFeature::MachineFeature()
 
 MachineFeature::~MachineFeature()
 {
+}
+
+
+void MachineFeature::SetApplication(EmunisceApplication* application)
+{
+	m_application = application;
 }
 
 
@@ -158,6 +166,14 @@ void MachineFeature::SetApplicationInterface(IMachineToApplication* applicationI
 	m_wrappedMachine->SetApplicationInterface(applicationInterface);
 }
 
+void MachineFeature::AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount /*= true*/)
+{
+	if(m_wrappedMachine == NULL)
+		return;
+
+	m_wrappedMachine->AddApplicationEvent(applicationEvent, relativeFrameCount);
+}
+
 
 //Component access
 IEmulatedDisplay* MachineFeature::GetDisplay()
@@ -194,6 +210,17 @@ unsigned int MachineFeature::GetFrameCount()
 
 	else if(m_wrappedMachine != NULL)
 		return m_wrappedMachine->GetFrameCount();
+
+	return 0;
+}
+
+unsigned int MachineFeature::GetTickCount()
+{
+	if((m_hasFocus || m_wrappedMachine == NULL) && m_featureExecution != NULL)
+		return m_featureExecution->GetTickCount();
+
+	else if(m_wrappedMachine != NULL)
+		return m_wrappedMachine->GetTickCount();
 
 	return 0;
 }
