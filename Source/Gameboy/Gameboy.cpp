@@ -222,6 +222,20 @@ void Gameboy::RunDuringInstruction(unsigned int ticks)
 	if(m_executingInstruction == false)
 		return;
 
+	if(m_applicationEvents.size() > 0 && m_nextApplicationEvent != m_applicationEvents.end())
+	{
+		ApplicationEvent currentTime;
+		currentTime.frameCount = m_frameCount;
+		currentTime.tickCount = (m_ticksPerFrame - m_frameTicksRemaining) + ticks;
+
+		if( (*m_nextApplicationEvent) < currentTime )
+		{
+			m_applicationInterface->HandleApplicationEvent(m_nextApplicationEvent->eventId);
+			m_applicationEvents.erase(m_nextApplicationEvent);
+			m_nextApplicationEvent = min_element(m_applicationEvents.begin(), m_applicationEvents.end());
+		}
+	}
+
 	if(m_cpu->IsStopped() == false)
 		m_display->Run(ticks);
 
