@@ -56,6 +56,7 @@ public:
 	//Application interface
 	virtual void SetApplicationInterface(IMachineToApplication* applicationInterface) = 0;
 	virtual void AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount = true) = 0;	///<When this is called, the application is requesting a callback on IMachineToApplication::ApplicationEvent at the specified time (frameCount+tickCount).  If relativeFrameCount is true, then the specified frameCount is relative to the machine's current frameCount.  tickCount is always absolute (relative to the beginning of the frame; never the current tick count).  eventId should be stored and passed back to ApplicationEvent as-is.  eventId is non-sequential and potentially very large.
+	virtual void RemoveApplicationEvent(unsigned int eventId) = 0;
 
 	//Component access
 	virtual IEmulatedDisplay* GetDisplay() = 0;

@@ -69,6 +69,7 @@ public:
 	//Application interface
 	virtual void SetApplicationInterface(IMachineToApplication* applicationInterface);
 	virtual void AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount /*= true*/);
+	virtual void RemoveApplicationEvent(unsigned int eventId);
 
 	//Component access
 	virtual IEmulatedDisplay* GetDisplay();

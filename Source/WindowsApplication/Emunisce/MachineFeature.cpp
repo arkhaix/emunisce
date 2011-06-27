@@ -174,6 +174,14 @@ void MachineFeature::AddApplicationEvent(ApplicationEvent& applicationEvent, boo
 	m_wrappedMachine->AddApplicationEvent(applicationEvent, relativeFrameCount);
 }
 
+void MachineFeature::RemoveApplicationEvent(unsigned int eventId)
+{
+	if(m_wrappedMachine == NULL)
+		return;
+
+	m_wrappedMachine->RemoveApplicationEvent(eventId);
+}
+
 
 //Component access
 IEmulatedDisplay* MachineFeature::GetDisplay()

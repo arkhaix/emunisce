@@ -163,6 +163,14 @@ void InputRecording::StartPlayback(bool absoluteFrames)
 void InputRecording::StopPlayback()
 {
 	m_playing = false;
+	
+	if(m_wrappedMachine != NULL)
+	{
+		for(unsigned int i=0;i<m_movie.size();i++)
+		{
+			m_wrappedMachine->RemoveApplicationEvent(m_eventIdOffset + i);
+		}
+	}
 }
 
 
@@ -180,12 +188,10 @@ void InputRecording::ApplicationEvent(unsigned int eventId)
 		InputEvent& inputEvent = m_movie[eventId];
 		if(inputEvent.keyDown == true)
 		{
-			printf("InputRecording::PlayDown(%d) at %d : %d\n", inputEvent.keyIndex, m_wrappedMachine->GetFrameCount() - m_playbackStartFrame, m_wrappedMachine->GetTickCount());
 			m_wrappedInput->ButtonDown(inputEvent.keyIndex);
 		}
 		else //inputEvent.keyDown == false (keyUp)
 		{
-			printf("InputRecording::PlayUp(%d) at %d : %d\n", inputEvent.keyIndex, m_wrappedMachine->GetFrameCount() - m_playbackStartFrame, m_wrappedMachine->GetTickCount());
 			m_wrappedInput->ButtonUp(inputEvent.keyIndex);
 		}
 	}
@@ -213,8 +219,6 @@ void InputRecording::RunToNextFrame()
 
 			m_movie.push_back(inputEvent);
 
-			printf("InputRecording::Record Button(%d) State(%d) at Frame(%d) : Tick(%d)\n", inputEvent.keyIndex, inputEvent.keyDown, inputEvent.frameId - m_recordingStartFrame, inputEvent.tickId);
-
 			m_pendingEvents.pop();
 		}
 	}
@@ -222,7 +226,6 @@ void InputRecording::RunToNextFrame()
 	MachineFeature::RunToNextFrame();
 }
 
-#include <stdio.h>
 void InputRecording::ButtonDown(unsigned int index)
 {
 	auto iter = m_isButtonDown.find(index);

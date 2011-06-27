@@ -63,6 +63,18 @@ void Gameboy::AddApplicationEvent(ApplicationEvent& applicationEvent, bool relat
 	m_nextApplicationEvent = min_element(m_applicationEvents.begin(), m_applicationEvents.end());
 }
 
+void Gameboy::RemoveApplicationEvent(unsigned int eventId)
+{
+	for(auto iter = m_applicationEvents.begin(); iter != m_applicationEvents.end(); ++iter)
+	{
+		if(iter->eventId == eventId)
+		{
+			m_applicationEvents.erase(iter);
+			break;
+		}
+	}
+}
+
 
 //Component access
 IEmulatedDisplay* Gameboy::GetDisplay()
