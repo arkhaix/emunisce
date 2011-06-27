@@ -87,7 +87,11 @@ private:
 	void ToggleMute();
 	void SetSquareSynthesisMethod(const char* strMethod);
 
+	void SetBackgroundAnimation(const char* state);
 	void SetDisplayFilter(const char* strFilter);
+
+	void ToggleRecording();
+	void TogglePlayback();
 
 
 	//Properties
@@ -110,6 +114,9 @@ private:
 
 	SquareSynthesisMethod::Type m_squareSynthesisMethod;
 	DisplayFilter::Type m_displayFilter;
+
+	bool m_recordingInput;
+	bool m_playingInput;
 };
 
 }	//namespace Emunisce

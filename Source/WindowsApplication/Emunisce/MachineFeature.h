@@ -49,7 +49,10 @@ public:
 	MachineFeature();
 	virtual ~MachineFeature();
 
-	virtual void SetMachine(IEmulatedMachine* wrappedMachine);
+	virtual void SetComponentMachine(IEmulatedMachine* componentMachine);
+	virtual void SetEmulatedMachine(IEmulatedMachine* emulatedMachine);
+
+	virtual void SetFocus(bool hasFocus);
 
 
 	// IEmulatedMachine
@@ -119,6 +122,7 @@ protected:
 	bool m_hasFocus;
 
 	IEmulatedMachine* m_wrappedMachine;
+	bool m_isWrappingComponent;
 
 	IEmulatedDisplay* m_wrappedDisplay;
 	IEmulatedInput* m_wrappedInput;

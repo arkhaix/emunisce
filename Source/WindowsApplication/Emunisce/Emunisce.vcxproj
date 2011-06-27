@@ -112,6 +112,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="InputRecording.cpp" />
     <ClCompile Include="KingsDream.cpp" />
     <ClCompile Include="ConsoleDebugger.cpp" />
     <ClCompile Include="Emunisce.cpp" />
@@ -122,6 +123,7 @@
     <ClCompile Include="UserInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="InputRecording.h" />
     <ClInclude Include="KingsDream.h" />
     <ClInclude Include="ConsoleDebugger.h" />
     <ClInclude Include="Emunisce.h" />

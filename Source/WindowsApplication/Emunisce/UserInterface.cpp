@@ -112,10 +112,44 @@ void UserInterface::LoadState(const char* id)
 }
 
 
+void UserInterface::EnableBackgroundAnimation()
+{
+	m_phoenix->EnableBackgroundAnimation();
+}
+
+void UserInterface::DisableBackgroundAnimation()
+{
+	m_phoenix->DisableBackgroundAnimation();
+}
+
 void UserInterface::SetDisplayFilter(DisplayFilter::Type displayFilter)
 {
 	m_phoenix->SetDisplayFilter(displayFilter);
 }
+
+
+void UserInterface::StartRecordingInputMovie()
+{
+	m_phoenix->StartRecordingInputMovie();
+}
+
+void UserInterface::StopRecordingInputMovie()
+{
+	m_phoenix->StopRecordingInputMovie();
+}
+
+
+void UserInterface::StartPlayingInputMovie()
+{
+	m_phoenix->StartPlayingInputMovie();
+}
+
+void UserInterface::StopPlayingInputMovie()
+{
+	m_phoenix->StopPlayingInputMovie();
+}
+
+
 
 
 

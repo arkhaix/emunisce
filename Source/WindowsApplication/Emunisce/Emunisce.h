@@ -53,7 +53,15 @@ public:
 	void SaveState(const char* id);
 	void LoadState(const char* id);
 
+	void EnableBackgroundAnimation();
+	void DisableBackgroundAnimation();
 	void SetDisplayFilter(DisplayFilter::Type filter);
+
+	void StartRecordingInputMovie();
+	void StopRecordingInputMovie();
+
+	void StartPlayingInputMovie();
+	void StopPlayingInputMovie();
 
 	void NotifyMachineChanged(IEmulatedMachine* newMachine);
 	IEmulatedMachine* GetMachine();

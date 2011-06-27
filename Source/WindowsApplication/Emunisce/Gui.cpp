@@ -90,6 +90,18 @@ ScreenBuffer* Gui::GetStableScreenBuffer()
 	return m_filteredScreenBuffer;
 }
 
+void Gui::EnableBackgroundAnimation()
+{
+	if(m_guiFeature != NULL)
+		m_guiFeature->EnableBackgroundAnimation();
+}
+
+void Gui::DisableBackgroundAnimation()
+{
+	if(m_guiFeature != NULL)
+		m_guiFeature->DisableBackgroundAnimation();
+}
+
 void Gui::SetDisplayFilter(DisplayFilter::Type filter)
 {
     m_displayFilter = filter;
@@ -109,6 +121,16 @@ Gui::GuiFeature::GuiFeature()
 	m_ticksThisFrame = 0;
 	m_ticksPerFrame = m_backgroundAnimation->GetPointsPerFrame() / 2;	///<Only update the background at 30fps.  This is because it uses a bit of cpu.  Don't forget to update the brightness (or points per frame) if you change this.
 	m_frameCount = 0;
+}
+
+void Gui::GuiFeature::EnableBackgroundAnimation()
+{
+	m_backgroundEnabled = true;
+}
+
+void Gui::GuiFeature::DisableBackgroundAnimation()
+{
+	m_backgroundEnabled = false;
 }
 
 
