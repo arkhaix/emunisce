@@ -58,6 +58,9 @@ ConsoleDebugger::ConsoleDebugger()
 
 	m_squareSynthesisMethod = SquareSynthesisMethod::LinearInterpolation;
 	m_displayFilter = DisplayFilter::None;
+
+	m_recordingInput = false;
+	m_playingInput = false;
 }
 
 void ConsoleDebugger::Initialize(EmunisceApplication* phoenix)
@@ -228,10 +231,20 @@ void ConsoleDebugger::FetchCommand()
 
 	COMMAND1("square", SetSquareSynthesisMethod(args[1].c_str()))
 
+	COMMAND1("background", SetBackgroundAnimation(args[1].c_str()))
+	COMMAND1("bg", SetBackgroundAnimation(args[1].c_str()))
+
 	COMMAND1("displayfilter", SetDisplayFilter(args[1].c_str()))
 	COMMAND1("display", SetDisplayFilter(args[1].c_str()))
 	COMMAND1("filter", SetDisplayFilter(args[1].c_str()))
 	COMMAND1("df", SetDisplayFilter(args[1].c_str()))
+
+	COMMAND0("record", ToggleRecording())
+	COMMAND0("rec", ToggleRecording())
+	//COMMAND0("r", ToggleRecording())	///< r = "run"
+
+	COMMAND0("play", TogglePlayback())
+	//COMMAND0("p", TogglePlayback())	///< p = "pause"
 
 	else
 	{
@@ -459,6 +472,22 @@ void ConsoleDebugger::SetSquareSynthesisMethod(const char* strMethod)
 	m_squareSynthesisMethod = method;
 }
 
+void ConsoleDebugger::SetBackgroundAnimation(const char* state)
+{
+	printf("%s\n", __FUNCTION__);
+
+	if(state == NULL || strlen(state) == 0 ||
+		_stricmp(state, "0") == 0 ||
+		_stricmp(state, "off") == 0)
+	{
+		m_userInterface->DisableBackgroundAnimation();
+	}
+	else
+	{
+		m_userInterface->EnableBackgroundAnimation();
+	}
+}
+
 void ConsoleDebugger::SetDisplayFilter(const char* strFilter)
 {
 	printf("%s\n", __FUNCTION__);
@@ -486,4 +515,37 @@ void ConsoleDebugger::SetDisplayFilter(const char* strFilter)
 
 	m_userInterface->SetDisplayFilter(filter);
 	m_displayFilter = filter;
+}
+
+
+void ConsoleDebugger::ToggleRecording()
+{
+	printf("%s\n", __FUNCTION__);
+
+	if(m_recordingInput == true)
+	{
+		m_userInterface->StopRecordingInputMovie();
+	}
+	else
+	{
+		m_userInterface->StartRecordingInputMovie();
+	}
+
+	m_recordingInput = !m_recordingInput;
+}
+
+void ConsoleDebugger::TogglePlayback()
+{
+	printf("%s\n", __FUNCTION__);
+
+	if(m_playingInput == true)
+	{
+		m_userInterface->StopPlayingInputMovie();
+	}
+	else
+	{
+		m_userInterface->StartPlayingInputMovie();
+	}
+
+	m_playingInput = !m_playingInput;
 }

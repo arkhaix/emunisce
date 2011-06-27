@@ -57,6 +57,9 @@ public:
 	Gui();
 	virtual ~Gui();
 
+	void EnableBackgroundAnimation();
+	void DisableBackgroundAnimation();
+
 	virtual void SetDisplayFilter(DisplayFilter::Type filter);
 
 
@@ -87,6 +90,9 @@ protected:
 		// GuiFeature
 
 		GuiFeature();
+
+		void EnableBackgroundAnimation();
+		void DisableBackgroundAnimation();
 
 
 		// IExecutableFeature

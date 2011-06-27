@@ -28,6 +28,7 @@ MachineFeature::MachineFeature()
 	m_hasFocus = false;
 
 	m_wrappedMachine = NULL;
+	m_isWrappingComponent = false;
 
 	m_wrappedDisplay = NULL;
 	m_wrappedInput = NULL;
@@ -63,8 +64,44 @@ MachineFeature::~MachineFeature()
 }
 
 
-void MachineFeature::SetMachine(IEmulatedMachine* wrappedMachine)
+void MachineFeature::SetComponentMachine(IEmulatedMachine* componentMachine)
 {
+	m_wrappedMachine = componentMachine;
+	m_isWrappingComponent = true;
+
+	if(m_wrappedMachine != NULL)
+	{
+		m_wrappedDisplay = componentMachine->GetDisplay();
+		m_wrappedInput = componentMachine->GetInput();
+		m_wrappedMemory = componentMachine->GetMemory();
+		m_wrappedProcessor = componentMachine->GetProcessor();
+		m_wrappedSound = componentMachine->GetSound();
+	}
+	else
+	{
+		m_wrappedDisplay = NULL;
+		m_wrappedInput = NULL;
+		m_wrappedMemory = NULL;
+		m_wrappedProcessor = NULL;
+		m_wrappedSound = NULL;
+	}
+}
+
+void MachineFeature::SetEmulatedMachine(IEmulatedMachine* wrappedMachine)
+{
+	if(m_isWrappingComponent == true && m_wrappedMachine != NULL)
+	{
+		MachineFeature* componentMachine = dynamic_cast<MachineFeature*>(m_wrappedMachine);
+		if(componentMachine != NULL)
+		{
+			componentMachine->SetEmulatedMachine(wrappedMachine);
+			return;
+		}
+	}
+
+
+	//This point only reached if we're not wrapping a component
+
 	m_wrappedMachine = wrappedMachine;
 
 	if(m_wrappedMachine != NULL)
@@ -83,6 +120,11 @@ void MachineFeature::SetMachine(IEmulatedMachine* wrappedMachine)
 		m_wrappedProcessor = NULL;
 		m_wrappedSound = NULL;
 	}
+}
+
+void MachineFeature::SetFocus(bool hasFocus)
+{
+	m_hasFocus = hasFocus;
 }
 
 
@@ -150,7 +192,7 @@ unsigned int MachineFeature::GetFrameCount()
 	if((m_hasFocus || m_wrappedMachine == NULL) && m_featureExecution != NULL)
 		return m_featureExecution->GetFrameCount();
 
-	if(m_wrappedMachine != NULL)
+	else if(m_wrappedMachine != NULL)
 		return m_wrappedMachine->GetFrameCount();
 
 	return 0;
@@ -161,7 +203,7 @@ unsigned int MachineFeature::GetTicksPerSecond()
 	if((m_hasFocus || m_wrappedMachine == NULL) && m_featureExecution != NULL)
 		return m_featureExecution->GetTicksPerSecond();
 
-	if(m_wrappedMachine != NULL)
+	else if(m_wrappedMachine != NULL)
 		return m_wrappedMachine->GetTicksPerSecond();
 
 	return 1;
@@ -172,7 +214,7 @@ unsigned int MachineFeature::GetTicksUntilNextFrame()
 	if((m_hasFocus || m_wrappedMachine == NULL) && m_featureExecution != NULL)
 		return m_featureExecution->GetTicksUntilNextFrame();
 
-	if(m_wrappedMachine != NULL)
+	else if(m_wrappedMachine != NULL)
 		return m_wrappedMachine->GetTicksUntilNextFrame();
 
 	return (unsigned int)-1;
@@ -185,7 +227,7 @@ void MachineFeature::Step()
 	if((m_hasFocus || m_wrappedMachine == NULL) && m_featureExecution != NULL)
 		m_featureExecution->Step();
 
-	if(m_wrappedMachine != NULL)
+	else if(m_wrappedMachine != NULL)
 		m_wrappedMachine->Step();
 }
 
@@ -194,7 +236,7 @@ void MachineFeature::RunToNextFrame()
 	if((m_hasFocus || m_wrappedMachine == NULL) && m_featureExecution != NULL)
 		m_featureExecution->RunToNextFrame();
 
-	if(m_wrappedMachine != NULL)
+	else if(m_wrappedMachine != NULL)
 		m_wrappedMachine->RunToNextFrame();
 }
 
@@ -290,7 +332,7 @@ unsigned int MachineFeature::NumButtons()
 {
 	unsigned int result = 0;
 
-	if( (m_hasFocus || m_wrappedInput == NULL) && m_featureInput != NULL )
+	if(m_featureInput != NULL)
 	{
 		result += m_featureInput->NumButtons();
 	}
@@ -305,7 +347,7 @@ unsigned int MachineFeature::NumButtons()
 
 const char* MachineFeature::GetButtonName(unsigned int index)
 {
-	if( (m_hasFocus || m_wrappedInput == NULL) && m_featureInput != NULL )
+	if(m_featureInput != NULL )
 	{
 		if(index < m_featureInput->NumButtons())
 			return m_featureInput->GetButtonName(index);
@@ -328,9 +370,10 @@ void MachineFeature::ButtonDown(unsigned int index)
 	{
 		if(index < m_featureInput->NumButtons())
 			return m_featureInput->ButtonDown(index);
-
-		index -= m_featureInput->NumButtons();
 	}
+
+	if(m_featureInput != NULL)
+		index -= m_featureInput->NumButtons();
 
 	if(m_wrappedInput != NULL)
 	{

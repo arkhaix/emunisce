@@ -143,8 +143,17 @@ public:
 	virtual void SaveState(const char* id);	///<Requires that a rom is loaded.  Saves state basd on rom name.  id is a slot identifier (any value is okay).
 	virtual void LoadState(const char* id);	///<Requires that a rom is loaded.  Loads state based on rom name and specified slot id.
 
-	//Display
+	//Gui
+	virtual void EnableBackgroundAnimation();
+	virtual void DisableBackgroundAnimation();
 	virtual void SetDisplayFilter(DisplayFilter::Type displayFilter);	///<Sets the desired display filter.
+
+	//Input movie
+	virtual void StartRecordingInputMovie();
+	virtual void StopRecordingInputMovie();
+
+	virtual void StartPlayingInputMovie();
+	virtual void StopPlayingInputMovie();
 
 
 	//Application to user

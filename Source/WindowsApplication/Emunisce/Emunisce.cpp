@@ -37,6 +37,7 @@ using namespace Emunisce;
 
 #include "MachineFeature.h"
 #include "Gui.h"
+#include "InputRecording.h"
 
 #include "MachineRunner.h"
 #include "ConsoleDebugger.h"
@@ -59,6 +60,7 @@ public:
 	Window* _Window;
 
 	Gui* _Gui;
+	InputRecording* _InputRecording;
 
 	MachineFeature* _Machine;
 	IEmulatedMachine* _WrappedMachine;
@@ -85,6 +87,10 @@ public:
 		_Window = new Window();
 
 		_Gui = new Gui();
+		_InputRecording = new InputRecording();
+
+		_Gui->SetComponentMachine(_InputRecording);
+		_Gui->SetFocus(true);
 
 		_Machine = _Gui;
 		_WrappedMachine = NULL;
@@ -201,9 +207,10 @@ public:
 
 		IEmulatedMachine* newMachine = _PendingMachine;
 
-		if(newMachine != _Machine)
+		if(newMachine != _Gui && newMachine != _InputRecording)
 		{
-			_Machine->SetMachine(newMachine);
+			_Gui->SetFocus(false);
+			_Machine->SetEmulatedMachine(newMachine);
 			_WrappedMachine = newMachine;
 		}
 
@@ -580,11 +587,50 @@ void EmunisceApplication::LoadState(const char* id)
 	fs.CloseFile();
 }
 
+void EmunisceApplication::EnableBackgroundAnimation()
+{
+	if(m_private->_Gui != NULL)
+		m_private->_Gui->EnableBackgroundAnimation();
+}
+
+void EmunisceApplication::DisableBackgroundAnimation()
+{
+	if(m_private->_Gui != NULL)
+		m_private->_Gui->DisableBackgroundAnimation();
+}
+
 void EmunisceApplication::SetDisplayFilter(DisplayFilter::Type filter)
 {
 	if(m_private->_Gui != NULL)
 		m_private->_Gui->SetDisplayFilter(filter);
 }
+
+
+void EmunisceApplication::StartRecordingInputMovie()
+{
+	if(m_private->_InputRecording != NULL)
+		m_private->_InputRecording->StartRecording();
+}
+
+void EmunisceApplication::StopRecordingInputMovie()
+{
+	if(m_private->_InputRecording != NULL)
+		m_private->_InputRecording->StopRecording();
+}
+
+
+void EmunisceApplication::StartPlayingInputMovie()
+{
+	if(m_private->_InputRecording != NULL)
+		m_private->_InputRecording->StartPlayback();
+}
+
+void EmunisceApplication::StopPlayingInputMovie()
+{
+	if(m_private->_InputRecording != NULL)
+		m_private->_InputRecording->StopPlayback();
+}
+
 
 void EmunisceApplication::NotifyMachineChanged(IEmulatedMachine* newMachine)
 {

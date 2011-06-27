@@ -172,7 +172,7 @@ void KingsDream::ResizeScreenBuffers(unsigned int width, unsigned int height)
 		m_frames[i] = new DynamicScreenBuffer(width, height);
 }
 
-#include <stdio.h>
+
 void KingsDream::IncrementGenerator()
 {
 	m_a += m_incrementPerFrame;
@@ -187,8 +187,6 @@ void KingsDream::IncrementGenerator()
 		if(m_a > iter->first && m_a < iter->second)
 			m_a += iter->second - iter->first;
 	}
-
-	printf("a = %0.05f\n", m_a);
 }
 
 void KingsDream::BlendBuffers()
