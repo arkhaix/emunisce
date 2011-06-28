@@ -38,7 +38,6 @@ MachineRunner::MachineRunner()
 	m_waitEvent = NULL;
 
 	m_emulationSpeed = 1.f;
-	m_throttlingEnabled = true;
 
 	QueryPerformanceFrequency(&m_syncState.CountsPerSecond);
 	m_syncState.CountsPerFrame.QuadPart = m_syncState.CountsPerSecond.QuadPart / 60;	///<todo: this is bad. When CountsPerSecond is 1000, this will be 16.66667 rounded down to 16, throwing everything off by two-thirds of a millisecond per frame (40 milliseconds per second).
@@ -92,6 +91,7 @@ float MachineRunner::GetEmulationSpeed()
 
 void MachineRunner::SetEmulationSpeed(float multiplier)
 {
+	ResetSynchronizationState();
 	m_emulationSpeed = multiplier;
 }
 
@@ -185,9 +185,6 @@ DWORD MachineRunner::RunnerThread()
 
 void MachineRunner::Synchronize()
 {
-	if(m_throttlingEnabled == false)
-		return;
-
 	if(m_emulationSpeed < +1e-5)
 		return;
 		

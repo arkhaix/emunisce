@@ -142,6 +142,48 @@ public:
 		_ScreenTexture = 0;
 	}
 
+	bool WglIsExtensionSupported(const char *extension)
+	{
+		//This function is copied directly from NeHe's tutorial #46.
+		//http://nehe.gamedev.net/data/lessons/lesson.asp?lesson=46
+
+		const size_t extlen = strlen(extension);
+		const char *supported = NULL;
+
+		// Try To Use wglGetExtensionStringARB On Current DC, If Possible
+		PROC wglGetExtString = wglGetProcAddress("wglGetExtensionsStringARB");
+
+		if (wglGetExtString)
+			supported = ((char*(__stdcall*)(HDC))wglGetExtString)(wglGetCurrentDC());
+
+		// If That Failed, Try Standard Opengl Extensions String
+		if (supported == NULL)
+			supported = (char*)glGetString(GL_EXTENSIONS);
+
+		// If That Failed Too, Must Be No Extensions Supported
+		if (supported == NULL)
+			return false;
+
+		// Begin Examination At Start Of String, Increment By 1 On False Match
+		for (const char* p = supported; ; p++)
+		{
+			// Advance p Up To The Next Possible Match
+			p = strstr(p, extension);
+
+			if (p == NULL)
+				return false;						// No Match
+
+			// Make Sure That Match Is At The Start Of The String Or That
+			// The Previous Char Is A Space, Or Else We Could Accidentally
+			// Match "wglFunkywglExtension" With "wglExtension"
+
+			// Also, Make Sure That The Following Character Is Space Or NULL
+			// Or Else "wglExtensionTwo" Might Match "wglExtension"
+			if ((p==supported || p[-1]==' ') && (p[extlen]=='\0' || p[extlen]==' '))
+				return true;						// Match
+		}
+	}
+
 	void InitializeOpenGL()
 	{
 		if(_WindowHandle == NULL)
@@ -174,6 +216,15 @@ public:
 		glShadeModel(GL_FLAT);
 		glDisable(GL_DEPTH_TEST);
 		glClearColor(0.0f, 0.0f, 1.0f, 0.0f);
+
+		//Enable v-sync if possible
+		if(WglIsExtensionSupported("WGL_EXT_swap_control") == true)
+		{
+			typedef void (APIENTRY *TwglSwapIntervalEXT)(int);
+			TwglSwapIntervalEXT wglSwapIntervalEXT = (TwglSwapIntervalEXT)wglGetProcAddress("wglSwapIntervalEXT");
+			if (wglSwapIntervalEXT != NULL)
+				wglSwapIntervalEXT(1);
+		}
 
 		RestorePreservedContext();
 	}

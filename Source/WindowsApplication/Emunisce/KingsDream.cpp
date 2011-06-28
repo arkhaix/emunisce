@@ -24,10 +24,13 @@ using namespace Emunisce;
 
 #include <math.h>
 #include <stdlib.h>
+#include <time.h>
 
 
 KingsDream::KingsDream()
 {
+	srand((unsigned int)time(NULL));
+
 	m_screenBuffer = NULL;
 	for(int i=0;i<m_maxNumBlendFrames;i++)
 		m_frames[i] = NULL;

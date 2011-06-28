@@ -53,6 +53,8 @@ public:
 
 private:
 
+	void Help();
+
 	void SetupConsole();
 
 	void UpdateDisplay();
