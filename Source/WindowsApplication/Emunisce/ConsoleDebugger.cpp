@@ -91,6 +91,8 @@ void ConsoleDebugger::Run()
 {
 	SetupConsole();
 
+	Help();
+
 	RunMachine();
 
 	while(m_phoenix->ShutdownRequested() == false)
@@ -100,6 +102,22 @@ void ConsoleDebugger::Run()
 	}
 }
 
+
+void ConsoleDebugger::Help()
+{
+	printf("Useful commands:\n");
+	printf("help - displays this list\n");
+	printf("load - opens the rom file selection dialog\n");
+	printf("pause - pauses the game\n");
+	printf("run - un-pauses the game\n");
+	printf("savestate name - saves the current state to a file called 'name.ess'\n");
+	printf("loadstate name - loads state from the file 'name.ess'\n");
+	printf("speed multiplier - sets the emulation speed. 1=normal, 0.5=half, 2=double, etc\n");
+	printf("mute - toggles mute on or off\n");
+	printf("displayfilter 1-4 - sets the display filter. 1=normal, 2=hq2x, 3=hq3x, 4=hq4x\n");
+	printf("background on/off - toggles the background animation on or off\n");
+	printf("\n");
+}
 
 void ConsoleDebugger::SetupConsole()
 {
@@ -159,6 +177,9 @@ void ConsoleDebugger::FetchCommand()
 	COMMAND0("q", m_phoenix->RequestShutdown())
 	COMMAND0("exit", m_phoenix->RequestShutdown())
 	COMMAND0("x", m_phoenix->RequestShutdown())
+
+	COMMAND0("help", Help())
+	COMMAND0("h", Help())
 
 	COMMAND1("load", LoadROM(line.substr(args[0].size()+1).c_str()))
 	COMMAND1("l", LoadROM(line.substr(args[0].size()+1).c_str()))
@@ -256,7 +277,7 @@ void ConsoleDebugger::FetchCommand()
 
 	else
 	{
-		printf("Unrecognized command\n");
+		printf("Unrecognized command.  Use 'help' for a list of valid commands.\n");
 	}
 }
 
@@ -330,6 +351,8 @@ void ConsoleDebugger::RunMachine()
 
 void ConsoleDebugger::RunMachineTo(int address)
 {
+	printf("%s(%04X)\n", __FUNCTION__, address);
+
 	u16 gbAddress = (u16)address;
 	bool addedBreakpoint = false;
 
@@ -356,23 +379,31 @@ void ConsoleDebugger::RunMachineTo(int address)
 
 void ConsoleDebugger::Pause()
 {
+	printf("%s\n", __FUNCTION__);
+
 	m_userInterface->Pause();
 }
 
 
 void ConsoleDebugger::Speed(float multiplier)
 {
+	printf("%s(%0.02f)\n", __FUNCTION__, multiplier);
+
 	m_userInterface->SetEmulationSpeed(multiplier);
 }
 
 
 void ConsoleDebugger::SaveState(const char* id)
 {
+	printf("%s(%s)\n", __FUNCTION__, id);
+
 	m_userInterface->SaveState(id);
 }
 
 void ConsoleDebugger::LoadState(const char* id)
 {
+	printf("%s(%s)\n", __FUNCTION__, id);
+
 	m_userInterface->LoadState(id);
 }
 

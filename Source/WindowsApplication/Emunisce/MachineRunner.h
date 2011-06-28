@@ -91,7 +91,6 @@ protected:
 	StepMode::Type m_stepMode;
 
 	float m_emulationSpeed;
-	bool m_throttlingEnabled;
 
 	struct SynchronizationInfo
 	{
