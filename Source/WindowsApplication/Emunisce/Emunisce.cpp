@@ -534,7 +534,7 @@ void EmunisceApplication::RunWindow()
 				GetWindow()->PumpMessages();
 			}
 
-			if(m_private->_Renderer->GetLastFrameRendered() == machine->GetDisplay()->GetScreenBufferCount() && ShutdownRequested() == false)
+			else if(ShutdownRequested() == false)
 			{
 				GetWindow()->PumpMessages();
 				Sleep(15);
