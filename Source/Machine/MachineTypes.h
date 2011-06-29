@@ -41,11 +41,11 @@ class IEmulatedSound;
 class ScreenBuffer;
 class DynamicScreenBuffer;
 
-typedef u32 DisplayPixel;	///<RGBA, where R is the least significant byte and A is the most significant byte.
+typedef u32 DisplayPixel;	///<ARGB, where B is the least significant byte and A is the most significant byte.
 
 inline DisplayPixel DisplayPixelFromRGBA(u8 r, u8 g, u8 b, u8 a = 255)
 {
-	return (DisplayPixel)((a << 24) | (b << 16) | (g << 8) | (r << 0));
+	return (DisplayPixel)((a << 24) | (r << 16) | (g << 8) | (b << 0));
 }
 
 inline DisplayPixel DisplayPixelFromRGBA(float r, float g, float b, float a = 1.f)

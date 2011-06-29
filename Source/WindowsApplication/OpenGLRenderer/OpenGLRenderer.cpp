@@ -23,6 +23,7 @@ using namespace Emunisce;
 #include "windows.h"
 
 #include "gl/gl.h"
+#include "glext.h"
 
 #include "PlatformIncludes.h"
 
@@ -120,6 +121,26 @@ public:
 
 	GLuint _ScreenTexture;
 
+
+	bool _PboSupported;
+
+	typedef void (APIENTRY *TglGenBuffersARB)(GLsizei n, GLuint* buffers);
+	typedef void (APIENTRY *TglBindBufferARB)(GLenum target, GLuint id);
+	typedef void (APIENTRY *TglBufferDataARB)(GLenum target, int size, const GLvoid *data, GLenum usage);
+	typedef void (APIENTRY *TglDeleteBuffersARB)(int size, GLuint* buffers);
+	typedef GLvoid* (APIENTRY *TglMapBufferARB)(GLenum target, GLenum access);
+	typedef GLboolean (APIENTRY *TglUnmapBufferARB)(GLenum target);
+
+	TglGenBuffersARB glGenBuffersARB;
+	TglBindBufferARB glBindBufferARB;
+	TglBufferDataARB glBufferDataARB;
+	TglDeleteBuffersARB glDeleteBuffersARB;
+	TglMapBufferARB glMapBufferARB;
+	TglUnmapBufferARB glUnmapBufferARB;
+
+	GLuint _PixelBufferObject;
+
+
 	OpenGLRenderer_Private()
 	{
 		_Phoenix = NULL;
@@ -140,11 +161,20 @@ public:
 		_LastFrameDrawn = -1;
 
 		_ScreenTexture = 0;
+
+		_PboSupported = false;
+		glGenBuffersARB = NULL;
+		glBindBufferARB = NULL;
+		glBufferDataARB = NULL;
+		glDeleteBuffersARB = NULL;
+		glMapBufferARB = NULL;
+		glUnmapBufferARB = NULL;
+		_PixelBufferObject = 0;
 	}
 
 	bool WglIsExtensionSupported(const char *extension)
 	{
-		//This function is copied directly from NeHe's tutorial #46.
+		//This function is modified from NeHe's tutorial #46.
 		//http://nehe.gamedev.net/data/lessons/lesson.asp?lesson=46
 
 		const size_t extlen = strlen(extension);
@@ -156,32 +186,54 @@ public:
 		if (wglGetExtString)
 			supported = ((char*(__stdcall*)(HDC))wglGetExtString)(wglGetCurrentDC());
 
-		// If That Failed, Try Standard Opengl Extensions String
-		if (supported == NULL)
-			supported = (char*)glGetString(GL_EXTENSIONS);
-
-		// If That Failed Too, Must Be No Extensions Supported
-		if (supported == NULL)
-			return false;
-
-		// Begin Examination At Start Of String, Increment By 1 On False Match
-		for (const char* p = supported; ; p++)
+		if(supported != NULL)
 		{
-			// Advance p Up To The Next Possible Match
-			p = strstr(p, extension);
+			// Begin Examination At Start Of String, Increment By 1 On False Match
+			for (const char* p = supported; ; p++)
+			{
+				// Advance p Up To The Next Possible Match
+				p = strstr(p, extension);
 
-			if (p == NULL)
-				return false;						// No Match
+				if (p == NULL)
+					break;						// No Match
 
-			// Make Sure That Match Is At The Start Of The String Or That
-			// The Previous Char Is A Space, Or Else We Could Accidentally
-			// Match "wglFunkywglExtension" With "wglExtension"
+				// Make Sure That Match Is At The Start Of The String Or That
+				// The Previous Char Is A Space, Or Else We Could Accidentally
+				// Match "wglFunkywglExtension" With "wglExtension"
 
-			// Also, Make Sure That The Following Character Is Space Or NULL
-			// Or Else "wglExtensionTwo" Might Match "wglExtension"
-			if ((p==supported || p[-1]==' ') && (p[extlen]=='\0' || p[extlen]==' '))
-				return true;						// Match
+				// Also, Make Sure That The Following Character Is Space Or NULL
+				// Or Else "wglExtensionTwo" Might Match "wglExtension"
+				if ((p==supported || p[-1]==' ') && (p[extlen]=='\0' || p[extlen]==' '))
+					return true;						// Match
+			}
 		}
+
+		//Not found in wgl extensions.  Try standard opengl extensions.
+		supported = (char*)glGetString(GL_EXTENSIONS);
+		if (supported != NULL)
+		{
+			// Begin Examination At Start Of String, Increment By 1 On False Match
+			for (const char* p = supported; ; p++)
+			{
+				// Advance p Up To The Next Possible Match
+				p = strstr(p, extension);
+
+				if (p == NULL)
+					break;						// No Match
+
+				// Make Sure That Match Is At The Start Of The String Or That
+				// The Previous Char Is A Space, Or Else We Could Accidentally
+				// Match "wglFunkywglExtension" With "wglExtension"
+
+				// Also, Make Sure That The Following Character Is Space Or NULL
+				// Or Else "wglExtensionTwo" Might Match "wglExtension"
+				if ((p==supported || p[-1]==' ') && (p[extlen]=='\0' || p[extlen]==' '))
+					return true;						// Match
+			}
+		}
+
+		//No dice
+		return false;
 	}
 
 	void InitializeOpenGL()
@@ -217,13 +269,30 @@ public:
 		glDisable(GL_DEPTH_TEST);
 		glClearColor(0.0f, 0.0f, 1.0f, 0.0f);
 
-		//Enable v-sync if possible
+		//Enable v-sync if supported
 		if(WglIsExtensionSupported("WGL_EXT_swap_control") == true)
 		{
 			typedef void (APIENTRY *TwglSwapIntervalEXT)(int);
 			TwglSwapIntervalEXT wglSwapIntervalEXT = (TwglSwapIntervalEXT)wglGetProcAddress("wglSwapIntervalEXT");
 			if (wglSwapIntervalEXT != NULL)
 				wglSwapIntervalEXT(1);
+		}
+
+		//Enable PBO method if supported
+		if(WglIsExtensionSupported("GL_ARB_pixel_buffer_object") == true)
+		{
+			_PboSupported = true;
+
+			glGenBuffersARB = (TglGenBuffersARB)wglGetProcAddress("glGenBuffersARB");
+			glBindBufferARB = (TglBindBufferARB)wglGetProcAddress("glBindBufferARB");
+			glBufferDataARB = (TglBufferDataARB)wglGetProcAddress("glBufferDataARB");
+			glDeleteBuffersARB = (TglDeleteBuffersARB)wglGetProcAddress("glDeleteBuffersARB");
+			glMapBufferARB = (TglMapBufferARB)wglGetProcAddress("glMapBufferARB");
+			glUnmapBufferARB = (TglUnmapBufferARB)wglGetProcAddress("glUnmapBufferARB");
+
+			if(glGenBuffersARB == NULL || glBindBufferARB == NULL || glBufferDataARB == NULL || 
+				glDeleteBuffersARB == NULL || glMapBufferARB == NULL || glUnmapBufferARB == NULL)
+				_PboSupported = false;
 		}
 
 		RestorePreservedContext();
@@ -266,37 +335,109 @@ public:
 
 		int displayWidth = displayScreen->GetWidth();
 		int displayHeight = displayScreen->GetHeight();
+		int displayDataSize = displayWidth * displayHeight * sizeof(DisplayPixel);
 
+		bool resizeTexture = false;
 		if(_ScreenBuffer == NULL || _ScreenBuffer->Width != displayWidth || _ScreenBuffer->Height != displayHeight)
 		{
 			if(_ScreenBuffer != NULL)
 				delete _ScreenBuffer;
 
 			_ScreenBuffer = new OpenGLScreenBuffer(displayWidth, displayHeight);
+			resizeTexture = true;
 		}
 
+		//Normally, texture format conversion goes here, but right now displayScreen->GetPixels
+		// outputs the native texture format, so I'm passing it directly into the gl functions.
+		/*
 		int numPixels = displayWidth * displayHeight;
 		memcpy((void*)_ScreenBuffer->Pixels, (void*)displayScreen->GetPixels(), numPixels * sizeof(DisplayPixel));
+		*/
 		
-		PreserveExistingContext();
-		wglMakeCurrent(_DeviceContext, _RenderContext);
-
-		if(_ScreenTexture != 0)
+		//PixelBufferObject method
+		if(_PboSupported == true)
 		{
-			glDeleteTextures(1, &_ScreenTexture);
+			if(resizeTexture == true)
+			{
+				//Free the old resources
+
+				//Texture
+				if(_ScreenTexture != 0)
+					glDeleteTextures(1, &_ScreenTexture);
+
+				//PBO
+				if(_PixelBufferObject != 0)
+					glDeleteBuffersARB(1, &_PixelBufferObject);
+
+
+				//Allocate new resources
+
+				//Texture
+				glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+				glPixelStorei(GL_PACK_ALIGNMENT, 1);
+				glGenTextures(1, &_ScreenTexture);
+				glBindTexture(GL_TEXTURE_2D, _ScreenTexture);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, displayWidth, displayHeight, 0, GL_BGRA_EXT, GL_UNSIGNED_INT_8_8_8_8_REV, NULL);
+				glBindTexture(GL_TEXTURE_2D, 0);
+
+				//PBO
+				glGenBuffersARB(1, &_PixelBufferObject);
+				glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, _PixelBufferObject);
+				glBufferDataARB(GL_PIXEL_UNPACK_BUFFER_ARB, displayDataSize, NULL, GL_STREAM_DRAW_ARB);
+				glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
+			}
+
+			//Bind things
+			glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, _PixelBufferObject);
+
+			//Map the buffer so we can modify it
+			glBufferDataARB(GL_PIXEL_UNPACK_BUFFER_ARB, displayDataSize, 0, GL_STREAM_DRAW_ARB);
+			GLubyte* mappedData = (GLubyte*)glMapBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, GL_WRITE_ONLY_ARB);
+
+			//Update the buffer
+			if(mappedData)
+			{
+				//memcpy((void*)mappedData, (void*)_ScreenBuffer->Pixels, displayDataSize);
+				memcpy((void*)mappedData, (void*)displayScreen->GetPixels(), displayDataSize);
+				glUnmapBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB);
+			}
+
+			//Copy data from the pbo to the texture
+			glBindTexture(GL_TEXTURE_2D, _ScreenTexture);
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, displayWidth, displayHeight, GL_BGRA_EXT, GL_UNSIGNED_INT_8_8_8_8_REV, NULL);
+			glBindTexture(GL_TEXTURE_2D, 0);
+
+			//We're done. Unbind the buffer.
+			glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
 		}
 
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glPixelStorei(GL_PACK_ALIGNMENT, 1);
-		glGenTextures(1, &_ScreenTexture);
-		glBindTexture(GL_TEXTURE_2D, _ScreenTexture);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		//TexImage2D method
+		else
+		{
+			if(resizeTexture == true)
+			{
+				if(_ScreenTexture != 0)
+					glDeleteTextures(1, &_ScreenTexture);
+			
+				glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+				glPixelStorei(GL_PACK_ALIGNMENT, 1);
+				glGenTextures(1, &_ScreenTexture);
+				glBindTexture(GL_TEXTURE_2D, _ScreenTexture);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, displayWidth, displayHeight, 0, GL_BGRA_EXT, GL_UNSIGNED_INT_8_8_8_8_REV, NULL);
+				glBindTexture(GL_TEXTURE_2D, 0);
+			}
 
-		//todo: power of 2 problems?
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, displayWidth, displayHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)_ScreenBuffer->Pixels);
+			glBindTexture(GL_TEXTURE_2D, _ScreenTexture);
 
-		RestorePreservedContext();
+			//glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, displayWidth, displayHeight, GL_BGRA_EXT, GL_UNSIGNED_INT_8_8_8_8_REV, (GLvoid*)_ScreenBuffer->Pixels);
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, displayWidth, displayHeight, GL_BGRA_EXT, GL_UNSIGNED_INT_8_8_8_8_REV, (GLvoid*)displayScreen->GetPixels());
+
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
 	}
 
 	void RenderToWindow()
@@ -311,9 +452,6 @@ public:
 			return;
 
 		_LastFrameDrawn = _LastFrameRendered;
-
-		PreserveExistingContext();
-		wglMakeCurrent(_DeviceContext, _RenderContext);
 
 		//Make sure we're covering the whole window (even after resize)
 		RECT clientRect;
@@ -366,8 +504,6 @@ public:
 
 		//Display the rendered frame to the window
 		SwapBuffers(_DeviceContext);
-
-		RestorePreservedContext();
 	}
 
 
@@ -381,8 +517,13 @@ public:
 
 	void Draw()
 	{
+		PreserveExistingContext();
+		wglMakeCurrent(_DeviceContext, _RenderContext);
+
 		UpdateTexture();
 		RenderToWindow();
+
+		RestorePreservedContext();
 	}
 
 
