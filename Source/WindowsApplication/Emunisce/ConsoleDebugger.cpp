@@ -115,6 +115,7 @@ void ConsoleDebugger::Help()
 	printf("speed multiplier - sets the emulation speed. 1=normal, 0.5=half, 2=double, etc\n");
 	printf("mute - toggles mute on or off\n");
 	printf("displayfilter 1-4 - sets the display filter. 1=normal, 2=hq2x, 3=hq3x, 4=hq4x\n");
+	printf("vsync on/off - toggles vsync on or off\n");
 	printf("background on/off - toggles the background animation on or off\n");
 	printf("\n");
 }
