@@ -55,7 +55,9 @@ public:
 
 	void EnableBackgroundAnimation();
 	void DisableBackgroundAnimation();
+
 	void SetDisplayFilter(DisplayFilter::Type filter);
+	void SetVsync(bool enabled);
 
 	void StartRecordingInputMovie();
 	void StopRecordingInputMovie();

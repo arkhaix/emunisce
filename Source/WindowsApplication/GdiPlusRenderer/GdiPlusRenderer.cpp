@@ -235,3 +235,9 @@ int GdiPlusRenderer::GetLastFrameRendered()
 {
 	return m_private->_LastFrameRendered;
 }
+
+
+void GdiPlusRenderer::SetVsync(bool enabled)
+{
+	//No option for this in GDI+
+}

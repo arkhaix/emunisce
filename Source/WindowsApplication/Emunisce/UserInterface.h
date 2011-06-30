@@ -146,7 +146,10 @@ public:
 	//Gui
 	virtual void EnableBackgroundAnimation();
 	virtual void DisableBackgroundAnimation();
+
+	//Display
 	virtual void SetDisplayFilter(DisplayFilter::Type displayFilter);	///<Sets the desired display filter.
+	virtual void SetVsync(bool enabled);	///<Enabled = true enables vsync if possible.  Not all renderers support this.  Enabled by default.
 
 	//Input movie
 	virtual void StartRecordingInputMovie();

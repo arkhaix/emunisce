@@ -119,6 +119,9 @@ public:
 	int _LastFrameRendered;
 	int _LastFrameDrawn;
 
+	typedef void (APIENTRY *TwglSwapIntervalEXT)(int mode);
+	TwglSwapIntervalEXT wglSwapIntervalEXT;
+
 	GLuint _ScreenTexture;
 
 
@@ -159,6 +162,8 @@ public:
 		_ScreenBuffer = NULL;
 		_LastFrameRendered = -1;
 		_LastFrameDrawn = -1;
+
+		wglSwapIntervalEXT = NULL;
 
 		_ScreenTexture = 0;
 
@@ -272,10 +277,8 @@ public:
 		//Enable v-sync if supported
 		if(WglIsExtensionSupported("WGL_EXT_swap_control") == true)
 		{
-			typedef void (APIENTRY *TwglSwapIntervalEXT)(int);
-			TwglSwapIntervalEXT wglSwapIntervalEXT = (TwglSwapIntervalEXT)wglGetProcAddress("wglSwapIntervalEXT");
-			if (wglSwapIntervalEXT != NULL)
-				wglSwapIntervalEXT(1);
+			wglSwapIntervalEXT = (TwglSwapIntervalEXT)wglGetProcAddress("wglSwapIntervalEXT");
+			SetVsync(true);
 		}
 
 		//Enable PBO method if supported
@@ -318,6 +321,16 @@ public:
 	void RestorePreservedContext()
 	{
 		wglMakeCurrent(_PreservedDeviceContext, _PreservedRenderContext);
+	}
+
+	void SetVsync(bool enabled)
+	{
+		int mode = 1;
+		if(enabled == false)
+			mode = 0;
+
+		if(wglSwapIntervalEXT != NULL)
+			wglSwapIntervalEXT(mode);
 	}
 
 	void UpdateTexture()
@@ -585,4 +598,10 @@ void OpenGLRenderer::SetMachine(IEmulatedMachine* machine)
 int OpenGLRenderer::GetLastFrameRendered()
 {
 	return m_private->_LastFrameRendered;
+}
+
+
+void OpenGLRenderer::SetVsync(bool enabled)
+{
+	m_private->SetVsync(enabled);
 }

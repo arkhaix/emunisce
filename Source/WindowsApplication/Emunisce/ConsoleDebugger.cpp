@@ -260,6 +260,9 @@ void ConsoleDebugger::FetchCommand()
 	COMMAND1("filter", SetDisplayFilter(args[1].c_str()))
 	COMMAND1("df", SetDisplayFilter(args[1].c_str()))
 
+	COMMAND1("vsync", SetVsync(args[1].c_str()))
+	COMMAND1("vs", SetVsync(args[1].c_str()))
+
 	COMMAND0("record", ToggleRecording())
 	COMMAND0("rec", ToggleRecording())
 	//COMMAND0("r", ToggleRecording())	///< r = "run"
@@ -527,6 +530,7 @@ void ConsoleDebugger::SetBackgroundAnimation(const char* state)
 	}
 }
 
+
 void ConsoleDebugger::SetDisplayFilter(const char* strFilter)
 {
 	printf("%s\n", __FUNCTION__);
@@ -555,6 +559,16 @@ void ConsoleDebugger::SetDisplayFilter(const char* strFilter)
 	m_userInterface->SetDisplayFilter(filter);
 	m_displayFilter = filter;
 }
+
+void ConsoleDebugger::SetVsync(const char* strMode)
+{
+	printf("%s\n", __FUNCTION__);
+
+	if( _stricmp(strMode, "0") == 0 || _stricmp(strMode, "off") == 0 )
+		m_userInterface->SetVsync(false);
+	else
+		m_userInterface->SetVsync(true);
+}	
 
 
 void ConsoleDebugger::ToggleRecording()
