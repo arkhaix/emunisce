@@ -138,21 +138,25 @@ void InputRecording::StopRecording()
 }
 
 
-void InputRecording::StartPlayback(bool absoluteFrames)
+void InputRecording::StartPlayback(bool absoluteFrames, bool restoreState, bool pauseFirst)
 {
 	if(m_wrappedMachine != NULL)
 	{
 		bool wasPaused = m_application->GetMachineRunner()->IsPaused();
-		m_application->GetMachineRunner()->Pause();
+		if(pauseFirst == true)
+			m_application->GetMachineRunner()->Pause();
 
 		m_playbackStartFrame = m_wrappedMachine->GetFrameCount();
 
 		m_playing = true;
 
-		MemorySerializer serializer;
-		serializer.SetBuffer(m_startState, m_startStateSize);
-		Archive archive(&serializer, ArchiveMode::Loading);
-		m_wrappedMachine->LoadState(archive);
+		if(restoreState == true)
+		{
+			MemorySerializer serializer;
+			serializer.SetBuffer(m_startState, m_startStateSize);
+			Archive archive(&serializer, ArchiveMode::Loading);
+			m_wrappedMachine->LoadState(archive);
+		}
 
 		for(unsigned int i=0;i<m_movie.size();i++)
 		{
@@ -167,7 +171,7 @@ void InputRecording::StartPlayback(bool absoluteFrames)
 			m_wrappedMachine->AddApplicationEvent(inputEvent, !absoluteFrames);
 		}
 
-		if(wasPaused == false)
+		if(wasPaused == false && pauseFirst == true)
 			m_application->GetMachineRunner()->Run();
 	}
 }
@@ -206,6 +210,9 @@ void InputRecording::ApplicationEvent(unsigned int eventId)
 		{
 			m_wrappedInput->ButtonUp(inputEvent.keyIndex);
 		}
+
+		if(eventId == m_movie.size() - 1 && m_playing == true)
+			StartPlayback(false, false, false);
 	}
 }
 
