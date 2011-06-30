@@ -155,7 +155,7 @@ void Sound3::Run(int ticks)
 
 		//Which tick did the access happen on?
 		int ticksSinceMemoryAccess = -m_waveTimerValue;
-		m_sampleReadTimerValue = 2 - ticksSinceMemoryAccess;	///<The constant here is just guesswork.  It represents how long (ticks) the data stays available after a read.
+		m_sampleReadTimerValue = 2 - ticksSinceMemoryAccess;	///<The constant here is just guesswork.  It represents how long (ticks) the data stays available after a read.  It seems that values of 1 and 2 both work.
 		adjustedReadTimer = true;
 
 		m_waveTimerValue += m_waveTimerPeriod;	///<Normally, this would be at the top of the while loop.  It's down here for memoryAccessTick simplification.
@@ -282,32 +282,44 @@ void Sound3::Trigger()
 	//Wave ram gets corrupted if a trigger occurs during a read
 	if(m_sampleReadTimerValue > 0 && m_dacEnabled == true)
 	{
+		m_machine->GetGbMemory()->SetWaveRamLock(WaveRamLock::Normal);
+
 		u16 waveRamAddress = 0xff30;
 
+		int nextWaveSamplePosition = m_waveSamplePosition + 1;	///<Not sure if this variable is necessary.  It might just need to use m_waveSamplePosition with no offset.
+		if(nextWaveSamplePosition > 31)
+			nextWaveSamplePosition -= 32;
+
 		//If it's reading one of the first four bytes, then the first byte gets overwritten
-		if(m_waveSamplePosition < 8)
+		if(nextWaveSamplePosition < 8)
 		{
-			m_machine->GetGbMemory()->Write8(waveRamAddress, m_waveSampleValue);
+			u16 sampleAddress = waveRamAddress + (nextWaveSamplePosition / 2);	///<2 samples per byte
+
+			u8 sampleByteValue = m_machine->GetGbMemory()->Read8(sampleAddress);
+
+			m_machine->GetGbMemory()->Write8(waveRamAddress, sampleByteValue);
 		}
 
 		//Otherwise, the first four bytes get overwritten with the four aligned bytes currently being accessed
 		else
 		{
-			u16 currentSampleAddress = 0xff30 + (m_waveSamplePosition / 2);
-			u16 alignedSampleAddress = currentSampleAddress - (currentSampleAddress % 4);
+			u16 sampleAddress = waveRamAddress + (nextWaveSamplePosition / 2);	///<2 samples per byte
+			u16 alignedSampleAddress = sampleAddress & 0xfff8;	///<Align to 4-byte boundary = set the 3 lowest bits to 0
 
 			for(int i=0;i<4;i++)
 			{
-				u8 newValue = m_machine->GetGbMemory()->Read8(waveRamAddress + i);
-				m_machine->GetGbMemory()->Write8(alignedSampleAddress + i, newValue);
+				u8 newValue = m_machine->GetGbMemory()->Read8(alignedSampleAddress + i);
+				m_machine->GetGbMemory()->Write8(waveRamAddress + i, newValue);
 			}
 		}
+
+		//m_machine->GetGbMemory()->SetWaveRamLock(WaveRamLock::SingleValue, m_waveSampleValue);
 	}
 
 	m_sampleReadTimerValue = 0;
 	m_waveSamplePosition = 0;
 
-	m_waveTimerValue = m_waveTimerPeriod + 6;	///<More guesswork here.  The constant represents a delay between triggering and actual playback start.
+	m_waveTimerValue = m_waveTimerPeriod + 6;	///<More guesswork here.  The constant represents a delay between triggering and actual playback start.  It seems that values of 5 and 6 both work.
 
 	SoundGenerator::Trigger();
 }
