@@ -654,10 +654,17 @@ void EmunisceApplication::DisableBackgroundAnimation()
 		m_private->_Gui->DisableBackgroundAnimation();
 }
 
+
 void EmunisceApplication::SetDisplayFilter(DisplayFilter::Type filter)
 {
 	if(m_private->_Gui != NULL)
 		m_private->_Gui->SetDisplayFilter(filter);
+}
+
+void EmunisceApplication::SetVsync(bool enabled)
+{
+	if(m_private->_Renderer != NULL)
+		m_private->_Renderer->SetVsync(enabled);
 }
 
 

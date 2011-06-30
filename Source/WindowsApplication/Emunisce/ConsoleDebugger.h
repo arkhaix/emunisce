@@ -90,7 +90,9 @@ private:
 	void SetSquareSynthesisMethod(const char* strMethod);
 
 	void SetBackgroundAnimation(const char* state);
+
 	void SetDisplayFilter(const char* strFilter);
+	void SetVsync(const char* strMode);
 
 	void ToggleRecording();
 	void TogglePlayback();

@@ -41,6 +41,8 @@ public:
 
 	int GetLastFrameRendered();
 
+	void SetVsync(bool enabled);
+
 private:
 
 	class OpenGLRenderer_Private* m_private;

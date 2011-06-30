@@ -122,6 +122,12 @@ void UserInterface::DisableBackgroundAnimation()
 	m_phoenix->DisableBackgroundAnimation();
 }
 
+
+void UserInterface::SetVsync(bool enabled)
+{
+	m_phoenix->SetVsync(enabled);
+}
+
 void UserInterface::SetDisplayFilter(DisplayFilter::Type displayFilter)
 {
 	m_phoenix->SetDisplayFilter(displayFilter);

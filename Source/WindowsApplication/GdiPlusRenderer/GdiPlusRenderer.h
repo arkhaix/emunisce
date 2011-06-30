@@ -38,6 +38,8 @@ public:
 
 	int GetLastFrameRendered();
 
+	void SetVsync(bool enabled);
+
 private:
 
 	class GdiPlusRenderer_Private* m_private;
