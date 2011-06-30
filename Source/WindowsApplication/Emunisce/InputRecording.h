@@ -47,7 +47,7 @@ public:
 	void StartRecording();
 	void StopRecording();
 
-	void StartPlayback(bool absoluteFrames = false);	///<If absoluteFrames is true, playback will only occur when the emulated machine's frame count matches the recorded frame count exactly.  This is only really useful for playback immediately after loading a savestate (rewinding).
+	void StartPlayback(bool absoluteFrames = false, bool restoreState = false, bool pauseFirst = true);	///<If absoluteFrames is true, playback will only occur when the emulated machine's frame count matches the recorded frame count exactly.  This is only really useful for playback immediately after loading a savestate (rewinding).
 	void StopPlayback();
 
 	void ApplicationEvent(unsigned int eventId);
