@@ -134,37 +134,60 @@ void UserInterface::SetDisplayFilter(DisplayFilter::Type displayFilter)
 }
 
 
-void UserInterface::StartRecordingInputMovie()
+void UserInterface::StartRecordingInput()
 {
-	m_phoenix->StartRecordingInputMovie();
+	m_phoenix->StartRecordingInput();
 }
 
-void UserInterface::StopRecordingInputMovie()
+void UserInterface::StopRecordingInput()
 {
-	m_phoenix->StopRecordingInputMovie();
-}
-
-
-void UserInterface::StartPlayingInputMovie()
-{
-	m_phoenix->StartPlayingInputMovie();
-}
-
-void UserInterface::StopPlayingInputMovie()
-{
-	m_phoenix->StopPlayingInputMovie();
+	m_phoenix->StopRecordingInput();
 }
 
 
-void UserInterface::SaveInputMovie(const char* id)
+void UserInterface::PlayMovie()
 {
-	m_phoenix->SaveInputMovie(id);
+	m_phoenix->PlayMovie();
 }
 
-void UserInterface::LoadInputMovie(const char* id)
+void UserInterface::StopMovie()
 {
-	m_phoenix->LoadInputMovie(id);
+	m_phoenix->StopMovie();
 }
+
+
+void UserInterface::SaveMovie(const char* id)
+{
+	m_phoenix->SaveMovie(id);
+}
+
+void UserInterface::LoadMovie(const char* id)
+{
+	m_phoenix->LoadMovie(id);
+}
+
+
+void UserInterface::PlayMacro(bool loop)
+{
+	m_phoenix->PlayMacro(loop);
+}
+
+void UserInterface::StopMacro()
+{
+	m_phoenix->StopMacro();
+}
+
+
+void UserInterface::SaveMacro(const char* id)
+{
+	m_phoenix->SaveMacro(id);
+}
+
+void UserInterface::LoadMacro(const char* id)
+{
+	m_phoenix->LoadMacro(id);
+}
+
 
 
 

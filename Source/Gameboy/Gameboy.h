@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef GAMEBOY_H
 #define GAMEBOY_H
 
-#include "PlatformTypes.h"
+#include "PlatformIncludes.h"
 
 #include "MachineIncludes.h"
 #include "GameboyTypes.h"
@@ -126,6 +126,7 @@ protected:
 
 	list<ApplicationEvent> m_applicationEvents;
 	list<ApplicationEvent>::iterator m_nextApplicationEvent;
+	Mutex m_applicationEventsLock;
 };
 
 }	//namespace Emunisce

@@ -264,20 +264,38 @@ void ConsoleDebugger::FetchCommand()
 	COMMAND1("vsync", SetVsync(args[1].c_str()))
 	COMMAND1("vs", SetVsync(args[1].c_str()))
 
+
 	COMMAND0("record", ToggleRecording())
 	COMMAND0("rec", ToggleRecording())
 	//COMMAND0("r", ToggleRecording())	///< r = "run"
 
-	COMMAND0("play", TogglePlayback())
+
+	COMMAND0("playmovie", TogglePlayMovie())
+	COMMAND0("play", TogglePlayMovie())
+	COMMAND0("pm", TogglePlayMovie())
 	//COMMAND0("p", TogglePlayback())	///< p = "pause"
 
-	COMMAND1("saverecording", SaveRecording(args[1].c_str()))
-	COMMAND1("saverec", SaveRecording(args[1].c_str()))
-	COMMAND1("sr", SaveRecording(args[1].c_str()))
+	COMMAND1("savemovie", SaveMovie(args[1].c_str()))
+	COMMAND1("sm", SaveMovie(args[1].c_str()))
 
-	COMMAND1("loadrecording", LoadRecording(args[1].c_str()))
-	COMMAND1("loadrec", LoadRecording(args[1].c_str()))
-	COMMAND1("lr", LoadRecording(args[1].c_str()))
+	COMMAND1("loadmovie", LoadMovie(args[1].c_str()))
+	COMMAND1("lm", LoadMovie(args[1].c_str()))
+
+
+	COMMAND1("playmacro", TogglePlayMacro(args[1].c_str()))
+	COMMAND1("playr", TogglePlayMacro(args[1].c_str()))
+	COMMAND1("pr", TogglePlayMacro(args[1].c_str()))
+
+	COMMAND0("playmacro", TogglePlayMacro(NULL))
+	COMMAND0("playr", TogglePlayMacro(NULL))
+	COMMAND0("pr", TogglePlayMacro(NULL))
+
+	COMMAND1("savemacro", SaveMacro(args[1].c_str()))
+	COMMAND1("sr", SaveMacro(args[1].c_str()))
+
+	COMMAND1("loadmacro", LoadMacro(args[1].c_str()))
+	COMMAND1("lr", LoadMacro(args[1].c_str()))
+
 
 	else
 	{
@@ -578,43 +596,79 @@ void ConsoleDebugger::ToggleRecording()
 
 	if(m_recordingInput == true)
 	{
-		m_userInterface->StopRecordingInputMovie();
+		m_userInterface->StopRecordingInput();
 	}
 	else
 	{
-		m_userInterface->StartRecordingInputMovie();
+		m_userInterface->StartRecordingInput();
 	}
 
 	m_recordingInput = !m_recordingInput;
 }
 
-void ConsoleDebugger::TogglePlayback()
+void ConsoleDebugger::TogglePlayMovie()
 {
 	printf("%s\n", __FUNCTION__);
 
 	if(m_playingInput == true)
 	{
-		m_userInterface->StopPlayingInputMovie();
+		m_userInterface->StopMovie();
 	}
 	else
 	{
-		m_userInterface->StartPlayingInputMovie();
+		m_userInterface->PlayMovie();
+	}
+
+	m_playingInput = !m_playingInput;
+}
+
+void ConsoleDebugger::TogglePlayMacro(const char* loop)
+{
+	printf("%s\n", __FUNCTION__);
+
+	bool loopMacro = true;
+	if( loop != NULL && (_stricmp(loop, "0") == 0 || _stricmp(loop, "off") == 0 || _stricmp(loop, "false") == 0) )
+		loopMacro = false;
+
+	if(m_playingInput == true)
+	{
+		m_userInterface->StopMacro();
+	}
+	else
+	{
+		m_userInterface->PlayMacro(loopMacro);
 	}
 
 	m_playingInput = !m_playingInput;
 }
 
 
-void ConsoleDebugger::SaveRecording(const char* id)
+void ConsoleDebugger::SaveMovie(const char* id)
 {
 	printf("%s\n", __FUNCTION__);
 
-	m_userInterface->SaveInputMovie(id);
+	m_userInterface->SaveMovie(id);
 }
 
-void ConsoleDebugger::LoadRecording(const char* id)
+void ConsoleDebugger::LoadMovie(const char* id)
 {
 	printf("%s\n", __FUNCTION__);
 
-	m_userInterface->LoadInputMovie(id);
+	m_userInterface->LoadMovie(id);
 }
+
+
+void ConsoleDebugger::SaveMacro(const char* id)
+{
+	printf("%s\n", __FUNCTION__);
+
+	m_userInterface->SaveMacro(id);
+}
+
+void ConsoleDebugger::LoadMacro(const char* id)
+{
+	printf("%s\n", __FUNCTION__);
+
+	m_userInterface->LoadMacro(id);
+}
+

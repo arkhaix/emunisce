@@ -42,12 +42,13 @@ public:
 	InputRecording();
 	~InputRecording();
 	
+	void SerializeHistory(Archive& archive);
 	void SerializeMovie(Archive& archive);
 
 	void StartRecording();
 	void StopRecording();
 
-	void StartPlayback(bool absoluteFrames = false, bool restoreState = false, bool pauseFirst = true);	///<If absoluteFrames is true, playback will only occur when the emulated machine's frame count matches the recorded frame count exactly.  This is only really useful for playback immediately after loading a savestate (rewinding).
+	void StartPlayback(bool absoluteFrames = false, bool restoreState = false, bool loop = false, bool pauseFirst = true);	///<If absoluteFrames is true, playback will only occur when the emulated machine's frame count matches the recorded frame count exactly.  This is only really useful for playback immediately after loading a savestate (rewinding).
 	void StopPlayback();
 
 	void ApplicationEvent(unsigned int eventId);
@@ -68,6 +69,8 @@ private:
 	unsigned int m_recordingStartFrame;
 	unsigned int m_playbackStartFrame;
 
+	bool m_loopPlayback;
+
 	struct InputEvent
 	{
 		unsigned int frameId;
@@ -80,7 +83,7 @@ private:
 	};
 
 	static const unsigned int m_eventIdOffset = 0x01000000;	///<Each application component that uses events will have a unique offset.  They're allocated sequentially in the high byte.
-	vector<InputEvent> m_movie;
+	vector<InputEvent> m_inputHistory;
 	unsigned char* m_startState;
 	unsigned int m_startStateSize;
 

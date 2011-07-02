@@ -152,14 +152,20 @@ public:
 	virtual void SetVsync(bool enabled);	///<Enabled = true enables vsync if possible.  Not all renderers support this.  Enabled by default.
 
 	//Input movie
-	virtual void StartRecordingInputMovie();
-	virtual void StopRecordingInputMovie();
+	virtual void StartRecordingInput();
+	virtual void StopRecordingInput();
 
-	virtual void StartPlayingInputMovie();
-	virtual void StopPlayingInputMovie();
+	virtual void PlayMovie();
+	virtual void StopMovie();
 
-	virtual void SaveInputMovie(const char* id);	///<Requires that a rom is loaded.  Saves movie based on rom name + id.
-	virtual void LoadInputMovie(const char* id);	///<Requires that a rom is loaded.  Loads movie based on rom name + id.
+	virtual void SaveMovie(const char* id);	///<Requires that a rom is loaded.  Saves movie based on rom name + id.
+	virtual void LoadMovie(const char* id);	///<Requires that a rom is loaded.  Loads movie based on rom name + id.
+
+	virtual void PlayMacro(bool loop);
+	virtual void StopMacro();
+
+	virtual void SaveMacro(const char* id);
+	virtual void LoadMacro(const char* id);
 
 
 	//Application to user

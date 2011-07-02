@@ -49,6 +49,8 @@ void Gameboy::SetApplicationInterface(IMachineToApplication* applicationInterfac
 
 void Gameboy::AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount)
 {
+	ScopedMutex scopedLock(m_applicationEventsLock);
+
 	if(relativeFrameCount == true)
 	{
 		ApplicationEvent eventCopy = applicationEvent;
@@ -65,6 +67,8 @@ void Gameboy::AddApplicationEvent(ApplicationEvent& applicationEvent, bool relat
 
 void Gameboy::RemoveApplicationEvent(unsigned int eventId)
 {
+	ScopedMutex scopedLock(m_applicationEventsLock);
+
 	for(auto iter = m_applicationEvents.begin(); iter != m_applicationEvents.end(); ++iter)
 	{
 		if(iter->eventId == eventId)
@@ -73,6 +77,8 @@ void Gameboy::RemoveApplicationEvent(unsigned int eventId)
 			break;
 		}
 	}
+
+	m_nextApplicationEvent = min_element(m_applicationEvents.begin(), m_applicationEvents.end());
 }
 
 
@@ -233,18 +239,22 @@ void Gameboy::RunDuringInstruction(unsigned int ticks)
 {
 	if(m_executingInstruction == false)
 		return;
-
-	if(m_applicationEvents.size() > 0 && m_nextApplicationEvent != m_applicationEvents.end())
+	
 	{
-		ApplicationEvent currentTime;
-		currentTime.frameCount = m_frameCount;
-		currentTime.tickCount = (m_ticksPerFrame - m_frameTicksRemaining) + ticks;
+		ScopedMutex scopedLock(m_applicationEventsLock);
 
-		if( (*m_nextApplicationEvent) < currentTime )
+		if(m_applicationEvents.size() > 0 && m_nextApplicationEvent != m_applicationEvents.end())
 		{
-			m_applicationInterface->HandleApplicationEvent(m_nextApplicationEvent->eventId);
-			m_applicationEvents.erase(m_nextApplicationEvent);
-			m_nextApplicationEvent = min_element(m_applicationEvents.begin(), m_applicationEvents.end());
+			ApplicationEvent currentTime;
+			currentTime.frameCount = m_frameCount;
+			currentTime.tickCount = (m_ticksPerFrame - m_frameTicksRemaining) + ticks;
+
+			if( (*m_nextApplicationEvent) < currentTime )
+			{
+				m_applicationInterface->HandleApplicationEvent(m_nextApplicationEvent->eventId);
+				m_applicationEvents.erase(m_nextApplicationEvent);
+				m_nextApplicationEvent = min_element(m_applicationEvents.begin(), m_applicationEvents.end());
+			}
 		}
 	}
 
@@ -322,17 +332,21 @@ void Gameboy::Initialize()
 
 void Gameboy::InternalStep()
 {
-	if(m_applicationEvents.size() > 0 && m_nextApplicationEvent != m_applicationEvents.end())
 	{
-		ApplicationEvent currentTime;
-		currentTime.frameCount = m_frameCount;
-		currentTime.tickCount = m_ticksPerFrame - m_frameTicksRemaining;
+		ScopedMutex scopedLock(m_applicationEventsLock);
 
-		if( (*m_nextApplicationEvent) < currentTime )
+		if(m_applicationEvents.size() > 0 && m_nextApplicationEvent != m_applicationEvents.end())
 		{
-			m_applicationInterface->HandleApplicationEvent(m_nextApplicationEvent->eventId);
-			m_applicationEvents.erase(m_nextApplicationEvent);
-			m_nextApplicationEvent = min_element(m_applicationEvents.begin(), m_applicationEvents.end());
+			ApplicationEvent currentTime;
+			currentTime.frameCount = m_frameCount;
+			currentTime.tickCount = m_ticksPerFrame - m_frameTicksRemaining;
+
+			if( (*m_nextApplicationEvent) < currentTime )
+			{
+				m_applicationInterface->HandleApplicationEvent(m_nextApplicationEvent->eventId);
+				m_applicationEvents.erase(m_nextApplicationEvent);
+				m_nextApplicationEvent = min_element(m_applicationEvents.begin(), m_applicationEvents.end());
+			}
 		}
 	}
 
