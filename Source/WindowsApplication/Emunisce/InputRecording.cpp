@@ -51,6 +51,8 @@ InputRecording::InputRecording()
 	m_recordingStartFrame = 0;
 	m_playbackStartFrame = 0;
 
+	m_loopPlayback = false;
+
 	m_startState = NULL;
 	m_startStateSize = 0;
 }
@@ -61,6 +63,35 @@ InputRecording::~InputRecording()
 		delete m_startState;
 }
 
+
+void InputRecording::SerializeHistory(Archive& archive)
+{
+	SerializeItem(archive, m_recordingStartFrame);
+
+	unsigned int numEvents = m_inputHistory.size();
+	SerializeItem(archive, numEvents);
+
+	if(archive.GetArchiveMode() == ArchiveMode::Loading)
+	{
+		m_inputHistory.clear();
+
+		for(int i=0;i<numEvents;i++)
+		{
+			InputEvent inputEvent;
+			inputEvent.Serialize(archive);
+
+			m_inputHistory.push_back(inputEvent);
+		}
+	}
+	else //archive.GetArchiveMode() == ArchiveMode::Saving
+	{
+		for(auto iter = m_inputHistory.begin(); iter != m_inputHistory.end(); ++iter)
+		{
+			InputEvent& inputEvent = *iter;
+			inputEvent.Serialize(archive);
+		}
+	}
+}
 
 void InputRecording::SerializeMovie(Archive& archive)
 {
@@ -75,32 +106,7 @@ void InputRecording::SerializeMovie(Archive& archive)
 
 	SerializeBuffer(archive, m_startState, m_startStateSize);
 
-
-	SerializeItem(archive, m_recordingStartFrame);
-
-	unsigned int numEvents = m_movie.size();
-	SerializeItem(archive, numEvents);
-
-	if(archive.GetArchiveMode() == ArchiveMode::Loading)
-	{
-		m_movie.clear();
-
-		for(int i=0;i<numEvents;i++)
-		{
-			InputEvent inputEvent;
-			inputEvent.Serialize(archive);
-
-			m_movie.push_back(inputEvent);
-		}
-	}
-	else //archive.GetArchiveMode() == ArchiveMode::Saving
-	{
-		for(auto iter = m_movie.begin(); iter != m_movie.end(); ++iter)
-		{
-			InputEvent& inputEvent = *iter;
-			inputEvent.Serialize(archive);
-		}
-	}
+	SerializeHistory(archive);
 }
 
 
@@ -111,7 +117,7 @@ void InputRecording::StartRecording()
 		bool wasPaused = m_application->GetMachineRunner()->IsPaused();
 		m_application->GetMachineRunner()->Pause();
 
-		m_movie.clear();
+		m_inputHistory.clear();
 
 		m_recording = true;
 		m_recordingStartFrame = m_wrappedMachine->GetFrameCount();
@@ -138,7 +144,7 @@ void InputRecording::StopRecording()
 }
 
 
-void InputRecording::StartPlayback(bool absoluteFrames, bool restoreState, bool pauseFirst)
+void InputRecording::StartPlayback(bool absoluteFrames, bool restoreState, bool loop, bool pauseFirst)
 {
 	if(m_wrappedMachine != NULL)
 	{
@@ -147,6 +153,8 @@ void InputRecording::StartPlayback(bool absoluteFrames, bool restoreState, bool 
 			m_application->GetMachineRunner()->Pause();
 
 		m_playbackStartFrame = m_wrappedMachine->GetFrameCount();
+
+		m_loopPlayback = loop;
 
 		m_playing = true;
 
@@ -158,12 +166,12 @@ void InputRecording::StartPlayback(bool absoluteFrames, bool restoreState, bool 
 			m_wrappedMachine->LoadState(archive);
 		}
 
-		for(unsigned int i=0;i<m_movie.size();i++)
+		for(unsigned int i=0;i<m_inputHistory.size();i++)
 		{
 			Emunisce::ApplicationEvent inputEvent;
 			inputEvent.eventId = m_eventIdOffset + i;
-			inputEvent.frameCount = m_movie[i].frameId;
-			inputEvent.tickCount = m_movie[i].tickId;
+			inputEvent.frameCount = m_inputHistory[i].frameId;
+			inputEvent.tickCount = m_inputHistory[i].tickId;
 
 			if(absoluteFrames == false)
 				inputEvent.frameCount -= m_recordingStartFrame;
@@ -182,7 +190,7 @@ void InputRecording::StopPlayback()
 	
 	if(m_wrappedMachine != NULL)
 	{
-		for(unsigned int i=0;i<m_movie.size();i++)
+		for(unsigned int i=0;i<m_inputHistory.size();i++)
 		{
 			m_wrappedMachine->RemoveApplicationEvent(m_eventIdOffset + i);
 		}
@@ -199,9 +207,9 @@ void InputRecording::ApplicationEvent(unsigned int eventId)
 		return;
 
 	eventId -= m_eventIdOffset;
-	if(eventId < m_movie.size())
+	if(eventId < m_inputHistory.size())
 	{
-		InputEvent& inputEvent = m_movie[eventId];
+		InputEvent& inputEvent = m_inputHistory[eventId];
 		if(inputEvent.keyDown == true)
 		{
 			m_wrappedInput->ButtonDown(inputEvent.keyIndex);
@@ -211,8 +219,8 @@ void InputRecording::ApplicationEvent(unsigned int eventId)
 			m_wrappedInput->ButtonUp(inputEvent.keyIndex);
 		}
 
-		if(eventId == m_movie.size() - 1 && m_playing == true)
-			StartPlayback(false, false, false);
+		if(eventId == m_inputHistory.size() - 1 && m_playing == true && m_loopPlayback == true)
+			StartPlayback(false, false, true, false);
 	}
 }
 
@@ -236,7 +244,7 @@ void InputRecording::RunToNextFrame()
 			inputEvent.frameId = m_wrappedMachine->GetFrameCount();
 			inputEvent.tickId = m_wrappedMachine->GetTickCount();
 
-			m_movie.push_back(inputEvent);
+			m_inputHistory.push_back(inputEvent);
 
 			m_pendingEvents.pop();
 		}

@@ -59,14 +59,20 @@ public:
 	void SetDisplayFilter(DisplayFilter::Type filter);
 	void SetVsync(bool enabled);
 
-	void StartRecordingInputMovie();
-	void StopRecordingInputMovie();
+	void StartRecordingInput();
+	void StopRecordingInput();
 
-	void StartPlayingInputMovie();
-	void StopPlayingInputMovie();
+	void PlayMovie();
+	void StopMovie();
 
-	void SaveInputMovie(const char* id);
-	void LoadInputMovie(const char* id);
+	void SaveMovie(const char* id);
+	void LoadMovie(const char* id);
+
+	void PlayMacro(bool loop);
+	void StopMacro();
+
+	void SaveMacro(const char* id);
+	void LoadMacro(const char* id);
 
 	void NotifyMachineChanged(IEmulatedMachine* newMachine);
 	IEmulatedMachine* GetMachine();

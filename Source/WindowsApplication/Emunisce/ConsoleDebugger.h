@@ -95,10 +95,15 @@ private:
 	void SetVsync(const char* strMode);
 
 	void ToggleRecording();
-	void TogglePlayback();
 
-	void SaveRecording(const char* id);
-	void LoadRecording(const char* id);
+	void TogglePlayMovie();
+	void TogglePlayMacro(const char* loop);
+
+	void SaveMovie(const char* id);
+	void LoadMovie(const char* id);
+
+	void SaveMacro(const char* id);
+	void LoadMacro(const char* id);
 
 
 	//Properties

@@ -388,6 +388,39 @@ public:
 	}
 
 
+	std::string GetBaseMacroFolder()
+	{
+		char path[MAX_PATH];
+
+		std::string dataFolder = GetDataFolder();
+		strcpy(path, dataFolder.c_str());
+
+		PathAppend(path, "Macros");
+
+		SHCreateDirectoryEx(NULL, path, NULL);
+
+		return std::string(path);
+	}
+
+	std::string GetCurrentMacroFolder()
+	{
+		return GetBaseMacroFolder();
+	}
+
+	std::string GetCurrentMacroFile(const char* name)
+	{
+		char file[MAX_PATH] = {0};
+
+		std::string path = GetCurrentMacroFolder();
+		strcpy(file, path.c_str());
+
+		std::string filename = std::string(name) + std::string(".eir");
+		PathAppend(file, filename.c_str());
+
+		return std::string(file);
+	}
+
+
 	// IMachineToApplication
 
 	void SaveRomData(const char* title, unsigned char* buffer, unsigned int bytes)
@@ -668,33 +701,33 @@ void EmunisceApplication::SetVsync(bool enabled)
 }
 
 
-void EmunisceApplication::StartRecordingInputMovie()
+void EmunisceApplication::StartRecordingInput()
 {
 	if(m_private->_InputRecording != NULL)
 		m_private->_InputRecording->StartRecording();
 }
 
-void EmunisceApplication::StopRecordingInputMovie()
+void EmunisceApplication::StopRecordingInput()
 {
 	if(m_private->_InputRecording != NULL)
 		m_private->_InputRecording->StopRecording();
 }
 
 
-void EmunisceApplication::StartPlayingInputMovie()
+void EmunisceApplication::PlayMovie()
 {
 	if(m_private->_InputRecording != NULL)
-		m_private->_InputRecording->StartPlayback();
+		m_private->_InputRecording->StartPlayback(true, true, false);
 }
 
-void EmunisceApplication::StopPlayingInputMovie()
+void EmunisceApplication::StopMovie()
 {
 	if(m_private->_InputRecording != NULL)
 		m_private->_InputRecording->StopPlayback();
 }
 
 
-void EmunisceApplication::SaveInputMovie(const char* id)
+void EmunisceApplication::SaveMovie(const char* id)
 {
 	std::string file = m_private->GetCurrentMovieFile(id);
 
@@ -708,7 +741,7 @@ void EmunisceApplication::SaveInputMovie(const char* id)
 	fs.CloseFile();
 }
 
-void EmunisceApplication::LoadInputMovie(const char* id)
+void EmunisceApplication::LoadMovie(const char* id)
 {
 	std::string file = m_private->GetCurrentMovieFile(id);
 
@@ -721,6 +754,49 @@ void EmunisceApplication::LoadInputMovie(const char* id)
 
 	fs.CloseFile();
 }
+
+
+void EmunisceApplication::PlayMacro(bool loop)
+{
+	if(m_private->_InputRecording != NULL)
+		m_private->_InputRecording->StartPlayback(false, false, true);
+}
+
+void EmunisceApplication::StopMacro()
+{
+	if(m_private->_InputRecording != NULL)
+		m_private->_InputRecording->StopPlayback();
+}
+
+
+void EmunisceApplication::SaveMacro(const char* id)
+{
+	std::string file = m_private->GetCurrentMacroFile(id);
+
+	FileSerializer fs;
+	fs.SetFile(file.c_str());
+
+	Archive ar(&fs, ArchiveMode::Saving);
+
+	m_private->_InputRecording->SerializeHistory(ar);
+
+	fs.CloseFile();
+}
+
+void EmunisceApplication::LoadMacro(const char* id)
+{
+	std::string file = m_private->GetCurrentMacroFile(id);
+
+	FileSerializer fs;
+	fs.SetFile(file.c_str());
+
+	Archive ar(&fs, ArchiveMode::Loading);
+
+	m_private->_InputRecording->SerializeHistory(ar);
+
+	fs.CloseFile();
+}
+
 
 
 void EmunisceApplication::NotifyMachineChanged(IEmulatedMachine* newMachine)
