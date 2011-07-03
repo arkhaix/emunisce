@@ -45,6 +45,8 @@ Rewinder::Segment::Segment(Rewinder* rewinder, InputRecording* recorder)
 
 Rewinder::Segment::~Segment()
 {
+	ClearCache();
+
 	if(m_inputMovieData != NULL)
 		delete m_inputMovieData;
 }
@@ -64,7 +66,11 @@ void Rewinder::Segment::RecordFrame()
 	m_rewinder->Internal_RunMachineToNextFrame();
 
 
-	//Cache the frame?
+	//Cache the frame
+	CachedFrame& frame = m_frameCache[ m_numFramesRecorded ];
+	frame.MachineFrameId = m_rewinder->Internal_GetFrameCount();
+	frame.ScreenId = m_rewinder->Internal_GetScreenBufferCount();
+	frame.Screen = m_rewinder->Internal_GetStableScreenBuffer()->Clone();
 
 
 	//Last frame
@@ -82,6 +88,7 @@ void Rewinder::Segment::RecordFrame()
 	}
 
 	m_numFramesRecorded++;
+	m_numFramesCached = m_numFramesRecorded;
 }
 
 unsigned int Rewinder::Segment::NumFramesRecorded()
@@ -287,7 +294,7 @@ void Rewinder::StartRewinding()
 
 	Segment* playingSegment = m_segments[ m_playingSegment ];
 
-	while(playingSegment->NumFramesCached() < playingSegment->NumFramesRecorded())
+	while(playingSegment->CanCacheMoreFrames())
 		playingSegment->CacheFrame();
 
 	m_frameHistory.clear();
@@ -314,19 +321,20 @@ void Rewinder::StopRewinding()
 		m_recordingSegment = m_segments.size()-1;
 
 	//We're altering the past.  We've created an alternate universe and caused the old future to vanish!
-	//Works, but commented out until we can actually restore from the past position.
-	/*
-	auto deleteFrom = m_playbackFrame;
+	//Right now, this just means deleting all segments after the one we rewound to.
 
-	while(m_playbackFrame != m_frameHistory.end())
-	{
-		delete m_playbackFrame->Screen;
-		m_playbackFrame++;
-	}
-	m_frameHistory.erase(deleteFrom, m_frameHistory.end());
+	printf("Erasing %d segments (out of %d)\n", m_segments.size() - m_playingSegment, m_segments.size());
 
-	m_playbackFrame = m_frameHistory.end();
-	*/
+	for(unsigned int i=m_playingSegment;i<m_segments.size();i++)
+		delete m_segments[i];
+
+	m_segments.erase(m_segments.begin() + m_playingSegment, m_segments.end());
+
+	m_segments.push_back(new Segment(this, m_recorder));
+	m_recordingSegment = m_segments.size()-1;
+	m_playingSegment = m_segments.size()-1;
+
+	printf("After adding a new one, there are now %d segments\n", m_segments.size());
 }
 
 void Rewinder::ApplicationEvent(unsigned int eventId)
@@ -397,13 +405,24 @@ void Rewinder::RunToNextFrame()
 			m_segments.push_back(new Segment(this, m_recorder));
 			m_recordingSegment = m_segments.size() - 1;
 			recordingSegment = m_segments[ m_recordingSegment ];
+
+			//Clear old caches
+			for(unsigned int i=0;i<m_segments.size();i++)
+				m_segments[i]->ClearCache();
+
+			//Delete earliest segments if we have too many
+			while(m_segments.size() >= m_maxSegments)
+			{
+				delete m_segments[0];
+				m_segments.erase(m_segments.begin());
+			}
 		}
 
 		m_segments[ m_recordingSegment ]->RecordFrame();
 	}
 	else
 	{
-		//Rewinding.  Don't run the machine.  Just advance (backward) one step in the frame history.
+		//Rewinding.  Advance (backward) one step in the frame history.
 		// Segment::CacheFrame runs the machine (playing an input movie "in the past"), generating new frames to cache.
 
 		//If we're at the beginning of the frame history, try to get more history from the segments.
@@ -452,7 +471,7 @@ void Rewinder::RunToNextFrame()
 		if(playingSegment != NULL && playingSegment->CanCacheMoreFrames())
 			playingSegment->CacheFrame();
 
-		printf("Rewinding to frame %d\n", m_playbackFrame->ScreenId);
+		printf("Rewinding to frame %d\n", m_playbackFrame->MachineFrameId);
 	}
 }
 
