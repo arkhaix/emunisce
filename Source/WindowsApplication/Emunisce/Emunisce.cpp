@@ -37,6 +37,7 @@ using namespace Emunisce;
 
 #include "MachineFeature.h"
 #include "Gui.h"
+#include "Rewinder.h"
 #include "InputRecording.h"
 
 #include "MachineRunner.h"
@@ -60,6 +61,7 @@ public:
 	Window* _Window;
 
 	Gui* _Gui;
+	Rewinder* _Rewinder;
 	InputRecording* _InputRecording;
 
 	MachineFeature* _Machine;
@@ -87,9 +89,12 @@ public:
 		_Window = new Window();
 
 		_Gui = new Gui();
+		_Rewinder = new Rewinder();
 		_InputRecording = new InputRecording();
 
-		_Gui->SetComponentMachine(_InputRecording);
+		_Gui->SetComponentMachine(_Rewinder);
+		_Rewinder->SetComponentMachine(_InputRecording);
+
 		_Gui->SetFocus(true);
 
 		_Machine = _Gui;

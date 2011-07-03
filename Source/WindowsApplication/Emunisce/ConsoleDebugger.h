@@ -105,6 +105,8 @@ private:
 	void SaveMacro(const char* id);
 	void LoadMacro(const char* id);
 
+	void PrintButtons();
+
 
 	//Properties
 

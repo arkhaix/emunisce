@@ -23,6 +23,7 @@ using namespace Emunisce;
 #include "windows.h"
 
 #include <map>
+#include <string>
 using namespace std;
 
 #include "PlatformIncludes.h"
@@ -44,7 +45,8 @@ public:
 	IEmulatedMachine* _Machine;
 	IEmulatedInput* _Input;
 
-	map<int, unsigned int> _KeyMap;
+	multimap<string, int> _NameKeyMap;
+	map<int, unsigned int> _KeyMap;		///<Built from _NameKeyMap
 	map<int, bool> _KeyStates;
 
 	KeyboardInput_Private()
@@ -53,42 +55,30 @@ public:
 		_Machine = NULL;
 		_Input = NULL;
 
-		/*
-		GameboyButtons
-		{
-		Right = 0,
-		Left,
-		Up,
-		Down,
+		_NameKeyMap.insert( make_pair("Up", VK_UP) );
+		_NameKeyMap.insert( make_pair("Down", VK_DOWN) );
+		_NameKeyMap.insert( make_pair("Left", VK_LEFT) );
+		_NameKeyMap.insert( make_pair("Right", VK_RIGHT) );
 
-		A,
-		B,
-		Select,
-		Start,
-		}
-		*/
-		_KeyMap[VK_UP] = 2;
-		_KeyMap[VK_DOWN] = 3;
-		_KeyMap[VK_LEFT] = 1;
-		_KeyMap[VK_RIGHT] = 0;
+		_NameKeyMap.insert( make_pair("B", 'Q') );
+		_NameKeyMap.insert( make_pair("B", 'A') );
+		_NameKeyMap.insert( make_pair("B", 'Z') );
 
-		_KeyMap['Q'] = 5;
-		_KeyMap['A'] = 5;
-		_KeyMap['Z'] = 5;
+		_NameKeyMap.insert( make_pair("A", 'W') );
+		_NameKeyMap.insert( make_pair("A", 'S') );
+		_NameKeyMap.insert( make_pair("A", 'X') );
 
-		_KeyMap['W'] = 4;
-		_KeyMap['S'] = 4;
-		_KeyMap['X'] = 4;
+		_NameKeyMap.insert( make_pair("Select", 'V') );
+		_NameKeyMap.insert( make_pair("Start", 'B') );
 
-		_KeyMap['V'] = 6;
-		_KeyMap['B'] = 7;
+		_NameKeyMap.insert( make_pair("Select", VK_LSHIFT) );
+		_NameKeyMap.insert( make_pair("Select", VK_RSHIFT) );
+		_NameKeyMap.insert( make_pair("Start", VK_RETURN) );
 
-		_KeyMap[VK_LSHIFT] = 6;
-		_KeyMap[VK_RSHIFT] = 6;
-		_KeyMap[VK_RETURN] = 7;
+		_NameKeyMap.insert( make_pair("Select", VK_OEM_4) );
+		_NameKeyMap.insert( make_pair("Start", VK_OEM_6) );
 
-		_KeyMap[VK_OEM_4] = 6;
-		_KeyMap[VK_OEM_6] = 7;
+		_NameKeyMap.insert( make_pair("Rewind", VK_TAB) );
 	}
 
 
@@ -135,6 +125,25 @@ public:
 
 		_Input->ButtonUp(keyIter->second);
 	}
+
+	void GenerateKeymap()
+	{
+		if(_Input == NULL)
+			return;
+
+		_KeyMap.clear();
+		_KeyStates.clear();
+
+		for(unsigned int i=0;i<_Input->NumButtons();i++)
+		{
+			string buttonName = _Input->GetButtonName(i);
+			auto mappedKeys = _NameKeyMap.equal_range(buttonName);
+			for(auto iter = mappedKeys.first; iter != mappedKeys.second; iter++)
+			{
+				_KeyMap[iter->second] = i;
+			}
+		}
+	}
 };
 
 }	//namespace Emunisce
@@ -160,4 +169,5 @@ void KeyboardInput::SetMachine(IEmulatedMachine* machine)
 {
 	m_private->_Machine = machine;
 	m_private->_Input = machine->GetInput();
+	m_private->GenerateKeymap();
 }

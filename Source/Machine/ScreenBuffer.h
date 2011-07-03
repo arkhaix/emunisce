@@ -22,6 +22,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "MachineTypes.h"
 
+#include <string.h>	///<memcpy
+
 
 namespace Emunisce
 {
@@ -38,6 +40,7 @@ public:
 	virtual DisplayPixel* GetPixels() = 0;
 
 	virtual void Clear(DisplayPixel clearColor) = 0;
+	virtual ScreenBuffer* Clone() = 0;
 };
 
 template<int TWidth, int THeight>
@@ -84,6 +87,13 @@ public:
 		for(int i=0;i<numPixels;i++)
 			Pixels[i] = clearColor;
 	}
+
+	virtual ScreenBuffer* Clone()
+	{
+		TScreenBuffer<TWidth, THeight>* result = new TScreenBuffer<TWidth, THeight>();
+		memcpy(&result->Pixels[0], &Pixels[0], TWidth * THeight * sizeof(DisplayPixel));
+		return result;
+	}
 };
 
 class DynamicScreenBuffer : public ScreenBuffer
@@ -103,6 +113,7 @@ public:
 	virtual DisplayPixel* GetPixels();
 
 	virtual void Clear(DisplayPixel clearColor);
+	virtual ScreenBuffer* Clone();
 };
 
 }	//namespace Emunisce
