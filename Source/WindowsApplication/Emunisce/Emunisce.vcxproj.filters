@@ -18,6 +18,9 @@
     <Filter Include="Machine Features\Input Recording">
       <UniqueIdentifier>{05bf6c39-1712-4293-8f26-1a0baefd05c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Machine Features\Rewinding">
+      <UniqueIdentifier>{e8b4a4a2-5564-4b21-b27a-ef5b887ca6b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -47,6 +50,9 @@
     <ClCompile Include="InputRecording.cpp">
       <Filter>Machine Features\Input Recording</Filter>
     </ClCompile>
+    <ClCompile Include="Rewinder.cpp">
+      <Filter>Machine Features\Rewinding</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConsoleDebugger.h">
@@ -72,6 +78,9 @@
     </ClInclude>
     <ClInclude Include="InputRecording.h">
       <Filter>Machine Features\Input Recording</Filter>
+    </ClInclude>
+    <ClInclude Include="Rewinder.h">
+      <Filter>Machine Features\Rewinding</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

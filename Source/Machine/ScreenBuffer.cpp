@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "ScreenBuffer.h"
 using namespace Emunisce;
 
-#include "stdlib.h"	///<malloc, free
+#include <stdlib.h>	///<malloc, free
 
 
 // ScreenBuffer
@@ -64,4 +64,11 @@ void DynamicScreenBuffer::Clear(DisplayPixel clearColor)
 	int numPixels = Width * Height;
 	for(int i=0;i<numPixels;i++)
 		Pixels[i] = clearColor;
+}
+
+ScreenBuffer* DynamicScreenBuffer::Clone()
+{
+	DynamicScreenBuffer* result = new DynamicScreenBuffer(Width, Height);
+	memcpy(&result->Pixels[0], &Pixels[0], Width * Height * sizeof(DisplayPixel));
+	return result;
 }

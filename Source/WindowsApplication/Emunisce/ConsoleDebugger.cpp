@@ -296,6 +296,8 @@ void ConsoleDebugger::FetchCommand()
 	COMMAND1("loadmacro", LoadMacro(args[1].c_str()))
 	COMMAND1("lr", LoadMacro(args[1].c_str()))
 
+	COMMAND0("buttons", PrintButtons())
+
 
 	else
 	{
@@ -672,3 +674,24 @@ void ConsoleDebugger::LoadMacro(const char* id)
 	m_userInterface->LoadMacro(id);
 }
 
+
+void ConsoleDebugger::PrintButtons()
+{
+	printf("%s\n", __FUNCTION__);
+
+	IEmulatedInput* input = m_machine->GetInput();
+	if(input == NULL)
+	{
+		printf("No input\n");
+		return;
+	}
+
+	printf("%d total buttons:\n", input->NumButtons());
+	printf("-----\n");
+	for(unsigned int i=0;i<input->NumButtons();i++)
+	{
+		printf(" %d: %s\n", i, input->GetButtonName(i));
+	}
+	printf("-----\n");
+	printf("\n");
+}

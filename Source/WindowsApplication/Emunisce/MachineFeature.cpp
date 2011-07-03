@@ -401,14 +401,13 @@ const char* MachineFeature::GetButtonName(unsigned int index)
 
 void MachineFeature::ButtonDown(unsigned int index)
 {
-	if( (m_hasFocus || m_wrappedInput == NULL) && m_featureInput != NULL )
+	if(m_featureInput != NULL)
 	{
 		if(index < m_featureInput->NumButtons())
 			return m_featureInput->ButtonDown(index);
-	}
 
-	if(m_featureInput != NULL)
 		index -= m_featureInput->NumButtons();
+	}
 
 	if(m_wrappedInput != NULL)
 	{
@@ -420,7 +419,7 @@ void MachineFeature::ButtonDown(unsigned int index)
 
 void MachineFeature::ButtonUp(unsigned int index)
 {
-	if( (m_hasFocus || m_wrappedInput == NULL) && m_featureInput != NULL )
+	if(m_featureInput != NULL)
 	{
 		if(index < m_featureInput->NumButtons())
 			return m_featureInput->ButtonUp(index);
