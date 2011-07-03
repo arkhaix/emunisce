@@ -36,6 +36,7 @@ public:
 
 	virtual unsigned char* GetBuffer();
 	virtual unsigned int GetBufferSize();
+	virtual void TransferBuffer(unsigned char** buffer, unsigned int* size);	///<Similar to calling GetBuffer and GetBufferSize, but releases ownership of the buffer to the caller.  MemorySerializer will no longer delete the buffer or reference it in any way after this is called.
 
 	virtual void SetBuffer(unsigned char* buffer, unsigned int size);
 

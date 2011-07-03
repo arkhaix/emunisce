@@ -28,6 +28,10 @@ namespace Emunisce
 
 class Window;
 
+class Gui;
+class Rewinder;
+class InputRecording;
+
 class IEmulatedMachine;
 
 class MachineRunner;
@@ -81,6 +85,10 @@ public:
 	void RequestShutdown();
 
 	Window* GetWindow();
+
+	Gui* GetGui();
+	Rewinder* GetRewinder();
+	InputRecording* GetInputRecorder();
 
 	UserInterface* GetUserInterface();
 

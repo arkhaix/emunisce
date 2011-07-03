@@ -55,6 +55,8 @@ InputRecording::InputRecording()
 
 	m_startState = NULL;
 	m_startStateSize = 0;
+
+	m_eventIdOffset = m_defaultEventIdOffset;
 }
 
 InputRecording::~InputRecording()
@@ -129,9 +131,7 @@ void InputRecording::StartRecording()
 		if(m_startState != NULL)
 			delete m_startState;
 
-		m_startStateSize = serializer.GetBufferSize();
-		m_startState = (unsigned char*)malloc(m_startStateSize);
-		memcpy((void*)m_startState, (void*)serializer.GetBuffer(), m_startStateSize);
+		serializer.TransferBuffer(&m_startState, &m_startStateSize);
 
 		if(wasPaused == false)
 			m_application->GetMachineRunner()->Run();
@@ -222,6 +222,11 @@ void InputRecording::ApplicationEvent(unsigned int eventId)
 		if(eventId == m_inputHistory.size() - 1 && m_playing == true && m_loopPlayback == true)
 			StartPlayback(false, false, true, false);
 	}
+}
+
+void InputRecording::SetEventIdOffset(unsigned int offset)
+{
+	m_eventIdOffset = offset;
 }
 
 

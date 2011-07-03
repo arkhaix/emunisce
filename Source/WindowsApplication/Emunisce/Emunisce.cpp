@@ -482,6 +482,11 @@ public:
 			if(_InputRecording != NULL)
 				_InputRecording->ApplicationEvent(eventId);
 		}
+		else if(eventId >= 0x02000000 && eventId < 0x03000000)
+		{
+			if(_Rewinder != NULL)
+				_Rewinder->ApplicationEvent(eventId);
+		}
 	}
 
 
@@ -834,6 +839,23 @@ Window* EmunisceApplication::GetWindow()
 {
 	return m_private->_Window;
 }
+
+
+Gui* EmunisceApplication::GetGui()
+{
+	return m_private->_Gui;
+}
+
+Rewinder* EmunisceApplication::GetRewinder()
+{
+	return m_private->_Rewinder;
+}
+
+InputRecording* EmunisceApplication::GetInputRecorder()
+{
+	return m_private->_InputRecording;
+}
+
 
 UserInterface* EmunisceApplication::GetUserInterface()
 {

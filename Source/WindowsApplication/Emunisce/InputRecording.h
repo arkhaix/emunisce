@@ -52,6 +52,7 @@ public:
 	void StopPlayback();
 
 	void ApplicationEvent(unsigned int eventId);
+	void SetEventIdOffset(unsigned int offset);
 
 
 	// MachineFeature
@@ -82,7 +83,8 @@ private:
 		void Serialize(Archive& archive);
 	};
 
-	static const unsigned int m_eventIdOffset = 0x01000000;	///<Each application component that uses events will have a unique offset.  They're allocated sequentially in the high byte.
+	static const unsigned int m_defaultEventIdOffset = 0x01000000;	///<Each application component that uses events will have a unique offset.  They're allocated sequentially in the high byte.
+	unsigned int m_eventIdOffset;
 	vector<InputEvent> m_inputHistory;
 	unsigned char* m_startState;
 	unsigned int m_startStateSize;
