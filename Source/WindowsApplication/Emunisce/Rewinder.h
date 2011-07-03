@@ -25,11 +25,14 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "PlatformIncludes.h"
 
 #include <list>
+#include <vector>
 using namespace std;
 
 
 namespace Emunisce
 {
+
+class InputRecording;
 
 class Rewinder : public MachineFeature
 {
@@ -42,6 +45,16 @@ public:
 
 	virtual void StartRewinding();
 	virtual void StopRewinding();
+
+	virtual void ApplicationEvent(unsigned int eventId);
+
+	virtual void Internal_RunMachineToNextFrame();	///<Used by Segment to run the machine.
+
+
+	// MachineFeature
+
+	virtual void SetComponentMachine(IEmulatedMachine* componentMachine);	///<Overridden because this component wraps its own InputRecording (m_recorder)
+	virtual void SetEmulatedMachine(IEmulatedMachine* emulatedMachine);	///<Overridden because this component wraps its own InputRecording (m_recorder)
 
 
 	// IEmulatedMachine
@@ -58,15 +71,66 @@ public:
 protected:
 
 	bool m_isRewinding;
+	InputRecording* m_recorder;	///<Private recorder so it doesn't conflict with user movies/macros.
 
-	struct FrameInfo
+	struct CachedFrame
 	{
-		unsigned int Id;
+		unsigned int MachineFrameId;	///<From Machine::GetFrameCount
+
+		unsigned int ScreenId;	///<From IEmulatedDisplay::GetScreenBufferCount
 		ScreenBuffer* Screen;
+
+		CachedFrame()
+		{
+			MachineFrameId = (unsigned int)-1;
+			ScreenId = (unsigned int)-1;
+			Screen = NULL;
+		}
 	};
 
-	list<FrameInfo> m_frameHistory;
-	list<FrameInfo>::iterator m_playbackFrame;
+	class Segment
+	{
+	public:
+
+		static const unsigned int FramesPerSegment = 60;
+
+		Segment(Rewinder* rewinder, InputRecording* recorder);
+		~Segment();
+
+		void RecordFrame();
+		unsigned int NumFramesRecorded();	///<The number of frames currently recorded by this segment
+		bool CanRecordMoreFrames();
+
+		void CacheFrame();
+		unsigned int NumFramesCached();	///<The number of frames cached and ready for playback
+		bool CanCacheMoreFrames();
+
+		CachedFrame GetCachedFrame(unsigned int index);
+
+		void ClearCache();
+
+
+	private:
+
+		Rewinder* m_rewinder;
+		InputRecording* m_recorder;
+
+		unsigned char* m_inputMovieData;
+		unsigned int m_inputMovieDataSize;
+
+		unsigned int m_numFramesRecorded;
+
+		CachedFrame m_frameCache[FramesPerSegment];
+		unsigned int m_numFramesCached;
+	};
+
+	vector<Segment*> m_segments;
+	vector<unsigned int> m_totalSegmentFrames;
+	unsigned int m_recordingSegment;
+	unsigned int m_playingSegment;
+
+	list<CachedFrame> m_frameHistory;
+	list<CachedFrame>::iterator m_playbackFrame;
 	static const unsigned int m_maxFrameHistorySize = 60;
 	Mutex m_frameHistoryLock;
 

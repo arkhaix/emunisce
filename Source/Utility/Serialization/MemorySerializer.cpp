@@ -52,6 +52,21 @@ unsigned int MemorySerializer::GetBufferSize()
 	return m_usedSize;
 }
 
+void MemorySerializer::TransferBuffer(unsigned char** buffer, unsigned int* size)
+{
+	if(buffer == NULL || size == NULL)
+		return;
+
+	*buffer = m_buffer;
+	*size = m_usedSize;
+
+	m_buffer = NULL;
+	m_usedSize = 0;
+	m_reservedSize = 0;
+
+	//todo: re-initialize buffer?
+}
+
 
 void MemorySerializer::SetBuffer(unsigned char* buffer, unsigned int size)
 {
@@ -94,6 +109,9 @@ void MemorySerializer::Save(unsigned char* data, unsigned int bytes)
 
 void MemorySerializer::Restore(unsigned char* buffer, unsigned int bytes)
 {
+	if(m_buffer == NULL || buffer == NULL)
+		return;
+
 	memcpy((void*)buffer, (void*)(m_buffer + m_usedSize), bytes);
 	m_usedSize += bytes;
 }
