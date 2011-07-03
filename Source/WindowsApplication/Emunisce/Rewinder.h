@@ -129,8 +129,8 @@ protected:
 		unsigned int m_numFramesCached;
 	};
 
+	static const unsigned int m_maxSegments = 60;	///<Keep 60 seconds of rewind history
 	vector<Segment*> m_segments;
-	vector<unsigned int> m_totalSegmentFrames;
 	unsigned int m_recordingSegment;
 	unsigned int m_playingSegment;
 
