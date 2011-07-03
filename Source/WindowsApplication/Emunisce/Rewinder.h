@@ -49,9 +49,14 @@ public:
 	virtual void ApplicationEvent(unsigned int eventId);
 
 	virtual void Internal_RunMachineToNextFrame();	///<Used by Segment to run the machine.
+	virtual unsigned int Internal_GetFrameCount();
+	virtual ScreenBuffer* Internal_GetStableScreenBuffer();
+	virtual int Internal_GetScreenBufferCount();
 
 
 	// MachineFeature
+
+	virtual void SetApplication(EmunisceApplication* application);
 
 	virtual void SetComponentMachine(IEmulatedMachine* componentMachine);	///<Overridden because this component wraps its own InputRecording (m_recorder)
 	virtual void SetEmulatedMachine(IEmulatedMachine* emulatedMachine);	///<Overridden because this component wraps its own InputRecording (m_recorder)

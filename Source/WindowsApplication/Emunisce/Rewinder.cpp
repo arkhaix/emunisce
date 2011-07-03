@@ -23,6 +23,9 @@ using namespace Emunisce;
 #include "Emunisce.h"
 #include "InputRecording.h"
 
+#include "Serialization/SerializationIncludes.h"
+#include "Serialization/MemorySerializer.h"
+
 #include <stdio.h>	///<printf debug
 
 
@@ -32,10 +35,18 @@ Rewinder::Segment::Segment(Rewinder* rewinder, InputRecording* recorder)
 {
 	m_rewinder = rewinder;
 	m_recorder = recorder;
+
+	m_inputMovieData = NULL;
+	m_inputMovieDataSize = 0;
+
+	m_numFramesRecorded = 0;
+	m_numFramesCached = 0;
 }
 
 Rewinder::Segment::~Segment()
 {
+	if(m_inputMovieData != NULL)
+		delete m_inputMovieData;
 }
 
 
@@ -45,6 +56,7 @@ void Rewinder::Segment::RecordFrame()
 	if(m_numFramesRecorded == 0)
 	{
 		//Start the input recorder
+		m_recorder->StartRecording(false);
 	}
 
 
@@ -59,7 +71,17 @@ void Rewinder::Segment::RecordFrame()
 	if(m_numFramesRecorded == FramesPerSegment-1)
 	{
 		//Stop the input recorder and save the movie
+		m_recorder->StopRecording();
+		
+		MemorySerializer serializer;
+		Archive archive(&serializer, ArchiveMode::Saving);
+
+		m_recorder->SerializeMovie(archive);
+
+		serializer.TransferBuffer(&m_inputMovieData, &m_inputMovieDataSize);
 	}
+
+	m_numFramesRecorded++;
 }
 
 unsigned int Rewinder::Segment::NumFramesRecorded()
@@ -81,7 +103,25 @@ void Rewinder::Segment::CacheFrame()
 	//First frame
 	if(m_numFramesCached == 0)
 	{
+		//Stop recording
+		m_recorder->StopRecording();
+
+
 		//Restore the input movie and start playing it
+
+		if(m_inputMovieData != NULL && m_inputMovieDataSize > 0)
+		{
+			MemorySerializer serializer;
+			serializer.SetBuffer(m_inputMovieData, m_inputMovieDataSize);
+			Archive archive(&serializer, ArchiveMode::Loading);
+
+			m_recorder->SerializeMovie(archive);
+		}
+
+		//If there's no movie data in this segment, it means we're the most recent segment
+		// so the recorder was still recording our movie until CacheFrame was called.
+
+		m_recorder->StartPlayback(false, true, false, false);
 	}
 
 
@@ -90,6 +130,15 @@ void Rewinder::Segment::CacheFrame()
 
 
 	//Cache the frame
+	if(m_numFramesCached < FramesPerSegment)
+	{
+		CachedFrame& frame = m_frameCache[ m_numFramesCached ];
+		frame.MachineFrameId = m_rewinder->Internal_GetFrameCount();
+		frame.ScreenId = m_rewinder->Internal_GetScreenBufferCount();
+		frame.Screen = m_rewinder->Internal_GetStableScreenBuffer()->Clone();
+
+		m_numFramesCached++;
+	}
 }
 
 unsigned int Rewinder::Segment::NumFramesCached()
@@ -99,7 +148,7 @@ unsigned int Rewinder::Segment::NumFramesCached()
 
 bool Rewinder::Segment::CanCacheMoreFrames()
 {
-	if(m_numFramesCached < FramesPerSegment)
+	if(m_numFramesCached < FramesPerSegment && m_numFramesCached < m_numFramesRecorded)
 		return true;
 
 	return false;
@@ -118,6 +167,15 @@ Rewinder::CachedFrame Rewinder::Segment::GetCachedFrame(unsigned int index)
 
 void Rewinder::Segment::ClearCache()
 {
+	CachedFrame default;
+
+	for(unsigned int i=0;i<m_numFramesCached;i++)
+	{
+		delete m_frameCache[i].Screen;
+		m_frameCache[i] = default;
+	}
+
+	m_numFramesCached = 0;
 }
 
 
@@ -220,6 +278,25 @@ void Rewinder::StartRewinding()
 
 	printf("StartRewinding\n");
 
+	if(m_segments.size() == 0)
+		return;
+
+	m_playingSegment = m_recordingSegment;
+	if(m_playingSegment >= m_segments.size())
+		m_playingSegment = m_segments.size()-1;
+
+	Segment* playingSegment = m_segments[ m_playingSegment ];
+
+	while(playingSegment->NumFramesCached() < playingSegment->NumFramesRecorded())
+		playingSegment->CacheFrame();
+
+	m_frameHistory.clear();
+	for(unsigned int i=0;i<playingSegment->NumFramesCached();i++)
+		m_frameHistory.push_back(playingSegment->GetCachedFrame(i));
+
+	if(m_playingSegment > 0)
+		m_playingSegment--;
+
 	m_isRewinding = true;
 	m_playbackFrame = m_frameHistory.end();
 }
@@ -231,6 +308,10 @@ void Rewinder::StopRewinding()
 	printf("StopRewinding\n");
 
 	m_isRewinding = false;
+
+	m_recordingSegment = m_playingSegment;
+	if(m_recordingSegment >= m_segments.size())
+		m_recordingSegment = m_segments.size()-1;
 
 	//We're altering the past.  We've created an alternate universe and caused the old future to vanish!
 	//Works, but commented out until we can actually restore from the past position.
@@ -258,8 +339,30 @@ void Rewinder::Internal_RunMachineToNextFrame()
 	MachineFeature::RunToNextFrame();
 }
 
+unsigned int Rewinder::Internal_GetFrameCount()
+{
+	return MachineFeature::GetFrameCount();
+}
+
+ScreenBuffer* Rewinder::Internal_GetStableScreenBuffer()
+{
+	return MachineFeature::GetStableScreenBuffer();
+}
+
+int Rewinder::Internal_GetScreenBufferCount()
+{
+	return MachineFeature::GetScreenBufferCount();
+}
+
+
 
 // MachineFeature
+
+void Rewinder::SetApplication(EmunisceApplication* application)
+{
+	MachineFeature::SetApplication(application);
+	m_recorder->SetApplication(application);
+}
 
 void Rewinder::SetComponentMachine(IEmulatedMachine* componentMachine)
 {

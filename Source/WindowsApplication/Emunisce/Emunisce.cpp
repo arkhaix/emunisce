@@ -523,6 +523,7 @@ EmunisceApplication::EmunisceApplication()
 	m_private = new Phoenix_Private();
 
 	m_private->_Gui->SetApplication(this);
+	m_private->_Rewinder->SetApplication(this);
 	m_private->_InputRecording->SetApplication(this);
 
 	m_private->_Window->Create(320, 240, "Emunisce", "Emunisce_RenderWindow");

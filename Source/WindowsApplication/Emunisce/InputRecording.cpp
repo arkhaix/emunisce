@@ -112,12 +112,13 @@ void InputRecording::SerializeMovie(Archive& archive)
 }
 
 
-void InputRecording::StartRecording()
+void InputRecording::StartRecording(bool pauseFirst)
 {
 	if(m_wrappedMachine != NULL)
 	{
 		bool wasPaused = m_application->GetMachineRunner()->IsPaused();
-		m_application->GetMachineRunner()->Pause();
+		if(pauseFirst == true)
+			m_application->GetMachineRunner()->Pause();
 
 		m_inputHistory.clear();
 
@@ -133,7 +134,7 @@ void InputRecording::StartRecording()
 
 		serializer.TransferBuffer(&m_startState, &m_startStateSize);
 
-		if(wasPaused == false)
+		if(wasPaused == false && pauseFirst == true)
 			m_application->GetMachineRunner()->Run();
 	}
 }
