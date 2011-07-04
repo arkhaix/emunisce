@@ -97,6 +97,15 @@ void Input::ButtonUp(unsigned int index)
 	UpdateInterruptFlag();
 }
 
+bool Input::IsButtonDown(unsigned int index)
+{
+	if(m_buttonStates & (1<<index))
+		return false;
+
+	return true;
+}
+
+
 //Registers
 void Input::SetJoypadMode(u8 value)
 {

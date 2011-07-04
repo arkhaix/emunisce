@@ -234,3 +234,9 @@ void Gui::GuiFeature::ButtonUp(unsigned int index)
 
 	//todo
 }
+
+bool Gui::GuiFeature::IsButtonDown(unsigned int index)
+{
+	//todo
+	return false;
+}

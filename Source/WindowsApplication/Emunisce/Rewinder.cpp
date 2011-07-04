@@ -113,17 +113,8 @@ void Rewinder::Segment::CacheFrame()
 		//Stop recording
 		m_recorder->StopRecording();
 
-
 		//Restore the input movie and start playing it
-
-		if(m_inputMovieData != NULL && m_inputMovieDataSize > 0)
-		{
-			MemorySerializer serializer;
-			serializer.SetBuffer(m_inputMovieData, m_inputMovieDataSize);
-			Archive archive(&serializer, ArchiveMode::Loading);
-
-			m_recorder->SerializeMovie(archive);
-		}
+		RestoreState();
 
 		//If there's no movie data in this segment, it means we're the most recent segment
 		// so the recorder was still recording our movie until CacheFrame was called.
@@ -186,6 +177,19 @@ void Rewinder::Segment::ClearCache()
 }
 
 
+void Rewinder::Segment::RestoreState()
+{
+	if(m_inputMovieData != NULL && m_inputMovieDataSize > 0)
+	{
+		MemorySerializer serializer;
+		serializer.SetBuffer(m_inputMovieData, m_inputMovieDataSize);
+		Archive archive(&serializer, ArchiveMode::Loading);
+
+		m_recorder->SerializeMovie(archive);
+	}
+}
+
+
 
 // Rewinder::InputHandler
 
@@ -239,7 +243,12 @@ void Rewinder::InputHandler::ButtonDown(unsigned int index)
 void Rewinder::InputHandler::ButtonUp(unsigned int index)
 {
 	if(index == RewinderButtons::Rewind)
-		m_rewinder->StopRewinding();
+		m_rewinder->StopRewindRequested();
+}
+
+bool Rewinder::InputHandler::IsButtonDown(unsigned int index)
+{
+	return false;
 }
 
 
@@ -308,6 +317,11 @@ void Rewinder::StartRewinding()
 	m_playbackFrame = m_frameHistory.end();
 }
 
+void Rewinder::StopRewindRequested()
+{
+	m_stopRewindRequested = true;
+}
+
 void Rewinder::StopRewinding()
 {
 	ScopedMutex scopedLock(m_frameHistoryLock);
@@ -315,8 +329,16 @@ void Rewinder::StopRewinding()
 	printf("StopRewinding\n");
 
 	m_isRewinding = false;
+	m_stopRewindRequested = false;
 
-	m_recordingSegment = m_playingSegment;
+	Segment* visibleSegment = NULL;
+	if(m_playingSegment+1 < m_segments.size())
+		visibleSegment = m_segments[ m_playingSegment+1 ];
+
+	if(visibleSegment != NULL)
+		visibleSegment->RestoreState();
+
+	m_recordingSegment = m_playingSegment+1;
 	if(m_recordingSegment >= m_segments.size())
 		m_recordingSegment = m_segments.size()-1;
 
@@ -335,6 +357,13 @@ void Rewinder::StopRewinding()
 	m_playingSegment = m_segments.size()-1;
 
 	printf("After adding a new one, there are now %d segments\n", m_segments.size());
+
+	//Clear input state so keys don't get stuck
+	if(m_wrappedInput != NULL)
+	{
+		for(unsigned int i=0;i<m_wrappedInput->NumButtons();i++)
+			m_wrappedInput->ButtonUp(i);
+	}
 }
 
 void Rewinder::ApplicationEvent(unsigned int eventId)
@@ -428,32 +457,39 @@ void Rewinder::RunToNextFrame()
 		//If we're at the beginning of the frame history, try to get more history from the segments.
 		if(m_playbackFrame == m_frameHistory.begin())
 		{
-			Segment* playingSegment = NULL;
-			if(m_playingSegment < m_segments.size())
-				playingSegment = m_segments[ m_playingSegment ];
-
-			if(playingSegment != NULL)
+			if(m_stopRewindRequested == true)
 			{
-				//The segment should already be fully cached.  Just to be sure...
-				while(playingSegment->CanCacheMoreFrames() == true)
-				{
-					playingSegment->CacheFrame();
-				}
-
-				//Clear the current frame history
-				m_frameHistory.clear();	///<No need for deep deletion.  Segments handle that.  Screens are shallow-copied.
-
-				for(unsigned int i=0;i<playingSegment->NumFramesCached();i++)
-				{
-					m_frameHistory.push_back(playingSegment->GetCachedFrame(i));
-				}
-
-				m_playbackFrame = m_frameHistory.end();
+				StopRewinding();
 			}
+			else
+			{
+				Segment* playingSegment = NULL;
+				if(m_playingSegment < m_segments.size())
+					playingSegment = m_segments[ m_playingSegment ];
+
+				if(playingSegment != NULL)
+				{
+					//The segment should already be fully cached.  Just to be sure...
+					while(playingSegment->CanCacheMoreFrames() == true)
+					{
+						playingSegment->CacheFrame();
+					}
+
+					//Clear the current frame history
+					m_frameHistory.clear();	///<No need for deep deletion.  Segments handle that.  Screens are shallow-copied.
+
+					for(unsigned int i=0;i<playingSegment->NumFramesCached();i++)
+					{
+						m_frameHistory.push_back(playingSegment->GetCachedFrame(i));
+					}
+
+					m_playbackFrame = m_frameHistory.end();
+				}
 			
-			//Next segment
-			if(m_playingSegment > 0)
-				m_playingSegment--;
+				//Next segment
+				if(m_playingSegment > 0)
+					m_playingSegment--;
+			}
 		}
 
 		//If we're not at the beginning of the frame history, then advance backward one frame.

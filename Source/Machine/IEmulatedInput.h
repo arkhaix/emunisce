@@ -35,6 +35,8 @@ public:
 
 	virtual void ButtonDown(unsigned int index) = 0;
 	virtual void ButtonUp(unsigned int index) = 0;
+
+	virtual bool IsButtonDown(unsigned int index) = 0;
 };
 
 }	//namespace Emunisce

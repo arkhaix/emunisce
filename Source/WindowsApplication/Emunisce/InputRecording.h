@@ -62,6 +62,8 @@ public:
 	virtual void ButtonDown(unsigned int index);
 	virtual void ButtonUp(unsigned int index);
 
+	virtual bool IsButtonDown(unsigned int index);
+
 private:
 
 	bool m_recording;
@@ -88,6 +90,7 @@ private:
 	vector<InputEvent> m_inputHistory;
 	unsigned char* m_startState;
 	unsigned int m_startStateSize;
+	vector<bool> m_initialKeysDown;
 
 	map<unsigned int, bool> m_isButtonDown;
 
