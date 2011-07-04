@@ -44,6 +44,7 @@ public:
 	virtual ~Rewinder();
 
 	virtual void StartRewinding();
+	virtual void StopRewinding();
 	virtual void StopRewindRequested();
 
 	virtual void ApplicationEvent(unsigned int eventId);
@@ -65,6 +66,7 @@ public:
 
 	// IEmulatedMachine
 
+	virtual unsigned int GetFrameCount();
 	virtual void RunToNextFrame();
 
 
@@ -75,8 +77,6 @@ public:
 
 
 protected:
-
-	virtual void StopRewinding();
 
 	bool m_isRewinding;
 	bool m_stopRewindRequested;
@@ -120,6 +120,8 @@ protected:
 
 		void RestoreState();
 
+		void LockAtFrame(unsigned int frameId);	///<Disables the history newer than the specified frame.
+
 
 	private:
 
@@ -133,6 +135,8 @@ protected:
 
 		CachedFrame m_frameCache[FramesPerSegment];
 		unsigned int m_numFramesCached;
+
+		bool m_locked;
 	};
 
 	static const unsigned int m_maxSegments = 60;	///<Keep 60 seconds of rewind history

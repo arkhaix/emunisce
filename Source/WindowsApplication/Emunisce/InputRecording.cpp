@@ -122,15 +122,6 @@ void InputRecording::StartRecording(bool pauseFirst)
 			m_application->GetMachineRunner()->Pause();
 
 
-		//Record the initial key state
-		m_initialKeysDown.clear();
-		if(m_wrappedInput != NULL)
-		{
-			for(unsigned int i=0;i<m_wrappedInput->NumButtons();i++)
-				m_initialKeysDown.push_back(m_wrappedInput->IsButtonDown(i));
-		}
-
-
 		//Record the initial machine state
 		m_inputHistory.clear();
 
@@ -181,19 +172,6 @@ void InputRecording::StartPlayback(bool absoluteFrames, bool restoreState, bool 
 			serializer.SetBuffer(m_startState, m_startStateSize);
 			Archive archive(&serializer, ArchiveMode::Loading);
 			m_wrappedMachine->LoadState(archive);
-		}
-
-		//Restore the initial input state
-		if(m_wrappedInput != NULL)
-		{
-			for(unsigned int i=0;i<m_wrappedInput->NumButtons();i++)
-				m_wrappedInput->ButtonUp(i);
-
-			for(unsigned int i=0;i<m_initialKeysDown.size();i++)
-			{
-				if(i < m_wrappedInput->NumButtons() && m_initialKeysDown[i] == true)
-					m_wrappedInput->ButtonDown(i);
-			}
 		}
 
 		//Add all the recorded events

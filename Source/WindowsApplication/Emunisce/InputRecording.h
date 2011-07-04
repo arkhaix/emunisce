@@ -90,7 +90,6 @@ private:
 	vector<InputEvent> m_inputHistory;
 	unsigned char* m_startState;
 	unsigned int m_startStateSize;
-	vector<bool> m_initialKeysDown;
 
 	map<unsigned int, bool> m_isButtonDown;
 
