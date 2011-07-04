@@ -26,8 +26,6 @@ using namespace Emunisce;
 #include "Serialization/SerializationIncludes.h"
 #include "Serialization/MemorySerializer.h"
 
-#include <stdio.h>	///<printf debug
-
 
 // Rewinder::Segment
 
@@ -267,8 +265,6 @@ Rewinder::Rewinder()
 	m_recorder = new InputRecording();
 	m_recorder->SetEventIdOffset(0x02000000);	///<Use rewinder's event id offset instead of InputRecording's.  So that the application directs events to the right place.
 
-	m_segments.push_back(new Segment(this, m_recorder));
-	m_recordingSegment = 0;
 	m_playingSegment = 0;
 }
 
@@ -292,14 +288,10 @@ void Rewinder::StartRewinding()
 {
 	ScopedMutex scopedLock(m_frameHistoryLock);
 
-	printf("StartRewinding\n");
-
 	if(m_segments.size() == 0)
 		return;
 
-	m_playingSegment = m_recordingSegment;
-	if(m_playingSegment >= m_segments.size())
-		m_playingSegment = m_segments.size()-1;
+	m_playingSegment = m_segments.size()-1;
 
 	Segment* playingSegment = m_segments[ m_playingSegment ];
 
@@ -326,37 +318,33 @@ void Rewinder::StopRewinding()
 {
 	ScopedMutex scopedLock(m_frameHistoryLock);
 
-	printf("StopRewinding\n");
-
 	m_isRewinding = false;
 	m_stopRewindRequested = false;
 
+	//m_playingSegment represents the segment being played in the background to generate caches.
+	// However, the currently visible segment is m_playingSegment+1 -- it's the segment that most
+	// recently finished generating caches and whose screen buffers are being displayed.
+	int visibleSegmentIndex = m_playingSegment+1;
+	if(visibleSegmentIndex >= m_segments.size())
+		visibleSegmentIndex = m_segments.size()-1;
+
 	Segment* visibleSegment = NULL;
-	if(m_playingSegment+1 < m_segments.size())
-		visibleSegment = m_segments[ m_playingSegment+1 ];
+	if(visibleSegmentIndex < m_segments.size())
+		visibleSegment = m_segments[ visibleSegmentIndex ];
 
 	if(visibleSegment != NULL)
 		visibleSegment->RestoreState();
 
-	m_recordingSegment = m_playingSegment+1;
-	if(m_recordingSegment >= m_segments.size())
-		m_recordingSegment = m_segments.size()-1;
-
 	//We're altering the past.  We've created an alternate universe and caused the old future to vanish!
 	//Right now, this just means deleting all segments after the one we rewound to.
 
-	printf("Erasing %d segments (out of %d)\n", m_segments.size() - m_playingSegment, m_segments.size());
-
-	for(unsigned int i=m_playingSegment;i<m_segments.size();i++)
+	for(unsigned int i=visibleSegmentIndex;i<m_segments.size();i++)
 		delete m_segments[i];
 
-	m_segments.erase(m_segments.begin() + m_playingSegment, m_segments.end());
+	m_segments.erase(m_segments.begin() + visibleSegmentIndex, m_segments.end());
 
 	m_segments.push_back(new Segment(this, m_recorder));
-	m_recordingSegment = m_segments.size()-1;
 	m_playingSegment = m_segments.size()-1;
-
-	printf("After adding a new one, there are now %d segments\n", m_segments.size());
 
 	//Clear input state so keys don't get stuck
 	if(m_wrappedInput != NULL)
@@ -425,15 +413,17 @@ void Rewinder::RunToNextFrame()
 		//Not rewinding.  Just run the machine normally and capture its frame for the history.
 		// Segment::RecordFrame runs the machine
 		
+		unsigned int lastSegmentIndex = m_segments.size()-1;
+
 		Segment* recordingSegment = NULL;
-		if(m_recordingSegment < m_segments.size())
-			recordingSegment = m_segments[ m_recordingSegment ];
+		if(lastSegmentIndex < m_segments.size())
+			recordingSegment = m_segments[ lastSegmentIndex ];
 
 		if(recordingSegment == NULL || recordingSegment->CanRecordMoreFrames() == false)
 		{
 			m_segments.push_back(new Segment(this, m_recorder));
-			m_recordingSegment = m_segments.size() - 1;
-			recordingSegment = m_segments[ m_recordingSegment ];
+			lastSegmentIndex = m_segments.size()-1;
+			recordingSegment = m_segments[ lastSegmentIndex ];
 
 			//Clear old caches
 			for(unsigned int i=0;i<m_segments.size();i++)
@@ -447,7 +437,7 @@ void Rewinder::RunToNextFrame()
 			}
 		}
 
-		m_segments[ m_recordingSegment ]->RecordFrame();
+		m_segments[ lastSegmentIndex ]->RecordFrame();
 	}
 	else
 	{
@@ -506,8 +496,6 @@ void Rewinder::RunToNextFrame()
 
 		if(playingSegment != NULL && playingSegment->CanCacheMoreFrames())
 			playingSegment->CacheFrame();
-
-		printf("Rewinding to frame %d\n", m_playbackFrame->MachineFrameId);
 	}
 }
 
@@ -526,8 +514,6 @@ ScreenBuffer* Rewinder::GetStableScreenBuffer()
 	}
 	else
 	{
-		printf("Playing history frame %d\n", m_playbackFrame->ScreenId);
-
 		//Rewinding.  Return our current history frame.
 		return m_playbackFrame->Screen;
 	}
