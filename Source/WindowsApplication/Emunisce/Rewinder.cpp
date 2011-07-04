@@ -21,6 +21,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 using namespace Emunisce;
 
 #include "Emunisce.h"
+#include "MachineRunner.h"
+
 #include "InputRecording.h"
 
 #include "Serialization/SerializationIncludes.h"
@@ -62,7 +64,7 @@ void Rewinder::Segment::RecordFrame()
 	if(m_numFramesRecorded == 0)
 	{
 		//Start the input recorder
-		m_recorder->StartRecording(false);
+		m_recorder->StartRecording();
 	}
 
 
@@ -126,7 +128,7 @@ void Rewinder::Segment::CacheFrame()
 		//If there's no movie data in this segment, it means we're the most recent segment
 		// so the recorder was still recording our movie until CacheFrame was called.
 
-		m_recorder->StartPlayback(false, true, false, false);
+		m_recorder->StartPlayback(false, true, false);
 	}
 
 
@@ -320,52 +322,60 @@ Rewinder::~Rewinder()
 
 void Rewinder::StartRewinding()
 {
-	ScopedMutex scopedLock(m_frameHistoryLock);
-
 	if(m_segments.size() == 0)
 		return;
 
-	m_playingSegment = m_segments.size()-1;
+	bool wasPaused = m_application->GetMachineRunner()->IsPaused();
+	m_application->GetMachineRunner()->Pause();
 
-	Segment* playingSegment = m_segments[ m_playingSegment ];
+	{
+		ScopedMutex scopedLock(m_frameHistoryLock);
 
-	while(playingSegment->CanCacheMoreFrames())
-		playingSegment->CacheFrame();
+		m_playingSegment = m_segments.size()-1;
 
-	m_frameHistory.clear();
-	for(unsigned int i=0;i<playingSegment->NumFramesCached();i++)
-		m_frameHistory.push_back(playingSegment->GetCachedFrame(i));
+		Segment* playingSegment = m_segments[ m_playingSegment ];
 
-	if(m_playingSegment > 0)
-		m_playingSegment--;
+		while(playingSegment->CanCacheMoreFrames())
+			playingSegment->CacheFrame();
 
-	m_isRewinding = true;
-	m_playbackFrame = m_frameHistory.end();
-	m_playbackFrame--;
-}
+		m_frameHistory.clear();
+		for(unsigned int i=0;i<playingSegment->NumFramesCached();i++)
+			m_frameHistory.push_back(playingSegment->GetCachedFrame(i));
 
-void Rewinder::StopRewindRequested()
-{
-	m_stopRewindRequested = true;
+		if(m_playingSegment > 0)
+			m_playingSegment--;
+
+		m_isRewinding = true;
+		m_playbackFrame = m_frameHistory.end();
+		m_playbackFrame--;
+	}
+
+	if(wasPaused == false)
+		m_application->GetMachineRunner()->Run();
 }
 
 void Rewinder::StopRewinding()
 {
-	ScopedMutex scopedLock(m_frameHistoryLock);
+	bool wasPaused = m_application->GetMachineRunner()->IsPaused();
+	m_application->GetMachineRunner()->Pause();
 
-	m_isRewinding = false;
-	m_stopRewindRequested = false;
-
-	//m_playingSegment represents the segment being played in the background to generate caches.
-	// However, the currently visible segment is m_playingSegment+1 -- it's the segment that most
-	// recently finished generating caches and whose screen buffers are being displayed.
 	unsigned int visibleSegmentIndex = m_playingSegment+1;
-	if(visibleSegmentIndex >= m_segments.size())
-		visibleSegmentIndex = m_segments.size()-1;
-
 	Segment* visibleSegment = NULL;
-	if(visibleSegmentIndex < m_segments.size())
-		visibleSegment = m_segments[ visibleSegmentIndex ];
+
+	{
+		ScopedMutex scopedLock(m_frameHistoryLock);
+
+		m_isRewinding = false;
+
+		//m_playingSegment represents the segment being played in the background to generate caches.
+		// However, the currently visible segment is m_playingSegment+1 -- it's the segment that most
+		// recently finished generating caches and whose screen buffers are being displayed.	
+		if(visibleSegmentIndex >= m_segments.size())
+			visibleSegmentIndex = m_segments.size()-1;
+
+		if(visibleSegmentIndex < m_segments.size())
+			visibleSegment = m_segments[ visibleSegmentIndex ];
+	}
 
 
 	//Run the visible segment up until we hit the frame that's currently being displayed
@@ -385,29 +395,37 @@ void Rewinder::StopRewinding()
 	}
 
 
-	//Delete all the segments newer than the visible one.  The old future is gone.
-
-	if(m_segments.size() > 0 && visibleSegmentIndex < m_segments.size())
 	{
-		for(unsigned int i=visibleSegmentIndex;i<m_segments.size();i++)
-			delete m_segments[i];
+		ScopedMutex scopedLock(m_frameHistoryLock);
 
-		m_segments.erase(m_segments.begin() + visibleSegmentIndex, m_segments.end());
+		//Delete all the segments newer than the visible one.  The old future is gone.
 
-		m_segments.push_back(new Segment(this, m_recorder));
-		m_playingSegment = m_segments.size()-1;
-	}
-
-
-	//Clear input state so keys don't get stuck
-	if(m_wrappedInput != NULL)
-	{
-		for(unsigned int i=0;i<m_wrappedInput->NumButtons();i++)
+		if(m_segments.size() > 0 && visibleSegmentIndex < m_segments.size())
 		{
-			m_wrappedInput->ButtonDown(i);
-			m_wrappedInput->ButtonUp(i);
+			for(unsigned int i=visibleSegmentIndex;i<m_segments.size();i++)
+				delete m_segments[i];
+
+			m_segments.erase(m_segments.begin() + visibleSegmentIndex, m_segments.end());
+
+			m_segments.push_back(new Segment(this, m_recorder));
+			m_playingSegment = m_segments.size()-1;
+		}
+
+
+		//Clear input state so keys don't get stuck
+		if(m_wrappedInput != NULL)
+		{
+			for(unsigned int i=0;i<m_wrappedInput->NumButtons();i++)
+			{
+				m_wrappedInput->ButtonDown(i);
+				m_wrappedInput->ButtonUp(i);
+			}
 		}
 	}
+
+
+	if(wasPaused == false)
+		m_application->GetMachineRunner()->Run();
 }
 
 void Rewinder::ApplicationEvent(unsigned int eventId)

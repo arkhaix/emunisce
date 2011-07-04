@@ -52,7 +52,7 @@ void MachineRunner::Initialize(EmunisceApplication* phoenix)
 {
 	m_waitEvent = CreateEvent(NULL, FALSE, TRUE, NULL);
 
-	m_runnerThread = CreateThread(NULL, 0, StaticRunnerThread, (LPVOID)this, 0, NULL);
+	m_runnerThread = CreateThread(NULL, 0, StaticRunnerThread, (LPVOID)this, 0, &m_runnerThreadId);
 }
 
 void MachineRunner::Shutdown()
@@ -106,9 +106,14 @@ void MachineRunner::Run()
 
 void MachineRunner::Pause()
 {
-	m_waitRequested = true;
+	if(GetCurrentThreadId() == m_runnerThreadId)
+		return;
+
 	while(m_waiting == false)
+	{
+		m_waitRequested = true;
 		Sleep(1);
+	}
 }
 
 bool MachineRunner::IsPaused()

@@ -112,14 +112,13 @@ void InputRecording::SerializeMovie(Archive& archive)
 }
 
 
-void InputRecording::StartRecording(bool pauseFirst)
+void InputRecording::StartRecording()
 {
 	if(m_wrappedMachine != NULL)
 	{
 		//Pause the machine
 		bool wasPaused = m_application->GetMachineRunner()->IsPaused();
-		if(pauseFirst == true)
-			m_application->GetMachineRunner()->Pause();
+		m_application->GetMachineRunner()->Pause();
 
 
 		//Record the initial machine state
@@ -139,7 +138,7 @@ void InputRecording::StartRecording(bool pauseFirst)
 
 
 		//Resume the machine
-		if(wasPaused == false && pauseFirst == true)
+		if(wasPaused == false)
 			m_application->GetMachineRunner()->Run();
 	}
 }
@@ -150,14 +149,13 @@ void InputRecording::StopRecording()
 }
 
 
-void InputRecording::StartPlayback(bool absoluteFrames, bool restoreState, bool loop, bool pauseFirst)
+void InputRecording::StartPlayback(bool absoluteFrames, bool restoreState, bool loop)
 {
 	if(m_wrappedMachine != NULL)
 	{
 		//Pause the machine
 		bool wasPaused = m_application->GetMachineRunner()->IsPaused();
-		if(pauseFirst == true)
-			m_application->GetMachineRunner()->Pause();
+		m_application->GetMachineRunner()->Pause();
 
 		m_playbackStartFrame = m_wrappedMachine->GetFrameCount();
 
@@ -189,7 +187,7 @@ void InputRecording::StartPlayback(bool absoluteFrames, bool restoreState, bool 
 		}
 
 		//Resume the machine
-		if(wasPaused == false && pauseFirst == true)
+		if(wasPaused == false)
 			m_application->GetMachineRunner()->Run();
 	}
 }
@@ -230,7 +228,7 @@ void InputRecording::ApplicationEvent(unsigned int eventId)
 		}
 
 		if(eventId == m_inputHistory.size() - 1 && m_playing == true && m_loopPlayback == true)
-			StartPlayback(false, false, true, false);
+			StartPlayback(false, false, true);
 	}
 }
 
