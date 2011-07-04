@@ -44,11 +44,12 @@ public:
 	virtual ~Rewinder();
 
 	virtual void StartRewinding();
-	virtual void StopRewinding();
+	virtual void StopRewindRequested();
 
 	virtual void ApplicationEvent(unsigned int eventId);
 
-	virtual void Internal_RunMachineToNextFrame();	///<Used by Segment to run the machine.
+	//Used by Segment to call into MachineFeature
+	virtual void Internal_RunMachineToNextFrame();
 	virtual unsigned int Internal_GetFrameCount();
 	virtual ScreenBuffer* Internal_GetStableScreenBuffer();
 	virtual int Internal_GetScreenBufferCount();
@@ -75,7 +76,10 @@ public:
 
 protected:
 
+	virtual void StopRewinding();
+
 	bool m_isRewinding;
+	bool m_stopRewindRequested;
 	InputRecording* m_recorder;	///<Private recorder so it doesn't conflict with user movies/macros.
 
 	struct CachedFrame
@@ -113,6 +117,8 @@ protected:
 		CachedFrame GetCachedFrame(unsigned int index);
 
 		void ClearCache();
+
+		void RestoreState();
 
 
 	private:
@@ -154,6 +160,8 @@ protected:
 
 		virtual void ButtonDown(unsigned int index);
 		virtual void ButtonUp(unsigned int index);
+
+		virtual bool IsButtonDown(unsigned int index);
 
 
 	private:

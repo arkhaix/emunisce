@@ -116,10 +116,22 @@ void InputRecording::StartRecording(bool pauseFirst)
 {
 	if(m_wrappedMachine != NULL)
 	{
+		//Pause the machine
 		bool wasPaused = m_application->GetMachineRunner()->IsPaused();
 		if(pauseFirst == true)
 			m_application->GetMachineRunner()->Pause();
 
+
+		//Record the initial key state
+		m_initialKeysDown.clear();
+		if(m_wrappedInput != NULL)
+		{
+			for(unsigned int i=0;i<m_wrappedInput->NumButtons();i++)
+				m_initialKeysDown.push_back(m_wrappedInput->IsButtonDown(i));
+		}
+
+
+		//Record the initial machine state
 		m_inputHistory.clear();
 
 		m_recording = true;
@@ -134,6 +146,8 @@ void InputRecording::StartRecording(bool pauseFirst)
 
 		serializer.TransferBuffer(&m_startState, &m_startStateSize);
 
+
+		//Resume the machine
 		if(wasPaused == false && pauseFirst == true)
 			m_application->GetMachineRunner()->Run();
 	}
@@ -149,6 +163,7 @@ void InputRecording::StartPlayback(bool absoluteFrames, bool restoreState, bool 
 {
 	if(m_wrappedMachine != NULL)
 	{
+		//Pause the machine
 		bool wasPaused = m_application->GetMachineRunner()->IsPaused();
 		if(pauseFirst == true)
 			m_application->GetMachineRunner()->Pause();
@@ -159,6 +174,7 @@ void InputRecording::StartPlayback(bool absoluteFrames, bool restoreState, bool 
 
 		m_playing = true;
 
+		//Restore the initial savestate
 		if(restoreState == true)
 		{
 			MemorySerializer serializer;
@@ -167,6 +183,20 @@ void InputRecording::StartPlayback(bool absoluteFrames, bool restoreState, bool 
 			m_wrappedMachine->LoadState(archive);
 		}
 
+		//Restore the initial input state
+		if(m_wrappedInput != NULL)
+		{
+			for(unsigned int i=0;i<m_wrappedInput->NumButtons();i++)
+				m_wrappedInput->ButtonUp(i);
+
+			for(unsigned int i=0;i<m_initialKeysDown.size();i++)
+			{
+				if(i < m_wrappedInput->NumButtons() && m_initialKeysDown[i] == true)
+					m_wrappedInput->ButtonDown(i);
+			}
+		}
+
+		//Add all the recorded events
 		for(unsigned int i=0;i<m_inputHistory.size();i++)
 		{
 			Emunisce::ApplicationEvent inputEvent;
@@ -180,6 +210,7 @@ void InputRecording::StartPlayback(bool absoluteFrames, bool restoreState, bool 
 			m_wrappedMachine->AddApplicationEvent(inputEvent, !absoluteFrames);
 		}
 
+		//Resume the machine
 		if(wasPaused == false && pauseFirst == true)
 			m_application->GetMachineRunner()->Run();
 	}
@@ -303,4 +334,16 @@ void InputRecording::ButtonUp(unsigned int index)
 	{
 		MachineFeature::ButtonUp(index);
 	}
+}
+
+bool InputRecording::IsButtonDown(unsigned int index)
+{
+	auto iter = m_isButtonDown.find(index);
+	if(iter == m_isButtonDown.end())
+		return false;
+
+	if(iter->second == false)
+		return false;
+
+	return true;
 }

@@ -435,6 +435,24 @@ void MachineFeature::ButtonUp(unsigned int index)
 	return;
 }
 
+bool MachineFeature::IsButtonDown(unsigned int index)
+{
+	if(m_featureInput != NULL)
+	{
+		if(index < m_featureInput->NumButtons())
+			return m_featureInput->IsButtonDown(index);
+
+		index -= m_featureInput->NumButtons();
+	}
+
+	if(m_wrappedInput != NULL)
+	{
+		return m_wrappedInput->IsButtonDown(index);
+	}
+
+	return false;
+}
+
 
 
 // IEmulatedMemory

@@ -121,6 +121,8 @@ protected:
 		virtual void ButtonDown(unsigned int index);
 		virtual void ButtonUp(unsigned int index);
 
+		virtual bool IsButtonDown(unsigned int index);
+
 
 	protected:
 
