@@ -371,14 +371,18 @@ void Rewinder::StopRewinding()
 	//Run the visible segment up until we hit the frame that's currently being displayed
 
 	if(visibleSegment != NULL)
+	{
+		visibleSegment->ClearCache();
+
 		visibleSegment->RestoreState();
 
-	while(m_wrappedMachine->GetFrameCount() != m_playbackFrame->MachineFrameId)
-		visibleSegment->CacheFrame();
+		while(visibleSegment->CanCacheMoreFrames() && m_wrappedMachine->GetFrameCount() != m_playbackFrame->MachineFrameId)
+			visibleSegment->CacheFrame();
 
-	visibleSegment->ClearCache();
+		visibleSegment->ClearCache();
 
-	visibleSegment->LockAtFrame(m_playbackFrame->MachineFrameId);
+		visibleSegment->LockAtFrame(m_playbackFrame->MachineFrameId);
+	}
 
 
 	//Delete all the segments newer than the visible one.  The old future is gone.
