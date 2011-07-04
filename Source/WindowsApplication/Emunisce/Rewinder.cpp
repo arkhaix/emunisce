@@ -359,7 +359,7 @@ void Rewinder::StopRewinding()
 	//m_playingSegment represents the segment being played in the background to generate caches.
 	// However, the currently visible segment is m_playingSegment+1 -- it's the segment that most
 	// recently finished generating caches and whose screen buffers are being displayed.
-	int visibleSegmentIndex = m_playingSegment+1;
+	unsigned int visibleSegmentIndex = m_playingSegment+1;
 	if(visibleSegmentIndex >= m_segments.size())
 		visibleSegmentIndex = m_segments.size()-1;
 
@@ -387,13 +387,16 @@ void Rewinder::StopRewinding()
 
 	//Delete all the segments newer than the visible one.  The old future is gone.
 
-	for(unsigned int i=visibleSegmentIndex;i<m_segments.size();i++)
-		delete m_segments[i];
+	if(m_segments.size() > 0 && visibleSegmentIndex < m_segments.size())
+	{
+		for(unsigned int i=visibleSegmentIndex;i<m_segments.size();i++)
+			delete m_segments[i];
 
-	m_segments.erase(m_segments.begin() + visibleSegmentIndex, m_segments.end());
+		m_segments.erase(m_segments.begin() + visibleSegmentIndex, m_segments.end());
 
-	m_segments.push_back(new Segment(this, m_recorder));
-	m_playingSegment = m_segments.size()-1;
+		m_segments.push_back(new Segment(this, m_recorder));
+		m_playingSegment = m_segments.size()-1;
+	}
 
 
 	//Clear input state so keys don't get stuck
