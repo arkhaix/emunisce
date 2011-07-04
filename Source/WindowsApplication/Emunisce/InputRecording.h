@@ -45,10 +45,10 @@ public:
 	void SerializeHistory(Archive& archive);
 	void SerializeMovie(Archive& archive);
 
-	void StartRecording(bool pauseFirst = true);
+	void StartRecording();
 	void StopRecording();
 
-	void StartPlayback(bool absoluteFrames = false, bool restoreState = false, bool loop = false, bool pauseFirst = true);	///<If absoluteFrames is true, playback will only occur when the emulated machine's frame count matches the recorded frame count exactly.  This is only really useful for playback immediately after loading a savestate (rewinding).
+	void StartPlayback(bool absoluteFrames = false, bool restoreState = false, bool loop = false);	///<If absoluteFrames is true, playback will only occur when the emulated machine's frame count matches the recorded frame count exactly.  This is only really useful for playback immediately after loading a savestate (rewinding).
 	void StopPlayback();
 
 	void ApplicationEvent(unsigned int eventId);

@@ -45,7 +45,6 @@ public:
 
 	virtual void StartRewinding();
 	virtual void StopRewinding();
-	virtual void StopRewindRequested();
 
 	virtual void ApplicationEvent(unsigned int eventId);
 
@@ -79,7 +78,6 @@ public:
 protected:
 
 	bool m_isRewinding;
-	bool m_stopRewindRequested;
 	InputRecording* m_recorder;	///<Private recorder so it doesn't conflict with user movies/macros.
 
 	struct CachedFrame

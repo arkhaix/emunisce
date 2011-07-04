@@ -77,6 +77,7 @@ protected:
 	IEmulatedMachine* m_machine;
 
 	HANDLE m_runnerThread;
+	DWORD m_runnerThreadId;
 	static DWORD WINAPI StaticRunnerThread(LPVOID param);
 	DWORD RunnerThread();
 
