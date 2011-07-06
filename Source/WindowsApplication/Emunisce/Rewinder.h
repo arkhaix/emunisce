@@ -118,7 +118,7 @@ protected:
 
 		void RestoreState();
 
-		void LockAtFrame(unsigned int frameId);	///<Disables the history newer than the specified frame.
+		void LockAtFrame(unsigned int frameId);	///<Disables all history within this segment newer than the specified frame.
 
 
 	private:
@@ -143,7 +143,7 @@ protected:
 
 	list<CachedFrame> m_frameHistory;
 	list<CachedFrame>::iterator m_playbackFrame;
-	static const unsigned int m_maxFrameHistorySize = 60;
+	static const unsigned int m_maxFrameHistorySize = Segment::FramesPerSegment;
 	Mutex m_frameHistoryLock;
 
 

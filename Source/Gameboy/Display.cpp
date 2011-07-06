@@ -180,6 +180,16 @@ void Display::Serialize(Archive& archive)
 		SerializeItem(archive, m_spriteHasPriority[i]);
 
 
+	// Screens  (these use a ton of space, but the first frame is inaccurate without them)
+
+	//m_screenBuffer.Serialize(archive);
+	//m_screenBuffer2.Serialize(archive);
+	//m_frameBackgroundData.Serialize(archive);
+	//m_frameWindowData.Serialize(archive);
+	//m_frameSpriteData.Serialize(archive);
+
+
+
 	// Caches
 
 	SerializeItem(archive, m_vramOffset);

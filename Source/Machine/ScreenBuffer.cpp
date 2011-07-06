@@ -20,6 +20,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "ScreenBuffer.h"
 using namespace Emunisce;
 
+#include "Serialization/SerializationIncludes.h"
+
 #include <stdlib.h>	///<malloc, free
 
 
@@ -27,6 +29,17 @@ using namespace Emunisce;
 
 ScreenBuffer::~ScreenBuffer()
 {
+}
+
+void ScreenBuffer::Serialize(Archive& archive)
+{
+	int width = GetWidth();
+	int height = GetHeight();
+	DisplayPixel* pixels = GetPixels();
+
+	for(int y=0;y<height;y++)
+		for(int x=0;x<width;x++)
+			SerializeItem(archive, pixels[y*width + x]);
 }
 
 
