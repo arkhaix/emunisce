@@ -75,7 +75,7 @@ void Rewinder::Segment::RecordFrame()
 	//Cache the frame
 	CachedFrame& frame = m_frameCache[ m_numFramesRecorded ];
 	frame.MachineFrameId = m_rewinder->Internal_GetFrameCount();
-	frame.ScreenId = m_rewinder->Internal_GetScreenBufferCount();
+	frame.ScreenBufferId = m_rewinder->Internal_GetScreenBufferCount();
 	frame.Screen = m_rewinder->Internal_GetStableScreenBuffer()->Clone();
 
 
@@ -141,8 +141,17 @@ void Rewinder::Segment::CacheFrame()
 	{
 		CachedFrame& frame = m_frameCache[ m_numFramesCached ];
 		frame.MachineFrameId = m_rewinder->Internal_GetFrameCount();
-		frame.ScreenId = m_rewinder->Internal_GetScreenBufferCount();
+		frame.ScreenBufferId = m_rewinder->Internal_GetScreenBufferCount();
 		frame.Screen = m_rewinder->Internal_GetStableScreenBuffer()->Clone();
+		frame.AudioBufferId = m_rewinder->Internal_GetAudioBufferCount();
+		frame.Audio = m_rewinder->Internal_GetStableAudioBuffer();
+
+		//Reverse the audio
+		for(int i=0;i<frame.Audio.NumSamples;i++)
+		{
+			swap(frame.Audio.Samples[0][i], frame.Audio.Samples[0][ frame.Audio.NumSamples-i-1 ]);
+			swap(frame.Audio.Samples[1][i], frame.Audio.Samples[1][ frame.Audio.NumSamples-i-1 ]);
+		}
 
 		m_numFramesCached++;
 	}
@@ -459,6 +468,16 @@ int Rewinder::Internal_GetScreenBufferCount()
 	return MachineFeature::GetScreenBufferCount();
 }
 
+AudioBuffer Rewinder::Internal_GetStableAudioBuffer()
+{
+	return MachineFeature::GetStableAudioBuffer();
+}
+
+int Rewinder::Internal_GetAudioBufferCount()
+{
+	return MachineFeature::GetAudioBufferCount();
+}
+
 
 
 // MachineFeature
@@ -626,6 +645,42 @@ int Rewinder::GetScreenBufferCount()
 	else
 	{
 		//Rewinding.  Return our current history frame's id.
-		return m_playbackFrame->ScreenId;
+		return m_playbackFrame->ScreenBufferId;
 	}
 }
+
+
+// IEmulatedSound
+
+AudioBuffer Rewinder::GetStableAudioBuffer()
+{
+	ScopedMutex scopedLock(m_frameHistoryLock);
+
+	if(m_isRewinding == false || m_frameHistory.size() == 0 || m_playbackFrame == m_frameHistory.end())
+	{
+		//Not rewinding.  Just pass through.
+		return MachineFeature::GetStableAudioBuffer();
+	}
+	else
+	{
+		//Rewinding.  Return our current history frame.
+		return m_playbackFrame->Audio;
+	}
+}
+
+int Rewinder::GetAudioBufferCount()
+{
+	ScopedMutex scopedLock(m_frameHistoryLock);
+
+	if(m_isRewinding == false || m_frameHistory.size() == 0 || m_playbackFrame == m_frameHistory.end())
+	{
+		//Not rewinding.  Just pass through.
+		return MachineFeature::GetAudioBufferCount();
+	}
+	else
+	{
+		//Rewinding.  Return our current history frame's id.
+		return m_playbackFrame->AudioBufferId;
+	}
+}
+
