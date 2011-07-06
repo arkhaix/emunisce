@@ -28,6 +28,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
+class Archive;
+
 class ScreenBuffer
 {
 public:
@@ -41,6 +43,8 @@ public:
 
 	virtual void Clear(DisplayPixel clearColor) = 0;
 	virtual ScreenBuffer* Clone() = 0;
+
+	virtual void Serialize(Archive& archive);
 };
 
 template<int TWidth, int THeight>

@@ -218,6 +218,7 @@ void Rewinder::Segment::LockAtFrame(unsigned int frameId)
 
 			m_locked = true;
 			m_numFramesRecorded = i+1;
+			m_numFramesCached = m_numFramesRecorded;
 			break;
 		}
 	}
@@ -299,7 +300,7 @@ Rewinder::Rewinder()
 	m_isRewinding = false;
 
 	m_recorder = new InputRecording();
-	m_recorder->SetEventIdOffset(0x02000000);	///<Use rewinder's event id offset instead of InputRecording's.  So that the application directs events to the right place.
+	m_recorder->SetEventIdOffset(0x02000000);	///<Use rewinder's event id offset instead of InputRecording's so that the application directs events to the right place.
 
 	m_playingSegment = 0;
 }
@@ -365,6 +366,9 @@ void Rewinder::StopRewinding()
 	{
 		ScopedMutex scopedLock(m_frameHistoryLock);
 
+		visibleSegmentIndex = m_playingSegment+1;
+		visibleSegment = NULL;
+
 		m_isRewinding = false;
 
 		//m_playingSegment represents the segment being played in the background to generate caches.
@@ -400,12 +404,14 @@ void Rewinder::StopRewinding()
 
 		//Delete all the segments newer than the visible one.  The old future is gone.
 
-		if(m_segments.size() > 0 && visibleSegmentIndex < m_segments.size())
+		int oldFutureSegmentIndex = visibleSegmentIndex + 1;
+
+		if(m_segments.size() > 0 && oldFutureSegmentIndex < m_segments.size())
 		{
-			for(unsigned int i=visibleSegmentIndex;i<m_segments.size();i++)
+			for(unsigned int i=oldFutureSegmentIndex;i<m_segments.size();i++)
 				delete m_segments[i];
 
-			m_segments.erase(m_segments.begin() + visibleSegmentIndex, m_segments.end());
+			m_segments.erase(m_segments.begin() + oldFutureSegmentIndex, m_segments.end());
 
 			m_segments.push_back(new Segment(this, m_recorder));
 			m_playingSegment = m_segments.size()-1;
@@ -541,17 +547,27 @@ void Rewinder::RunToNextFrame()
 
 			if(playingSegment != NULL)
 			{
-				//The segment should already be fully cached.  Just to be sure...
+				//The segment should already be fully cached (except the first segment when rewinding has just begun).
 				while(playingSegment->CanCacheMoreFrames() == true)
-				{
 					playingSegment->CacheFrame();
-				}
 
-				//Clear the current frame history
-				m_frameHistory.clear();	///<No need for deep deletion.  Segments handle that.  Screens are shallow-copied.
+				//Replace the active frame history with the segment data
+				m_frameHistory.clear();
 
 				for(unsigned int i=0;i<playingSegment->NumFramesCached();i++)
 				{
+					//Note: This is very hackish and is currently Gameboy-specific.
+					// The first frame after restoring state contains garbage.  This is very visible
+					// when restoring lots of states frequently and expecting them to blend together nicely.
+					// To work around this, I'm doubling up the second frame and copying it over the first.
+					// <--
+					if(i==0 && playingSegment->NumFramesCached() > 1)
+						continue;
+
+					if(i == 1)
+						m_frameHistory.push_back(playingSegment->GetCachedFrame(i));
+					// -->
+
 					m_frameHistory.push_back(playingSegment->GetCachedFrame(i));
 				}
 
@@ -566,9 +582,7 @@ void Rewinder::RunToNextFrame()
 		//If we're not at the beginning of the frame history, then advance backward one frame.
 		// The frame history might have been refilled by the block above just before this, so use a bare if-check and not an else.
 		if(m_playbackFrame != m_frameHistory.begin())
-		{
 			m_playbackFrame--;
-		}
 
 		//Advance the segment cache
 		Segment* playingSegment = NULL;
