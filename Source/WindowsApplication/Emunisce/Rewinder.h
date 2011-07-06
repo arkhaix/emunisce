@@ -53,6 +53,8 @@ public:
 	virtual unsigned int Internal_GetFrameCount();
 	virtual ScreenBuffer* Internal_GetStableScreenBuffer();
 	virtual int Internal_GetScreenBufferCount();
+	virtual AudioBuffer Internal_GetStableAudioBuffer();
+	virtual int Internal_GetAudioBufferCount();
 
 
 	// MachineFeature
@@ -75,6 +77,12 @@ public:
 	virtual int GetScreenBufferCount();
 
 
+	// IEmulatedSound
+
+	virtual AudioBuffer GetStableAudioBuffer();
+	virtual int GetAudioBufferCount();
+
+
 protected:
 
 	bool m_isRewinding;
@@ -84,14 +92,20 @@ protected:
 	{
 		unsigned int MachineFrameId;	///<From Machine::GetFrameCount
 
-		unsigned int ScreenId;	///<From IEmulatedDisplay::GetScreenBufferCount
+		unsigned int ScreenBufferId;	///<From IEmulatedDisplay::GetScreenBufferCount
 		ScreenBuffer* Screen;
+
+		unsigned int AudioBufferId;
+		AudioBuffer Audio;
 
 		CachedFrame()
 		{
 			MachineFrameId = (unsigned int)-1;
-			ScreenId = (unsigned int)-1;
+
+			ScreenBufferId = (unsigned int)-1;
 			Screen = NULL;
+
+			AudioBufferId = (unsigned int)-1;
 		}
 	};
 
