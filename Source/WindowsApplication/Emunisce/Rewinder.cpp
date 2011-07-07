@@ -147,7 +147,7 @@ void Rewinder::Segment::CacheFrame()
 		frame.Audio = m_rewinder->Internal_GetStableAudioBuffer();
 
 		//Reverse the audio
-		for(int i=0;i<frame.Audio.NumSamples;i++)
+		for(int i=0;i<frame.Audio.NumSamples/2;i++)
 		{
 			swap(frame.Audio.Samples[0][i], frame.Audio.Samples[0][ frame.Audio.NumSamples-i-1 ]);
 			swap(frame.Audio.Samples[1][i], frame.Audio.Samples[1][ frame.Audio.NumSamples-i-1 ]);
