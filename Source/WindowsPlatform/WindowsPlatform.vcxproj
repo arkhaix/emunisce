@@ -13,14 +13,12 @@
   <ItemGroup>
     <ClCompile Include="Mutex.cpp" />
     <ClCompile Include="Window.cpp" />
-    <ClCompile Include="Window_Internal.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mutex.h" />
     <ClInclude Include="PlatformIncludes.h" />
     <ClInclude Include="PlatformTypes.h" />
     <ClInclude Include="Window.h" />
-    <ClInclude Include="Window_Internal.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DB6D23F7-7B73-4FAE-8D91-BD8B045BF89C}</ProjectGuid>

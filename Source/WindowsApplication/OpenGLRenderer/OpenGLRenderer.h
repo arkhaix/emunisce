@@ -34,7 +34,7 @@ public:
 	OpenGLRenderer();
 	~OpenGLRenderer();
 
-	void Initialize(EmunisceApplication* phoenix);
+	void Initialize(EmunisceApplication* phoenix, void* windowHandle);
 	void Shutdown();
 
 	void SetMachine(IEmulatedMachine* machine);
@@ -42,6 +42,12 @@ public:
 	int GetLastFrameRendered();
 
 	void SetVsync(bool enabled);
+
+	
+	//Window events
+
+	void Draw();
+
 
 private:
 

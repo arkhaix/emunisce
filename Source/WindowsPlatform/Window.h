@@ -20,67 +20,92 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include "windows.h"
+
+#include <list>
+#include <map>
+#include <set>
+using namespace std;
+
+#include "Window.h"
+#include "Mutex.h"
+
 
 namespace Emunisce
 {
 
-class IWindowMessageListener
-{
-public:
+	class IWindowMessageListener
+	{
+	public:
 
-	virtual void Closed() = 0;
+		virtual void Closed() = 0;
 
-	virtual void Draw() = 0;
+		virtual void Draw() = 0;
 
-	virtual void Resize() = 0;
-	
-	virtual void KeyDown(int key) = 0;
-	virtual void KeyUp(int key) = 0;
-};
+		virtual void Resize() = 0;
 
-struct WindowSize
-{
-	int width;
-	int height;
-};
+		virtual void KeyDown(int key) = 0;
+		virtual void KeyUp(int key) = 0;
+	};
 
-struct WindowPosition
-{
-	int x;
-	int y;
-};
+	struct WindowSize
+	{
+		int width;
+		int height;
+	};
 
-class Window
-{
-public:
+	struct WindowPosition
+	{
+		int x;
+		int y;
+	};
 
-	Window();
-	~Window();
+	class Window
+	{
+	public:
 
-	void Create(int width = 640, int height = 480, const char* title = "", const char* className = "GenericWindow");
-	void Destroy();
+		Window();
+		~Window();
 
-	void* GetHandle();
+		void Create(int width, int height, const char* title, const char* className);
+		void Destroy();
 
-	void SubscribeListener(IWindowMessageListener* listener);
-	void UnsubscribeListener(IWindowMessageListener* listener);
+		void* GetHandle();
 
-	void PumpMessages();
-	void RequestExit();
+		void SubscribeListener(IWindowMessageListener* listener);
+		void UnsubscribeListener(IWindowMessageListener* listener);
 
-	void Show();
-	void Hide();
+		void PumpMessages();
+		void RequestExit();
 
-	WindowSize GetSize();
-	void SetSize(WindowSize size);
+		void Show();
+		void Hide();
 
-	WindowPosition GetPosition();
-	void SetPosition(WindowPosition position);
+		WindowSize GetSize();
+		void SetSize(WindowSize size);
 
-private:
+		WindowPosition GetPosition();
+		void SetPosition(WindowPosition position);
 
-	class Window_Private* m_private;
-};
+	private:
+
+		static LRESULT CALLBACK StaticWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+		static map<HWND, Window*> m_hwndInstanceMap;
+		static Mutex m_hwndInstanceMapLock;
+
+		LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+		bool m_needsDestroy;
+		bool m_requestingExit;
+
+		HWND m_windowHandle;
+
+		WindowSize m_size;
+		WindowPosition m_position;
+
+		list<IWindowMessageListener*> m_listeners;
+		Mutex m_listenersLock;
+	};
 
 }	//namespace Emunisce
 

@@ -38,6 +38,9 @@ public:
 
 	void SetMachine(IEmulatedMachine* machine);
 
+	void KeyDown(int key);
+	void KeyUp(int key);
+
 private:
 
 	class KeyboardInput_Private* m_private;

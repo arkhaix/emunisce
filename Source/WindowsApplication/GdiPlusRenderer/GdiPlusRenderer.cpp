@@ -43,13 +43,12 @@ using namespace Gdiplus;
 namespace Emunisce
 {
 
-class GdiPlusRenderer_Private : public IWindowMessageListener
+class GdiPlusRenderer_Private
 {
 public:
 
 	EmunisceApplication* _Phoenix;
 	
-	Window* _Window;
 	HWND _WindowHandle;
 
 	Bitmap* _Bitmap;
@@ -63,7 +62,6 @@ public:
 
 	GdiPlusRenderer_Private()
 	{
-		_Window = NULL;
 		_WindowHandle = NULL;
 
 		_LastFrameRendered = -1;
@@ -172,53 +170,22 @@ public:
 
 		_Bitmap->UnlockBits(&bitmapData);
 	}
-
-
-	// IWindowMessageListener
-
-	void Closed()
-	{
-		_Phoenix->RequestShutdown();
-	}
-
-	void Draw()
-	{
-		OnPaint();
-	}
-
-	void Resize()
-	{
-	}
-	
-	void KeyDown(int key)
-	{
-	}
-
-	void KeyUp(int key)
-	{
-	}
 };
 
 }	//namespace Emunisce
 
-void GdiPlusRenderer::Initialize(EmunisceApplication* phoenix)
+void GdiPlusRenderer::Initialize(EmunisceApplication* phoenix, HWND windowHandle)
 {
 	m_private = new GdiPlusRenderer_Private();
 	m_private->_Phoenix = phoenix;
 
-	m_private->_Window = phoenix->GetWindow();
-	m_private->_WindowHandle = (HWND)m_private->_Window->GetHandle();
-
-	m_private->_Window->SubscribeListener(m_private);
-	m_private->Resize();	///<Force an auto-resize on startup
+	m_private->_WindowHandle = windowHandle;
 
 	m_private->InitializeGdiPlus();
 }
 
 void GdiPlusRenderer::Shutdown()
 {
-	m_private->_Window->UnsubscribeListener(m_private);
-
 	m_private->ShutdownGdiPlus();
 
 	delete m_private;
@@ -240,4 +207,10 @@ int GdiPlusRenderer::GetLastFrameRendered()
 void GdiPlusRenderer::SetVsync(bool enabled)
 {
 	//No option for this in GDI+
+}
+
+
+void GdiPlusRenderer::Draw()
+{
+	m_private->OnPaint();
 }
