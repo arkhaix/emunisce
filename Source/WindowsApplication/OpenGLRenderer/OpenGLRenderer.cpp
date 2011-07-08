@@ -98,7 +98,7 @@ struct OpenGLScreenBuffer
 	}
 };
 
-class OpenGLRenderer_Private : public IWindowMessageListener
+class OpenGLRenderer_Private
 {
 public:
 
@@ -520,14 +520,6 @@ public:
 	}
 
 
-	// IWindowMessageListener
-	
-	void Closed()
-	{
-		ShutdownOpenGL();
-	}
-
-
 	void Draw()
 	{
 		PreserveExistingContext();
@@ -537,21 +529,6 @@ public:
 		RenderToWindow();
 
 		RestorePreservedContext();
-	}
-
-
-	void Resize()
-	{
-		
-	}
-
-	
-	void KeyDown(int key)
-	{
-	}
-
-	void KeyUp(int key)
-	{
 	}
 };
 
@@ -569,20 +546,16 @@ OpenGLRenderer::~OpenGLRenderer()
 }
 
 
-void OpenGLRenderer::Initialize(EmunisceApplication* phoenix)
+void OpenGLRenderer::Initialize(EmunisceApplication* phoenix, void* windowHandle)
 {
 	m_private->_Phoenix = phoenix;
-	m_private->_WindowHandle = (HWND)phoenix->GetWindow()->GetHandle();
+	m_private->_WindowHandle = (HWND)windowHandle;
 
 	m_private->InitializeOpenGL();
-
-	phoenix->GetWindow()->SubscribeListener(m_private);
 }
 
 void OpenGLRenderer::Shutdown()
 {
-	m_private->_Phoenix->GetWindow()->UnsubscribeListener(m_private);
-
 	m_private->ShutdownOpenGL();
 }
 
@@ -604,4 +577,10 @@ int OpenGLRenderer::GetLastFrameRendered()
 void OpenGLRenderer::SetVsync(bool enabled)
 {
 	m_private->SetVsync(enabled);
+}
+
+
+void OpenGLRenderer::Draw()
+{
+	m_private->Draw();
 }

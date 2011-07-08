@@ -27,6 +27,7 @@ using namespace Emunisce;
 #include <string>
 
 #include "PlatformIncludes.h"
+#include "Window.h"
 
 #include "MachineIncludes.h"
 
@@ -499,6 +500,8 @@ public:
 
 	void Draw()
 	{
+		if(_Renderer != NULL)
+			_Renderer->Draw();
 	}
 
 	void Resize()
@@ -508,10 +511,12 @@ public:
 
 	void KeyDown(int key)
 	{
+		_Input->KeyDown(key);
 	}
 
 	void KeyUp(int key)
 	{
+		_Input->KeyUp(key);
 	}
 };
 
@@ -534,7 +539,7 @@ EmunisceApplication::EmunisceApplication()
 	m_private->_Runner->Initialize(this);
 	m_private->_Debugger->Initialize(this);
 
-	m_private->_Renderer->Initialize(this);
+	m_private->_Renderer->Initialize(this, m_private->_Window->GetHandle());
 	m_private->_Input->Initialize(this);
 	m_private->_Sound->Initialize(this);
 

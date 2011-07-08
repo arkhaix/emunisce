@@ -36,7 +36,7 @@ using namespace std;
 namespace Emunisce
 {
 
-class KeyboardInput_Private : public IWindowMessageListener
+class KeyboardInput_Private
 {
 public:
 
@@ -79,20 +79,6 @@ public:
 		_NameKeyMap.insert( make_pair("Start", VK_OEM_6) );
 
 		_NameKeyMap.insert( make_pair("Rewind", VK_TAB) );
-	}
-
-
-	void Closed()
-	{
-	}
-
-	void Draw()
-	{
-	}
-
-
-	void Resize()
-	{
 	}
 
 
@@ -156,13 +142,10 @@ KeyboardInput::KeyboardInput()
 void KeyboardInput::Initialize(EmunisceApplication* phoenix)
 {
 	m_private->_Phoenix = phoenix;
-	
-	phoenix->GetWindow()->SubscribeListener(m_private);
 }
 
 void KeyboardInput::Shutdown()
 {
-	m_private->_Phoenix->GetWindow()->UnsubscribeListener(m_private);
 }
 
 void KeyboardInput::SetMachine(IEmulatedMachine* machine)
@@ -170,4 +153,14 @@ void KeyboardInput::SetMachine(IEmulatedMachine* machine)
 	m_private->_Machine = machine;
 	m_private->_Input = machine->GetInput();
 	m_private->GenerateKeymap();
+}
+
+void KeyboardInput::KeyDown(int key)
+{
+	m_private->KeyDown(key);
+}
+
+void KeyboardInput::KeyUp(int key)
+{
+	m_private->KeyUp(key);
 }

@@ -23,4 +23,3 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "PlatformTypes.h"
 
 #include "Mutex.h"
-#include "Window.h"
