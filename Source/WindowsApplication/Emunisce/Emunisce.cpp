@@ -17,6 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
+#define EmulatedMachine_ToString 1
+
 #include "Emunisce.h"
 using namespace Emunisce;
 
@@ -27,7 +29,7 @@ using namespace Emunisce;
 #include <string>
 
 #include "PlatformIncludes.h"
-#include "Window.h"
+#include "../WindowsPlatform/Window.h"
 
 #include "MachineIncludes.h"
 
@@ -269,7 +271,7 @@ public:
 		char path[MAX_PATH];
 
 		std::string dataFolder = GetDataFolder();
-		strcpy(path, dataFolder.c_str());
+		strcpy_s(path, MAX_PATH, dataFolder.c_str());
 
 		PathAppend(path, "SaveStates");
 
@@ -283,7 +285,7 @@ public:
 		char path[MAX_PATH] = {0};
 
 		std::string basePath = GetBaseSaveStateFolder();
-		strcpy(path, basePath.c_str());
+		strcpy_s(path, MAX_PATH, basePath.c_str());
 
 		PathAppend(path, EmulatedMachine::ToString[ _Machine->GetType() ]);
 		PathAppend(path, _Machine->GetRomTitle());
@@ -298,10 +300,10 @@ public:
 		char file[MAX_PATH] = {0};
 
 		std::string path = GetCurrentSaveStateFolder();
-		strcpy(file, path.c_str());
+		strcpy_s(file, MAX_PATH, path.c_str());
 
 		char idStr[MAX_PATH];
-		sprintf(idStr, "%s.ess", id);
+		sprintf_s(idStr, MAX_PATH, "%s.ess", id);
 
 		PathAppend(file, idStr);
 
@@ -313,7 +315,7 @@ public:
 		char path[MAX_PATH];
 
 		std::string dataFolder = GetDataFolder();
-		strcpy(path, dataFolder.c_str());
+		strcpy_s(path, MAX_PATH, dataFolder.c_str());
 
 		PathAppend(path, "RomData");
 
@@ -327,7 +329,7 @@ public:
 		char path[MAX_PATH] = {0};
 
 		std::string basePath = GetBaseRomDataFolder();
-		strcpy(path, basePath.c_str());
+		strcpy_s(path, MAX_PATH, basePath.c_str());
 
 		PathAppend(path, EmulatedMachine::ToString[ _Machine->GetType() ]);
 		PathAppend(path, _Machine->GetRomTitle());
@@ -342,7 +344,7 @@ public:
 		char file[MAX_PATH] = {0};
 
 		std::string path = GetCurrentRomDataFolder();
-		strcpy(file, path.c_str());
+		strcpy_s(file, MAX_PATH, path.c_str());
 
 		std::string filename = std::string(name) + std::string(".erd");
 		PathAppend(file, filename.c_str());
@@ -356,7 +358,7 @@ public:
 		char path[MAX_PATH];
 
 		std::string dataFolder = GetDataFolder();
-		strcpy(path, dataFolder.c_str());
+		strcpy_s(path, MAX_PATH, dataFolder.c_str());
 
 		PathAppend(path, "Movies");
 
@@ -370,7 +372,7 @@ public:
 		char path[MAX_PATH] = {0};
 
 		std::string basePath = GetBaseMovieFolder();
-		strcpy(path, basePath.c_str());
+		strcpy_s(path, MAX_PATH, basePath.c_str());
 
 		PathAppend(path, EmulatedMachine::ToString[ _Machine->GetType() ]);
 		PathAppend(path, _Machine->GetRomTitle());
@@ -385,7 +387,7 @@ public:
 		char file[MAX_PATH] = {0};
 
 		std::string path = GetCurrentMovieFolder();
-		strcpy(file, path.c_str());
+		strcpy_s(file, MAX_PATH, path.c_str());
 
 		std::string filename = std::string(name) + std::string(".eim");
 		PathAppend(file, filename.c_str());
@@ -399,7 +401,7 @@ public:
 		char path[MAX_PATH];
 
 		std::string dataFolder = GetDataFolder();
-		strcpy(path, dataFolder.c_str());
+		strcpy_s(path, MAX_PATH, dataFolder.c_str());
 
 		PathAppend(path, "Macros");
 
@@ -418,7 +420,7 @@ public:
 		char file[MAX_PATH] = {0};
 
 		std::string path = GetCurrentMacroFolder();
-		strcpy(file, path.c_str());
+		strcpy_s(file, MAX_PATH, path.c_str());
 
 		std::string filename = std::string(name) + std::string(".eir");
 		PathAppend(file, filename.c_str());
@@ -562,8 +564,6 @@ EmunisceApplication::~EmunisceApplication()
 
 void EmunisceApplication::RunWindow()
 {
-	int lastFrameRendered = -1;
-
 	while(ShutdownRequested() == false)
 	{
 		m_private->HandlePendingMachineChange();
@@ -775,7 +775,7 @@ void EmunisceApplication::LoadMovie(const char* id)
 void EmunisceApplication::PlayMacro(bool loop)
 {
 	if(m_private->_InputRecording != NULL)
-		m_private->_InputRecording->StartPlayback(false, false, true);
+		m_private->_InputRecording->StartPlayback(false, false, loop);
 }
 
 void EmunisceApplication::StopMacro()

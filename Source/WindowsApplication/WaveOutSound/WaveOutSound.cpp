@@ -75,7 +75,7 @@ public:
 
 		_Mute = false;
 
-		for(int i=0;i<AudioBuffer::BufferSizeSamples;i++)
+		for(unsigned int i=0;i<AudioBuffer::BufferSizeSamples;i++)
 		{
 			_Silence.Samples[0][i] = SilentSample;
 			_Silence.Samples[1][i] = SilentSample;
@@ -136,7 +136,7 @@ public:
 
 		while(_Phoenix->ShutdownRequested() == false)
 		{
-			if(_Mute == false && _Machine != NULL && _Machine->GetSound()->GetAudioBufferCount() != _LastFrameQueued)
+			if(_Mute == false && _Machine != NULL && _Machine->GetSound()->GetAudioBufferCount() != (int)_LastFrameQueued)
 			{
 				AudioBuffer buffer = _Machine->GetSound()->GetStableAudioBuffer();
 

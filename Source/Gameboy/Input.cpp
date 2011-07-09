@@ -17,6 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
+#define GameboyButtons_ToString 1
+
 #include "Input.h"
 using namespace Emunisce;
 
@@ -70,7 +72,7 @@ const char* Input::GetButtonName(unsigned int index)
 void Input::ButtonDown(unsigned int index)
 {
 	u8 oldButtonStates = m_buttonStates;
-	
+
 	m_buttonStates &= ~(1<<index);
 
 	if(m_buttonStates == oldButtonStates)

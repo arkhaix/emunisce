@@ -95,17 +95,19 @@ namespace PromptResult
 		NumPromptResults
 	};
 
+#ifdef PromptResult_ToString
 	static const char* ToString[] =
 	{
 		"Cancel",
 
 		"Ok",
-		
+
 		"Yes",
 		"No",
 
 		"NumPromptResults"
 	};
+#endif
 }
 
 

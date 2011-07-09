@@ -40,10 +40,12 @@ namespace GuiButtons
 		NumGuiButtons
 	};
 
+#ifdef GuiButtons_ToString
 	static const char* ToString[] =
 	{
 		"NumGuiButtons"
 	};
+#endif
 }
 
 typedef TScreenBuffer<320, 240> GuiScreenBuffer;

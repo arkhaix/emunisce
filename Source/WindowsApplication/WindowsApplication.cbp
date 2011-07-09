@@ -13,6 +13,7 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-Wall" />
 					<Add option="-g" />
 				</Compiler>
 			</Target>
@@ -23,6 +24,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="-Wall" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -63,11 +65,17 @@
 		<Unit filename="Emunisce\Emunisce.h" />
 		<Unit filename="Emunisce\Gui.cpp" />
 		<Unit filename="Emunisce\Gui.h" />
+		<Unit filename="Emunisce\InputRecording.cpp" />
+		<Unit filename="Emunisce\InputRecording.h" />
+		<Unit filename="Emunisce\KingsDream.cpp" />
+		<Unit filename="Emunisce\KingsDream.h" />
 		<Unit filename="Emunisce\MachineFeature.cpp" />
 		<Unit filename="Emunisce\MachineFeature.h" />
 		<Unit filename="Emunisce\MachineRunner.cpp" />
 		<Unit filename="Emunisce\MachineRunner.h" />
 		<Unit filename="Emunisce\Main.cpp" />
+		<Unit filename="Emunisce\Rewinder.cpp" />
+		<Unit filename="Emunisce\Rewinder.h" />
 		<Unit filename="Emunisce\UserInterface.cpp" />
 		<Unit filename="Emunisce\UserInterface.h" />
 		<Unit filename="GdiPlusRenderer\GdiPlusRenderer.cpp" />

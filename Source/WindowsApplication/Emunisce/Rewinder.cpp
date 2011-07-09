@@ -84,7 +84,7 @@ void Rewinder::Segment::RecordFrame()
 	{
 		//Stop the input recorder and save the movie
 		m_recorder->StopRecording();
-		
+
 		MemorySerializer serializer;
 		Archive archive(&serializer, ArchiveMode::Saving);
 
@@ -147,7 +147,7 @@ void Rewinder::Segment::CacheFrame()
 		frame.Audio = m_rewinder->Internal_GetStableAudioBuffer();
 
 		//Reverse the audio
-		for(int i=0;i<frame.Audio.NumSamples/2;i++)
+		for(unsigned int i=0;i<frame.Audio.NumSamples/2;i++)
 		{
 			swap(frame.Audio.Samples[0][i], frame.Audio.Samples[0][ frame.Audio.NumSamples-i-1 ]);
 			swap(frame.Audio.Samples[1][i], frame.Audio.Samples[1][ frame.Audio.NumSamples-i-1 ]);
@@ -176,19 +176,19 @@ Rewinder::CachedFrame Rewinder::Segment::GetCachedFrame(unsigned int index)
 	if(index < m_numFramesCached)
 		return m_frameCache[index];
 
-	Rewinder::CachedFrame default;
-	return default;
+	Rewinder::CachedFrame defaultFrame;
+	return defaultFrame;
 }
 
 
 void Rewinder::Segment::ClearCache()
 {
-	CachedFrame default;
+	CachedFrame defaultFrame;
 
 	for(unsigned int i=0;i<m_numFramesCached;i++)
 	{
 		delete m_frameCache[i].Screen;
-		m_frameCache[i] = default;
+		m_frameCache[i] = defaultFrame;
 	}
 
 	m_numFramesCached = 0;
@@ -216,13 +216,13 @@ void Rewinder::Segment::LockAtFrame(unsigned int frameId)
 		{
 			//Found the specified frame.  Kill everything after this one.
 
-			CachedFrame default;
-			for(int j=i+1;j<m_numFramesRecorded;j++)
+			CachedFrame defaultFrame;
+			for(unsigned int j=i+1;j<m_numFramesRecorded;j++)
 			{
 				if(m_frameCache[j].Screen != NULL)
 					delete m_frameCache[j].Screen;
 
-				m_frameCache[j] = default;
+				m_frameCache[j] = defaultFrame;
 			}
 
 			m_locked = true;
@@ -290,7 +290,7 @@ void Rewinder::InputHandler::ButtonUp(unsigned int index)
 		m_rewinder->StopRewinding();
 }
 
-bool Rewinder::InputHandler::IsButtonDown(unsigned int index)
+bool Rewinder::InputHandler::IsButtonDown(unsigned int /*index*/)
 {
 	return false;
 }
@@ -382,7 +382,7 @@ void Rewinder::StopRewinding()
 
 		//m_playingSegment represents the segment being played in the background to generate caches.
 		// However, the currently visible segment is m_playingSegment+1 -- it's the segment that most
-		// recently finished generating caches and whose screen buffers are being displayed.	
+		// recently finished generating caches and whose screen buffers are being displayed.
 		if(visibleSegmentIndex >= m_segments.size())
 			visibleSegmentIndex = m_segments.size()-1;
 
@@ -413,7 +413,7 @@ void Rewinder::StopRewinding()
 
 		//Delete all the segments newer than the visible one.  The old future is gone.
 
-		int oldFutureSegmentIndex = visibleSegmentIndex + 1;
+		unsigned int oldFutureSegmentIndex = visibleSegmentIndex + 1;
 
 		if(m_segments.size() > 0 && oldFutureSegmentIndex < m_segments.size())
 		{
@@ -512,7 +512,7 @@ unsigned int Rewinder::GetFrameCount()
 		//Not rewinding.  Just pass through.
 		return MachineFeature::GetFrameCount();
 	}
-	
+
 	//Rewinding.  Return the frame id of the current frame in the history.
 	return m_playbackFrame->MachineFrameId;
 }
@@ -525,7 +525,7 @@ void Rewinder::RunToNextFrame()
 	{
 		//Not rewinding.  Just run the machine normally and capture its frame for the history.
 		// Segment::RecordFrame runs the machine
-		
+
 		unsigned int lastSegmentIndex = m_segments.size()-1;
 
 		Segment* recordingSegment = NULL;
@@ -592,7 +592,7 @@ void Rewinder::RunToNextFrame()
 
 				m_playbackFrame = m_frameHistory.end();
 			}
-		
+
 			//Next segment
 			if(m_playingSegment > 0)
 				m_playingSegment--;
