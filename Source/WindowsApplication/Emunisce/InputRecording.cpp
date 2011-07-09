@@ -70,7 +70,7 @@ void InputRecording::SerializeHistory(Archive& archive)
 {
 	SerializeItem(archive, m_recordingStartFrame);
 
-	unsigned int numEvents = m_inputHistory.size();
+	unsigned int numEvents = (unsigned int)m_inputHistory.size();
 	SerializeItem(archive, numEvents);
 
 	if(archive.GetArchiveMode() == ArchiveMode::Loading)

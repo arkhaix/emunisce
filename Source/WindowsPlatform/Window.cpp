@@ -244,7 +244,7 @@ LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 		{
 			ScopedMutex scopedMutex(m_listenersLock);
 			for(auto iter = m_listeners.begin(); iter != m_listeners.end(); ++iter)
-				(*iter)->KeyDown(wParam);
+				(*iter)->KeyDown((int)wParam);
 			return 0;
 		}
 
@@ -252,7 +252,7 @@ LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 		{
 			ScopedMutex scopedMutex(m_listenersLock);
 			for(auto iter = m_listeners.begin(); iter != m_listeners.end(); ++iter)
-				(*iter)->KeyUp(wParam);
+				(*iter)->KeyUp((int)wParam);
 			return 0;
 		}
 

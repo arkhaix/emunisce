@@ -195,7 +195,7 @@ public:
 		while(numPendingBuffers == 0 && _Phoenix->ShutdownRequested() == false)
 		{
 			EnterCriticalSection(&_PendingBufferQueueLock);
-				numPendingBuffers = _PendingBufferQueue.size();
+				numPendingBuffers = (int)_PendingBufferQueue.size();
 			LeaveCriticalSection(&_PendingBufferQueueLock);
 
 			if(numPendingBuffers == 0)
@@ -226,7 +226,7 @@ public:
 			while(numPendingBuffers == 0 && _Phoenix->ShutdownRequested() == false)
 			{
 				EnterCriticalSection(&_PendingBufferQueueLock);
-					numPendingBuffers = _PendingBufferQueue.size();
+					numPendingBuffers = (int)_PendingBufferQueue.size();
 				LeaveCriticalSection(&_PendingBufferQueueLock);
 
 				if(numPendingBuffers == 0)
