@@ -25,6 +25,8 @@ using namespace Emunisce;
 #include "Emunisce.h"
 #include "MachineRunner.h"
 
+#include "SecureCrt.h"
+
 
 // Application component
 
@@ -49,7 +51,7 @@ void UserInterface::Shutdown()
 {
 }
 
-void UserInterface::SetMachine(IEmulatedMachine* machine)
+void UserInterface::SetMachine(IEmulatedMachine* /*machine*/)
 {
 }
 
@@ -195,7 +197,7 @@ void UserInterface::LoadMacro(const char* id)
 
 // Application to user
 
-void UserInterface::DisplayStatusMessage(const char* message)
+void UserInterface::DisplayStatusMessage(const char* /*message*/)
 {
 }
 
@@ -214,7 +216,7 @@ void UserInterface::DisplayImportantMessage(MessageType::Type messageType, const
 }
 
 
-PromptResult::Type UserInterface::DisplayPrompt(PromptType::Type promptType, const char* title, const char* message, void** extraResult)
+PromptResult::Type UserInterface::DisplayPrompt(PromptType::Type promptType, const char* title, const char* message, void** /*extraResult*/)
 {
 	int windowsPromptType = MB_OK;
 	if(promptType == PromptType::OkCancel)
@@ -227,13 +229,13 @@ PromptResult::Type UserInterface::DisplayPrompt(PromptType::Type promptType, con
 	int windowsResult = MessageBox(NULL, message, title, windowsPromptType);
 
 	PromptResult::Type result = PromptResult::Cancel;
-	if(result == IDOK)
+	if(windowsResult == IDOK)
 		result = PromptResult::Ok;
-	else if(result == IDCANCEL)
+	else if(windowsResult == IDCANCEL)
 		result = PromptResult::Cancel;
-	else if(result == IDYES)
+	else if(windowsResult == IDYES)
 		result = PromptResult::Yes;
-	else if(result == IDNO)
+	else if(windowsResult == IDNO)
 		result = PromptResult::No;
 
 	return result;
@@ -259,7 +261,7 @@ bool UserInterface::SelectFile(char** result, const char* fileMask)
 	if(GetOpenFileName(&openDialog))
 	{
 		*result = (char*)malloc(MAX_PATH);
-		strcpy(*result, selectedFile);
+		strcpy_s(*result, MAX_PATH, selectedFile);
 		return true;
 	}
 

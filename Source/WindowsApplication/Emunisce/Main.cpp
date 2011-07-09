@@ -28,7 +28,7 @@ using namespace Emunisce;
 
 EmunisceApplication* g_phoenix = NULL;
 
-DWORD WINAPI ConsoleThread(LPVOID param)
+DWORD WINAPI ConsoleThread(LPVOID /*param*/)
 {
 	ConsoleDebugger* debugger = g_phoenix->GetDebugger();
 	debugger->Run();
@@ -36,7 +36,7 @@ DWORD WINAPI ConsoleThread(LPVOID param)
 	return 0;
 }
 
-INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, PSTR, INT iCmdShow)
+INT WINAPI WinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/, LPSTR /*lpCmdLine*/, INT /*iCmdShow*/)
 {
 	g_phoenix = new EmunisceApplication();
 

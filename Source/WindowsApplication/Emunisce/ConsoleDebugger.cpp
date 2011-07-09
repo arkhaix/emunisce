@@ -35,6 +35,7 @@ using namespace std;
 
 //Platform
 #include "PlatformIncludes.h"
+#include "SecureCrt.h"
 
 //Machine
 #include "MachineIncludes.h"
@@ -124,9 +125,10 @@ void ConsoleDebugger::SetupConsole()
 {
 	AllocConsole();
 
-	freopen("CONOUT$", "w", stdout);
-	freopen("CONOUT$", "w", stderr);
-	freopen("CONIN$", "r", stdin);
+	FILE* ignored = NULL;
+	freopen_s(&ignored, "CONOUT$", "w", stdout);
+	freopen_s(&ignored, "CONOUT$", "w", stderr);
+	freopen_s(&ignored, "CONIN$", "r", stdin);
 }
 
 void ConsoleDebugger::UpdateDisplay()
@@ -172,9 +174,8 @@ void ConsoleDebugger::FetchCommand()
 #define COMMAND1(name, target)	else if( _stricmp(command, name) == 0 && args.size() > 1 ) { target; }
 #define COMMAND2(name, target)	else if( _stricmp(command, name) == 0 && args.size() > 2 ) { target; }
 
-	if(false) { }
-
-	COMMAND0("quit", m_phoenix->RequestShutdown())
+	//COMMAND0("quit", m_phoenix->RequestShutdown())
+	if(_stricmp(command, "quit") == 0) { m_phoenix->RequestShutdown(); }
 	COMMAND0("q", m_phoenix->RequestShutdown())
 	COMMAND0("exit", m_phoenix->RequestShutdown())
 	COMMAND0("x", m_phoenix->RequestShutdown())
@@ -312,12 +313,13 @@ vector<string> ConsoleDebugger::SplitCommand(string command)
 	char* input = const_cast<char*>(command.c_str());
 	const char* separators = " \t\n";
 	char* token = NULL;
+	char* context = NULL;
 
-	token = strtok(input, separators);
+	token = strtok_s(input, separators, &context);
 	while(token != NULL)
 	{
 		result.push_back(string(token));
-		token = strtok(NULL, separators);
+		token = strtok_s(NULL, separators, &context);
 	}
 
 	return result;
@@ -472,7 +474,7 @@ void ConsoleDebugger::ClearBreakpoints()
 }
 
 
-void ConsoleDebugger::PrintMemory(int address, int length)
+void ConsoleDebugger::PrintMemory(int /*address*/, int /*length*/)
 {
 	//system("cls");
 
@@ -577,7 +579,7 @@ void ConsoleDebugger::SetVsync(const char* strMode)
 		m_userInterface->SetVsync(false);
 	else
 		m_userInterface->SetVsync(true);
-}	
+}
 
 
 void ConsoleDebugger::ToggleRecording()

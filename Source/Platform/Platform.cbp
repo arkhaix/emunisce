@@ -41,9 +41,10 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="Mutex.h" />
+		<Unit filename="PlatformDefines.h" />
 		<Unit filename="PlatformIncludes.h" />
 		<Unit filename="PlatformTypes.h" />
-		<Unit filename="Window.h" />
+		<Unit filename="SecureCrt.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

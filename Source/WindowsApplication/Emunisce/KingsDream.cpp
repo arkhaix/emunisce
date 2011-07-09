@@ -32,7 +32,7 @@ KingsDream::KingsDream()
 	srand((unsigned int)time(NULL));
 
 	m_screenBuffer = NULL;
-	for(int i=0;i<m_maxNumBlendFrames;i++)
+	for(unsigned int i=0;i<m_maxNumBlendFrames;i++)
 		m_frames[i] = NULL;
 
 	ResizeScreenBuffers(320, 240);
@@ -163,15 +163,15 @@ unsigned int KingsDream::GetBlendFrames()
 
 void KingsDream::ResizeScreenBuffers(unsigned int width, unsigned int height)
 {
-	if(m_screenBuffer != NULL && m_screenBuffer->GetWidth() == width && m_screenBuffer->GetHeight() == height)
+	if(m_screenBuffer != NULL && m_screenBuffer->GetWidth() == (int)width && m_screenBuffer->GetHeight() == (int)height)
 		return;
 
 	delete m_screenBuffer;
-	for(int i=0;i<m_maxNumBlendFrames;i++)
+	for(unsigned int i=0;i<m_maxNumBlendFrames;i++)
 		delete m_frames[i];
 
 	m_screenBuffer = new DynamicScreenBuffer(width, height);
-	for(int i=0;i<m_maxNumBlendFrames;i++)
+	for(unsigned int i=0;i<m_maxNumBlendFrames;i++)
 		m_frames[i] = new DynamicScreenBuffer(width, height);
 }
 
@@ -197,7 +197,7 @@ void KingsDream::BlendBuffers()
 	DisplayPixel* screenPixels = m_screenBuffer->GetPixels();
 
 	DisplayPixel* framePixels[m_maxNumBlendFrames] = {NULL};
-	for(int i=0;i<m_numBlendFrames;i++)
+	for(unsigned int i=0;i<m_numBlendFrames;i++)
 		framePixels[i] = m_frames[i]->GetPixels();
 
 	int numPixels = m_screenBuffer->GetWidth() * m_screenBuffer->GetHeight();
@@ -211,7 +211,7 @@ void KingsDream::BlendBuffers()
 		ng = 0;
 		nb = 0;
 
-		for(int frameIndex=0; frameIndex < m_numBlendFrames; frameIndex++)
+		for(unsigned int frameIndex=0; frameIndex < m_numBlendFrames; frameIndex++)
 		{
 			DisplayPixelToRGBA(framePixels[frameIndex][pixelIndex], r, g, b, a);
 
@@ -245,8 +245,8 @@ void KingsDream::Dream()
 	int width = m_screenBuffer->GetWidth();
 	int height = m_screenBuffer->GetHeight();
 
-	int xPos = ((m_x+2.f)/4.f) * width;
-	int yPos = ((m_y+2.f)/4.f) * height;
+	int xPos = (int)(((m_x+2.f)/4.f) * width);
+	int yPos = (int)(((m_y+2.f)/4.f) * height);
 	int index = yPos * width + xPos;
 
     u8 incZero = 0;
@@ -261,16 +261,16 @@ void KingsDream::Dream()
 	DisplayPixel blendIncrement = incZero;
 
 
-	u8 or, og, ob, oa;
-	DisplayPixelToRGBA(oldIncrement, or, og, ob, oa);
+	u8 oldR, oldG, oldB, oldA;
+	DisplayPixelToRGBA(oldIncrement, oldR, oldG, oldB, oldA);
 
-	u8 nr, ng, nb, na;
-	DisplayPixelToRGBA(randomIncrement, nr, ng, nb, na);
+	u8 newR, newG, newB, newA;
+	DisplayPixelToRGBA(randomIncrement, newR, newG, newB, newA);
 
 	float blend = (float)m_pointsThisColor / (float)m_pointsPerColor;
-	u8 br = (nr * blend) + (or * (1.f-blend));
-	u8 bg = (ng * blend) + (og * (1.f-blend));
-	u8 bb = (nb * blend) + (ob * (1.f-blend));
+	u8 br = (u8)((newR * blend) + (oldR * (1.f-blend)));
+	u8 bg = (u8)((newG * blend) + (oldG * (1.f-blend)));
+	u8 bb = (u8)((newB * blend) + (oldB * (1.f-blend)));
 
 	blendIncrement = DisplayPixelFromRGBA(br, bg, bb);
 

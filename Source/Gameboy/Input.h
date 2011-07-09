@@ -48,6 +48,7 @@ namespace GameboyButtons
 		NumGameboyButtons
 	};
 
+#ifdef GameboyButtons_ToString
 	static const char* ToString[] =
 	{
 		"Right",
@@ -62,6 +63,7 @@ namespace GameboyButtons
 
 		"NumGameboyButtons"
 	};
+#endif
 
 }	//namespace Buttons
 

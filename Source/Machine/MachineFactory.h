@@ -41,6 +41,7 @@ namespace EmulatedMachine
 		NumEmulatedMachines
 	};
 
+#ifdef EmulatedMachine_ToString
 	static const char* ToString[] =
 	{
 		"None",
@@ -51,6 +52,7 @@ namespace EmulatedMachine
 
 		"NumEmulatedMachines"
 	};
+#endif
 }
 
 class MachineFactory

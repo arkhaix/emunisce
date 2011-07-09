@@ -47,8 +47,6 @@
 		<Unit filename="PlatformTypes.h" />
 		<Unit filename="Window.cpp" />
 		<Unit filename="Window.h" />
-		<Unit filename="Window_Internal.cpp" />
-		<Unit filename="Window_Internal.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

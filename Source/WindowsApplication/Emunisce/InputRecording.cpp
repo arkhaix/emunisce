@@ -77,7 +77,7 @@ void InputRecording::SerializeHistory(Archive& archive)
 	{
 		m_inputHistory.clear();
 
-		for(int i=0;i<numEvents;i++)
+		for(unsigned int i=0;i<numEvents;i++)
 		{
 			InputEvent inputEvent;
 			inputEvent.Serialize(archive);

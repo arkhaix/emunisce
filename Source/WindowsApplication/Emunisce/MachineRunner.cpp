@@ -48,7 +48,7 @@ MachineRunner::MachineRunner()
 
 // Application component
 
-void MachineRunner::Initialize(EmunisceApplication* phoenix)
+void MachineRunner::Initialize(EmunisceApplication* /*phoenix*/)
 {
 	m_waitEvent = CreateEvent(NULL, FALSE, TRUE, NULL);
 
@@ -148,14 +148,14 @@ DWORD WINAPI MachineRunner::StaticRunnerThread(LPVOID param)
 {
 	MachineRunner* instance = (MachineRunner*)param;
 	if(instance == NULL)
-		return -1;
+		return (DWORD)-1;
 
 	return instance->RunnerThread();
 }
 
 DWORD MachineRunner::RunnerThread()
 {
-	while(true)
+	for(;;)
 	{
 		if(m_waitRequested == true)
 		{

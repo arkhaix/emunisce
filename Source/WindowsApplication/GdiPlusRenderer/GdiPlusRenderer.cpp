@@ -48,7 +48,7 @@ class GdiPlusRenderer_Private
 public:
 
 	EmunisceApplication* _Phoenix;
-	
+
 	HWND _WindowHandle;
 
 	Bitmap* _Bitmap;
@@ -139,7 +139,7 @@ public:
 		int screenWidth = screen->GetWidth();
 		int screenHeight = screen->GetHeight();
 
-		if(_Bitmap == NULL || _Bitmap->GetWidth() != screenWidth || _Bitmap->GetHeight() != screenHeight)
+		if(_Bitmap == NULL || (int)_Bitmap->GetWidth() != screenWidth || (int)_Bitmap->GetHeight() != screenHeight)
 		{
 			if(_Bitmap != NULL)
 				delete _Bitmap;

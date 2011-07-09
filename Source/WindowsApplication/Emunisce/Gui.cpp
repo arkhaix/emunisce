@@ -17,6 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
+#define GuiButtons_ToString 1
+
 #include "Gui.h"
 using namespace Emunisce;
 
@@ -235,7 +237,7 @@ void Gui::GuiFeature::ButtonUp(unsigned int index)
 	//todo
 }
 
-bool Gui::GuiFeature::IsButtonDown(unsigned int index)
+bool Gui::GuiFeature::IsButtonDown(unsigned int /*index*/)
 {
 	//todo
 	return false;
