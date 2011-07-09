@@ -341,7 +341,7 @@ void Rewinder::StartRewinding()
 	{
 		ScopedMutex scopedLock(m_frameHistoryLock);
 
-		m_playingSegment = m_segments.size()-1;
+		m_playingSegment = (unsigned int)m_segments.size()-1;
 
 		Segment* playingSegment = m_segments[ m_playingSegment ];
 
@@ -384,7 +384,7 @@ void Rewinder::StopRewinding()
 		// However, the currently visible segment is m_playingSegment+1 -- it's the segment that most
 		// recently finished generating caches and whose screen buffers are being displayed.
 		if(visibleSegmentIndex >= m_segments.size())
-			visibleSegmentIndex = m_segments.size()-1;
+			visibleSegmentIndex = (unsigned int)m_segments.size()-1;
 
 		if(visibleSegmentIndex < m_segments.size())
 			visibleSegment = m_segments[ visibleSegmentIndex ];
@@ -423,7 +423,7 @@ void Rewinder::StopRewinding()
 			m_segments.erase(m_segments.begin() + oldFutureSegmentIndex, m_segments.end());
 
 			m_segments.push_back(new Segment(this, m_recorder));
-			m_playingSegment = m_segments.size()-1;
+			m_playingSegment = (unsigned int)m_segments.size()-1;
 		}
 
 
@@ -526,7 +526,7 @@ void Rewinder::RunToNextFrame()
 		//Not rewinding.  Just run the machine normally and capture its frame for the history.
 		// Segment::RecordFrame runs the machine
 
-		unsigned int lastSegmentIndex = m_segments.size()-1;
+		unsigned int lastSegmentIndex = (unsigned int)m_segments.size()-1;
 
 		Segment* recordingSegment = NULL;
 		if(lastSegmentIndex < m_segments.size())	///<This check is here in case m_segments.size() == 0
@@ -535,7 +535,7 @@ void Rewinder::RunToNextFrame()
 		if(recordingSegment == NULL || recordingSegment->CanRecordMoreFrames() == false)
 		{
 			m_segments.push_back(new Segment(this, m_recorder));
-			lastSegmentIndex = m_segments.size()-1;
+			lastSegmentIndex = (unsigned int)m_segments.size()-1;
 			recordingSegment = m_segments[ lastSegmentIndex ];
 
 			//Clear old caches
