@@ -18,10 +18,11 @@ You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//todo: ifdef stuff
-#if defined __linux__
+#include "PlatformDefines.h"
+
+#if defined EMUNISCE_PLATFORM_LINUX
     #include "../LinuxPlatform/PlatformTypes.h"
-#elif defined _WIN32 || defined _WIN64
+#elif defined EMUNISCE_PLATFORM_WINDOWS
     #include "../WindowsPlatform/PlatformTypes.h"
 #else
     #error "unknown platform"

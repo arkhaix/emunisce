@@ -17,15 +17,23 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef APPLICATION_H
+#define APPLICATION_H
 
-#include "PlatformDefines.h"
+#include "wx/wx.h"
 
-#if defined EMUNISCE_PLATFORM_LINUX
-    #include "../LinuxPlatform/Mutex.h"
-#elif defined EMUNISCE_PLATFORM_WINDOWS
-    #include "../WindowsPlatform/Mutex.h"
-#else
-    #error "unknown platform"
-#endif
+class WindowMain;
 
+class Application : public wxApp
+{
+public:
 
+protected:
+
+    virtual bool OnInit();
+
+    wxFrame* m_frame;
+    WindowMain* m_windowMain;
+};
+
+#endif // APPLICATION_H
