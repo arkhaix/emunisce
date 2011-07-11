@@ -21,6 +21,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 //This is a convenience header for pulling in all platform layer types
 
 #include "PlatformDefines.h"
+
 #include "PlatformTypes.h"
 
 #include "SecureCrt.h"

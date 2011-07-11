@@ -17,15 +17,28 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "Application.h"
 
-#include "PlatformDefines.h"
+#include "wx/sizer.h"
 
-#if defined EMUNISCE_PLATFORM_LINUX
-    #include "../LinuxPlatform/Mutex.h"
-#elif defined EMUNISCE_PLATFORM_WINDOWS
-    #include "../WindowsPlatform/Mutex.h"
-#else
-    #error "unknown platform"
-#endif
+#include "WindowMain.h"
+
+IMPLEMENT_APP(Application)
 
 
+bool Application::OnInit()
+{
+    wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
+    m_frame = new wxFrame((wxFrame *)NULL, -1,  wxT("Hello GL World"), wxPoint(50,50), wxSize(400,200));
+
+    int args[] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0};
+
+    m_windowMain = new WindowMain(m_frame, args);
+    sizer->Add(m_windowMain, 1, wxEXPAND);
+
+    m_frame->SetSizer(sizer);
+    m_frame->SetAutoLayout(true);
+
+    m_frame->Show();
+    return true;
+}
