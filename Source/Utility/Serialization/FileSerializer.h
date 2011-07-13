@@ -48,6 +48,8 @@ public:
 	virtual void Save(unsigned char* data, unsigned int bytes);
 	virtual void Restore(unsigned char* buffer, unsigned int bytes);
 
+	virtual void Close();
+
 
 protected:
 

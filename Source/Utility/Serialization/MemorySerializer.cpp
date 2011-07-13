@@ -116,3 +116,9 @@ void MemorySerializer::Restore(unsigned char* buffer, unsigned int bytes)
 	m_usedSize += bytes;
 }
 
+
+void MemorySerializer::Close()
+{
+	//Nothing to do here.  The destructor cleans up the memory when necessary.
+}
+

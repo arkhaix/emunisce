@@ -9,18 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Machine Features">
-      <UniqueIdentifier>{f54322e8-bac2-4e89-9ce5-7f4968d41264}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Machine Features\Gui">
-      <UniqueIdentifier>{9c248c18-d2a7-4df9-958f-6c695cc8ca04}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Machine Features\Input Recording">
-      <UniqueIdentifier>{05bf6c39-1712-4293-8f26-1a0baefd05c9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Machine Features\Rewinding">
-      <UniqueIdentifier>{e8b4a4a2-5564-4b21-b27a-ef5b887ca6b1}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -29,58 +17,16 @@
     <ClCompile Include="ConsoleDebugger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="UserInterface.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MachineRunner.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Emunisce.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MachineFeature.cpp">
-      <Filter>Machine Features</Filter>
-    </ClCompile>
-    <ClCompile Include="Gui.cpp">
-      <Filter>Machine Features\Gui</Filter>
-    </ClCompile>
-    <ClCompile Include="KingsDream.cpp">
-      <Filter>Machine Features\Gui</Filter>
-    </ClCompile>
-    <ClCompile Include="InputRecording.cpp">
-      <Filter>Machine Features\Input Recording</Filter>
-    </ClCompile>
-    <ClCompile Include="Rewinder.cpp">
-      <Filter>Machine Features\Rewinding</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConsoleDebugger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UserInterface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MachineRunner.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Emunisce.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MachineFeature.h">
-      <Filter>Machine Features</Filter>
-    </ClInclude>
-    <ClInclude Include="Gui.h">
-      <Filter>Machine Features\Gui</Filter>
-    </ClInclude>
-    <ClInclude Include="KingsDream.h">
-      <Filter>Machine Features\Gui</Filter>
-    </ClInclude>
-    <ClInclude Include="InputRecording.h">
-      <Filter>Machine Features\Input Recording</Filter>
-    </ClInclude>
-    <ClInclude Include="Rewinder.h">
-      <Filter>Machine Features\Rewinding</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

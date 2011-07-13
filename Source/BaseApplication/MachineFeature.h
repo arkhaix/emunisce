@@ -26,7 +26,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class EmunisceApplication;
+class BaseApplication;
 
 class IExecutableFeature
 {
@@ -52,7 +52,7 @@ public:
 	MachineFeature();
 	virtual ~MachineFeature();
 
-	virtual void SetApplication(EmunisceApplication* application);
+	virtual void SetApplication(BaseApplication* application);
 
 	virtual void SetComponentMachine(IEmulatedMachine* componentMachine);
 	virtual void SetEmulatedMachine(IEmulatedMachine* emulatedMachine);
@@ -129,7 +129,7 @@ public:
 
 protected:
 
-	EmunisceApplication* m_application;
+	BaseApplication* m_application;
 
 	bool m_hasFocus;
 

@@ -66,7 +66,7 @@ MachineFeature::~MachineFeature()
 }
 
 
-void MachineFeature::SetApplication(EmunisceApplication* application)
+void MachineFeature::SetApplication(BaseApplication* application)
 {
 	m_application = application;
 }

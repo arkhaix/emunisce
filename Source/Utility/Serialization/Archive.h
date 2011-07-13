@@ -46,7 +46,9 @@ class Archive
 public:
 
 	Archive(ISerializer* serializer, ArchiveMode::Type archiveMode);
+	void Close();
 
+	ISerializer* GetSerializer();
 	ArchiveMode::Type GetArchiveMode();
 
 	void SerializeBuffer(unsigned char* buffer, unsigned int bytes);

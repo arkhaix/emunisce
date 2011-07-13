@@ -20,19 +20,21 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef EMUNISCE_H
 #define EMUNISCE_H
 
-#include "UserInterface.h"	///<For DisplayFilter
+#include "../BaseApplication/BaseApplication.h"
+
+#include "../GdiPlusRenderer/GdiPlusRenderer.h"
+#include "../KeyboardInput/KeyboardInput.h"
+#include "../OpenGLRenderer/OpenGLRenderer.h"
+#include "../WaveOutSound/WaveOutSound.h"
+
+#include "../WindowsPlatform/Window.h"
+
+#include <string>
+using namespace std;
 
 
 namespace Emunisce
 {
-
-class Window;
-
-class Gui;
-class Rewinder;
-class InputRecording;
-
-class IEmulatedMachine;
 
 class MachineRunner;
 class ConsoleDebugger;
@@ -42,7 +44,7 @@ class KeyboardInput;
 class WaveOutSound;
 
 
-class EmunisceApplication
+class EmunisceApplication : public BaseApplication, public IWindowMessageListener
 {
 public:
 
@@ -51,57 +53,102 @@ public:
 
 	void RunWindow();	///<Pumps messages on the window until shutdown is requested.  Blocks until shutdown.
 
-	bool LoadRom(const char* filename);
-	void ResetRom();
-
-	void SaveState(const char* id);
-	void LoadState(const char* id);
-
-	void EnableBackgroundAnimation();
-	void DisableBackgroundAnimation();
-
-	void SetDisplayFilter(DisplayFilter::Type filter);
-	void SetVsync(bool enabled);
-
-	void StartRecordingInput();
-	void StopRecordingInput();
-
-	void PlayMovie();
-	void StopMovie();
-
-	void SaveMovie(const char* id);
-	void LoadMovie(const char* id);
-
-	void PlayMacro(bool loop);
-	void StopMacro();
-
-	void SaveMacro(const char* id);
-	void LoadMacro(const char* id);
-
-	void NotifyMachineChanged(IEmulatedMachine* newMachine);
-	IEmulatedMachine* GetMachine();
-
-	bool ShutdownRequested();
-	void RequestShutdown();
-
 	Window* GetWindow();
 
-	Gui* GetGui();
-	Rewinder* GetRewinder();
-	InputRecording* GetInputRecorder();
-
-	UserInterface* GetUserInterface();
-
-	MachineRunner* GetMachineRunner();
 	ConsoleDebugger* GetDebugger();
 
 	GdiPlusRenderer* GetRenderer();
 	KeyboardInput* GetInput();
 	WaveOutSound* GetSound();
 
+
+	// BaseApplication overrides
+
+	virtual void NotifyMachineChanged(IEmulatedMachine* newMachine);
+	virtual void RequestShutdown();
+
+
+	// BaseApplication interface
+
+	virtual void SetVsync(bool enabled);
+
+	virtual void DisplayStatusMessage(const char* message);
+	virtual void DisplayImportantMessage(MessageType::Type messageType, const char* message);
+	virtual PromptResult::Type DisplayPrompt(PromptType::Type promptType, const char* title, const char* message, void** extraResult);
+
+	virtual bool SelectFile(char** result, const char* fileMask);
+
+	virtual unsigned int GetRomDataSize(const char* title);
+
+
+	// IWindowMessageListener
+
+	virtual void Closed();
+
+	virtual void Draw();
+
+	virtual void Resize();
+
+	virtual void KeyDown(int key);
+	virtual void KeyUp(int key);
+
+
 private:
 
-	class Phoenix_Private* m_private;
+	void AdjustWindowSize();
+	void HandlePendingMachineChange();
+
+	Archive* OpenFileArchive(const char* fileName, bool saving);
+	void ReleaseArchive(Archive* archive);
+
+
+	// BaseApplication interface
+
+	virtual Archive* OpenRomData(const char* name, bool saving);
+	virtual void CloseRomData(Archive* archive);
+
+	virtual Archive* OpenSavestate(const char* name, bool saving);
+	virtual void CloseSavestate(Archive* archive);
+
+	virtual Archive* OpenMovie(const char* name, bool saving);
+	virtual void CloseMovie(Archive* archive);
+
+	virtual Archive* OpenMacro(const char* name, bool saving);
+	virtual void CloseMacro(Archive* archive);
+
+
+	// Persistence
+
+	string GetDataFolder();
+
+	string GetBaseSaveStateFolder();
+	string GetCurrentSaveStateFolder();
+	string GetCurrentSaveStateFile(const char* id);
+
+	string GetBaseRomDataFolder();
+	string GetCurrentRomDataFolder();
+	string GetCurrentRomDataFile(const char* name);
+
+	string GetBaseMovieFolder();
+	string GetCurrentMovieFolder();
+	string GetCurrentMovieFile(const char* name);
+
+	string GetBaseMacroFolder();
+	string GetCurrentMacroFolder();
+	string GetCurrentMacroFile(const char* name);
+
+
+	Window* m_window;
+
+	IEmulatedMachine* m_pendingMachine;
+
+	MachineRunner* m_runner;
+	ConsoleDebugger* m_debugger;
+
+	//GdiPlusRenderer* m_renderer;
+	OpenGLRenderer* m_renderer;
+	KeyboardInput* m_input;
+	WaveOutSound* m_sound;
 };
 
 }	//namespace Emunisce
