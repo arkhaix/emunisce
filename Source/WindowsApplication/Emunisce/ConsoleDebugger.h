@@ -29,7 +29,7 @@ using namespace std;
 
 #include "MachineIncludes.h"
 
-#include "UserInterface.h"	///<For DisplayFilter
+#include "IUserInterface.h"	///<For DisplayFilter
 
 
 namespace Emunisce
@@ -111,7 +111,7 @@ private:
 	//Properties
 
 	EmunisceApplication* m_phoenix;
-	UserInterface* m_userInterface;
+	IUserInterface* m_userInterface;
 
 	IEmulatedMachine* m_machine;
 	IEmulatedProcessor* m_cpu;

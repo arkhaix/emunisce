@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "Rewinder.h"
 using namespace Emunisce;
 
-#include "Emunisce.h"
+#include "BaseApplication.h"
 #include "MachineRunner.h"
 
 #include "InputRecording.h"
@@ -482,7 +482,7 @@ int Rewinder::Internal_GetAudioBufferCount()
 
 // MachineFeature
 
-void Rewinder::SetApplication(EmunisceApplication* application)
+void Rewinder::SetApplication(BaseApplication* application)
 {
 	MachineFeature::SetApplication(application);
 	m_recorder->SetApplication(application);

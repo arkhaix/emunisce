@@ -42,7 +42,7 @@ using namespace std;
 
 //Application
 #include "Emunisce.h"
-#include "UserInterface.h"
+#include "IUserInterface.h"
 #include "../WaveOutSound/WaveOutSound.h"
 
 
@@ -67,7 +67,7 @@ ConsoleDebugger::ConsoleDebugger()
 void ConsoleDebugger::Initialize(EmunisceApplication* phoenix)
 {
 	m_phoenix = phoenix;
-	m_userInterface = phoenix->GetUserInterface();
+	m_userInterface = phoenix;
 
 	phoenix->GetSound()->SetMute(m_muteSound);
 }

@@ -31,6 +31,16 @@ Archive::Archive(ISerializer* serializer, ArchiveMode::Type archiveMode)
 	m_serializer->SetArchive(this);
 }
 
+void Archive::Close()
+{
+	m_serializer->Close();
+}
+
+
+ISerializer* Archive::GetSerializer()
+{
+	return m_serializer;
+}
 
 ArchiveMode::Type Archive::GetArchiveMode()
 {

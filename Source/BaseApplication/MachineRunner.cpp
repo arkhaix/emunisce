@@ -27,7 +27,6 @@ using namespace Emunisce;
 
 MachineRunner::MachineRunner()
 {
-	m_phoenix = NULL;
 	m_machine = NULL;
 
 	m_runnerThread = NULL;
@@ -48,7 +47,7 @@ MachineRunner::MachineRunner()
 
 // Application component
 
-void MachineRunner::Initialize(EmunisceApplication* /*phoenix*/)
+void MachineRunner::Initialize()
 {
 	m_waitEvent = CreateEvent(NULL, FALSE, TRUE, NULL);
 

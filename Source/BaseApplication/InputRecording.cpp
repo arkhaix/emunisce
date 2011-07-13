@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "InputRecording.h"
 using namespace Emunisce;
 
-#include "Emunisce.h"
+#include "BaseApplication.h"
 #include "MachineRunner.h"
 
 #include "Serialization/SerializationIncludes.h"

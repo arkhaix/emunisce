@@ -59,7 +59,7 @@ public:
 
 	// MachineFeature
 
-	virtual void SetApplication(EmunisceApplication* application);
+	virtual void SetApplication(BaseApplication* application);
 
 	virtual void SetComponentMachine(IEmulatedMachine* componentMachine);	///<Overridden because this component wraps its own InputRecording (m_recorder)
 	virtual void SetEmulatedMachine(IEmulatedMachine* emulatedMachine);	///<Overridden because this component wraps its own InputRecording (m_recorder)

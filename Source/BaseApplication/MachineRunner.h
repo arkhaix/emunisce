@@ -26,7 +26,6 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class EmunisceApplication;
 class IEmulatedMachine;
 
 namespace StepMode
@@ -52,7 +51,7 @@ public:
 
 	// Application component
 
-	void Initialize(EmunisceApplication* phoenix);
+	void Initialize();
 	void Shutdown();
 
 	void SetMachine(IEmulatedMachine* machine);
@@ -73,7 +72,6 @@ public:
 
 protected:
 
-	EmunisceApplication* m_phoenix;
 	IEmulatedMachine* m_machine;
 
 	HANDLE m_runnerThread;

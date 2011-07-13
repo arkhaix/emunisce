@@ -86,6 +86,11 @@ void FileSerializer::Restore(unsigned char* buffer, unsigned int bytes)
 	m_fileStream->read((char*)buffer, bytes);
 }
 
+void FileSerializer::Close()
+{
+	CloseFile();
+}
+
 
 
 void FileSerializer::OpenStream()

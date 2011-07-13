@@ -31,7 +31,6 @@ using namespace std;
 #include "MachineIncludes.h"
 
 #include "../Emunisce/Emunisce.h"	///<todo: this is basically unused.  refactor this.
-#include "../Emunisce/MachineRunner.h"
 
 namespace Emunisce
 {

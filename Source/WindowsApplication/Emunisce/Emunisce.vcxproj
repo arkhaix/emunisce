@@ -92,7 +92,7 @@
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)WindowsPlatform;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)WindowsPlatform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -131,7 +131,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)WindowsPlatform;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)WindowsPlatform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -148,6 +148,9 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\BaseApplication\BaseApplication.vcxproj">
+      <Project>{cf7183bb-c90f-4c19-b0c1-9932ad2abe58}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Gameboy\Gameboy.vcxproj">
       <Project>{9d59f9e7-2668-4089-9aab-e609df7d6cad}</Project>
     </ProjectReference>
@@ -177,27 +180,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="InputRecording.cpp" />
-    <ClCompile Include="KingsDream.cpp" />
     <ClCompile Include="ConsoleDebugger.cpp" />
     <ClCompile Include="Emunisce.cpp" />
-    <ClCompile Include="Gui.cpp" />
-    <ClCompile Include="MachineFeature.cpp" />
-    <ClCompile Include="MachineRunner.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Rewinder.cpp" />
-    <ClCompile Include="UserInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="InputRecording.h" />
-    <ClInclude Include="KingsDream.h" />
     <ClInclude Include="ConsoleDebugger.h" />
     <ClInclude Include="Emunisce.h" />
-    <ClInclude Include="Gui.h" />
-    <ClInclude Include="MachineFeature.h" />
-    <ClInclude Include="MachineRunner.h" />
-    <ClInclude Include="Rewinder.h" />
-    <ClInclude Include="UserInterface.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
