@@ -20,6 +20,9 @@
     <ClCompile Include="Thread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Event.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mutex.h">

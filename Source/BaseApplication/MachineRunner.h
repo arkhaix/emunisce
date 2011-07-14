@@ -20,8 +20,6 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MACHINERUNNER_H
 #define MACHINERUNNER_H
 
-#include "windows.h"	///<HANDLE
-
 #include "PlatformIncludes.h"
 
 
@@ -76,7 +74,7 @@ protected:
 
 	IEmulatedMachine* m_machine;
 
-	class _RunnerThread : public Thread
+	class Thread_Runner : public Thread
 	{
 	public:
 
@@ -89,10 +87,10 @@ protected:
 			instance->RunnerThread();
 		}
 
-		virtual void StopRequested() { /* internal control only (via Shutdown() -> m_shutdownRequested) */ }
+		virtual void StopRequested() { /* Use MachineRunner::Shutdown() instead */ }
 	};
 
-	_RunnerThread m_runnerThread;
+	Thread_Runner m_runnerThread;
 	DWORD RunnerThread();
 
 	void Synchronize();
@@ -101,7 +99,7 @@ protected:
 	bool m_shutdownRequested;
 	bool m_waitRequested;
 	bool m_waiting;
-	HANDLE m_waitEvent;
+	Event m_waitEvent;
 
 	StepMode::Type m_stepMode;
 
