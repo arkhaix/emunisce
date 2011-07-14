@@ -41,6 +41,21 @@
 			<Add directory="../Machine" />
 			<Add directory="../Utility" />
 		</Compiler>
+		<Unit filename="BaseApplication.cpp" />
+		<Unit filename="BaseApplication.h" />
+		<Unit filename="Gui.cpp" />
+		<Unit filename="Gui.h" />
+		<Unit filename="IUserInterface.h" />
+		<Unit filename="InputRecording.cpp" />
+		<Unit filename="InputRecording.h" />
+		<Unit filename="KingsDream.cpp" />
+		<Unit filename="KingsDream.h" />
+		<Unit filename="MachineFeature.cpp" />
+		<Unit filename="MachineFeature.h" />
+		<Unit filename="MachineRunner.cpp" />
+		<Unit filename="MachineRunner.h" />
+		<Unit filename="Rewinder.cpp" />
+		<Unit filename="Rewinder.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

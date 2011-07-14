@@ -8,8 +8,8 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin\Debug\WindowsApplication" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Debug\" />
+				<Option output="bin/Debug/WindowsApplication" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -18,8 +18,8 @@
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="bin\Release\WindowsApplication" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Release\" />
+				<Option output="bin/Release/WindowsApplication" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -36,9 +36,9 @@
 			<Add option="-std=gnu++0x" />
 			<Add option="-DWINVER=0x0501" />
 			<Add option="-D_WIN32_WINNT=0x0501" />
-			<Add directory="..\Machine" />
-			<Add directory="..\Platform" />
-			<Add directory="..\Utility" />
+			<Add directory="../Machine" />
+			<Add directory="../Platform" />
+			<Add directory="../Utility" />
 			<Add directory="Emunisce" />
 			<Add directory="GdiPlusRenderer" />
 			<Add directory="KeyboardInput" />
@@ -46,11 +46,11 @@
 			<Add directory="WaveOutSound" />
 		</Compiler>
 		<Linker>
-			<Add library="..\WindowsPlatform\libWindowsPlatform.a" />
-			<Add library="..\Utility\HqNx\libHqNx.a" />
-			<Add library="..\Utility\Serialization\libSerialization.a" />
-			<Add library="..\Machine\libMachine.a" />
-			<Add library="..\Gameboy\libGameboy.a" />
+			<Add library="../WindowsPlatform/libWindowsPlatform.a" />
+			<Add library="../Utility/HqNx/libHqNx.a" />
+			<Add library="../Utility/Serialization/libSerialization.a" />
+			<Add library="../Machine/libMachine.a" />
+			<Add library="../Gameboy/libGameboy.a" />
 			<Add library="shell32" />
 			<Add library="shlwapi" />
 			<Add library="winmm" />
@@ -59,33 +59,19 @@
 			<Add library="gdi32" />
 			<Add library="comdlg32" />
 		</Linker>
-		<Unit filename="Emunisce\ConsoleDebugger.cpp" />
-		<Unit filename="Emunisce\ConsoleDebugger.h" />
-		<Unit filename="Emunisce\Emunisce.cpp" />
-		<Unit filename="Emunisce\Emunisce.h" />
-		<Unit filename="Emunisce\Gui.cpp" />
-		<Unit filename="Emunisce\Gui.h" />
-		<Unit filename="Emunisce\InputRecording.cpp" />
-		<Unit filename="Emunisce\InputRecording.h" />
-		<Unit filename="Emunisce\KingsDream.cpp" />
-		<Unit filename="Emunisce\KingsDream.h" />
-		<Unit filename="Emunisce\MachineFeature.cpp" />
-		<Unit filename="Emunisce\MachineFeature.h" />
-		<Unit filename="Emunisce\MachineRunner.cpp" />
-		<Unit filename="Emunisce\MachineRunner.h" />
-		<Unit filename="Emunisce\Main.cpp" />
-		<Unit filename="Emunisce\Rewinder.cpp" />
-		<Unit filename="Emunisce\Rewinder.h" />
-		<Unit filename="Emunisce\UserInterface.cpp" />
-		<Unit filename="Emunisce\UserInterface.h" />
-		<Unit filename="GdiPlusRenderer\GdiPlusRenderer.cpp" />
-		<Unit filename="GdiPlusRenderer\GdiPlusRenderer.h" />
-		<Unit filename="KeyboardInput\KeyboardInput.cpp" />
-		<Unit filename="KeyboardInput\KeyboardInput.h" />
-		<Unit filename="OpenGLRenderer\OpenGLRenderer.cpp" />
-		<Unit filename="OpenGLRenderer\OpenGLRenderer.h" />
-		<Unit filename="WaveOutSound\WaveOutSound.cpp" />
-		<Unit filename="WaveOutSound\WaveOutSound.h" />
+		<Unit filename="Emunisce/ConsoleDebugger.cpp" />
+		<Unit filename="Emunisce/ConsoleDebugger.h" />
+		<Unit filename="Emunisce/Emunisce.cpp" />
+		<Unit filename="Emunisce/Emunisce.h" />
+		<Unit filename="Emunisce/Main.cpp" />
+		<Unit filename="GdiPlusRenderer/GdiPlusRenderer.cpp" />
+		<Unit filename="GdiPlusRenderer/GdiPlusRenderer.h" />
+		<Unit filename="KeyboardInput/KeyboardInput.cpp" />
+		<Unit filename="KeyboardInput/KeyboardInput.h" />
+		<Unit filename="OpenGLRenderer/OpenGLRenderer.cpp" />
+		<Unit filename="OpenGLRenderer/OpenGLRenderer.h" />
+		<Unit filename="WaveOutSound/WaveOutSound.cpp" />
+		<Unit filename="WaveOutSound/WaveOutSound.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
