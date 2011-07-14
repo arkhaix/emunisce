@@ -22,6 +22,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "windows.h"	///<HANDLE
 
+#include "PlatformIncludes.h"
+
 
 namespace Emunisce
 {
@@ -74,9 +76,23 @@ protected:
 
 	IEmulatedMachine* m_machine;
 
-	HANDLE m_runnerThread;
-	DWORD m_runnerThreadId;
-	static DWORD WINAPI StaticRunnerThread(LPVOID param);
+	class _RunnerThread : public Thread
+	{
+	public:
+
+		virtual void EntryPoint(void* param)
+		{
+			MachineRunner* instance = (MachineRunner*)param;
+			if(instance == NULL)
+				return;
+
+			instance->RunnerThread();
+		}
+
+		virtual void StopRequested() { /* internal control only (via Shutdown() -> m_shutdownRequested) */ }
+	};
+
+	_RunnerThread m_runnerThread;
 	DWORD RunnerThread();
 
 	void Synchronize();

@@ -29,8 +29,6 @@ MachineRunner::MachineRunner()
 {
 	m_machine = NULL;
 
-	m_runnerThread = NULL;
-
 	m_shutdownRequested = false;
 	m_waitRequested = true;
 	m_waiting = false;
@@ -51,15 +49,12 @@ void MachineRunner::Initialize()
 {
 	m_waitEvent = CreateEvent(NULL, FALSE, TRUE, NULL);
 
-	m_runnerThread = CreateThread(NULL, 0, StaticRunnerThread, (LPVOID)this, 0, &m_runnerThreadId);
+	m_runnerThread.Start((void*)this);
 }
 
 void MachineRunner::Shutdown()
 {
-	DWORD exitCode = STILL_ACTIVE;
-	GetExitCodeThread(m_runnerThread, &exitCode);
-
-	if(exitCode == STILL_ACTIVE)
+	if(m_runnerThread.IsRunning())
 	{
 		Pause();
 
@@ -67,9 +62,10 @@ void MachineRunner::Shutdown()
 
 		m_waitRequested = false;	
 		SetEvent(m_waitEvent);
-		CloseHandle(m_waitEvent);
 
-		WaitForSingleObject(m_runnerThread, 1000);
+		m_runnerThread.Join(1000);
+
+		CloseHandle(m_waitEvent);
 	}
 }
 
@@ -105,7 +101,7 @@ void MachineRunner::Run()
 
 void MachineRunner::Pause()
 {
-	if(GetCurrentThreadId() == m_runnerThreadId)
+	if(Thread::GetCurrentThreadId() == m_runnerThread.GetThreadId())
 		return;
 
 	while(m_waiting == false)
@@ -142,15 +138,6 @@ void MachineRunner::StepFrame()
 }
 
 
-
-DWORD WINAPI MachineRunner::StaticRunnerThread(LPVOID param)
-{
-	MachineRunner* instance = (MachineRunner*)param;
-	if(instance == NULL)
-		return (DWORD)-1;
-
-	return instance->RunnerThread();
-}
 
 DWORD MachineRunner::RunnerThread()
 {

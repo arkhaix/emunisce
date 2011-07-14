@@ -20,6 +20,4 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 //This is a convenience header for pulling in all platform layer types
 
-#include "PlatformTypes.h"
-
-#include "Mutex.h"
+#include "../Platform/PlatformIncludes.h"
