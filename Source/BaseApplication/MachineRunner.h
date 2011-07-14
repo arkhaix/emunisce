@@ -36,7 +36,7 @@ namespace StepMode
 	{
 		Instruction = 0,
 		Frame,
-		
+
 		NumStepModes
 	};
 }
@@ -91,7 +91,7 @@ protected:
 	};
 
 	Thread_Runner m_runnerThread;
-	DWORD RunnerThread();
+	int RunnerThread();
 
 	void Synchronize();
 	void ResetSynchronizationState();
@@ -107,6 +107,7 @@ protected:
 
 	struct SynchronizationInfo
 	{
+	    #if defined EMUNISCE_PLATFORM_WINDOWS
 		LARGE_INTEGER CountsPerSecond;
 		LARGE_INTEGER CountsPerFrame;
 
@@ -117,6 +118,17 @@ protected:
 
 		LARGE_INTEGER ElapsedRealTime;
 		LARGE_INTEGER ElapsedMachineTime;
+
+		#elif defined EMUNISCE_PLATFORM_LINUX
+		int RunStartTime;
+
+		int CurrentRealTime;
+		int CurrentMachineTime;
+
+		int ElapsedRealTime;
+		int ElapsedMachineTime;
+
+		#endif
 	};
 
 	SynchronizationInfo m_syncState;

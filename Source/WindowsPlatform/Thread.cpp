@@ -92,14 +92,12 @@ bool Thread::IsRunning()
 }
 
 
-int Thread::GetCurrentThreadId()
+bool Thread::IsCallingThread()
 {
-	return (int)::GetCurrentThreadId();
-}
+    if(GetCurrentThreadId() == m_threadId)
+        return true;
 
-int Thread::GetThreadId()
-{
-	return (int)m_threadId;
+    return false;
 }
 
 
