@@ -34,8 +34,15 @@ MachineRunner::MachineRunner()
 
 	m_emulationSpeed = 1.f;
 
+#if defined EMUNISCE_PLATFORM_WINDOWS
 	QueryPerformanceFrequency(&m_syncState.CountsPerSecond);
 	m_syncState.CountsPerFrame.QuadPart = m_syncState.CountsPerSecond.QuadPart / 60;	///<todo: this is bad. When CountsPerSecond is 1000, this will be 16.66667 rounded down to 16, throwing everything off by two-thirds of a millisecond per frame (40 milliseconds per second).
+
+#elif defined EMUNISCE_PLATFORM_LINUX
+//todo
+
+#endif
+
 	ResetSynchronizationState();
 }
 
@@ -56,7 +63,7 @@ void MachineRunner::Shutdown()
 
 		m_shutdownRequested = true;
 
-		m_waitRequested = false;	
+		m_waitRequested = false;
 		m_waitEvent.Set();
 
 		m_runnerThread.Join(1000);
@@ -95,13 +102,17 @@ void MachineRunner::Run()
 
 void MachineRunner::Pause()
 {
-	if(Thread::GetCurrentThreadId() == m_runnerThread.GetThreadId())
+	if(m_runnerThread.IsCallingThread())
 		return;
 
 	while(m_waiting == false)
 	{
 		m_waitRequested = true;
+		#if defined EMUNISCE_PLATFORM_WINDOWS
 		Sleep(1);
+		#elif defined EMUNSICE_PLATFORM_LINUX
+		//todo
+		#endif
 	}
 }
 
@@ -133,7 +144,7 @@ void MachineRunner::StepFrame()
 
 
 
-DWORD MachineRunner::RunnerThread()
+int MachineRunner::RunnerThread()
 {
 	for(;;)
 	{
@@ -150,7 +161,11 @@ DWORD MachineRunner::RunnerThread()
 
 		if(m_machine == NULL)
 		{
-			Sleep(250);
+		    #if defined EMUNISCE_PLATFORM_WINDOWS
+            Sleep(250);
+            #elif defined EMUNSICE_PLATFORM_LINUX
+            //todo
+            #endif
 			continue;
 		}
 
@@ -172,10 +187,12 @@ void MachineRunner::Synchronize()
 {
 	if(m_emulationSpeed < +1e-5)
 		return;
-		
+
 
 	//Note: This function assumes it's being called 60 times per second (defined by CountsPerFrame).
 	//		It will synchronize itself to that rate.
+
+#if defined EMUNISCE_PLATFORM_WINDOWS
 
 	QueryPerformanceCounter(&m_syncState.CurrentRealTime);
 	m_syncState.CurrentMachineTime.QuadPart += (LONGLONG)((double)m_syncState.CountsPerFrame.QuadPart * (1.0 / (double)m_emulationSpeed));
@@ -196,7 +213,7 @@ void MachineRunner::Synchronize()
 	int millisecondsAhead = (int)((secondsAhead * 1000.0) + 0.5);	///< +0.5 = Round up
 
 	//The constant in the if-check below is arbitrary.
-	//Using a small value (less than ~15 or so) may result in the OS sleeping for longer than expected 
+	//Using a small value (less than ~15 or so) may result in the OS sleeping for longer than expected
 	// due to the minimum timer resolution being higher than the specified sleep value.  If the emulator is running
 	// fast enough to catch up (and if it doesn't cause too many thread context switches), then that's probably okay.
 	//Using a high value (greater than ~50 or so) may result in noticeable jitter.
@@ -205,11 +222,18 @@ void MachineRunner::Synchronize()
 		Sleep(millisecondsAhead);
 	}
 
+#elif defined EMUNISCE_PLATFORM_LINUX
+
+//todo
+
+#endif
+
 	return;
 }
 
 void MachineRunner::ResetSynchronizationState()
 {
+#if defined EMUNISCE_PLATFORM_WINDOWS
 	LARGE_INTEGER now;
 	QueryPerformanceCounter(&now);
 
@@ -220,4 +244,9 @@ void MachineRunner::ResetSynchronizationState()
 
 	m_syncState.ElapsedRealTime.QuadPart = 0;
 	m_syncState.ElapsedMachineTime.QuadPart = 0;
+
+#elif defined EMUNISCE_PLATFORM_LINUX
+//todo
+
+#endif
 }

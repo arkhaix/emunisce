@@ -20,6 +20,9 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef THREAD_H
 #define THREAD_H
 
+#include <pthread.h>
+
+
 namespace Emunisce
 {
 
@@ -36,8 +39,7 @@ public:
 
 	bool IsRunning();
 
-	static int GetCurrentThreadId();
-	int GetThreadId();
+	bool IsCallingThread(); ///<Returns true if called from the same thread that's running EntryPoint.
 
 
 protected:
@@ -46,7 +48,6 @@ protected:
 	virtual void StopRequested() = 0;
 
 
-    /*
 	struct ThreadStartData
 	{
 		Thread* instance;
@@ -60,11 +61,12 @@ protected:
 	};
 
 	ThreadStartData m_threadStartData;
-	static DWORD WINAPI StaticEntryPoint(LPVOID param);
+	static void* StaticEntryPoint(void* param);
 
-	HANDLE m_threadHandle;
-	DWORD m_threadId;
-	*/
+	static void StaticCleanup(void* param);
+
+	pthread_t m_thread;
+	bool m_isRunning;
 };
 
 }	//namespace Emunisce

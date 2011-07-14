@@ -21,7 +21,6 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 using namespace Emunisce;
 
 #include "PlatformIncludes.h"
-#include "../WindowsPlatform/Window.h"
 
 #include "MachineIncludes.h"
 

@@ -39,8 +39,7 @@ public:
 
 	bool IsRunning();
 
-	static int GetCurrentThreadId();
-	int GetThreadId();
+	bool IsCallingThread(); ///<Returns true if called from the same thread that's running EntryPoint.
 
 
 protected:

@@ -23,43 +23,87 @@ using namespace Emunisce;
 
 Thread::Thread()
 {
-
 }
 
 Thread::~Thread()
 {
+    if(IsRunning())
+        Join(250);
 
+    if(IsRunning())
+    {
+        pthread_cancel(m_thread);
+    }
 }
 
 
 void Thread::Start(void* param)
 {
+    if(IsRunning())
+        return;
 
+    m_threadStartData.instance = this;
+	m_threadStartData.userData = param;
+
+    pthread_create(&m_thread, NULL, StaticEntryPoint, (void*)&m_threadStartData);
 }
 
 void Thread::Stop()
 {
+    if(IsRunning() == false)
+        return;
 
+    StopRequested();
 }
 
 void Thread::Join(unsigned int timeoutMilliseconds)
 {
-
+    Stop();
+    pthread_join(m_thread, NULL);
+    //todo: timeout support
 }
 
 
 bool Thread::IsRunning()
 {
+    return m_isRunning;
+}
+
+
+bool Thread::IsCallingThread()
+{
+    if( pthread_equal(pthread_self(), m_thread) )
+        return true;
+
     return false;
 }
 
 
-int Thread::GetCurrentThreadId()
+void* Thread::StaticEntryPoint(void* param)
 {
-    return 0;
+    ThreadStartData* data = (ThreadStartData*)param;
+	if(data == NULL)
+		return NULL;
+
+	if(data->instance == NULL)
+		return NULL;
+
+    pthread_cleanup_push(StaticCleanup, (void*)data->instance);
+
+    data->instance->m_isRunning = true;
+	data->instance->EntryPoint( data->userData );
+
+    pthread_cleanup_pop(1);
+	pthread_exit(NULL);
+
+	return NULL;
 }
 
-int Thread::GetThreadId()
+void Thread::StaticCleanup(void* param)
 {
-    return 0;
+    Thread* instance = (Thread*)param;
+    if(instance == NULL)
+        return;
+
+    instance->m_isRunning = false;
 }
