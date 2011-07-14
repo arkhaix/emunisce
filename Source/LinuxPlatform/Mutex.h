@@ -20,6 +20,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MUTEX_H
 #define MUTEX_H
 
+#include <pthread.h>
+
 
 namespace Emunisce
 {
@@ -36,7 +38,8 @@ public:
 
 private:
 
-	class Mutex_Private* m_private;
+	pthread_mutex_t m_lock;
+	pthread_mutexattr_t m_lockAttributes;
 };
 
 class ScopedMutex
