@@ -22,33 +22,27 @@ using namespace Emunisce;
 
 
 
-namespace Emunisce
-{
-
-class Mutex_Private
-{
-public:
-
-};
-
-}	//namespace Emunisce
-
-
 Mutex::Mutex()
 {
-	m_private = new Mutex_Private();
+    pthread_mutexattr_init(&m_lockAttributes);
+    pthread_mutexattr_settype(&m_lockAttributes, PTHREAD_MUTEX_RECURSIVE);
+
+	pthread_mutex_init(&m_lock, &m_lockAttributes);
 }
 
 Mutex::~Mutex()
 {
-	delete m_private;
+    pthread_mutex_destroy(&m_lock);
+    pthread_mutexattr_destroy(&m_lockAttributes);
 }
 
 
 void Mutex::Acquire()
 {
+    pthread_mutex_lock(&m_lock);
 }
 
 void Mutex::Release()
 {
+    pthread_mutex_unlock(&m_lock);
 }
