@@ -17,28 +17,57 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "Application.h"
+#ifndef THREAD_H
+#define THREAD_H
 
-#include "wx/sizer.h"
-
-#include "WindowMain.h"
-
-IMPLEMENT_APP(Application)
+#include "windows.h"
 
 
-bool Application::OnInit()
+namespace Emunisce
 {
-    wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
-    m_frame = new wxFrame((wxFrame *)NULL, -1,  wxT("Hello GL World"), wxPoint(50,50), wxSize(400,200));
 
-    int args[] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0};
+class Thread
+{
+public:
 
-    m_windowMain = new WindowMain(m_frame, args);
-    sizer->Add(m_windowMain, 1, wxEXPAND);
+	Thread();
+	~Thread();
 
-    m_frame->SetSizer(sizer);
-    m_frame->SetAutoLayout(true);
+	void Start(void* param);
+	void Stop();	///<Non-blocking
+	void Join(unsigned int timeoutMilliseconds);	///<Blocking
 
-    m_frame->Show();
-    return true;
-}
+	bool IsRunning();
+
+	static int GetCurrentThreadId();
+	int GetThreadId();
+
+
+protected:
+
+	virtual void EntryPoint(void* param) = 0;
+	virtual void StopRequested() = 0;
+
+
+	struct ThreadStartData
+	{
+		Thread* instance;
+		void* userData;
+
+		ThreadStartData()
+		{
+			instance = 0;
+			userData = 0;
+		}
+	};
+
+	ThreadStartData m_threadStartData;
+	static DWORD WINAPI StaticEntryPoint(LPVOID param);
+
+	HANDLE m_threadHandle;
+	DWORD m_threadId;
+};
+
+}	//namespace Emunisce
+
+#endif

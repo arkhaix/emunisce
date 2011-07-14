@@ -21,11 +21,9 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "PlatformDefines.h"
 
 #if defined EMUNISCE_PLATFORM_LINUX
-    #include "../LinuxPlatform/Mutex.h"
+#include "../LinuxPlatform/Event.h"
 #elif defined EMUNISCE_PLATFORM_WINDOWS
-    #include "../WindowsPlatform/Mutex.h"
+#include "../WindowsPlatform/Event.h"
 #else
-    #error "unknown platform"
+#error "unknown platform"
 #endif
-
-

@@ -17,15 +17,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef EVENT_H
+#define EVENT_H
 
-#include "PlatformDefines.h"
+//todo
 
-#if defined EMUNISCE_PLATFORM_LINUX
-    #include "../LinuxPlatform/Mutex.h"
-#elif defined EMUNISCE_PLATFORM_WINDOWS
-    #include "../WindowsPlatform/Mutex.h"
-#else
-    #error "unknown platform"
 #endif
-
-
