@@ -17,32 +17,35 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef EVENT_H
-#define EVENT_H
-
-#include "windows.h"
+#include "Event.h"
+using namespace Emunisce;
 
 
-namespace Emunisce
+Event::Event(bool autoReset)
 {
+	m_event = CreateEvent(NULL, !autoReset, FALSE, NULL);
+}
 
-class Event
+Event::~Event()
 {
-public:
+	CloseHandle(m_event);
+	m_event = NULL;
+}
 
-	Event(bool autoReset = false);
-	~Event();
 
-	void Set();		///<Sets state to signaled, allowing waiting threads to continue
-	void Reset();	///<Sets state to non-signaled, causing threads to wait
+void Event::Set()
+{
+	SetEvent(m_event);
+}
 
-	void Wait();
+void Event::Reset()
+{
+	ResetEvent(m_event);
+}
 
-private:
 
-	HANDLE m_event;
-};
+void Event::Wait()
+{
+	WaitForSingleObject(m_event, INFINITE);
+}
 
-}	//namespace Emunisce
-
-#endif

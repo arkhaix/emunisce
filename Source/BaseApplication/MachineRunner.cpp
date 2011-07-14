@@ -20,19 +20,17 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "MachineRunner.h"
 using namespace Emunisce;
 
-#include "windows.h"
-
 #include "MachineIncludes.h"
 
 
 MachineRunner::MachineRunner()
+: m_waitEvent(true)
 {
 	m_machine = NULL;
 
 	m_shutdownRequested = false;
 	m_waitRequested = true;
 	m_waiting = false;
-	m_waitEvent = NULL;
 
 	m_emulationSpeed = 1.f;
 
@@ -47,8 +45,6 @@ MachineRunner::MachineRunner()
 
 void MachineRunner::Initialize()
 {
-	m_waitEvent = CreateEvent(NULL, FALSE, TRUE, NULL);
-
 	m_runnerThread.Start((void*)this);
 }
 
@@ -61,11 +57,9 @@ void MachineRunner::Shutdown()
 		m_shutdownRequested = true;
 
 		m_waitRequested = false;	
-		SetEvent(m_waitEvent);
+		m_waitEvent.Set();
 
 		m_runnerThread.Join(1000);
-
-		CloseHandle(m_waitEvent);
 	}
 }
 
@@ -96,7 +90,7 @@ void MachineRunner::Run()
 	m_stepMode = StepMode::Frame;
 
 	m_waitRequested = false;
-	SetEvent(m_waitEvent);
+	m_waitEvent.Set();
 }
 
 void MachineRunner::Pause()
@@ -124,7 +118,7 @@ void MachineRunner::StepInstruction()
 	m_stepMode = StepMode::Instruction;
 
 	m_waitRequested = true;
-	SetEvent(m_waitEvent);
+	m_waitEvent.Set();
 }
 
 void MachineRunner::StepFrame()
@@ -134,7 +128,7 @@ void MachineRunner::StepFrame()
 	m_stepMode = StepMode::Frame;
 
 	m_waitRequested = true;
-	SetEvent(m_waitEvent);
+	m_waitEvent.Set();
 }
 
 
@@ -146,7 +140,7 @@ DWORD MachineRunner::RunnerThread()
 		if(m_waitRequested == true)
 		{
 			m_waiting = true;
-			WaitForSingleObject(m_waitEvent, INFINITE);
+			m_waitEvent.Wait();
 			ResetSynchronizationState();
 			m_waiting = false;
 		}
