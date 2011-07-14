@@ -2,7 +2,7 @@
 <CodeBlocks_workspace_file>
 	<Workspace title="Emunisce">
 		<Project filename="Platform/Platform.cbp" />
-		<Project filename="LinuxPlatform/LinuxPlatform.cbp" />
+		<Project filename="LinuxPlatform/LinuxPlatform.cbp" active="1" />
 		<Project filename="WindowsPlatform/WindowsPlatform.cbp" />
 		<Project filename="Utility/Serialization/Serialization.cbp" />
 		<Project filename="Utility/HqNx/HqNx.cbp" />
@@ -18,7 +18,7 @@
 			<Depends filename="Machine/Machine.cbp" />
 			<Depends filename="Gameboy/Gameboy.cbp" />
 		</Project>
-		<Project filename="wxApplication/wxApplication.cbp" active="1" />
+		<Project filename="wxApplication/wxApplication.cbp" />
 		<Project filename="BaseApplication/BaseApplication.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>
