@@ -41,6 +41,8 @@ public:
 
 	bool IsCallingThread(); ///<Returns true if called from the same thread that's running EntryPoint.
 
+	static void Sleep(unsigned int milliseconds);   ///<Sleeps the calling thread for the requested duration.  Note that this is dependent upon the operating system's scheduler and timer resolution, so the actual duration will be longer.
+
 
 protected:
 

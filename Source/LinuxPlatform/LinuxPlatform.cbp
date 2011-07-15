@@ -46,8 +46,6 @@
 		<Unit filename="Mutex.cpp" />
 		<Unit filename="Mutex.h" />
 		<Unit filename="PlatformTypes.h" />
-		<Unit filename="SleepThread.cpp" />
-		<Unit filename="SleepThread.h" />
 		<Unit filename="Thread.cpp" />
 		<Unit filename="Thread.h" />
 		<Unit filename="Timing.cpp" />

@@ -23,6 +23,9 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "wx/wx.h"
 #include "wx/glcanvas.h"
 
+namespace Emunisce
+{
+
 class WindowMain : public wxGLCanvas
 {
     wxGLContext*	m_context;
@@ -37,8 +40,8 @@ public:
 	int getHeight();
 
 	void render(wxPaintEvent& evt);
-	void prepare3DViewport(int topleft_x, int topleft_y, int bottomrigth_x, int bottomrigth_y);
-	void prepare2DViewport(int topleft_x, int topleft_y, int bottomrigth_x, int bottomrigth_y);
+	void prepare3DViewport(int topleft_x, int topleft_y, int bottomright_x, int bottomright_y);
+	void prepare2DViewport(int topleft_x, int topleft_y, int bottomright_x, int bottomright_y);
 
 	// events
 	void mouseMoved(wxMouseEvent& event);
@@ -52,5 +55,7 @@ public:
 
 	DECLARE_EVENT_TABLE()
 };
+
+}   //namespace Emunisce
 
 #endif // WindowMain_H

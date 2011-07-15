@@ -108,7 +108,7 @@ void MachineRunner::Pause()
 	while(m_waiting == false)
 	{
 		m_waitRequested = true;
-		SleepThread(1);
+		Thread::Sleep(1);
 	}
 }
 
@@ -157,7 +157,7 @@ int MachineRunner::RunnerThread()
 
 		if(m_machine == NULL)
 		{
-		    SleepThread(250);
+		    Thread::Sleep(250);
 			continue;
 		}
 
@@ -211,7 +211,7 @@ void MachineRunner::Synchronize()
 	//Using a high value (greater than ~50 or so) may result in noticeable jitter.
 	if(millisecondsAhead >= 5)
 	{
-		SleepThread(millisecondsAhead);
+	    Thread::Sleep(millisecondsAhead);
 	}
 
 #elif defined EMUNISCE_PLATFORM_LINUX
@@ -236,7 +236,7 @@ void MachineRunner::Synchronize()
 	//Using a high value (greater than ~50 or so) may result in noticeable jitter.
 	if(millisecondsAhead >= 5)
 	{
-		SleepThread(millisecondsAhead);
+	    Thread::Sleep(millisecondsAhead);
 	}
 
 #endif

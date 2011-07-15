@@ -2,7 +2,7 @@
 <CodeBlocks_workspace_file>
 	<Workspace title="Emunisce">
 		<Project filename="Platform/Platform.cbp" />
-		<Project filename="LinuxPlatform/LinuxPlatform.cbp" active="1" />
+		<Project filename="LinuxPlatform/LinuxPlatform.cbp" />
 		<Project filename="WindowsPlatform/WindowsPlatform.cbp" />
 		<Project filename="Utility/Serialization/Serialization.cbp" />
 		<Project filename="Utility/HqNx/HqNx.cbp" />
@@ -12,13 +12,30 @@
 		</Project>
 		<Project filename="WindowsApplication/WindowsApplication.cbp">
 			<Depends filename="Platform/Platform.cbp" />
+			<Depends filename="LinuxPlatform/LinuxPlatform.cbp" />
 			<Depends filename="WindowsPlatform/WindowsPlatform.cbp" />
 			<Depends filename="Utility/Serialization/Serialization.cbp" />
 			<Depends filename="Utility/HqNx/HqNx.cbp" />
 			<Depends filename="Machine/Machine.cbp" />
 			<Depends filename="Gameboy/Gameboy.cbp" />
+			<Depends filename="BaseApplication/BaseApplication.cbp" />
 		</Project>
-		<Project filename="wxApplication/wxApplication.cbp" />
-		<Project filename="BaseApplication/BaseApplication.cbp" />
+		<Project filename="wxApplication/wxApplication.cbp" active="1">
+			<Depends filename="Platform/Platform.cbp" />
+			<Depends filename="LinuxPlatform/LinuxPlatform.cbp" />
+			<Depends filename="Utility/Serialization/Serialization.cbp" />
+			<Depends filename="Utility/HqNx/HqNx.cbp" />
+			<Depends filename="Machine/Machine.cbp" />
+			<Depends filename="Gameboy/Gameboy.cbp" />
+			<Depends filename="BaseApplication/BaseApplication.cbp" />
+		</Project>
+		<Project filename="BaseApplication/BaseApplication.cbp">
+			<Depends filename="Platform/Platform.cbp" />
+			<Depends filename="LinuxPlatform/LinuxPlatform.cbp" />
+			<Depends filename="Utility/Serialization/Serialization.cbp" />
+			<Depends filename="Utility/HqNx/HqNx.cbp" />
+			<Depends filename="Machine/Machine.cbp" />
+			<Depends filename="Gameboy/Gameboy.cbp" />
+		</Project>
 	</Workspace>
 </CodeBlocks_workspace_file>

@@ -22,18 +22,78 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "wx/wx.h"
 
+#include "../BaseApplication/BaseApplication.h"
+
+
+namespace Emunisce
+{
+
 class WindowMain;
 
-class Application : public wxApp
+class Application : public wxApp, public BaseApplication
 {
 public:
 
+    Application();
+    ~Application();
+
+
+    // BaseApplication overrides
+
+	virtual void NotifyMachineChanged(IEmulatedMachine* newMachine);
+	virtual void RequestShutdown();
+
+
+	// BaseApplication interface
+
+	virtual void SetVsync(bool enabled);
+
+	virtual void DisplayStatusMessage(const char* message);
+	virtual void DisplayImportantMessage(MessageType::Type messageType, const char* message);
+	virtual PromptResult::Type DisplayPrompt(PromptType::Type promptType, const char* title, const char* message, void** extraResult);
+
+	virtual bool SelectFile(char** result, const char* fileMask);
+
+	virtual unsigned int GetRomDataSize(const char* title);
+
+
+	// IWindowMessageListener
+
+	virtual void Closed();
+
+	virtual void Draw();
+
+	virtual void Resize();
+
+	virtual void KeyDown(int key);
+	virtual void KeyUp(int key);
+
+
 protected:
+
+    // BaseApplication interface
+
+	virtual Archive* OpenRomData(const char* name, bool saving);
+	virtual void CloseRomData(Archive* archive);
+
+	virtual Archive* OpenSavestate(const char* name, bool saving);
+	virtual void CloseSavestate(Archive* archive);
+
+	virtual Archive* OpenMovie(const char* name, bool saving);
+	virtual void CloseMovie(Archive* archive);
+
+	virtual Archive* OpenMacro(const char* name, bool saving);
+	virtual void CloseMacro(Archive* archive);
+
+
+	// wxApp
 
     virtual bool OnInit();
 
     wxFrame* m_frame;
     WindowMain* m_windowMain;
 };
+
+}   //namespace Emunisce
 
 #endif // APPLICATION_H
