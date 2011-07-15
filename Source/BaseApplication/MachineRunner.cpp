@@ -108,11 +108,7 @@ void MachineRunner::Pause()
 	while(m_waiting == false)
 	{
 		m_waitRequested = true;
-		#if defined EMUNISCE_PLATFORM_WINDOWS
-		Sleep(1);
-		#elif defined EMUNSICE_PLATFORM_LINUX
-		//todo
-		#endif
+		SleepThread(1);
 	}
 }
 
@@ -161,11 +157,7 @@ int MachineRunner::RunnerThread()
 
 		if(m_machine == NULL)
 		{
-		    #if defined EMUNISCE_PLATFORM_WINDOWS
-            Sleep(250);
-            #elif defined EMUNSICE_PLATFORM_LINUX
-            //todo
-            #endif
+		    SleepThread(250);
 			continue;
 		}
 
@@ -219,7 +211,7 @@ void MachineRunner::Synchronize()
 	//Using a high value (greater than ~50 or so) may result in noticeable jitter.
 	if(millisecondsAhead >= 5)
 	{
-		Sleep(millisecondsAhead);
+		SleepThread(millisecondsAhead);
 	}
 
 #elif defined EMUNISCE_PLATFORM_LINUX

@@ -17,18 +17,31 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-//This is a convenience header for pulling in all platform layer types
-
-#include "PlatformDefines.h"
-
-#include "PlatformTypes.h"
-
-#include "SecureCrt.h"
-
-#include "Event.h"
-#include "Mutex.h"
-#include "Thread.h"
-
 #include "SleepThread.h"
+using namespace Emunisce;
 
+#include <pthread.h>
+#include <sys/timeb.h>
+
+
+void SleepThread(int milliseconds)
+{
+    timeb startTime;
+    ftime(&startTime);
+
+    timeb currentTime;
+
+    long int elapsedMilliseconds = 0;
+
+    do
+    {
+        pthread_yield();
+
+        ftime(&currentTime);
+
+        time_t secondsDifference = currentTime.time - startTime.time;
+        long int millisecondsDifference = currentTime.millitm - startTime.millitm;
+
+        elapsedMilliseconds = (secondsDifference * 1000) + millisecondsDifference;
+    }   while(elapsedMilliseconds < milliseconds);
+}
