@@ -30,7 +30,7 @@ namespace DisplayFilter
 
 	enum
 	{
-		None = 0,
+		NoFilter = 0,   ///<Was 'None', but changed due to a name conflict
 
 		Hq2x,
 		Hq3x,

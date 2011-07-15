@@ -58,7 +58,7 @@ ConsoleDebugger::ConsoleDebugger()
 	m_breakpointsEnabled = false;
 
 	m_squareSynthesisMethod = SquareSynthesisMethod::LinearInterpolation;
-	m_displayFilter = DisplayFilter::None;
+	m_displayFilter = DisplayFilter::NoFilter;
 
 	m_recordingInput = false;
 	m_playingInput = false;
@@ -549,11 +549,11 @@ void ConsoleDebugger::SetDisplayFilter(const char* strFilter)
 	if(strFilter == NULL || strlen(strFilter) == 0)
 		strFilter = "none";
 
-	DisplayFilter::Type filter = DisplayFilter::None;
+	DisplayFilter::Type filter = DisplayFilter::NoFilter;
 
 	if( _stricmp(strFilter, "none") == 0 || _stricmp(strFilter, "0") == 0 ||
 		_stricmp(strFilter, "1") == 0 )
-		filter = DisplayFilter::None;
+		filter = DisplayFilter::NoFilter;
 
 	else if( _stricmp(strFilter, "hq2x") == 0 || _stricmp(strFilter, "2x") == 0 ||
 		_stricmp(strFilter, "2") == 0 )

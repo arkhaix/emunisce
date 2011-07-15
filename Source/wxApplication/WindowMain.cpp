@@ -20,6 +20,18 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "WindowMain.h"
 using namespace Emunisce;
 
+// Emunsice stuff
+
+#include "Application.h"
+
+void WindowMain::SetApplication(Application* application)
+{
+    m_application = application;
+}
+
+
+// wx stuff
+
 // include OpenGL
 #ifdef __WXMAC__
 #include "OpenGL/glu.h"
@@ -66,6 +78,9 @@ GLint faces[6][4] = {  /* Vertex indices for the 6 faces of a cube. */
 WindowMain::WindowMain(wxFrame* parent, int* args) :
     wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE)
 {
+    m_application = NULL;
+
+
 	m_context = new wxGLContext(this);
     // prepare a simple cube to demonstrate 3D render
     // source: http://www.opengl.org/resources/code/samples/glut_examples/examples/cube.c
@@ -90,6 +105,9 @@ void WindowMain::resized(wxSizeEvent& evt)
 //	wxGLCanvas::OnSize(evt);
 
     Refresh();
+
+    if(m_application != NULL)
+        m_application->Resize();
 }
 
 /** Inits the OpenGL viewport for drawing in 3D. */

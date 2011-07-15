@@ -26,8 +26,25 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
+class Application;
+
 class WindowMain : public wxGLCanvas
 {
+    //Emunsice stuff
+
+public:
+
+    void SetApplication(Application* application);
+
+private:
+
+    Application* m_application;
+
+
+    //wx stuff
+
+private:
+
     wxGLContext*	m_context;
 
 public:
