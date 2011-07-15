@@ -69,11 +69,41 @@ void Application::DisplayStatusMessage(const char* message)
 
 void Application::DisplayImportantMessage(MessageType::Type messageType, const char* message)
 {
+    long iconType = wxICON_INFORMATION;
+
+	if(messageType == MessageType::Information)
+		iconType = wxICON_INFORMATION;
+	else if(messageType == MessageType::Warning)
+		iconType = wxICON_WARNING;
+	else if(messageType == MessageType::Error)
+		iconType = wxICON_ERROR;
+
+    wxMessageBox(wxString::FromAscii(message), wxT("Emunisce"), iconType | wxOK);
 }
 
 PromptResult::Type Application::DisplayPrompt(PromptType::Type promptType, const char* title, const char* message, void** extraResult)
 {
-    return PromptResult::Ok;
+    long wxPromptType = wxOK;
+	if(promptType == PromptType::OkCancel)
+		wxPromptType = wxOK | wxCANCEL;
+	else if(promptType == PromptType::YesNo)
+		wxPromptType = wxYES | wxNO;
+	else if(promptType == PromptType::YesNoCancel)
+		wxPromptType = wxYES | wxNO | wxCANCEL;
+
+	int wxResult = wxMessageBox( wxString::FromAscii(message), wxString::FromAscii(title), wxPromptType);
+
+	PromptResult::Type result = PromptResult::Cancel;
+	if(wxResult == wxOK)
+		result = PromptResult::Ok;
+	else if(wxResult == wxCANCEL)
+		result = PromptResult::Cancel;
+	else if(wxResult == wxYES)
+		result = PromptResult::Yes;
+	else if(wxResult == wxNO)
+		result = PromptResult::No;
+
+	return result;
 }
 
 
@@ -171,6 +201,8 @@ bool Application::OnInit()
     int args[] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0};
 
     m_windowMain = new WindowMain(m_frame, args);
+    m_windowMain->SetApplication(this);
+
     sizer->Add(m_windowMain, 1, wxEXPAND);
 
     m_frame->SetSizer(sizer);

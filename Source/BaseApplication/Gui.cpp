@@ -36,7 +36,7 @@ Gui::Gui()
 	m_screenBufferCopy = NULL;
     m_filteredScreenBuffer = NULL;
 	m_filteredScreenBufferId = -1;
-	m_displayFilter = DisplayFilter::None;
+	m_displayFilter = DisplayFilter::NoFilter;
 
 	m_guiFeature = new GuiFeature();
 	m_featureExecution = m_guiFeature;
