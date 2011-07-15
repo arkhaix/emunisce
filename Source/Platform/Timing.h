@@ -18,18 +18,12 @@ You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//This is a convenience header for pulling in all platform layer types
-
 #include "PlatformDefines.h"
 
-#include "PlatformTypes.h"
-
-#include "SecureCrt.h"
-
-#include "Event.h"
-#include "Mutex.h"
-#include "Thread.h"
-
-#include "SleepThread.h"
-#include "Timing.h"
-
+#if defined EMUNISCE_PLATFORM_LINUX
+#include "../LinuxPlatform/Timing.h"
+#elif defined EMUNISCE_PLATFORM_WINDOWS
+#include "../WindowsPlatform/Timing.h"
+#else
+#error "unknown platform"
+#endif
