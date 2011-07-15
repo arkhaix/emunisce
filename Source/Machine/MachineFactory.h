@@ -32,7 +32,7 @@ namespace EmulatedMachine
 
 	enum
 	{
-		None = 0,
+		NoMachine,  /* Was 'None', but that conflicts with something somewhere according to gcc */
 		AutoSelect,
 
 		Gameboy,

@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "WindowMain.h"
+using namespace Emunisce;
 
 // include OpenGL
 #ifdef __WXMAC__

@@ -52,7 +52,7 @@ MachineFeature::MachineFeature()
 	for(int y=0;y<m_defaultScreenBuffer.GetHeight();y++)
 		for(int x=0;x<m_defaultScreenBuffer.GetWidth();x++)
 			m_defaultScreenBuffer.SetPixel(x, y, (DisplayPixel)0);
-	
+
 	m_defaultAudioBuffer.NumSamples = m_defaultAudioBuffer.BufferSizeSamples;
 	for(unsigned int i=0;i<m_defaultAudioBuffer.NumSamples;i++)
 	{
@@ -143,7 +143,7 @@ void MachineFeature::SetFocus(bool hasFocus)
 EmulatedMachine::Type MachineFeature::GetType()
 {
 	if(m_wrappedMachine == NULL)
-		return EmulatedMachine::None;
+		return EmulatedMachine::NoMachine;
 
 	return m_wrappedMachine->GetType();
 }

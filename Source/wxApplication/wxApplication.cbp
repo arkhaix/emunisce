@@ -34,9 +34,19 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="`wx-config --cflags`" />
+			<Add directory="../Platform" />
+			<Add directory="../Machine" />
+			<Add directory="../Utility" />
+			<Add directory="../BaseApplication" />
 		</Compiler>
 		<Linker>
 			<Add option="`wx-config --libs --gl-libs`" />
+			<Add library="../BaseApplication/libBaseApplication.a" />
+			<Add library="../Utility/Serialization/libSerialization.a" />
+			<Add library="../Utility/HqNx/libHqNx.a" />
+			<Add library="../Machine/libMachine.a" />
+			<Add library="../Gameboy/libGameboy.a" />
+			<Add library="../LinuxPlatform/libLinuxPlatform.a" />
 			<Add library="GL" />
 		</Linker>
 		<Unit filename="Application.cpp" />

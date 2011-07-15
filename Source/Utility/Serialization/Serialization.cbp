@@ -33,7 +33,7 @@
 		<Compiler>
 			<Add option="-std=c++0x" />
 			<Add option="-Wall" />
-			<Add directory="..\..\Platform" />
+			<Add directory="../../Platform" />
 		</Compiler>
 		<Unit filename="Archive.cpp" />
 		<Unit filename="Archive.h" />
