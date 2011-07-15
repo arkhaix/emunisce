@@ -23,28 +23,55 @@ using namespace Emunisce;
 
 Event::Event(bool autoReset)
 {
+    m_autoReset = autoReset;
 
+    m_signalled = false;
+
+    pthread_mutex_init(&m_mutex, NULL);
+    pthread_cond_init(&m_condition, NULL);
 }
 
 Event::~Event()
 {
-
+    pthread_cond_destroy(&m_condition);
+    pthread_mutex_destroy(&m_mutex);
 }
 
 
 void Event::Set()
 {
+    pthread_mutex_lock(&m_mutex);
 
+    m_signalled = true;
+    pthread_cond_signal(&m_condition);
+
+    pthread_mutex_unlock(&m_mutex);
 }
 
 void Event::Reset()
 {
+    pthread_mutex_lock(&m_mutex);
 
+    m_signalled = false;
+
+    pthread_mutex_unlock(&m_mutex);
 }
 
 
 void Event::Wait()
 {
+    pthread_mutex_lock(&m_mutex);
 
+    while(m_signalled == false)
+    {
+        pthread_cond_wait(&m_condition, &m_mutex);
+    }
+
+    if(m_autoReset == true)
+    {
+        m_signalled = false;
+    }
+
+    pthread_mutex_unlock(&m_mutex);
 }
 
