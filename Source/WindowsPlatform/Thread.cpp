@@ -101,6 +101,12 @@ bool Thread::IsCallingThread()
 }
 
 
+void Thread::Sleep(unsigned int milliseconds)
+{
+	::Sleep((DWORD)milliseconds);
+}
+
+
 DWORD WINAPI Thread::StaticEntryPoint(LPVOID param)
 {
 	ThreadStartData* data = (ThreadStartData*)param;
