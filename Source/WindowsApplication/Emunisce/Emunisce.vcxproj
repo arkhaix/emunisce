@@ -92,7 +92,7 @@
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)WindowsPlatform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -109,7 +109,7 @@
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)WindowsPlatform;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -131,7 +131,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)WindowsPlatform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -144,7 +144,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)WindowsPlatform;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
