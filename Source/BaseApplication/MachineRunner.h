@@ -120,13 +120,15 @@ protected:
 		LARGE_INTEGER ElapsedMachineTime;
 
 		#elif defined EMUNISCE_PLATFORM_LINUX
-		int RunStartTime;
+		float MillisecondsPerFrame;
 
-		int CurrentRealTime;
-		int CurrentMachineTime;
+		Time RunStartTime;
 
-		int ElapsedRealTime;
-		int ElapsedMachineTime;
+		Time CurrentRealTime;
+		Time CurrentMachineTime;
+
+		Time ElapsedRealTime;
+		Time ElapsedMachineTime;
 
 		#endif
 	};

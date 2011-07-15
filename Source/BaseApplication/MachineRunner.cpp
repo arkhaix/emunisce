@@ -39,7 +39,7 @@ MachineRunner::MachineRunner()
 	m_syncState.CountsPerFrame.QuadPart = m_syncState.CountsPerSecond.QuadPart / 60;	///<todo: this is bad. When CountsPerSecond is 1000, this will be 16.66667 rounded down to 16, throwing everything off by two-thirds of a millisecond per frame (40 milliseconds per second).
 
 #elif defined EMUNISCE_PLATFORM_LINUX
-//todo
+    m_syncState.MillisecondsPerFrame = 1000.f / 60.f;
 
 #endif
 
@@ -215,8 +215,29 @@ void MachineRunner::Synchronize()
 	}
 
 #elif defined EMUNISCE_PLATFORM_LINUX
+    m_syncState.CurrentRealTime = Time::Now();
+	m_syncState.CurrentMachineTime.AddMilliseconds( (m_syncState.MillisecondsPerFrame * (1.f / m_emulationSpeed)) );
 
-//todo
+	m_syncState.ElapsedRealTime.SetTotalMilliseconds(m_syncState.CurrentRealTime.GetTotalMilliseconds() - m_syncState.RunStartTime.GetTotalMilliseconds());
+	m_syncState.ElapsedMachineTime.SetTotalMilliseconds(m_syncState.CurrentMachineTime.GetTotalMilliseconds() - m_syncState.RunStartTime.GetTotalMilliseconds());
+
+    if(m_syncState.ElapsedRealTime.GetTotalMilliseconds() > m_syncState.ElapsedMachineTime.GetTotalMilliseconds())
+	{
+		//Real time is ahead of the machine time, so the emulator is running too slow already.
+		return;
+	}
+
+    int millisecondsAhead = m_syncState.ElapsedMachineTime.GetTotalMilliseconds() - m_syncState.ElapsedRealTime.GetTotalMilliseconds();
+
+	//The constant in the if-check below is arbitrary.
+	//Using a small value (less than ~15 or so) may result in the OS sleeping for longer than expected
+	// due to the minimum timer resolution being higher than the specified sleep value.  If the emulator is running
+	// fast enough to catch up (and if it doesn't cause too many thread context switches), then that's probably okay.
+	//Using a high value (greater than ~50 or so) may result in noticeable jitter.
+	if(millisecondsAhead >= 5)
+	{
+		SleepThread(millisecondsAhead);
+	}
 
 #endif
 
@@ -238,7 +259,15 @@ void MachineRunner::ResetSynchronizationState()
 	m_syncState.ElapsedMachineTime.QuadPart = 0;
 
 #elif defined EMUNISCE_PLATFORM_LINUX
-//todo
+    Time now = Time::Now();
+
+    m_syncState.RunStartTime = now;
+
+    m_syncState.CurrentRealTime = now;
+    m_syncState.CurrentMachineTime = now;
+
+    m_syncState.ElapsedRealTime.Zero();
+    m_syncState.ElapsedMachineTime.Zero();
 
 #endif
 }

@@ -46,7 +46,9 @@
 		<Unit filename="PlatformIncludes.h" />
 		<Unit filename="PlatformTypes.h" />
 		<Unit filename="SecureCrt.h" />
+		<Unit filename="SleepThread.h" />
 		<Unit filename="Thread.h" />
+		<Unit filename="Timing.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
