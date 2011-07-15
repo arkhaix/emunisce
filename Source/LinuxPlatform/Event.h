@@ -20,6 +20,9 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef EVENT_H
 #define EVENT_H
 
+#include <pthread.h>
+
+
 namespace Emunisce
 {
 
@@ -37,9 +40,11 @@ public:
 
 private:
 
-/*
-	HANDLE m_event;
-*/
+    bool m_autoReset;
+
+    bool m_signalled;
+    pthread_mutex_t m_mutex;
+    pthread_cond_t m_condition;
 };
 
 }   //namespace Emunisce
