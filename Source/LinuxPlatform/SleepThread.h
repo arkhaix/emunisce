@@ -17,18 +17,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef SLEEPTHREAD_H
+#define SLEEPTHREAD_H
 
-//This is a convenience header for pulling in all platform layer types
 
-#include "PlatformDefines.h"
+namespace Emunisce
+{
 
-#include "PlatformTypes.h"
+void SleepThread(int milliseconds);
 
-#include "SecureCrt.h"
+}
 
-#include "Event.h"
-#include "Mutex.h"
-#include "Thread.h"
-
-#include "SleepThread.h"
-
+#endif
