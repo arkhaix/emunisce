@@ -107,19 +107,6 @@ protected:
 
 	struct SynchronizationInfo
 	{
-	    #if defined EMUNISCE_PLATFORM_WINDOWS
-		LARGE_INTEGER CountsPerSecond;
-		LARGE_INTEGER CountsPerFrame;
-
-		LARGE_INTEGER RunStartTime;
-
-		LARGE_INTEGER CurrentRealTime;
-		LARGE_INTEGER CurrentMachineTime;
-
-		LARGE_INTEGER ElapsedRealTime;
-		LARGE_INTEGER ElapsedMachineTime;
-
-		#elif defined EMUNISCE_PLATFORM_LINUX
 		float MillisecondsPerFrame;
 
 		Time RunStartTime;
@@ -129,8 +116,6 @@ protected:
 
 		Time ElapsedRealTime;
 		Time ElapsedMachineTime;
-
-		#endif
 	};
 
 	SynchronizationInfo m_syncState;
