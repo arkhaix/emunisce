@@ -24,15 +24,17 @@ using namespace Emunisce;
 // Time
 
 LARGE_INTEGER Time::m_startTime;
-LARGE_INTEGER Time::m_resolution;
+double Time::m_millisecondsPerCount;
+double Time::m_countsPerMillisecond;
 int Time::_Invoke_StaticInitialize = Time::StaticInitialize();
 
 int Time::StaticInitialize()
 {
-	QueryPerformanceFrequency(&m_resolution);
-	double secondsPerCount = 1.0 / (double)m_resolution.QuadPart;
-	m_millisecondsPerCount = secondsPerCount * 1000.0;
-	m_countsPerMillisecond = 1.0 / m_millisecondsPerCount;
+	LARGE_INTEGER countsPerSecond;
+	QueryPerformanceFrequency(&countsPerSecond);
+
+	m_countsPerMillisecond = (double)countsPerSecond.QuadPart / 1000.0;
+	m_millisecondsPerCount = 1.0 / m_countsPerMillisecond;
 
 	QueryPerformanceCounter(&m_startTime);
 
@@ -57,24 +59,24 @@ void Time::Zero()
 	m_currentTime = m_startTime;
 }
 
-unsigned int Time::GetTotalMilliseconds()
+float Time::GetTotalMilliseconds()
 {
 	LARGE_INTEGER elapsedTime;
 	elapsedTime.QuadPart = m_currentTime.QuadPart - m_startTime.QuadPart;
 
 	double result = (double)elapsedTime.QuadPart * m_millisecondsPerCount;
 
-	return (unsigned int)result;
+	return (float)result;
 }
 
-void Time::SetTotalMilliseconds(unsigned int totalMilliseconds)
+void Time::SetTotalMilliseconds(float totalMilliseconds)
 {
 	m_currentTime = m_startTime;
 
 	m_currentTime.QuadPart += (LONGLONG)((double)totalMilliseconds * m_countsPerMillisecond);
 }
 
-void Time::AddMilliseconds(int milliseconds)
+void Time::AddMilliseconds(float milliseconds)
 {
 	SetTotalMilliseconds( GetTotalMilliseconds() + milliseconds );
 }
@@ -82,12 +84,12 @@ void Time::AddMilliseconds(int milliseconds)
 
 // TimeSpan
 
-int TimeSpan::GetElapsedMilliseconds(Time past)
+float TimeSpan::GetElapsedMilliseconds(Time past)
 {
 	return GetElapsedMilliseconds(past, Time::Now());
 }
 
-int TimeSpan::GetElapsedMilliseconds(Time a, Time b)
+float TimeSpan::GetElapsedMilliseconds(Time a, Time b)
 {
 	return b.GetTotalMilliseconds() - a.GetTotalMilliseconds();
 }

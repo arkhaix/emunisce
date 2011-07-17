@@ -55,7 +55,7 @@ void Time::Zero()
 
 unsigned int Time::GetTotalMilliseconds()
 {
-    unsigned int result = (unsigned int)(m_startTime.tv_sec - m_currentTime.tv_sec) * 1000;
+    unsigned int result = (unsigned int)(m_currentTime.tv_sec - m_startTime.tv_sec) * 1000;
     result += (m_currentTime.tv_nsec - m_startTime.tv_nsec) / 1e6;
     return result;
 }
