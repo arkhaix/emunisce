@@ -23,6 +23,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "wx/wx.h"
 
 #include "BaseApplication/BaseApplication.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
 
 
 namespace Emunisce
@@ -63,7 +64,7 @@ public:
 
 	virtual void Draw();
 
-	virtual void Resize();
+	virtual void Resize(int newWidth, int newHeight);
 
 	virtual void KeyDown(int key);
 	virtual void KeyUp(int key);
@@ -84,6 +85,11 @@ protected:
 
 	virtual Archive* OpenMacro(const char* name, bool saving);
 	virtual void CloseMacro(Archive* archive);
+
+
+	// Application properties
+
+	OpenGLRenderer* m_renderer;
 
 
 	// wxApp

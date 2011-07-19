@@ -107,7 +107,7 @@ void WindowMain::resized(wxSizeEvent& evt)
     Refresh();
 
     if(m_application != NULL)
-        m_application->Resize();
+        m_application->Resize(evt.GetSize().GetWidth(), evt.GetSize().GetHeight());
 }
 
 /** Inits the OpenGL viewport for drawing in 3D. */
@@ -169,7 +169,7 @@ void WindowMain::render( wxPaintEvent& evt )
 
     wxGLCanvas::SetCurrent(*m_context);
     wxPaintDC(this); // only to be used in paint events. use wxClientDC to paint outside the paint event
-
+	/*
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // ------------- draw some 2D ----------------
@@ -213,7 +213,11 @@ void WindowMain::render( wxPaintEvent& evt )
         glVertex3fv(&v[faces[i][0]][0]);
         glEnd();
     }
+	*/
 
-    glFlush();
-    SwapBuffers();
+	if(m_application != NULL)
+		m_application->Draw();
+
+	glFlush();
+	SwapBuffers();
 }

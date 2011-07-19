@@ -36,6 +36,7 @@ using namespace Emunisce;
 
 Application::Application()
 {
+	m_renderer = new OpenGLRenderer();
 }
 
 Application::~Application()
@@ -48,10 +49,12 @@ Application::~Application()
 
 void Application::NotifyMachineChanged(IEmulatedMachine* newMachine)
 {
+	BaseApplication::NotifyMachineChanged(newMachine);
 }
 
 void Application::RequestShutdown()
 {
+	BaseApplication::RequestShutdown();
 }
 
 
@@ -60,6 +63,8 @@ void Application::RequestShutdown()
 
 void Application::SetVsync(bool enabled)
 {
+	if(m_renderer != NULL)
+		m_renderer->SetVsync(enabled);
 }
 
 
@@ -129,11 +134,15 @@ void Application::Closed()
 
 void Application::Draw()
 {
+	if(m_renderer != NULL)
+		m_renderer->Draw();
 }
 
 
-void Application::Resize()
+void Application::Resize(int newWidth, int newHeight)
 {
+	if(m_renderer != NULL)
+		m_renderer->Resize(newWidth, newHeight);
 }
 
 
@@ -209,5 +218,17 @@ bool Application::OnInit()
     m_frame->SetAutoLayout(true);
 
     m_frame->Show();
+
+
+	m_renderer->Initialize(this, NULL);
+
+	if(m_machine != NULL)
+	{
+		BaseApplication::NotifyMachineChanged(m_machine);
+		m_renderer->SetMachine(m_machine);
+	}
+
+	Run();
+
     return true;
 }
