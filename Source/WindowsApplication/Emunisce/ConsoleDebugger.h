@@ -29,7 +29,7 @@ using namespace std;
 
 #include "MachineIncludes.h"
 
-#include "IUserInterface.h"	///<For DisplayFilter
+#include "BaseApplication/IUserInterface.h"	///<For DisplayFilter
 
 
 namespace Emunisce

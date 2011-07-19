@@ -31,7 +31,7 @@ using namespace Emunisce;
 #include "MachineIncludes.h"
 
 //BaseApplication
-#include "MachineFeature.h"
+#include "BaseApplication/MachineFeature.h"
 
 
 Application::Application()

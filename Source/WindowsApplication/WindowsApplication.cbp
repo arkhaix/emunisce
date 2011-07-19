@@ -43,11 +43,11 @@
 			<Add directory="Emunisce" />
 			<Add directory="GdiPlusRenderer" />
 			<Add directory="KeyboardInput" />
-			<Add directory="OpenGLRenderer" />
 			<Add directory="WaveOutSound" />
 		</Compiler>
 		<Linker>
-			<Add library="..\BaseApplication\libBaseApplication.a" />
+			<Add library="..\BaseApplication\OpenGLRenderer\libOpenGLRenderer.a" />
+			<Add library="..\BaseApplication\BaseApplication\libBaseApplication.a" />
 			<Add library="..\Gameboy\libGameboy.a" />
 			<Add library="..\Machine\libMachine.a" />
 			<Add library="..\Utility\Serialization\libSerialization.a" />
@@ -70,8 +70,6 @@
 		<Unit filename="GdiPlusRenderer\GdiPlusRenderer.h" />
 		<Unit filename="KeyboardInput\KeyboardInput.cpp" />
 		<Unit filename="KeyboardInput\KeyboardInput.h" />
-		<Unit filename="OpenGLRenderer\OpenGLRenderer.cpp" />
-		<Unit filename="OpenGLRenderer\OpenGLRenderer.h" />
 		<Unit filename="WaveOutSound\WaveOutSound.cpp" />
 		<Unit filename="WaveOutSound\WaveOutSound.h" />
 		<Extensions>

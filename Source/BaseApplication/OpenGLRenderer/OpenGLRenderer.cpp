@@ -33,7 +33,7 @@ using namespace Emunisce;
 
 #include "MachineIncludes.h"
 
-#include "../Emunisce/Emunisce.h"
+#include "BaseApplication/BaseApplication.h"
 
 
 
@@ -487,13 +487,20 @@ public:
 
 		_LastFrameDrawn = _LastFrameRendered;
 
+		//todo: client width/height
+		int clientWidth = 1;
+		int clientHeight = 1;
+
 		//Make sure we're covering the whole window (even after resize)
 #ifdef EMUNISCE_PLATFORM_WINDOWS
-		RECT clientRect;
-		GetClientRect(_WindowHandle, &clientRect);
-		int clientWidth = clientRect.right - clientRect.left;
-		int clientHeight = clientRect.bottom - clientRect.top;
-		glViewport(0, 0, clientWidth, clientHeight);
+		if(_WindowHandle != NULL)
+		{
+			RECT clientRect;
+			GetClientRect(_WindowHandle, &clientRect);
+			clientWidth = clientRect.right - clientRect.left;
+			clientHeight = clientRect.bottom - clientRect.top;
+			glViewport(0, 0, clientWidth, clientHeight);
+		}
 #endif
 
 		//Setup 2D projection

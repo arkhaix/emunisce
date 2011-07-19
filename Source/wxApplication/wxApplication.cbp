@@ -8,8 +8,8 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Debug/wxApplication" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj/Debug/" />
+				<Option output="bin\Debug\wxApplication" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug\" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
@@ -18,8 +18,8 @@
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/wxApplication" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj/Release/" />
+				<Option output="bin\Release\wxApplication" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
@@ -34,19 +34,20 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="`wx-config --cflags`" />
-			<Add directory="../Platform" />
-			<Add directory="../Machine" />
-			<Add directory="../Utility" />
-			<Add directory="../BaseApplication" />
+			<Add directory="..\Platform" />
+			<Add directory="..\Machine" />
+			<Add directory="..\Utility" />
+			<Add directory="..\BaseApplication" />
 		</Compiler>
 		<Linker>
 			<Add option="`wx-config --libs --gl-libs`" />
-			<Add library="../BaseApplication/libBaseApplication.a" />
-			<Add library="../Utility/Serialization/libSerialization.a" />
-			<Add library="../Utility/HqNx/libHqNx.a" />
-			<Add library="../Machine/libMachine.a" />
-			<Add library="../Gameboy/libGameboy.a" />
-			<Add library="../LinuxPlatform/libLinuxPlatform.a" />
+			<Add library="..\BaseApplication\OpenGLRenderer\libOpenGLRenderer.a" />
+			<Add library="..\BaseApplication\BaseApplication\libBaseApplication.a" />
+			<Add library="..\Utility\Serialization\libSerialization.a" />
+			<Add library="..\Utility\HqNx\libHqNx.a" />
+			<Add library="..\Machine\libMachine.a" />
+			<Add library="..\Gameboy\libGameboy.a" />
+			<Add library="..\LinuxPlatform\libLinuxPlatform.a" />
 			<Add library="GL" />
 		</Linker>
 		<Unit filename="Application.cpp" />
@@ -56,6 +57,7 @@
 		<Extensions>
 			<code_completion />
 			<debugger />
+			<envvars />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

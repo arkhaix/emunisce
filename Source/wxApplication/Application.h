@@ -22,7 +22,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "wx/wx.h"
 
-#include "../BaseApplication/BaseApplication.h"
+#include "BaseApplication/BaseApplication.h"
 
 
 namespace Emunisce
