@@ -20,7 +20,11 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "OpenGLRenderer.h"
 using namespace Emunisce;
 
+#include "PlatformDefines.h"
+
+#ifdef EMUNISCE_PLATFORM_WINDOWS
 #include "windows.h"
+#endif
 
 #include "gl/gl.h"
 #include "glext.h"
@@ -107,20 +111,23 @@ public:
 	IEmulatedMachine* _Machine;
 	IEmulatedDisplay* _Display;
 
+	bool _NeedsShutdown;
+
+#ifdef EMUNISCE_PLATFORM_WINDOWS
 	HWND _WindowHandle;
 	HDC _DeviceContext;
 	HGLRC _RenderContext;
-	bool _NeedsShutdown;
 
 	HDC _PreservedDeviceContext;
 	HGLRC _PreservedRenderContext;
 
+	typedef void (APIENTRY *TwglSwapIntervalEXT)(int mode);
+	TwglSwapIntervalEXT wglSwapIntervalEXT;
+#endif
+
 	OpenGLScreenBuffer* _ScreenBuffer;
 	int _LastFrameRendered;
 	int _LastFrameDrawn;
-
-	typedef void (APIENTRY *TwglSwapIntervalEXT)(int mode);
-	TwglSwapIntervalEXT wglSwapIntervalEXT;
 
 	GLuint _ScreenTexture;
 
@@ -151,19 +158,22 @@ public:
 		_Machine = NULL;
 		_Display = NULL;
 
+		_NeedsShutdown = false;
+
+#ifdef EMUNISCE_PLATFORM_WINDOWS
 		_WindowHandle = NULL;
 		_DeviceContext = NULL;
 		_RenderContext = NULL;
-		_NeedsShutdown = false;
 
 		_PreservedDeviceContext = NULL;
 		_PreservedRenderContext = NULL;
 
+		wglSwapIntervalEXT = NULL;
+#endif
+
 		_ScreenBuffer = NULL;
 		_LastFrameRendered = -1;
 		_LastFrameDrawn = -1;
-
-		wglSwapIntervalEXT = NULL;
 
 		_ScreenTexture = 0;
 
@@ -177,7 +187,7 @@ public:
 		_PixelBufferObject = 0;
 	}
 
-	bool WglIsExtensionSupported(const char *extension)
+	bool IsExtensionSupported(const char *extension)
 	{
 		//This function is modified from NeHe's tutorial #46.
 		//http://nehe.gamedev.net/data/lessons/lesson.asp?lesson=46
@@ -185,11 +195,13 @@ public:
 		const size_t extlen = strlen(extension);
 		const char *supported = NULL;
 
+#ifdef EMUNISCE_PLATFORM_WINDOWS
 		// Try To Use wglGetExtensionStringARB On Current DC, If Possible
 		PROC wglGetExtString = wglGetProcAddress("wglGetExtensionsStringARB");
 
 		if (wglGetExtString)
 			supported = ((char*(__stdcall*)(HDC))wglGetExtString)(wglGetCurrentDC());
+#endif
 
 		if(supported != NULL)
 		{
@@ -248,6 +260,7 @@ public:
 
 		_NeedsShutdown = true;
 
+#ifdef EMUNISCE_PLATFORM_WINDOWS
 		_DeviceContext = GetDC(_WindowHandle);
 
 		PIXELFORMATDESCRIPTOR desiredPixelFormat;
@@ -269,20 +282,23 @@ public:
 
 		PreserveExistingContext();
 		wglMakeCurrent(_DeviceContext, _RenderContext);
+#endif
 
 		glShadeModel(GL_FLAT);
 		glDisable(GL_DEPTH_TEST);
 		glClearColor(0.0f, 0.0f, 1.0f, 0.0f);
 
 		//Enable v-sync if supported
-		if(WglIsExtensionSupported("WGL_EXT_swap_control") == true)
+#ifdef EMUNISCE_PLATFORM_WINDOWS
+		if(IsExtensionSupported("WGL_EXT_swap_control") == true)
 		{
 			wglSwapIntervalEXT = (TwglSwapIntervalEXT)wglGetProcAddress("wglSwapIntervalEXT");
 			SetVsync(true);
 		}
+#endif
 
 		//Enable PBO method if supported
-		if(WglIsExtensionSupported("GL_ARB_pixel_buffer_object") == true)
+		if(IsExtensionSupported("GL_ARB_pixel_buffer_object") == true)
 		{
 			_PboSupported = true;
 
@@ -308,19 +324,25 @@ public:
 
 		_NeedsShutdown = false;
 	
+#ifdef EMUNISCE_PLATFORM_WINDOWS
 		wglDeleteContext(_RenderContext);
 		ReleaseDC(_WindowHandle, _DeviceContext);
+#endif
 	}
 
 	void PreserveExistingContext()
 	{
+#ifdef EMUNISCE_PLATFORM_WINDOWS
 		_PreservedDeviceContext = wglGetCurrentDC();
 		_PreservedRenderContext = wglGetCurrentContext();
+#endif
 	}
 
 	void RestorePreservedContext()
 	{
+#ifdef EMUNISCE_PLATFORM_WINDOWS
 		wglMakeCurrent(_PreservedDeviceContext, _PreservedRenderContext);
+#endif
 	}
 
 	void SetVsync(bool enabled)
@@ -329,8 +351,10 @@ public:
 		if(enabled == false)
 			mode = 0;
 
+#ifdef EMUNISCE_PLATFORM_WINDOWS
 		if(wglSwapIntervalEXT != NULL)
 			wglSwapIntervalEXT(mode);
+#endif
 	}
 
 	void UpdateTexture()
@@ -453,12 +477,9 @@ public:
 		}
 	}
 
-	void RenderToWindow()
+	void RenderToDisplay()
 	{
 		if(_ScreenBuffer == NULL || _ScreenBuffer->Width <= 0 || _ScreenBuffer->Height <= 0)
-			return;
-
-		if(_Phoenix->GetWindow() == NULL)
 			return;
 
 		if(_LastFrameDrawn == _LastFrameRendered)
@@ -467,11 +488,13 @@ public:
 		_LastFrameDrawn = _LastFrameRendered;
 
 		//Make sure we're covering the whole window (even after resize)
+#ifdef EMUNISCE_PLATFORM_WINDOWS
 		RECT clientRect;
 		GetClientRect(_WindowHandle, &clientRect);
 		int clientWidth = clientRect.right - clientRect.left;
 		int clientHeight = clientRect.bottom - clientRect.top;
 		glViewport(0, 0, clientWidth, clientHeight);
+#endif
 
 		//Setup 2D projection
 		int viewPort[4];
@@ -523,10 +546,12 @@ public:
 	void Draw()
 	{
 		PreserveExistingContext();
+#ifdef EMUNISCE_PLATFORM_WINDOWS
 		wglMakeCurrent(_DeviceContext, _RenderContext);
+#endif
 
 		UpdateTexture();
-		RenderToWindow();
+		RenderToDisplay();
 
 		RestorePreservedContext();
 	}
