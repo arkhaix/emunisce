@@ -26,7 +26,7 @@ using namespace Emunisce;
 #include "windows.h"
 #endif
 
-#include "gl/gl.h"
+#include "GL/gl.h"
 #include "glext.h"
 
 #include "PlatformIncludes.h"
@@ -301,7 +301,6 @@ public:
 			wglSwapIntervalEXT = (TwglSwapIntervalEXT)wglGetProcAddress("wglSwapIntervalEXT");
 			SetVsync(true);
 		}
-#endif
 
 		//Enable PBO method if supported
 		if(IsExtensionSupported("GL_ARB_pixel_buffer_object") == true)
@@ -315,12 +314,11 @@ public:
 			glMapBufferARB = (TglMapBufferARB)wglGetProcAddress("glMapBufferARB");
 			glUnmapBufferARB = (TglUnmapBufferARB)wglGetProcAddress("glUnmapBufferARB");
 
-			if(glGenBuffersARB == NULL || glBindBufferARB == NULL || glBufferDataARB == NULL || 
+			if(glGenBuffersARB == NULL || glBindBufferARB == NULL || glBufferDataARB == NULL ||
 				glDeleteBuffersARB == NULL || glMapBufferARB == NULL || glUnmapBufferARB == NULL)
 				_PboSupported = false;
 		}
 
-#ifdef EMUNISCE_PLATFORM_WINDOWS
 		if(_WindowHandle != NULL)
 			RestorePreservedContext();
 #endif
@@ -332,7 +330,7 @@ public:
 			return;
 
 		_NeedsShutdown = false;
-	
+
 #ifdef EMUNISCE_PLATFORM_WINDOWS
 		if(_WindowHandle != NULL)
 		{
@@ -402,7 +400,7 @@ public:
 		int numPixels = displayWidth * displayHeight;
 		memcpy((void*)_ScreenBuffer->Pixels, (void*)displayScreen->GetPixels(), numPixels * sizeof(DisplayPixel));
 		*/
-		
+
 		//PixelBufferObject method
 		if(_PboSupported == true)
 		{
@@ -469,7 +467,7 @@ public:
 			{
 				if(_ScreenTexture != 0)
 					glDeleteTextures(1, &_ScreenTexture);
-			
+
 				glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 				glPixelStorei(GL_PACK_ALIGNMENT, 1);
 				glGenTextures(1, &_ScreenTexture);
@@ -537,16 +535,18 @@ public:
 			glVertex2f((GLfloat)_ClientWidth, (GLfloat)_ClientHeight);
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
-		
+
 		//Clean up the matrix stack
 		glMatrixMode(GL_PROJECTION);
-		glPopMatrix();   
+		glPopMatrix();
 		glMatrixMode(GL_MODELVIEW);
 		glPopMatrix();
 
 		//Display the rendered frame to the window
+#ifdef EMUNISCE_PLATFORM_WINDOWS
 		if(_DeviceContext != NULL)
 			SwapBuffers(_DeviceContext);
+#endif
 	}
 
 
@@ -588,7 +588,9 @@ OpenGLRenderer::~OpenGLRenderer()
 void OpenGLRenderer::Initialize(BaseApplication* phoenix, void* windowHandle)
 {
 	m_private->_Application = phoenix;
+#ifdef EMUNSICE_PLATFORM_WINDOWS
 	m_private->_WindowHandle = (HWND)windowHandle;
+#endif
 
 	m_private->InitializeOpenGL();
 }

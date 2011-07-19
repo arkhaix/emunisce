@@ -36,10 +36,10 @@ public:
 
     void Zero();
 
-    unsigned int GetTotalMilliseconds();
-    void SetTotalMilliseconds(unsigned int totalMilliseconds);
+    float GetTotalMilliseconds();
+    void SetTotalMilliseconds(float totalMilliseconds);
 
-    void AddMilliseconds(int milliseconds);
+    void AddMilliseconds(float milliseconds);
 
 private:
 
@@ -56,8 +56,8 @@ class TimeSpan
 {
 public:
 
-    static int GetElapsedMilliseconds(Time past);   ///<Gets milliseconds elapsed between past and Time::Now().
-    static int GetElapsedMilliseconds(Time a, Time b);   ///<Gets milliseconds elapsed between a and b.  Can return a negative number if b is earlier than a.
+    static float GetElapsedMilliseconds(Time past);   ///<Gets milliseconds elapsed between past and Time::Now().
+    static float GetElapsedMilliseconds(Time a, Time b);   ///<Gets milliseconds elapsed between a and b.  Can return a negative number if b is earlier than a.
 };
 
 }   //namespace Emunisce

@@ -53,19 +53,19 @@ void Time::Zero()
     m_currentTime = m_startTime;
 }
 
-unsigned int Time::GetTotalMilliseconds()
+float Time::GetTotalMilliseconds()
 {
-    unsigned int result = (unsigned int)(m_currentTime.tv_sec - m_startTime.tv_sec) * 1000;
-    result += (m_currentTime.tv_nsec - m_startTime.tv_nsec) / 1e6;
+    float result = (float)(m_currentTime.tv_sec - m_startTime.tv_sec) * 1000.f;
+    result += (float)(m_currentTime.tv_nsec - m_startTime.tv_nsec) / 1e6;
     return result;
 }
 
-void Time::SetTotalMilliseconds(unsigned int totalMilliseconds)
+void Time::SetTotalMilliseconds(float totalMilliseconds)
 {
     m_currentTime = m_startTime;
 
-    m_currentTime.tv_sec += (totalMilliseconds / 1000);
-    totalMilliseconds /= 1000;
+    m_currentTime.tv_sec += (totalMilliseconds / 1000.f);
+    totalMilliseconds /= 1000.f;
 
     m_currentTime.tv_nsec += (totalMilliseconds * 1e6);
     while(m_currentTime.tv_nsec > 1e9)
@@ -75,7 +75,7 @@ void Time::SetTotalMilliseconds(unsigned int totalMilliseconds)
     }
 }
 
-void Time::AddMilliseconds(int milliseconds)
+void Time::AddMilliseconds(float milliseconds)
 {
     SetTotalMilliseconds( GetTotalMilliseconds() + milliseconds );
 }
@@ -83,12 +83,12 @@ void Time::AddMilliseconds(int milliseconds)
 
 // TimeSpan
 
-int TimeSpan::GetElapsedMilliseconds(Time past)
+float TimeSpan::GetElapsedMilliseconds(Time past)
 {
     return GetElapsedMilliseconds(past, Time::Now());
 }
 
-int TimeSpan::GetElapsedMilliseconds(Time a, Time b)
+float TimeSpan::GetElapsedMilliseconds(Time a, Time b)
 {
     return b.GetTotalMilliseconds() - a.GetTotalMilliseconds();
 }
