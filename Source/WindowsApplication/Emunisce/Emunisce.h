@@ -20,11 +20,13 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef EMUNISCE_H
 #define EMUNISCE_H
 
-#include "../BaseApplication/BaseApplication.h"
+//BaseApplication
+#include "BaseApplication/BaseApplication.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
 
+//WindowsApplication
 #include "../GdiPlusRenderer/GdiPlusRenderer.h"
 #include "../KeyboardInput/KeyboardInput.h"
-#include "../OpenGLRenderer/OpenGLRenderer.h"
 #include "../WaveOutSound/WaveOutSound.h"
 
 #include "../WindowsPlatform/Window.h"

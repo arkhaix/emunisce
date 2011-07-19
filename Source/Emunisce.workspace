@@ -18,24 +18,21 @@
 			<Depends filename="Utility/HqNx/HqNx.cbp" />
 			<Depends filename="Machine/Machine.cbp" />
 			<Depends filename="Gameboy/Gameboy.cbp" />
-			<Depends filename="BaseApplication/BaseApplication.cbp" />
+			<Depends filename="BaseApplication/BaseApplication/BaseApplication.cbp" />
+			<Depends filename="BaseApplication/OpenGLRenderer/OpenGLRenderer.cbp" />
 		</Project>
 		<Project filename="wxApplication/wxApplication.cbp">
 			<Depends filename="Platform/Platform.cbp" />
 			<Depends filename="LinuxPlatform/LinuxPlatform.cbp" />
+			<Depends filename="WindowsPlatform/WindowsPlatform.cbp" />
 			<Depends filename="Utility/Serialization/Serialization.cbp" />
 			<Depends filename="Utility/HqNx/HqNx.cbp" />
 			<Depends filename="Machine/Machine.cbp" />
 			<Depends filename="Gameboy/Gameboy.cbp" />
-			<Depends filename="BaseApplication/BaseApplication.cbp" />
+			<Depends filename="BaseApplication/BaseApplication/BaseApplication.cbp" />
+			<Depends filename="BaseApplication/OpenGLRenderer/OpenGLRenderer.cbp" />
 		</Project>
-		<Project filename="BaseApplication/BaseApplication.cbp">
-			<Depends filename="Platform/Platform.cbp" />
-			<Depends filename="LinuxPlatform/LinuxPlatform.cbp" />
-			<Depends filename="Utility/Serialization/Serialization.cbp" />
-			<Depends filename="Utility/HqNx/HqNx.cbp" />
-			<Depends filename="Machine/Machine.cbp" />
-			<Depends filename="Gameboy/Gameboy.cbp" />
-		</Project>
+		<Project filename="BaseApplication/BaseApplication/BaseApplication.cbp" />
+		<Project filename="BaseApplication/OpenGLRenderer/OpenGLRenderer.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

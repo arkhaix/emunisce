@@ -41,8 +41,8 @@ using namespace std;
 #include "MachineIncludes.h"
 
 //Application
+#include "BaseApplication/IUserInterface.h"
 #include "Emunisce.h"
-#include "IUserInterface.h"
 #include "../WaveOutSound/WaveOutSound.h"
 
 

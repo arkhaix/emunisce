@@ -30,7 +30,7 @@ using namespace Emunisce;
 
 #include "MachineIncludes.h"
 
-#include "MachineFeature.h"
+#include "BaseApplication/MachineFeature.h"
 
 #include "Serialization/SerializationIncludes.h"
 #include "Serialization/FileSerializer.h"

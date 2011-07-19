@@ -148,8 +148,11 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\BaseApplication\BaseApplication.vcxproj">
+    <ProjectReference Include="..\..\BaseApplication\BaseApplication\BaseApplication.vcxproj">
       <Project>{cf7183bb-c90f-4c19-b0c1-9932ad2abe58}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BaseApplication\OpenGLRenderer\OpenGLRenderer.vcxproj">
+      <Project>{4913cbb4-2d7d-4d39-b3c2-1440ebff3953}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Gameboy\Gameboy.vcxproj">
       <Project>{9d59f9e7-2668-4089-9aab-e609df7d6cad}</Project>
@@ -171,9 +174,6 @@
     </ProjectReference>
     <ProjectReference Include="..\KeyboardInput\KeyboardInput.vcxproj">
       <Project>{05e90435-3f0e-4575-8b8f-a1da99c34b58}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\OpenGLRenderer\OpenGLRenderer.vcxproj">
-      <Project>{4913cbb4-2d7d-4d39-b3c2-1440ebff3953}</Project>
     </ProjectReference>
     <ProjectReference Include="..\WaveOutSound\WaveOutSound.vcxproj">
       <Project>{b47d9786-8300-4349-ab06-5fce239da5c5}</Project>
