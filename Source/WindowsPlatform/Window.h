@@ -42,7 +42,7 @@ namespace Emunisce
 
 		virtual void Draw() = 0;
 
-		virtual void Resize() = 0;
+		virtual void Resize(int newWidth, int newHeight) = 0;
 
 		virtual void KeyDown(int key) = 0;
 		virtual void KeyUp(int key) = 0;

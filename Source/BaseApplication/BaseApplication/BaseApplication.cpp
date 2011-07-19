@@ -98,6 +98,8 @@ void BaseApplication::NotifyMachineChanged(IEmulatedMachine* newMachine)
 	}
 
 	m_machineRunner->SetMachine(m_machine);
+
+	newMachine->SetApplicationInterface(this);
 }
 
 IEmulatedMachine* BaseApplication::GetMachine()

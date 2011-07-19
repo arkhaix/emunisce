@@ -106,7 +106,7 @@ class OpenGLRenderer_Private
 {
 public:
 
-	EmunisceApplication* _Phoenix;
+	BaseApplication* _Application;
 
 	IEmulatedMachine* _Machine;
 	IEmulatedDisplay* _Display;
@@ -131,6 +131,9 @@ public:
 
 	GLuint _ScreenTexture;
 
+	int _ClientWidth;
+	int _ClientHeight;
+
 
 	bool _PboSupported;
 
@@ -153,7 +156,7 @@ public:
 
 	OpenGLRenderer_Private()
 	{
-		_Phoenix = NULL;
+		_Application = NULL;
 
 		_Machine = NULL;
 		_Display = NULL;
@@ -176,6 +179,9 @@ public:
 		_LastFrameDrawn = -1;
 
 		_ScreenTexture = 0;
+
+		_ClientWidth = 1;
+		_ClientHeight = 1;
 
 		_PboSupported = false;
 		glGenBuffersARB = NULL;
@@ -255,33 +261,33 @@ public:
 
 	void InitializeOpenGL()
 	{
-		if(_WindowHandle == NULL)
-			return;
-
 		_NeedsShutdown = true;
 
 #ifdef EMUNISCE_PLATFORM_WINDOWS
-		_DeviceContext = GetDC(_WindowHandle);
+		if(_WindowHandle != NULL)
+		{
+			_DeviceContext = GetDC(_WindowHandle);
 
-		PIXELFORMATDESCRIPTOR desiredPixelFormat;
-		ZeroMemory(&desiredPixelFormat, sizeof(desiredPixelFormat));
-		desiredPixelFormat.nSize = sizeof(desiredPixelFormat);
+			PIXELFORMATDESCRIPTOR desiredPixelFormat;
+			ZeroMemory(&desiredPixelFormat, sizeof(desiredPixelFormat));
+			desiredPixelFormat.nSize = sizeof(desiredPixelFormat);
 
-		desiredPixelFormat.nVersion = 1;
-		desiredPixelFormat.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
-		desiredPixelFormat.iPixelType = PFD_TYPE_RGBA;
-		desiredPixelFormat.cColorBits = 24;
-		desiredPixelFormat.cDepthBits = 16;
-		desiredPixelFormat.iLayerType = PFD_MAIN_PLANE;
+			desiredPixelFormat.nVersion = 1;
+			desiredPixelFormat.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+			desiredPixelFormat.iPixelType = PFD_TYPE_RGBA;
+			desiredPixelFormat.cColorBits = 24;
+			desiredPixelFormat.cDepthBits = 16;
+			desiredPixelFormat.iLayerType = PFD_MAIN_PLANE;
 
-		int pixelFormat;
-		pixelFormat = ChoosePixelFormat(_DeviceContext, &desiredPixelFormat);
-		SetPixelFormat(_DeviceContext, pixelFormat, &desiredPixelFormat);
+			int pixelFormat;
+			pixelFormat = ChoosePixelFormat(_DeviceContext, &desiredPixelFormat);
+			SetPixelFormat(_DeviceContext, pixelFormat, &desiredPixelFormat);
 
-		_RenderContext = wglCreateContext(_DeviceContext);
+			_RenderContext = wglCreateContext(_DeviceContext);
 
-		PreserveExistingContext();
-		wglMakeCurrent(_DeviceContext, _RenderContext);
+			PreserveExistingContext();
+			wglMakeCurrent(_DeviceContext, _RenderContext);
+		}
 #endif
 
 		glShadeModel(GL_FLAT);
@@ -314,7 +320,10 @@ public:
 				_PboSupported = false;
 		}
 
-		RestorePreservedContext();
+#ifdef EMUNISCE_PLATFORM_WINDOWS
+		if(_WindowHandle != NULL)
+			RestorePreservedContext();
+#endif
 	}
 
 	void ShutdownOpenGL()
@@ -325,23 +334,26 @@ public:
 		_NeedsShutdown = false;
 	
 #ifdef EMUNISCE_PLATFORM_WINDOWS
-		wglDeleteContext(_RenderContext);
-		ReleaseDC(_WindowHandle, _DeviceContext);
+		if(_WindowHandle != NULL)
+		{
+			wglDeleteContext(_RenderContext);
+			ReleaseDC(_WindowHandle, _DeviceContext);
+		}
 #endif
 	}
 
 	void PreserveExistingContext()
 	{
 #ifdef EMUNISCE_PLATFORM_WINDOWS
-		_PreservedDeviceContext = wglGetCurrentDC();
-		_PreservedRenderContext = wglGetCurrentContext();
+		//_PreservedDeviceContext = wglGetCurrentDC();
+		//_PreservedRenderContext = wglGetCurrentContext();
 #endif
 	}
 
 	void RestorePreservedContext()
 	{
 #ifdef EMUNISCE_PLATFORM_WINDOWS
-		wglMakeCurrent(_PreservedDeviceContext, _PreservedRenderContext);
+		//wglMakeCurrent(_PreservedDeviceContext, _PreservedRenderContext);
 #endif
 	}
 
@@ -487,21 +499,8 @@ public:
 
 		_LastFrameDrawn = _LastFrameRendered;
 
-		//todo: client width/height
-		int clientWidth = 1;
-		int clientHeight = 1;
-
 		//Make sure we're covering the whole window (even after resize)
-#ifdef EMUNISCE_PLATFORM_WINDOWS
-		if(_WindowHandle != NULL)
-		{
-			RECT clientRect;
-			GetClientRect(_WindowHandle, &clientRect);
-			clientWidth = clientRect.right - clientRect.left;
-			clientHeight = clientRect.bottom - clientRect.top;
-			glViewport(0, 0, clientWidth, clientHeight);
-		}
-#endif
+		glViewport(0, 0, _ClientWidth, _ClientHeight);
 
 		//Setup 2D projection
 		int viewPort[4];
@@ -529,13 +528,13 @@ public:
 			glVertex2f(-1.0,-1.0);
 
 			glTexCoord2f(1.0, 1.0);
-			glVertex2f((GLfloat)clientWidth, -1.0);
+			glVertex2f((GLfloat)_ClientWidth, -1.0);
 
 			glTexCoord2f(0.0, 0.0);
-			glVertex2f(-1.0, (GLfloat)clientHeight);
+			glVertex2f(-1.0, (GLfloat)_ClientHeight);
 
 			glTexCoord2f(1.0, 0.0);
-			glVertex2f((GLfloat)clientWidth, (GLfloat)clientHeight);
+			glVertex2f((GLfloat)_ClientWidth, (GLfloat)_ClientHeight);
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
 		
@@ -546,7 +545,8 @@ public:
 		glPopMatrix();
 
 		//Display the rendered frame to the window
-		SwapBuffers(_DeviceContext);
+		if(_DeviceContext != NULL)
+			SwapBuffers(_DeviceContext);
 	}
 
 
@@ -554,13 +554,20 @@ public:
 	{
 		PreserveExistingContext();
 #ifdef EMUNISCE_PLATFORM_WINDOWS
-		wglMakeCurrent(_DeviceContext, _RenderContext);
+		if(_DeviceContext != NULL && _RenderContext != NULL)
+			wglMakeCurrent(_DeviceContext, _RenderContext);
 #endif
 
 		UpdateTexture();
 		RenderToDisplay();
 
 		RestorePreservedContext();
+	}
+
+	void Resize(int newWidth, int newHeight)
+	{
+		_ClientWidth = newWidth;
+		_ClientHeight = newHeight;
 	}
 };
 
@@ -578,9 +585,9 @@ OpenGLRenderer::~OpenGLRenderer()
 }
 
 
-void OpenGLRenderer::Initialize(EmunisceApplication* phoenix, void* windowHandle)
+void OpenGLRenderer::Initialize(BaseApplication* phoenix, void* windowHandle)
 {
-	m_private->_Phoenix = phoenix;
+	m_private->_Application = phoenix;
 	m_private->_WindowHandle = (HWND)windowHandle;
 
 	m_private->InitializeOpenGL();
@@ -615,4 +622,9 @@ void OpenGLRenderer::SetVsync(bool enabled)
 void OpenGLRenderer::Draw()
 {
 	m_private->Draw();
+}
+
+void OpenGLRenderer::Resize(int newWidth, int newHeight)
+{
+	m_private->Resize(newWidth, newHeight);
 }

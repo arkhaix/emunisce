@@ -38,7 +38,6 @@ using namespace std;
 namespace Emunisce
 {
 
-class MachineRunner;
 class ConsoleDebugger;
 
 class GdiPlusRenderer;
@@ -89,7 +88,7 @@ public:
 
 	virtual void Draw();
 
-	virtual void Resize();
+	virtual void Resize(int newWidth, int newHeight);
 
 	virtual void KeyDown(int key);
 	virtual void KeyUp(int key);
@@ -144,7 +143,6 @@ private:
 
 	IEmulatedMachine* m_pendingMachine;
 
-	MachineRunner* m_runner;
 	ConsoleDebugger* m_debugger;
 
 	//GdiPlusRenderer* m_renderer;

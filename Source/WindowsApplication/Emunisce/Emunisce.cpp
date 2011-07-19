@@ -283,8 +283,11 @@ void EmunisceApplication::Draw()
 		m_renderer->Draw();
 }
 
-void EmunisceApplication::Resize()
+void EmunisceApplication::Resize(int newWidth, int newHeight)
 {
+	if(m_renderer != NULL)
+		m_renderer->Resize(newWidth, newHeight);
+
 	AdjustWindowSize();
 }
 
@@ -390,8 +393,6 @@ void EmunisceApplication::HandlePendingMachineChange()
 
 	//Adjust to make up for aspect ratio, borders, titlebar, menu, etc
 	AdjustWindowSize();
-
-	m_machine->SetApplicationInterface(this);
 
 	m_pendingMachine = NULL;
 }

@@ -259,8 +259,15 @@ LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 	case WM_SIZE:
 		{
 			ScopedMutex scopedMutex(m_listenersLock);
+
+			RECT clientRect;
+			GetClientRect(m_windowHandle, &clientRect);
+			int newWidth = clientRect.right - clientRect.left;
+			int newHeight = clientRect.bottom - clientRect.top;
+
 			for(auto iter = m_listeners.begin(); iter != m_listeners.end(); ++iter)
-				(*iter)->Resize();
+				(*iter)->Resize(newWidth, newHeight);
+
 			return 0;
 		}
 
