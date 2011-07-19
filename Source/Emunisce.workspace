@@ -10,7 +10,7 @@
 		<Project filename="Gameboy/Gameboy.cbp">
 			<Depends filename="Utility/HqNx/HqNx.cbp" />
 		</Project>
-		<Project filename="WindowsApplication/WindowsApplication.cbp" active="1">
+		<Project filename="WindowsApplication/WindowsApplication.cbp">
 			<Depends filename="Platform/Platform.cbp" />
 			<Depends filename="LinuxPlatform/LinuxPlatform.cbp" />
 			<Depends filename="WindowsPlatform/WindowsPlatform.cbp" />
@@ -21,7 +21,7 @@
 			<Depends filename="BaseApplication/BaseApplication/BaseApplication.cbp" />
 			<Depends filename="BaseApplication/OpenGLRenderer/OpenGLRenderer.cbp" />
 		</Project>
-		<Project filename="wxApplication/wxApplication.cbp">
+		<Project filename="wxApplication/wxApplication.cbp" active="1">
 			<Depends filename="Platform/Platform.cbp" />
 			<Depends filename="LinuxPlatform/LinuxPlatform.cbp" />
 			<Depends filename="WindowsPlatform/WindowsPlatform.cbp" />
