@@ -51,24 +51,15 @@ public:
 	WindowMain(wxFrame* parent, int* args);
 	virtual ~WindowMain();
 
-	void resized(wxSizeEvent& evt);
-
 	int getWidth();
 	int getHeight();
 
-	void render(wxPaintEvent& evt);
-	void prepare3DViewport(int topleft_x, int topleft_y, int bottomright_x, int bottomright_y);
-	void prepare2DViewport(int topleft_x, int topleft_y, int bottomright_x, int bottomright_y);
-
 	// events
-	void mouseMoved(wxMouseEvent& event);
-	void mouseDown(wxMouseEvent& event);
-	void mouseWheelMoved(wxMouseEvent& event);
-	void mouseReleased(wxMouseEvent& event);
-	void rightClick(wxMouseEvent& event);
-	void mouseLeftWindow(wxMouseEvent& event);
-	void keyPressed(wxKeyEvent& event);
-	void keyReleased(wxKeyEvent& event);
+	void OnKeyDown(wxKeyEvent& event);
+	void OnKeyUp(wxKeyEvent& event);
+	void OnResize(wxSizeEvent& event);
+	void OnPaint(wxPaintEvent& event);
+	void OnEraseBackground(wxEraseEvent& event);
 	void OnIdle(wxIdleEvent& event);
 
 	DECLARE_EVENT_TABLE()

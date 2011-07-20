@@ -43,36 +43,52 @@ void WindowMain::SetApplication(Application* application)
 
 
 BEGIN_EVENT_TABLE(WindowMain, wxGLCanvas)
-EVT_MOTION(WindowMain::mouseMoved)
-EVT_LEFT_DOWN(WindowMain::mouseDown)
-EVT_LEFT_UP(WindowMain::mouseReleased)
-EVT_RIGHT_DOWN(WindowMain::rightClick)
-EVT_LEAVE_WINDOW(WindowMain::mouseLeftWindow)
-EVT_SIZE(WindowMain::resized)
-EVT_KEY_DOWN(WindowMain::keyPressed)
-EVT_KEY_UP(WindowMain::keyReleased)
-EVT_MOUSEWHEEL(WindowMain::mouseWheelMoved)
-EVT_PAINT(WindowMain::render)
+EVT_KEY_DOWN(WindowMain::OnKeyDown)
+EVT_KEY_UP(WindowMain::OnKeyUp)
+EVT_SIZE(WindowMain::OnResize)
+EVT_PAINT(WindowMain::OnPaint)
+EVT_ERASE_BACKGROUND(WindowMain::OnEraseBackground)
 EVT_IDLE(WindowMain::OnIdle)
 END_EVENT_TABLE()
 
 
-// some useful events to use
-void WindowMain::mouseMoved(wxMouseEvent& event) {}
-void WindowMain::mouseDown(wxMouseEvent& event) {}
-void WindowMain::mouseWheelMoved(wxMouseEvent& event) {}
-void WindowMain::mouseReleased(wxMouseEvent& event) {}
-void WindowMain::rightClick(wxMouseEvent& event) {}
-void WindowMain::mouseLeftWindow(wxMouseEvent& event) {}
-
-void WindowMain::keyPressed(wxKeyEvent& event)
+void WindowMain::OnKeyDown(wxKeyEvent& event)
 {
     //todo
 }
 
-void WindowMain::keyReleased(wxKeyEvent& event)
+void WindowMain::OnKeyUp(wxKeyEvent& event)
 {
     //todo
+}
+
+void WindowMain::OnResize(wxSizeEvent& event)
+{
+//	wxGLCanvas::OnSize(evt);
+
+    Refresh();
+
+    if(m_application != NULL)
+        m_application->Resize(event.GetSize().GetWidth(), event.GetSize().GetHeight());
+}
+
+void WindowMain::OnPaint(wxPaintEvent& event)
+{
+    if(!IsShown()) return;
+
+    wxGLCanvas::SetCurrent(*m_context);
+    wxPaintDC(this); // only to be used in paint events. use wxClientDC to paint outside the paint event
+
+	if(m_application != NULL)
+		m_application->Draw();
+
+	glFlush();
+	SwapBuffers();
+}
+
+void WindowMain::OnEraseBackground(wxEraseEvent& event)
+{
+    //Do nothing.  Prevents flicker on Windows.
 }
 
 void WindowMain::OnIdle(wxIdleEvent &event)
@@ -99,16 +115,6 @@ WindowMain::~WindowMain()
 	delete m_context;
 }
 
-void WindowMain::resized(wxSizeEvent& evt)
-{
-//	wxGLCanvas::OnSize(evt);
-
-    Refresh();
-
-    if(m_application != NULL)
-        m_application->Resize(evt.GetSize().GetWidth(), evt.GetSize().GetHeight());
-}
-
 int WindowMain::getWidth()
 {
     return GetSize().x;
@@ -119,18 +125,4 @@ int WindowMain::getHeight()
     return GetSize().y;
 }
 
-
-void WindowMain::render( wxPaintEvent& evt )
-{
-    if(!IsShown()) return;
-
-    wxGLCanvas::SetCurrent(*m_context);
-    wxPaintDC(this); // only to be used in paint events. use wxClientDC to paint outside the paint event
-
-	if(m_application != NULL)
-		m_application->Draw();
-
-	glFlush();
-	SwapBuffers();
-}
 
