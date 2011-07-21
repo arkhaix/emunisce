@@ -54,12 +54,14 @@ END_EVENT_TABLE()
 
 void WindowMain::OnKeyDown(wxKeyEvent& event)
 {
-    //todo
+    if(m_application != NULL)
+        m_application->KeyDown(event.GetKeyCode());
 }
 
 void WindowMain::OnKeyUp(wxKeyEvent& event)
 {
-    //todo
+    if(m_application != NULL)
+        m_application->KeyUp(event.GetKeyCode());
 }
 
 void WindowMain::OnResize(wxSizeEvent& event)

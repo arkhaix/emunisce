@@ -55,6 +55,8 @@ void Application::NotifyMachineChanged(IEmulatedMachine* newMachine)
 void Application::RequestShutdown()
 {
 	BaseApplication::RequestShutdown();
+	m_windowMain->Close();
+	m_frame->Close();
 }
 
 
@@ -83,7 +85,7 @@ void Application::DisplayImportantMessage(MessageType::Type messageType, const c
 	else if(messageType == MessageType::Error)
 		iconType = wxICON_ERROR;
 
-    wxMessageBox(wxString::FromAscii(message), wxT("Emunisce"), iconType | wxOK);
+    wxMessageBox(wxString::FromAscii(message), _("Emunisce"), iconType | wxOK);
 }
 
 PromptResult::Type Application::DisplayPrompt(PromptType::Type promptType, const char* title, const char* message, void** extraResult)
@@ -114,7 +116,23 @@ PromptResult::Type Application::DisplayPrompt(PromptType::Type promptType, const
 
 bool Application::SelectFile(char** result, const char* fileMask)
 {
-    return false;
+    if(result == NULL)
+		return false;
+
+    if(fileMask == NULL)
+        fileMask = "*.*|*.*";
+
+    wxFileDialog openFileDialog(NULL, _("Open File"), _(""), _(""), wxString::FromAscii(fileMask), wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+
+    if (openFileDialog.ShowModal() == wxID_CANCEL)
+        return false;
+
+    int bufferSize = openFileDialog.GetPath().Length()+1;
+
+    *result = (char*)malloc(bufferSize);
+    strcpy_s(*result, bufferSize, openFileDialog.GetPath().ToAscii());
+
+    return true;
 }
 
 
@@ -148,6 +166,31 @@ void Application::Resize(int newWidth, int newHeight)
 
 void Application::KeyDown(int key)
 {
+    char* fileSelected = NULL;
+    char buffer[1024];
+
+    if(key >= 'A' && key <= 'Z')
+        key = 'a' + (key-'A');
+
+    if(key == 'q' || key == WXK_ESCAPE)
+        RequestShutdown();
+
+    else if(key == (int)'t')
+        DisplayImportantMessage(MessageType::Information, "test");
+
+    else if(key == (int)'o')
+    {
+        SelectFile(&fileSelected, NULL);
+        sprintf_s(buffer, 1024, "You chose: '%s'", fileSelected);
+        DisplayImportantMessage(MessageType::Information, buffer);
+        free(fileSelected);
+    }
+
+    else
+    {
+        sprintf_s(buffer, 1024, "Unknown key code: %d", key);
+        DisplayImportantMessage(MessageType::Warning, buffer);
+    }
 }
 
 void Application::KeyUp(int key)
@@ -218,6 +261,8 @@ bool Application::OnInit()
     m_frame->SetAutoLayout(true);
 
     m_frame->Show();
+
+    m_windowMain->SetFocus();
 
 
 	m_renderer->Initialize(this, NULL);
