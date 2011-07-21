@@ -22,6 +22,8 @@ using namespace Emunisce;
 
 #include "PlatformTypes.h"
 
+#include <math.h>   ///<fmod
+
 
 // Time
 
@@ -64,11 +66,13 @@ void Time::SetTotalMilliseconds(float totalMilliseconds)
 {
     m_currentTime = m_startTime;
 
-    m_currentTime.tv_sec += (totalMilliseconds / 1000.f);
-    totalMilliseconds /= 1000.f;
+    int numSeconds = totalMilliseconds / 1000.f;
+    m_currentTime.tv_sec += numSeconds;
+    totalMilliseconds = fmodf(totalMilliseconds, 1000.f);
 
-    m_currentTime.tv_nsec += (totalMilliseconds * 1e6);
-    while(m_currentTime.tv_nsec > 1e9)
+    int numNanoseconds = totalMilliseconds * 1e6;
+    m_currentTime.tv_nsec += numNanoseconds;
+    while(m_currentTime.tv_nsec >= 1e9)
     {
         m_currentTime.tv_sec++;
         m_currentTime.tv_nsec -= 1e9;
