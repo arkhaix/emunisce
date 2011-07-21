@@ -205,7 +205,7 @@ IMPLEMENT_APP(Application)
 bool Application::OnInit()
 {
     wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
-    m_frame = new wxFrame((wxFrame *)NULL, -1,  wxT("Hello GL World"), wxPoint(50,50), wxSize(400,200));
+    m_frame = new wxFrame((wxFrame *)NULL, -1, wxT("Emunisce"), wxPoint(50,50), wxSize(320,240));
 
     int args[] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0};
 

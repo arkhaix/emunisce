@@ -115,7 +115,7 @@ void Thread::Sleep(unsigned int milliseconds)
 {
     Time startTime = Time::Now();
 
-    long int elapsedMilliseconds = 0;
+    float elapsedMilliseconds = 0.f;
 
     do
     {
@@ -123,6 +123,6 @@ void Thread::Sleep(unsigned int milliseconds)
 
         elapsedMilliseconds = Time::Now().GetTotalMilliseconds() - startTime.GetTotalMilliseconds();
 
-    }   while(elapsedMilliseconds < milliseconds);
+    }   while((unsigned int)elapsedMilliseconds < milliseconds);
 }
 
