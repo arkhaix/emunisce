@@ -38,6 +38,7 @@ using namespace Emunisce;
 #include "MachineIncludes.h"
 
 //BaseApplication
+#include "BaseApplication/InputManager.h"
 #include "BaseApplication/MachineFeature.h"
 
 //Serialization
@@ -48,6 +49,8 @@ using namespace Emunisce;
 Application::Application()
 {
 	m_renderer = new OpenGLRenderer();
+
+	MapDefaultKeys();
 }
 
 Application::~Application()
@@ -178,18 +181,17 @@ void Application::Resize(int newWidth, int newHeight)
 void Application::KeyDown(int key)
 {
     char* fileSelected = NULL;
-    char buffer[1024];
 
-    if(key >= 'A' && key <= 'Z')
-        key = 'a' + (key-'A');
+    if(key >= 'a' && key <= 'z')
+        key = 'A' + (key-'a');
 
-    if(key == 'q' || key == WXK_ESCAPE)
+    if(key == 'Q' || key == WXK_ESCAPE)
         RequestShutdown();
 
-    else if(key == (int)'t')
+    else if(key == 'T')
         DisplayImportantMessage(MessageType::Information, "test");
 
-    else if(key == (int)'o')
+    else if(key == 'O')
     {
         SelectFile(&fileSelected, NULL);
 
@@ -202,10 +204,19 @@ void Application::KeyDown(int key)
             free(fileSelected);
         }
     }
+
+    else
+    {
+        m_inputManager->KeyDown(key);
+    }
 }
 
 void Application::KeyUp(int key)
 {
+    if(key >= 'a' && key <= 'z')
+        key = 'A' + (key-'a');
+
+    m_inputManager->KeyUp(key);
 }
 
 
@@ -396,6 +407,37 @@ string Application::GetMacroFile(const char* name)
 
     return result;
 #endif
+}
+
+
+
+// Input
+
+void Application::MapDefaultKeys()
+{
+    m_inputManager->MapKey("Up", WXK_UP);
+    m_inputManager->MapKey("Down", WXK_DOWN);
+    m_inputManager->MapKey("Left", WXK_LEFT);
+    m_inputManager->MapKey("Right", WXK_RIGHT);
+
+    m_inputManager->MapKey("B", 'Q');
+    m_inputManager->MapKey("B", 'A');
+    m_inputManager->MapKey("B", 'Z');
+
+    m_inputManager->MapKey("A", 'W');
+    m_inputManager->MapKey("A", 'S');
+    m_inputManager->MapKey("A", 'X');
+
+    m_inputManager->MapKey("Select", 'V');
+    m_inputManager->MapKey("Start", 'B');
+
+    m_inputManager->MapKey("Select", WXK_SHIFT);
+    m_inputManager->MapKey("Start", WXK_RETURN);
+
+    m_inputManager->MapKey("Select", '[');
+    m_inputManager->MapKey("Start", ']');
+
+    m_inputManager->MapKey("Rewind", WXK_TAB);
 }
 
 

@@ -32,6 +32,7 @@ using namespace Emunisce;
 #include "Rewinder.h"
 #include "InputRecording.h"
 
+#include "InputManager.h"
 #include "MachineRunner.h"
 
 
@@ -65,6 +66,9 @@ BaseApplication::BaseApplication()
 
 	// Utilities
 
+    m_inputManager = new InputManager();
+    m_inputManager->Initialize(this);
+
 	m_machineRunner = new MachineRunner();
 	m_machineRunner->Initialize();
 }
@@ -75,6 +79,9 @@ BaseApplication::~BaseApplication()
 
 	m_machineRunner->Shutdown();
 	delete m_machineRunner;
+
+	//input manager doesn't need shutdown
+    delete m_inputManager;
 
 	delete m_inputRecorder;
 	delete m_rewinder;
@@ -97,6 +104,7 @@ void BaseApplication::NotifyMachineChanged(IEmulatedMachine* newMachine)
 		m_wrappedMachine = newMachine;
 	}
 
+    m_inputManager->SetMachine(m_machine);
 	m_machineRunner->SetMachine(m_machine);
 
 	newMachine->SetApplicationInterface(this);
@@ -124,6 +132,11 @@ InputRecording* BaseApplication::GetInputRecorder()
 	return m_inputRecorder;
 }
 
+
+InputManager* BaseApplication::GetInputManager()
+{
+    return m_inputManager;
+}
 
 MachineRunner* BaseApplication::GetMachineRunner()
 {
