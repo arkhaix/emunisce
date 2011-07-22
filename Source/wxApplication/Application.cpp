@@ -305,7 +305,12 @@ string Application::GetDataFolder()
     return string(".");
 
 #elif EMUNISCE_PLATFORM_LINUX
-    string result = string("~/.Emunisce");
+    string result = getenv("HOME");
+    if(result.length() == 0)
+        result = ".";
+
+    result += string("/.Emunisce");
+
     mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
     return result;
