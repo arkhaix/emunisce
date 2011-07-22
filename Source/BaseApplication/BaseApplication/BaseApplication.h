@@ -37,6 +37,7 @@ class Gui;
 class Rewinder;
 class InputRecording;
 
+class InputManager;
 class MachineRunner;
 
 
@@ -59,13 +60,14 @@ public:
 	virtual InputRecording* GetInputRecorder();
 
 	//Utilities
+	virtual InputManager* GetInputManager();
 	virtual MachineRunner* GetMachineRunner();
 
 	//Shutdown
 	virtual bool ShutdownRequested();
 	virtual void RequestShutdown();
 
-	
+
 	// IUserInterface
 
 	//User to application
@@ -158,6 +160,7 @@ protected:
 	InputRecording* m_inputRecorder;
 
 	//Utilities
+	InputManager* m_inputManager;
 	MachineRunner* m_machineRunner;
 
 	char m_lastRomLoaded[1024];

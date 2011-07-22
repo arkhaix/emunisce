@@ -103,6 +103,11 @@ protected:
 	string GetMacroFile(const char* name);
 
 
+	// Input
+
+	void MapDefaultKeys();
+
+
 	// Application properties
 
 	OpenGLRenderer* m_renderer;
