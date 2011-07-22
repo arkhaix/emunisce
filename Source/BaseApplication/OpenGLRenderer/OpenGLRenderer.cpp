@@ -588,7 +588,7 @@ OpenGLRenderer::~OpenGLRenderer()
 void OpenGLRenderer::Initialize(BaseApplication* phoenix, void* windowHandle)
 {
 	m_private->_Application = phoenix;
-#ifdef EMUNSICE_PLATFORM_WINDOWS
+#ifdef EMUNISCE_PLATFORM_WINDOWS
 	m_private->_WindowHandle = (HWND)windowHandle;
 #endif
 
