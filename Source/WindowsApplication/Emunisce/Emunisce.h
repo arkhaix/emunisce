@@ -26,7 +26,6 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 //WindowsApplication
 #include "../GdiPlusRenderer/GdiPlusRenderer.h"
-#include "../KeyboardInput/KeyboardInput.h"
 #include "../WaveOutSound/WaveOutSound.h"
 
 #include "../WindowsPlatform/Window.h"
@@ -41,7 +40,6 @@ namespace Emunisce
 class ConsoleDebugger;
 
 class GdiPlusRenderer;
-class KeyboardInput;
 class WaveOutSound;
 
 
@@ -57,9 +55,6 @@ public:
 	Window* GetWindow();
 
 	ConsoleDebugger* GetDebugger();
-
-	GdiPlusRenderer* GetRenderer();
-	KeyboardInput* GetInput();
 	WaveOutSound* GetSound();
 
 
@@ -139,6 +134,11 @@ private:
 	string GetCurrentMacroFile(const char* name);
 
 
+	// Input
+
+	void MapDefaultKeys();
+
+
 	Window* m_window;
 
 	IEmulatedMachine* m_pendingMachine;
@@ -147,7 +147,6 @@ private:
 
 	//GdiPlusRenderer* m_renderer;
 	OpenGLRenderer* m_renderer;
-	KeyboardInput* m_input;
 	WaveOutSound* m_sound;
 };
 
