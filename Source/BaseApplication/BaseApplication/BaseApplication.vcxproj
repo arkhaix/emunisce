@@ -113,6 +113,7 @@
   <ItemGroup>
     <ClInclude Include="BaseApplication.h" />
     <ClInclude Include="Gui.h" />
+    <ClInclude Include="InputManager.h" />
     <ClInclude Include="InputRecording.h" />
     <ClInclude Include="IUserInterface.h" />
     <ClInclude Include="KingsDream.h" />
@@ -123,6 +124,7 @@
   <ItemGroup>
     <ClCompile Include="BaseApplication.cpp" />
     <ClCompile Include="Gui.cpp" />
+    <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="InputRecording.cpp" />
     <ClCompile Include="KingsDream.cpp" />
     <ClCompile Include="MachineFeature.cpp" />

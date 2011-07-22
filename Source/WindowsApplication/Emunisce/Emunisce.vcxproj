@@ -172,9 +172,6 @@
     <ProjectReference Include="..\GdiPlusRenderer\GdiPlusRenderer.vcxproj">
       <Project>{ec091f82-1e1c-4b24-a41e-899cf6458295}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\KeyboardInput\KeyboardInput.vcxproj">
-      <Project>{05e90435-3f0e-4575-8b8f-a1da99c34b58}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\WaveOutSound\WaveOutSound.vcxproj">
       <Project>{b47d9786-8300-4349-ab06-5fce239da5c5}</Project>
     </ProjectReference>

@@ -30,6 +30,7 @@ using namespace Emunisce;
 
 #include "MachineIncludes.h"
 
+#include "BaseApplication/InputManager.h"
 #include "BaseApplication/MachineFeature.h"
 
 #include "Serialization/SerializationIncludes.h"
@@ -49,7 +50,6 @@ EmunisceApplication::EmunisceApplication()
 
 	//_Renderer = new GdiPlusRenderer();
 	m_renderer = new OpenGLRenderer();
-	m_input = new KeyboardInput();
 	m_sound = new WaveOutSound();
 
 	AdjustWindowSize();
@@ -61,8 +61,9 @@ EmunisceApplication::EmunisceApplication()
 	m_debugger->Initialize(this);
 
 	m_renderer->Initialize(this, m_window->GetHandle());
-	m_input->Initialize(this);
 	m_sound->Initialize(this);
+
+	MapDefaultKeys();
 
 	//Calling HandlePendingMachineChange here with just the MachineFeature components
 	//(no emulated machine yet) so we don't have to force a LoadROM immediately.
@@ -79,13 +80,11 @@ EmunisceApplication::~EmunisceApplication()
 	m_window->Destroy();
 
 	m_sound->Shutdown();
-	m_input->Shutdown();
 	m_renderer->Shutdown();
 
 	m_debugger->Shutdown();
 
 	delete m_sound;
-	delete m_input;
 	delete m_renderer;
 
 	delete m_debugger;
@@ -137,17 +136,6 @@ Window* EmunisceApplication::GetWindow()
 ConsoleDebugger* EmunisceApplication::GetDebugger()
 {
 	return m_debugger;
-}
-
-GdiPlusRenderer* EmunisceApplication::GetRenderer()
-{
-	return NULL;
-	//return _Renderer;
-}
-
-KeyboardInput* EmunisceApplication::GetInput()
-{
-	return m_input;
 }
 
 WaveOutSound* EmunisceApplication::GetSound()
@@ -293,12 +281,12 @@ void EmunisceApplication::Resize(int newWidth, int newHeight)
 
 void EmunisceApplication::KeyDown(int key)
 {
-	m_input->KeyDown(key);
+	m_inputManager->KeyDown(key);
 }
 
 void EmunisceApplication::KeyUp(int key)
 {
-	m_input->KeyUp(key);
+	m_inputManager->KeyUp(key);
 }
 
 
@@ -373,7 +361,6 @@ void EmunisceApplication::HandlePendingMachineChange()
 	m_debugger->SetMachine(m_machine);
 
 	m_renderer->SetMachine(m_machine);
-	m_input->SetMachine(m_machine);
 	m_sound->SetMachine(m_machine);
 
 	//Start out at the native resolution or 320x240 (adjusted for aspect ratio), whichever is larger.
@@ -646,4 +633,33 @@ std::string EmunisceApplication::GetCurrentMacroFile(const char* name)
 	PathAppend(file, filename.c_str());
 
 	return std::string(file);
+}
+
+
+void EmunisceApplication::MapDefaultKeys()
+{
+	m_inputManager->MapKey("Up", VK_UP);
+	m_inputManager->MapKey("Down", VK_DOWN);
+	m_inputManager->MapKey("Left", VK_LEFT);
+	m_inputManager->MapKey("Right", VK_RIGHT);
+
+	m_inputManager->MapKey("B", 'Q');
+	m_inputManager->MapKey("B", 'A');
+	m_inputManager->MapKey("B", 'Z');
+
+	m_inputManager->MapKey("A", 'W');
+	m_inputManager->MapKey("A", 'S');
+	m_inputManager->MapKey("A", 'X');
+
+	m_inputManager->MapKey("Select", 'V');
+	m_inputManager->MapKey("Start", 'B');
+
+	m_inputManager->MapKey("Select", VK_LSHIFT);
+	m_inputManager->MapKey("Select", VK_RSHIFT);
+	m_inputManager->MapKey("Start", VK_RETURN);
+
+	m_inputManager->MapKey("Select", VK_OEM_4);
+	m_inputManager->MapKey("Start", VK_OEM_6);
+
+	m_inputManager->MapKey("Rewind", VK_TAB);
 }
