@@ -17,6 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
+#define EmulatedMachine_ToString 1
+
 #include "Application.h"
 using namespace Emunisce;
 
@@ -27,11 +29,20 @@ using namespace Emunisce;
 //Platform
 #include "PlatformIncludes.h"
 
+#ifdef EMUNISCE_PLATFORM_LINUX
+#include <sys/types.h>
+#include <sys/stat.h>
+#endif
+
 //Machine
 #include "MachineIncludes.h"
 
 //BaseApplication
 #include "BaseApplication/MachineFeature.h"
+
+//Serialization
+#include "Serialization/SerializationIncludes.h"
+#include "Serialization/FileSerializer.h"
 
 
 Application::Application()
@@ -181,15 +192,15 @@ void Application::KeyDown(int key)
     else if(key == (int)'o')
     {
         SelectFile(&fileSelected, NULL);
-        sprintf_s(buffer, 1024, "You chose: '%s'", fileSelected);
-        DisplayImportantMessage(MessageType::Information, buffer);
-        free(fileSelected);
-    }
 
-    else
-    {
-        sprintf_s(buffer, 1024, "Unknown key code: %d", key);
-        DisplayImportantMessage(MessageType::Warning, buffer);
+        if(fileSelected != NULL)
+        {
+            bool result = LoadRom(fileSelected);
+            if(result == false)
+                DisplayImportantMessage(MessageType::Error, "Failed to load the specified file.");
+
+            free(fileSelected);
+        }
     }
 }
 
@@ -202,41 +213,189 @@ void Application::KeyUp(int key)
 
 Archive* Application::OpenRomData(const char* name, bool saving)
 {
-    return NULL;
+    return OpenFileArchive( GetRomDataFile(name).c_str(), saving );
 }
 
 void Application::CloseRomData(Archive* archive)
 {
+    ReleaseArchive(archive);
 }
 
 
 Archive* Application::OpenSavestate(const char* name, bool saving)
 {
-    return NULL;
+    return OpenFileArchive( GetSaveStateFile(name).c_str(), saving );
 }
 
 void Application::CloseSavestate(Archive* archive)
 {
+    ReleaseArchive(archive);
 }
 
 
 Archive* Application::OpenMovie(const char* name, bool saving)
 {
-    return NULL;
+    return OpenFileArchive( GetMovieFile(name).c_str(), saving );
 }
 
 void Application::CloseMovie(Archive* archive)
 {
+    ReleaseArchive(archive);
 }
 
 
 Archive* Application::OpenMacro(const char* name, bool saving)
 {
-    return NULL;
+    return OpenFileArchive( GetMacroFile(name).c_str(), saving );
 }
 
 void Application::CloseMacro(Archive* archive)
 {
+    ReleaseArchive(archive);
+}
+
+
+
+//  Persistence
+
+Archive* Application::OpenFileArchive(const char* filename, bool saving)
+{
+    FileSerializer* serializer = new FileSerializer();
+	serializer->SetFile(filename);
+
+	ArchiveMode::Type mode;
+	if(saving == true)
+		mode = ArchiveMode::Saving;
+	else
+		mode = ArchiveMode::Loading;
+
+	Archive* archive = new Archive(serializer, mode);
+	return archive;
+}
+
+void Application::ReleaseArchive(Archive* archive)
+{
+    if(archive == NULL)
+		return;
+
+	ISerializer* serializer = archive->GetSerializer();
+
+	archive->Close();
+
+	delete archive;
+	delete serializer;
+}
+
+
+string Application::GetDataFolder()
+{
+#ifdef EMUNISCE_PLATFORM_WINDOWS
+    //todo
+    return string(".");
+
+#elif EMUNISCE_PLATFORM_LINUX
+    string result = string("~/.Emunisce");
+    mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+    return result;
+
+#endif
+}
+
+
+string Application::GetSaveStateFile(const char* name)
+{
+#ifdef EMUNISCE_PLATFORM_WINDOWS
+    //todo
+    return GetDataFolder() + string("/") + string(name) + string(".ess");
+
+#elif EMUNISCE_PLATFORM_LINUX
+    string result = GetDataFolder();
+
+    result += string("/SaveStates");
+    mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+    result += string("/") + string(EmulatedMachine::ToString[ m_machine->GetType() ]);
+    mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+    result += string("/") + string(m_machine->GetRomTitle());
+    mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+    result += string("/") + string(name) + string(".ess");
+
+    return result;
+#endif
+}
+
+string Application::GetRomDataFile(const char* name)
+{
+#ifdef EMUNISCE_PLATFORM_WINDOWS
+    //todo
+    return GetDataFolder() + string("/") + string(name) + string(".erd");
+
+#elif EMUNISCE_PLATFORM_LINUX
+    string result = GetDataFolder();
+
+    result += string("/RomData");
+    mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+    result += string("/") + string(EmulatedMachine::ToString[ m_machine->GetType() ]);
+    mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+    result += string("/") + string(m_machine->GetRomTitle());
+    mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+    result += string("/") + string(name) + string(".erd");
+
+    return result;
+#endif
+}
+
+string Application::GetMovieFile(const char* name)
+{
+#ifdef EMUNISCE_PLATFORM_WINDOWS
+    //todo
+    return GetDataFolder() + string("/") + string(name) + string(".eim");
+
+#elif EMUNISCE_PLATFORM_LINUX
+    string result = GetDataFolder();
+
+    result += string("/Movies");
+    mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+    result += string("/") + string(EmulatedMachine::ToString[ m_machine->GetType() ]);
+    mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+    result += string("/") + string(m_machine->GetRomTitle());
+    mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+    result += string("/") + string(name) + string(".eim");
+
+    return result;
+#endif
+}
+
+string Application::GetMacroFile(const char* name)
+{
+#ifdef EMUNISCE_PLATFORM_WINDOWS
+    //todo
+    return GetDataFolder() + string("/") + string(name) + string(".eir");
+
+#elif EMUNISCE_PLATFORM_LINUX
+    string result = GetDataFolder();
+
+    result += string("/Macros");
+    mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+    result += string("/") + string(EmulatedMachine::ToString[ m_machine->GetType() ]);
+    mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+    //no rom title folder for macros.  they're global to the machine.
+
+    result += string("/") + string(name) + string(".eir");
+
+    return result;
+#endif
 }
 
 

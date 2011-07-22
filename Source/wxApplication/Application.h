@@ -25,6 +25,9 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "BaseApplication/BaseApplication.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 
+#include <string>
+using namespace std;
+
 
 namespace Emunisce
 {
@@ -85,6 +88,19 @@ protected:
 
 	virtual Archive* OpenMacro(const char* name, bool saving);
 	virtual void CloseMacro(Archive* archive);
+
+
+    // Persistence
+
+    Archive* OpenFileArchive(const char* filename, bool saving);
+	void ReleaseArchive(Archive* archive);
+
+	string GetDataFolder();
+
+	string GetSaveStateFile(const char* name);
+	string GetRomDataFile(const char* name);
+	string GetMovieFile(const char* name);
+	string GetMacroFile(const char* name);
 
 
 	// Application properties
