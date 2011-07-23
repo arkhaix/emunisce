@@ -318,12 +318,13 @@ Rewinder::~Rewinder()
 {
 	m_isRewinding = false;
 
-	while(m_frameHistory.empty() == false)
+	for(unsigned int i=0;i<m_segments.size();i++)
 	{
-		CachedFrame info = *m_frameHistory.begin();
-		delete info.Screen;
-		m_frameHistory.pop_front();
+		delete m_segments[i];
 	}
+
+	m_segments.clear();
+	m_frameHistory.clear();	///<Don't need to delete anything here because the screens are shallow copied from the segments
 
 	m_featureInput = NULL;
 	delete m_inputHandler;
