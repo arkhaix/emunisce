@@ -20,7 +20,9 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "WindowMain.h"
 using namespace Emunisce;
 
-// Emunsice stuff
+// Emunisce stuff
+
+#include "PlatformIncludes.h"
 
 #include "Application.h"
 
@@ -96,6 +98,7 @@ void WindowMain::OnEraseBackground(wxEraseEvent& event)
 void WindowMain::OnIdle(wxIdleEvent &event)
 {
     Refresh();
+	Thread::Sleep(1);
 }
 
 

@@ -34,6 +34,7 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-std=gnu++0x" />
+			<Add option="-static" />
 			<Add option="-DWINVER=0x0501" />
 			<Add option="-D_WIN32_WINNT=0x0501" />
 			<Add directory="..\BaseApplication" />
@@ -53,6 +54,7 @@
 			<Add library="..\Utility\Serialization\libSerialization.a" />
 			<Add library="..\Utility\HqNx\libHqNx.a" />
 			<Add library="..\WindowsPlatform\libWindowsPlatform.a" />
+			<Add library="..\..\Import\freetype\Export\x86\lib\freetype.a" />
 			<Add library="shell32" />
 			<Add library="shlwapi" />
 			<Add library="winmm" />
@@ -68,8 +70,6 @@
 		<Unit filename="Emunisce\Main.cpp" />
 		<Unit filename="GdiPlusRenderer\GdiPlusRenderer.cpp" />
 		<Unit filename="GdiPlusRenderer\GdiPlusRenderer.h" />
-		<Unit filename="KeyboardInput\KeyboardInput.cpp" />
-		<Unit filename="KeyboardInput\KeyboardInput.h" />
 		<Unit filename="WaveOutSound\WaveOutSound.cpp" />
 		<Unit filename="WaveOutSound\WaveOutSound.h" />
 		<Extensions>
