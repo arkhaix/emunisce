@@ -26,6 +26,11 @@ using namespace Emunisce;
 
 #include "HqNx/HqNx.h"
 
+//Freetype
+#include "ft2build.h"
+#include <freetype/freetype.h>
+#include FT_FREETYPE_H
+
 #include <memory.h>
 
 
@@ -53,6 +58,108 @@ Gui::~Gui()
 
 	if(m_screenBufferCopy != NULL)
         delete m_screenBufferCopy;
+}
+
+#include <math.h>
+void TestFreetype(ScreenBuffer* screen)
+{
+	FT_Library    library;
+	FT_Face       face;
+
+	FT_GlyphSlot  slot;
+	FT_Matrix     matrix;                 /* transformation matrix */
+	FT_Vector     pen;                    /* untransformed origin  */
+	FT_Error      error;
+
+	const char*         filename = "arial.ttf";
+	const char*         text = "emunisce";
+
+	double        angle;
+	int           target_height;
+	int           n, num_chars;
+
+	const int HEIGHT = screen->GetHeight();
+	const int WIDTH = screen->GetWidth();
+
+	num_chars     = strlen( text );
+	angle         = ( 25.0 / 360 ) * 3.14159 * 2;      /* use 25 degrees     */
+	target_height = HEIGHT;
+
+	error = FT_Init_FreeType( &library );              /* initialize library */
+	if(error != 0)
+		return;
+
+	error = FT_New_Face( library, filename, 0, &face ); /* create face object */
+	if(error != 0)
+		return;
+
+	/* use 20pt at 100dpi */
+	error = FT_Set_Char_Size( face, 20 * 64, 0,
+		100, 0 );                /* set character size */
+	if(error != 0)
+		return;
+
+	slot = face->glyph;
+
+	/* set up matrix */
+	matrix.xx = (FT_Fixed)( cos( angle ) * 0x10000L );
+	matrix.xy = (FT_Fixed)(-sin( angle ) * 0x10000L );
+	matrix.yx = (FT_Fixed)( sin( angle ) * 0x10000L );
+	matrix.yy = (FT_Fixed)( cos( angle ) * 0x10000L );
+
+	/* the pen position in 26.6 cartesian space coordinates; */
+	/* start at (WIDTH/2,HEIGHT/2) relative to the upper left corner  */
+	pen.x = (WIDTH/2) * 64;
+	pen.y = ( target_height - (HEIGHT/2) ) * 64;
+
+
+	for ( n = 0; n < num_chars; n++ )
+	{
+		/* set transformation */
+		FT_Set_Transform( face, &matrix, &pen );
+
+		/* load glyph image into the slot (erase previous one) */
+		error = FT_Load_Char( face, text[n], FT_LOAD_RENDER );
+		if ( error )
+			continue;                 /* ignore errors */
+
+		/* now, draw to our target surface (convert position) */
+		//draw_bitmap( &slot->bitmap,
+		//	slot->bitmap_left,
+		//	target_height - slot->bitmap_top );
+
+		{
+			FT_Bitmap*  bitmap = &slot->bitmap;
+			FT_Int x = slot->bitmap_left;
+			FT_Int y = target_height - slot->bitmap_top;
+
+			FT_Int  i, j, p, q;
+			FT_Int  x_max = x + bitmap->width;
+			FT_Int  y_max = y + bitmap->rows;
+
+			DisplayPixel* pixels = screen->GetPixels();
+
+			for ( i = x, p = 0; i < x_max; i++, p++ )
+			{
+				for ( j = y, q = 0; j < y_max; j++, q++ )
+				{
+					if ( i < 0      || j < 0       ||
+						i >= WIDTH || j >= HEIGHT )
+						continue;
+
+					pixels[j*WIDTH+i] |= (bitmap->buffer[q * bitmap->width + p]) << 16;
+				}
+			}
+		}
+
+
+		/* increment pen position */
+		pen.x += slot->advance.x;
+		pen.y += slot->advance.y;
+	}
+
+	FT_Done_Face    ( face );
+	FT_Done_FreeType( library );
 }
 
 ScreenBuffer* Gui::GetStableScreenBuffer()
@@ -88,6 +195,11 @@ ScreenBuffer* Gui::GetStableScreenBuffer()
 		m_filteredScreenBuffer = HqNx::Hq3x(m_screenBufferCopy);
 	else if(m_displayFilter == DisplayFilter::Hq4x)
 		m_filteredScreenBuffer = HqNx::Hq4x(m_screenBufferCopy);
+
+
+	//test
+	TestFreetype(m_filteredScreenBuffer);
+
 
 	return m_filteredScreenBuffer;
 }
@@ -191,10 +303,11 @@ ScreenResolution Gui::GuiFeature::GetScreenResolution()
 
 ScreenBuffer* Gui::GuiFeature::GetStableScreenBuffer()
 {
+	ScreenBuffer* result = &m_screenBuffer;
 	if(m_backgroundEnabled == true)
-		return m_backgroundAnimation->GetFrame();
+		result = m_backgroundAnimation->GetFrame();
 
-	return &m_screenBuffer;
+	return result;
 }
 
 int Gui::GuiFeature::GetScreenBufferCount()
