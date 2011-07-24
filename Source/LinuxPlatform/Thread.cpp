@@ -22,6 +22,8 @@ using namespace Emunisce;
 
 #include "Timing.h"
 
+#include <unistd.h>
+
 
 Thread::Thread()
 {
@@ -119,6 +121,7 @@ void Thread::Sleep(unsigned int milliseconds)
 
     do
     {
+        usleep(1000);
         pthread_yield();
 
         elapsedMilliseconds = Time::Now().GetTotalMilliseconds() - startTime.GetTotalMilliseconds();
