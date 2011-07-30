@@ -345,12 +345,6 @@ void Memory::SetDmaStartLocation(u8 value)
 
 void Memory::DisableBootRom(u8 value)
 {
-	if(m_bootRomEnabled == false)
-		return;
-
-	if(value != 0x01)
-		return;
-
 	m_bootRomEnabled = false;
 }
 
@@ -449,12 +443,17 @@ void Memory::LoadBootRom(const char* filename)
 		//Use default boot rom
 		u8 defaultBootRom[] = 
 		{
+			//Save AF (cgb/dmg identification)
+			0xf5,				//PUSH AF
+
 			//Enable the lcd
 			0x3e, 0x91,			//LD A,$91
 			0xe0, 0x40,			//LD ($FF00+$40),A
 
+			//Restore AF (cgb/dmg identification)
+			0xf1,				//POP AF
+
 			//Disable boot rom area
-			0x3e, 0x01,			//LD A, $01
 			0xe0, 0x50,			//LD ($FF50), A
 		};
 

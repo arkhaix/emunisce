@@ -107,6 +107,8 @@ private:
 
 	void PrintButtons();
 
+	void PrintMachineType();
+
 
 	//Properties
 

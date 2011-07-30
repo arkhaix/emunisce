@@ -493,7 +493,7 @@ void Display::RenderBackgroundPixel(int screenX, int screenY)
 	u16 bgTileIndex = (bgTileY * 32) + bgTileX;	///<BG map is 32x32
 
 	//Get the tile value
-	u8* vram = m_memory->GetVram();
+	u8* vram = m_memory->GetVram(0);
 	u8 bgTileValue = vram[bgTileMapAddress + bgTileIndex - m_vramOffset];
 
 	//Which tile data?
@@ -586,7 +586,7 @@ void Display::RenderWindowPixel(int screenX, int screenY)
 	u16 tilePositionIndex = (tileY * 32) + tileX;	///<BG map is 32x32
 
 	//Get the tile value
-	u8* vram = m_memory->GetVram();
+	u8* vram = m_memory->GetVram(0);
 	u8 tileValue = vram[tileMapAddress + tilePositionIndex - m_vramOffset];
 
 	//Which tile data?
@@ -685,7 +685,7 @@ void Display::RenderSprites(int screenY)
 		u16 tileLineAddress = tileDataAddress + (targetTileLine * 2);
 
 		//Read the two bytes for this line of the tile
-		u8* vram = m_memory->GetVram();
+		u8* vram = m_memory->GetVram(0);
 		u8 tileLineLow = vram[tileLineAddress - m_vramOffset];
 		u8 tileLineHigh = vram[tileLineAddress+1 - m_vramOffset];
 
@@ -820,7 +820,7 @@ void Display::CheckCoincidence()
 
 void Display::UpdateTileData(u16 address, u8 data)
 {
-	u8* vram = m_memory->GetVram();
+	u8* vram = m_memory->GetVram(0);
 	int baseVramAddress = address - 0x8000;
 
 	//Get both bytes corresponding to the line

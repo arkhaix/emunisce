@@ -109,6 +109,8 @@ public:
 private:
 
 	Gameboy* m_machine;
+	EmulatedMachine::Type m_machineType;
+
 	Memory* m_memory;
 
 	bool m_masterInterruptsEnabled;	///<Interrupt master enable flag (IME)
