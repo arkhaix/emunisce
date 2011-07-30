@@ -81,7 +81,7 @@ void TestFreetype(ScreenBuffer* screen)
 	const int HEIGHT = screen->GetHeight();
 	const int WIDTH = screen->GetWidth();
 
-	num_chars     = strlen( text );
+	num_chars     = (int)strlen( text );
 	angle         = ( 25.0 / 360 ) * 3.14159 * 2;      /* use 25 degrees     */
 	target_height = HEIGHT;
 
@@ -198,7 +198,7 @@ ScreenBuffer* Gui::GetStableScreenBuffer()
 
 
 	//test
-	TestFreetype(m_filteredScreenBuffer);
+	//TestFreetype(m_filteredScreenBuffer);
 
 
 	return m_filteredScreenBuffer;
