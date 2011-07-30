@@ -56,6 +56,9 @@ public:
 
 	void SetRegisterLocation(u8 registerOffset, u8* pRegister, bool writeable=false);	///<registerOffset is the offset from 0xff00 (so register = 0x7e is address 0xff7e).
 
+	u8* GetVram(int bank=-1);	///<Returns raw pointer to vram space.  Used by Display to avoid a bunch of Read8 calls.  bank = -1 returns the currently selected vram bank.
+	u8* GetOam();	///<Returns raw pointer to oam space.  Used by Display to avoid a bunch of Read8 calls.
+
 	u8 Read8(u16 address);
 	u16 Read16(u16 address);
 
@@ -64,6 +67,8 @@ public:
 
 	void SetDmaStartLocation(u8 value);
 	void DisableBootRom(u8 value);
+	void SetCgbRamBank(u8 value);
+	void SetCgbVramBank(u8 value);
 
 	void SetVramLock(bool locked);
 	void SetOamLock(bool locked);
@@ -84,6 +89,7 @@ protected:
 	//Component pointers for handling registers.
 
 	Gameboy* m_machine;
+	EmulatedMachine::Type m_machineType;
 
 	Cpu* m_cpu;
 	Display* m_display;
@@ -100,6 +106,12 @@ protected:
 	//Memory
 
 	u8 m_memoryData[0x10000];
+
+	u8 m_cgbRamBanks[8][0x1000];
+	int m_selectedCgbRamBank;
+
+	u8 m_cgbVramBanks[2][0x2000];
+	int m_selectedCgbVramBank;
 
 
 	//Registers

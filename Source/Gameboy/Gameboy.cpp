@@ -32,7 +32,7 @@ using namespace Emunisce;
 //Machine type
 EmulatedMachine::Type Gameboy::GetType()
 {
-	return EmulatedMachine::Gameboy;
+	return m_machineType;
 }
 
 const char* Gameboy::GetRomTitle()
@@ -179,13 +179,16 @@ void Gameboy::DisableBreakpoint(int address)
 // Gameboy
 
 //Creation
-Gameboy* Gameboy::Create(const char* filename)
+Gameboy* Gameboy::Create(const char* filename, EmulatedMachine::Type machineType)
 {
+	//if(machineType != EmulatedMachine::Gameboy && machineType != EmulatedMachine::GameboyColor)
+		machineType = EmulatedMachine::Gameboy;
+
 	Memory* memory = Memory::CreateFromFile(filename);
 	if(memory == NULL)
 		return NULL;
 
-	Gameboy* result = new Gameboy(memory);
+	Gameboy* result = new Gameboy(memory, machineType);
 
 	result->Initialize();
 
@@ -271,8 +274,10 @@ void Gameboy::RunDuringInstruction(unsigned int ticks)
 
 //protected:
 
-Gameboy::Gameboy(Memory* memory)
+Gameboy::Gameboy(Memory* memory, EmulatedMachine::Type machineType)
 {
+	m_machineType = machineType;
+
 	m_applicationInterface = NULL;
 
 	m_memory = memory;

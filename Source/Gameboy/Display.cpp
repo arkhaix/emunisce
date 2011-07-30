@@ -222,8 +222,10 @@ void Display::Serialize(Archive& archive)
 
 void Display::WriteVram(u16 address, u8 value)
 {
-	//Update cache
-	m_vramCache[address - m_vramOffset] = value;
+	//This shouldn't be here since Memory handles the actual write, but it has to 
+	// be here for now because UpdateTileData assumes the value has already been written.
+	u8* vram = m_memory->GetVram();
+	vram[address - 0x8000] = value;
 
 	//Update tile data
 	if(address >= 0x8000 && address < 0x9800)
@@ -232,7 +234,6 @@ void Display::WriteVram(u16 address, u8 value)
 
 void Display::WriteOam(u16 address, u8 value)
 {
-	m_oamCache[address - m_oamOffset] = value;
 }
 
 
@@ -492,7 +493,8 @@ void Display::RenderBackgroundPixel(int screenX, int screenY)
 	u16 bgTileIndex = (bgTileY * 32) + bgTileX;	///<BG map is 32x32
 
 	//Get the tile value
-	u8 bgTileValue = m_vramCache[bgTileMapAddress + bgTileIndex - m_vramOffset];
+	u8* vram = m_memory->GetVram();
+	u8 bgTileValue = vram[bgTileMapAddress + bgTileIndex - m_vramOffset];
 
 	//Which tile data?
 	s8 bytesPerTile = 16;
@@ -584,7 +586,8 @@ void Display::RenderWindowPixel(int screenX, int screenY)
 	u16 tilePositionIndex = (tileY * 32) + tileX;	///<BG map is 32x32
 
 	//Get the tile value
-	u8 tileValue = m_vramCache[tileMapAddress + tilePositionIndex - m_vramOffset];
+	u8* vram = m_memory->GetVram();
+	u8 tileValue = vram[tileMapAddress + tilePositionIndex - m_vramOffset];
 
 	//Which tile data?
 	s8 bytesPerTile = 16;
@@ -648,8 +651,9 @@ void Display::RenderSprites(int screenY)
 	{
 		u16 spriteDataAddress = 0xfe00 + (i*4);
 
-		int spriteY = m_oamCache[spriteDataAddress - m_oamOffset];
-		int spriteX = m_oamCache[spriteDataAddress+1 - m_oamOffset];
+		u8* oam = m_memory->GetOam();
+		int spriteY = oam[spriteDataAddress - m_oamOffset];
+		int spriteX = oam[spriteDataAddress+1 - m_oamOffset];
 
 		//Sprite coordinates are offset, so sprite[8,16] = screen[0,0].
 		spriteX -= 8;
@@ -664,8 +668,8 @@ void Display::RenderSprites(int screenY)
 			continue;
 
 		//It's relevant, so get the rest of the data
-		int spriteTileValue = m_oamCache[spriteDataAddress+2 - m_oamOffset];
-		int spriteFlags = m_oamCache[spriteDataAddress+3 - m_oamOffset];
+		int spriteTileValue = oam[spriteDataAddress+2 - m_oamOffset];
+		int spriteFlags = oam[spriteDataAddress+3 - m_oamOffset];
 
 		//In 8x16 mode, the least significant bit of the tile value is ignored
 		if(m_lcdControl & LCDC_SpriteSize)
@@ -681,8 +685,9 @@ void Display::RenderSprites(int screenY)
 		u16 tileLineAddress = tileDataAddress + (targetTileLine * 2);
 
 		//Read the two bytes for this line of the tile
-		u8 tileLineLow = m_vramCache[tileLineAddress - m_vramOffset];
-		u8 tileLineHigh = m_vramCache[tileLineAddress+1 - m_vramOffset];
+		u8* vram = m_memory->GetVram();
+		u8 tileLineLow = vram[tileLineAddress - m_vramOffset];
+		u8 tileLineHigh = vram[tileLineAddress+1 - m_vramOffset];
 
 		//Cache the rest of the sprite values on this line
 		int tileX = 0;
@@ -815,6 +820,7 @@ void Display::CheckCoincidence()
 
 void Display::UpdateTileData(u16 address, u8 data)
 {
+	u8* vram = m_memory->GetVram();
 	int baseVramAddress = address - 0x8000;
 
 	//Get both bytes corresponding to the line
@@ -822,8 +828,8 @@ void Display::UpdateTileData(u16 address, u8 data)
 	if(baseVramAddress & 1)	///<Bytes 0 and 1 of the line will always start on an even boundary.  If baseVramAddress is odd, then we're modifying the high byte and the low byte is baseVramAddress-1.
 		lineAddress--;
 
-	u8 tileDataLow = m_vramCache[lineAddress];
-	u8 tileDataHigh = m_vramCache[lineAddress+1];
+	u8 tileDataLow = vram[lineAddress];
+	u8 tileDataHigh = vram[lineAddress+1];
 
 	//In vram, each tile is 8 lines tall with 2 bytes per line, so each tile is 16 bytes.
 	int tileIndex = baseVramAddress / 16;
