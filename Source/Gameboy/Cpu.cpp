@@ -42,6 +42,7 @@ Cpu::Cpu()
 void Cpu::SetMachine(Gameboy* machine)
 {
 	m_machine = machine;
+	m_machineType = machine->GetType();
 
 	m_memory = machine->GetGbMemory();
 
@@ -89,6 +90,9 @@ void Cpu::Initialize()
 	sp = 0xfffe;
 
 	pc = 0x0000;
+
+	if(m_machineType == EmulatedMachine::GameboyColor)
+		a = 0x11;
 }
 
 

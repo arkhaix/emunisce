@@ -24,7 +24,7 @@ using namespace Emunisce;
 
 IEmulatedMachine* MachineFactory::CreateMachine(const char* romFilename, EmulatedMachine::Type machineType)
 {
-	return Gameboy::Create(romFilename);
+	return Gameboy::Create(romFilename, machineType);
 }
 
 void MachineFactory::ReleaseMachine(IEmulatedMachine* machine)

@@ -181,11 +181,21 @@ void Gameboy::DisableBreakpoint(int address)
 //Creation
 Gameboy* Gameboy::Create(const char* filename, EmulatedMachine::Type machineType)
 {
-	//if(machineType != EmulatedMachine::Gameboy && machineType != EmulatedMachine::GameboyColor)
-		machineType = EmulatedMachine::Gameboy;
-
 	Memory* memory = Memory::CreateFromFile(filename);
 	if(memory == NULL)
+		return NULL;
+
+	if(machineType == EmulatedMachine::AutoSelect)
+	{
+		u8 cgbValue = memory->Read8(0x0143);
+
+		if(cgbValue & 0x80)
+			machineType = EmulatedMachine::GameboyColor;
+		else
+			machineType = EmulatedMachine::Gameboy;
+	}
+
+	if(machineType != EmulatedMachine::Gameboy && machineType != EmulatedMachine::GameboyColor)
 		return NULL;
 
 	Gameboy* result = new Gameboy(memory, machineType);

@@ -17,6 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
+#define EmulatedMachine_ToString 1
+
 #include "ConsoleDebugger.h"
 using namespace Emunisce;
 
@@ -298,6 +300,8 @@ void ConsoleDebugger::FetchCommand()
 	COMMAND1("lr", LoadMacro(args[1].c_str()))
 
 	COMMAND0("buttons", PrintButtons())
+
+	COMMAND0("machine", PrintMachineType())
 
 
 	else
@@ -684,4 +688,12 @@ void ConsoleDebugger::PrintButtons()
 	}
 	printf("-----\n");
 	printf("\n");
+}
+
+
+void ConsoleDebugger::PrintMachineType()
+{
+	printf("%s\n", __FUNCTION__);
+
+	printf("Machine type: %s\n", EmulatedMachine::ToString[m_machine->GetType()]);
 }

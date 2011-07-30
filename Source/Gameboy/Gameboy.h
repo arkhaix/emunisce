@@ -79,7 +79,7 @@ public:
 	// Gameboy
 
 	//Creation
-	static Gameboy* Create(const char* filename, EmulatedMachine::Type machineType = EmulatedMachine::Gameboy);
+	static Gameboy* Create(const char* filename, EmulatedMachine::Type machineType);
 	static void Release(Gameboy* machine);
 
 	//Application interface
