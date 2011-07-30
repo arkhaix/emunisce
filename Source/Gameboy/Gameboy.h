@@ -79,7 +79,7 @@ public:
 	// Gameboy
 
 	//Creation
-	static Gameboy* Create(const char* filename);
+	static Gameboy* Create(const char* filename, EmulatedMachine::Type machineType = EmulatedMachine::Gameboy);
 	static void Release(Gameboy* machine);
 
 	//Application interface
@@ -97,13 +97,15 @@ public:
 
 protected:
 
-	Gameboy(Memory* memory);
+	Gameboy(Memory* memory, EmulatedMachine::Type machineType);
 	~Gameboy();
 	void Initialize();
 
 	void InternalStep();	///<Non-virtual Step.
 
 	virtual void Serialize(Archive& archive);
+
+	EmulatedMachine::Type m_machineType;
 
 	IMachineToApplication* m_applicationInterface;
 

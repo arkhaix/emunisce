@@ -136,10 +136,7 @@ private:
 
 	// Caches
 
-	u8 m_vramCache[0x2000];
 	u16 m_vramOffset;
-
-	u8 m_oamCache[0xa0];
 	u16 m_oamOffset;
 
 

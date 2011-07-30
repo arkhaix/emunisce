@@ -69,6 +69,7 @@ Memory::~Memory()
 void Memory::SetMachine(Gameboy* machine)
 {
 	m_machine = machine;
+	m_machineType = machine->GetType();
 
 	//Reset Machine-dependent values
 	for(int i=0;i<0x100;i++)
@@ -86,7 +87,9 @@ void Memory::SetMachine(Gameboy* machine)
 	//Update register info
 
 	m_callWriteRegister[0x46] = true;	//Memory::SetDmaStartLocation
+	m_callWriteRegister[0x4f] = true;	//Memory::SetCgbVramBank
 	m_callWriteRegister[0x50] = true;	//Memory::DisableBootRom
+	m_callWriteRegister[0x70] = true;	//Memory::SetCgbRamBank
 
 	m_callWriteRegister[0x04] = true;	//CPU::SetTimerDivider
 	m_callWriteRegister[0x07] = true;	//CPU::SetTimerControl
@@ -127,6 +130,9 @@ void Memory::SetMachine(Gameboy* machine)
 
 void Memory::Initialize()
 {
+	m_selectedCgbRamBank = 1;
+	m_selectedCgbVramBank = 0;
+
 	//Randomize the active RAM
 	for(int i=0;i<0x2000;i++)
 		m_memoryData[0xa000+i] = (u8)rand();
@@ -181,6 +187,25 @@ void Memory::SetRegisterLocation(u8 registerOffset, u8* pRegister, bool writeabl
 {
 	m_registerLocation[registerOffset] = pRegister;
 	m_registerWriteable[registerOffset] = writeable;
+}
+
+u8* Memory::GetVram(int bank)
+{
+	if(m_machineType != EmulatedMachine::GameboyColor)
+		return &m_memoryData[0x8000];
+
+	if(bank < 0)
+		return &m_cgbVramBanks[m_selectedCgbVramBank][0];
+
+	if(bank > 1)
+		bank = 1;
+
+	return &m_cgbVramBanks[bank][0];
+}
+
+u8* Memory::GetOam()
+{
+	return &m_memoryData[0xfe00];
 }
 
 u8 Memory::Read8(u16 address)
@@ -274,6 +299,16 @@ void Memory::Write8(u16 address, u8 value)
 	if(address >= 0xe000 && address < 0xfe00)
 		Write8(address - 0x2000, value);
 
+	//CGB banks
+	if(m_machineType == EmulatedMachine::GameboyColor)
+	{
+		if(address >= 0x8000 && address < 0xa000)
+			m_cgbVramBanks[m_selectedCgbVramBank][address - 0x8000] = value;
+
+		if(address >= 0xd000 && address < 0xe000)
+			m_cgbRamBanks[m_selectedCgbRamBank][address - 0xd000] = value;
+	}
+
 	//Write it
 	m_memoryData[address] = value;
 }
@@ -317,6 +352,28 @@ void Memory::DisableBootRom(u8 value)
 		return;
 
 	m_bootRomEnabled = false;
+}
+
+void Memory::SetCgbRamBank(u8 value)
+{
+	if(m_machineType != EmulatedMachine::GameboyColor)
+		return;
+
+	int bank = (value & 0x07);
+	if(bank == 0)
+		bank = 1;
+	
+	memcpy((void*)(&m_memoryData[0xd000]), (void*)(&m_cgbRamBanks[m_selectedCgbRamBank][0]), 0x1000);
+}
+
+void Memory::SetCgbVramBank(u8 value)
+{
+	if(m_machineType != EmulatedMachine::GameboyColor)
+		return;
+
+	int bank = (value & 0x01);
+
+	memcpy((void*)(&m_memoryData[0x8000]), (void*)(&m_cgbRamBanks[m_selectedCgbVramBank][0]), 0x2000);
 }
 
 void Memory::SetVramLock(bool locked)
@@ -459,8 +516,9 @@ void Memory::WriteRegister(u16 address, u8 value)
 	case 0xff45: m_display->SetScanlineCompare(value); break;
 
 	case 0xff46: SetDmaStartLocation(value); break;
-
+	case 0xff4f: SetCgbVramBank(value); break;
 	case 0xff50: DisableBootRom(value); break;
+	case 0xff70: SetCgbRamBank(value); break;
 	}
 }
 
