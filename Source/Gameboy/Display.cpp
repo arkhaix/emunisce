@@ -59,6 +59,20 @@ Display::Display()
 	m_displayPalette[1] = DisplayPixelFromRGBA(0.67f, 0.67f, 0.67f);
 	m_displayPalette[2] = DisplayPixelFromRGBA(0.33f, 0.33f, 0.33f);
 	m_displayPalette[3] = DisplayPixelFromRGBA(0.00f, 0.00f, 0.00f);
+
+	//test
+	for(int i=0;i<8;i++)
+	{
+		m_cgbBackgroundDisplayColor[i*4 + 0] = DisplayPixelFromRGBA(0.f, 0.f, 0.f);
+		m_cgbBackgroundDisplayColor[i*4 + 1] = DisplayPixelFromRGBA(1.f, 0.f, 0.f);
+		m_cgbBackgroundDisplayColor[i*4 + 2] = DisplayPixelFromRGBA(0.f, 1.f, 0.f);
+		m_cgbBackgroundDisplayColor[i*4 + 3] = DisplayPixelFromRGBA(0.f, 0.f, 1.f);
+
+		m_cgbSpriteDisplayColor[i*4 + 0] = PIXEL_TRANSPARENT;
+		m_cgbSpriteDisplayColor[i*4 + 1] = DisplayPixelFromRGBA(1.f, 0.f, 0.f);
+		m_cgbSpriteDisplayColor[i*4 + 2] = DisplayPixelFromRGBA(0.f, 1.f, 0.f);
+		m_cgbSpriteDisplayColor[i*4 + 3] = DisplayPixelFromRGBA(0.f, 0.f, 1.f);
+	}
 }
 
 Display::~Display()
@@ -97,6 +111,8 @@ int Display::GetScreenBufferCount()
 void Display::SetMachine(Gameboy* machine)
 {
 	m_machine = machine;
+	m_machineType = machine->GetType();
+
 	m_memory = machine->GetGbMemory();
 
 	//Registers
@@ -111,6 +127,11 @@ void Display::SetMachine(Gameboy* machine)
 	m_memory->SetRegisterLocation(0x49, &m_spritePalette1, true);
 	m_memory->SetRegisterLocation(0x4a, &m_windowY, true);
 	m_memory->SetRegisterLocation(0x4b, &m_windowX, true);
+	
+	m_memory->SetRegisterLocation(0x68, &m_cgbBackgroundPaletteIndex, false);
+	m_memory->SetRegisterLocation(0x69, &m_cgbBackgroundPaletteData, false);
+	m_memory->SetRegisterLocation(0x6a, &m_cgbSpritePaletteIndex, false);
+	m_memory->SetRegisterLocation(0x6b, &m_cgbSpritePaletteData, false);
 }
 
 void Display::Initialize()
@@ -133,6 +154,9 @@ void Display::Initialize()
 
 	m_windowX = 0;
 	m_windowY = 0;
+
+	m_cgbBackgroundPaletteIndex = 0;
+	m_cgbSpritePaletteIndex = 0;
 
 	//Start everything off at 0,0
 	m_currentScanline = 153;
@@ -220,16 +244,16 @@ void Display::Serialize(Archive& archive)
 	SerializeItem(archive, m_lcdEnabled);
 }
 
-void Display::WriteVram(u16 address, u8 value)
+void Display::WriteVram(int bank, u16 address, u8 value)
 {
 	//This shouldn't be here since Memory handles the actual write, but it has to 
 	// be here for now because UpdateTileData assumes the value has already been written.
-	u8* vram = m_memory->GetVram();
+	u8* vram = m_memory->GetVram(bank);
 	vram[address - 0x8000] = value;
 
 	//Update tile data
 	if(address >= 0x8000 && address < 0x9800)
-		UpdateTileData(address, value);
+		UpdateTileData(bank, address, value);
 }
 
 void Display::WriteOam(u16 address, u8 value)
@@ -321,6 +345,121 @@ void Display::SetScanlineCompare(u8 value)
 	m_scanlineCompare = value;
 	//CheckCoincidence(); ///<Enabling this causes prehistorik man to hang
 }
+
+
+void Display::SetCgbBackgroundPaletteTarget(u8 value)
+{
+	m_cgbBackgroundPaletteIndex = value;
+
+	int index = value & 0x1f;
+	index /= 2;
+	u16 paletteData = m_cgbBackgroundPaletteColor[index];
+
+	if(value & 0x01)
+		m_cgbBackgroundPaletteData = (u8)(paletteData >> 8);
+	else
+		m_cgbBackgroundPaletteData = (u8)paletteData;
+}
+
+void Display::SetCgbBackgroundPaletteData(u8 value)
+{
+	static const float cgbToRgb = (float)0xff / (float)0x1f;
+
+	int index = m_cgbBackgroundPaletteIndex;
+
+	bool autoIncrement = (index & 0x80) ? true : false;
+	index &= 0x1f;
+
+	bool highByte = (index & 0x01) ? true : false;
+	index /= 2;
+
+	u16 paletteData = m_cgbBackgroundPaletteColor[index];
+
+	if(highByte)
+	{
+		paletteData &= 0x00ff;
+		paletteData |= (value << 8);
+	}
+	else
+	{
+		paletteData &= 0xff00;
+		paletteData |= value;
+	}
+
+	m_cgbBackgroundPaletteColor[index] = paletteData;
+	m_cgbBackgroundPaletteData = value;
+
+	u8 r = (u8)((float)((paletteData & (0x1f << 0)) >> 0) * cgbToRgb);		///<0b0000000000011111
+	u8 g = (u8)((float)((paletteData & (0x1f << 5)) >> 5) * cgbToRgb);		///<0b0000001111100000
+	u8 b = (u8)((float)((paletteData & (0x1f << 10)) >> 10) * cgbToRgb);	///<0b0111110000000000
+	m_cgbBackgroundDisplayColor[index] = DisplayPixelFromRGBA(r, g, b);
+
+	if(autoIncrement)
+	{
+		m_cgbBackgroundPaletteIndex++;
+		m_cgbBackgroundPaletteIndex &= ~(0x40);	///<clears bit 6 (which is unusable) so we don't overflow
+
+		SetCgbBackgroundPaletteTarget(m_cgbBackgroundPaletteIndex); ///<Update m_cgbBackgroundPaletteData
+	}
+}
+
+
+void Display::SetCgbSpritePaletteTarget(u8 value)
+{
+	m_cgbSpritePaletteIndex = value;
+
+	int index = value & 0x1f;
+	index /= 2;
+	u16 paletteData = m_cgbSpritePaletteColor[index];
+
+	if(value & 0x01)
+		m_cgbSpritePaletteData = (u8)(paletteData >> 8);
+	else
+		m_cgbSpritePaletteData = (u8)paletteData;
+}
+
+void Display::SetCgbSpritePaletteData(u8 value)
+{
+	static const float cgbToRgb = (float)0xff / (float)0x1f;
+
+	int index = m_cgbSpritePaletteIndex;
+
+	bool autoIncrement = (index & 0x80) ? true : false;
+	index &= 0x1f;
+
+	bool highByte = (index & 0x01) ? true : false;
+	index /= 2;
+
+	u16 paletteData = m_cgbSpritePaletteColor[index];
+
+	if(highByte)
+	{
+		paletteData &= 0x00ff;
+		paletteData |= (value << 8);
+	}
+	else
+	{
+		paletteData &= 0xff00;
+		paletteData |= value;
+	}
+
+	m_cgbSpritePaletteColor[index] = paletteData;
+	m_cgbSpritePaletteData = value;
+
+	u8 r = (u8)((float)((paletteData & (0x1f << 0)) >> 0) * cgbToRgb);		///<0b0000000000011111
+	u8 g = (u8)((float)((paletteData & (0x1f << 5)) >> 5) * cgbToRgb);		///<0b0000001111100000
+	u8 b = (u8)((float)((paletteData & (0x1f << 10)) >> 10) * cgbToRgb);	///<0b0111110000000000
+	m_cgbSpriteDisplayColor[index] = DisplayPixelFromRGBA(r, g, b);
+
+	if(autoIncrement)
+	{
+		m_cgbSpritePaletteIndex++;
+		m_cgbSpritePaletteIndex &= ~(0x40);	///<clears bit 6 (which is unusable) so we don't overflow
+		
+		SetCgbSpritePaletteTarget(m_cgbSpritePaletteIndex); ///<Update m_cgbSpritePaletteData
+	}
+}
+
 
 void Display::Begin_HBlank()
 {
@@ -467,7 +606,7 @@ void Display::Run_VBlank(int ticks)
 
 void Display::RenderBackgroundPixel(int screenX, int screenY)
 {
-	if((m_lcdControl & LCDC_Background) == 0)
+	if((m_lcdControl & LCDC_Background) == 0 && m_machineType != EmulatedMachine::GameboyColor)
 		return;
 
 	//Cached?
@@ -496,6 +635,15 @@ void Display::RenderBackgroundPixel(int screenX, int screenY)
 	u8* vram = m_memory->GetVram(0);
 	u8 bgTileValue = vram[bgTileMapAddress + bgTileIndex - m_vramOffset];
 
+	//Get the tile attributes (cgb only)
+	u8* cgbVram = NULL;
+	u8 bgTileAttributes = 0;
+	if(m_machineType == EmulatedMachine::GameboyColor)
+	{
+		cgbVram = m_memory->GetVram(1);
+		bgTileAttributes = cgbVram[bgTileMapAddress + bgTileIndex - m_vramOffset];
+	}
+
 	//Which tile data?
 	s8 bytesPerTile = 16;
 	u16 bgTileAddress = (u16)0x8000 + (bgTileValue * bytesPerTile);
@@ -519,12 +667,30 @@ void Display::RenderBackgroundPixel(int screenX, int screenY)
 	int cacheScreenX = screenX;
 	while(tilePixelX <= 7)
 	{
-		u8 bgPixelValue = m_tileData[ cacheTileAddress + (tilePixelY * 8) + tilePixelX ];
+		int bank = 0;
+		if(m_machineType == EmulatedMachine::GameboyColor)
+		{
+			if(bgTileAttributes & 0x08)
+				bank = 1;
+		}
+
+		u8 bgPixelValue = m_tileData[bank][ cacheTileAddress + (tilePixelY * 8) + tilePixelX ];
+		DisplayPixel finalValue = m_displayPalette[0];	///<Re-assigned after a palette lookup
 
 		//Ok...so we have our pixel.  Now we still have to look it up in the palette.
-		int bgPixelPaletteShift = bgPixelValue * 2;	///<2 bits per entry
-		u8 bgPixelPaletteValue = (m_backgroundPalette & (0x03 << bgPixelPaletteShift)) >> bgPixelPaletteShift;
-		DisplayPixel finalValue = m_displayPalette[ bgPixelPaletteValue ];
+		if(m_machineType == EmulatedMachine::GameboyColor)
+		{
+			//CGB uses one of 8 background color palette registers
+			int paletteIndex = bgTileAttributes & 0x07;
+			finalValue = m_cgbBackgroundDisplayColor[(paletteIndex * 4) + bgPixelValue];	///<4 colors per palette
+		}
+		else
+		{
+			//DMG uses the background palette register
+			int bgPixelPaletteShift = bgPixelValue * 2;	///<2 bits per entry
+			u8 bgPixelPaletteValue = (m_backgroundPalette & (0x03 << bgPixelPaletteShift)) >> bgPixelPaletteShift;
+			finalValue = m_displayPalette[ bgPixelPaletteValue ];
+		}
 
 		//Done
 		m_frameBackgroundData.SetPixel(cacheScreenX, screenY, finalValue);
@@ -545,8 +711,18 @@ void Display::RenderSpritePixel(int screenX, int screenY)
 		return;
 
 	//Check priority
-	if(m_spriteHasPriority[screenX] == false && m_activeScreenBuffer->GetPixel(screenX, screenY) != m_displayPalette[0])
-		return;
+	if(m_machineType != EmulatedMachine::GameboyColor)
+	{
+		if(m_spriteHasPriority[screenX] == false && m_activeScreenBuffer->GetPixel(screenX, screenY) != m_displayPalette[0])
+			return;
+	}
+	else /*GBC*/
+	{
+		if(m_lcdControl & LCDC_Background)	///<LCDC_Background in CGB mode is a master priority flag.  If 0, then sprites have priority.
+		{
+			//todo: background priority flag, background data != 00 (palettes)
+		}
+	}
 
 	//RenderSprites fills m_frameSpriteData.  If there's no value there at this pixel, then there's no sprite at this pixel.
 	DisplayPixel cachedValue = m_frameSpriteData.GetPixel(screenX, screenY);
@@ -589,6 +765,15 @@ void Display::RenderWindowPixel(int screenX, int screenY)
 	u8* vram = m_memory->GetVram(0);
 	u8 tileValue = vram[tileMapAddress + tilePositionIndex - m_vramOffset];
 
+	//Get the tile attributes (cgb only)
+	u8* cgbVram = NULL;
+	u8 tileAttributes = 0;
+	if(m_machineType == EmulatedMachine::GameboyColor)
+	{
+		cgbVram = m_memory->GetVram(1);
+		tileAttributes = cgbVram[tileMapAddress + tilePositionIndex - m_vramOffset];
+	}
+
 	//Which tile data?
 	s8 bytesPerTile = 16;
 	u16 tileAddress = (u16)0x8000 + (tileValue * bytesPerTile);
@@ -612,12 +797,30 @@ void Display::RenderWindowPixel(int screenX, int screenY)
 	int cacheScreenX = screenX;
 	while(tilePixelX <= 7)
 	{
-		u8 pixelValue = m_tileData[ cacheTileAddress + (tilePixelY * 8) + tilePixelX ];
+		int bank = 0;
+		if(m_machineType == EmulatedMachine::GameboyColor)
+		{
+			if(tileAttributes & 0x08)
+				bank = 1;
+		}
+
+		u8 pixelValue = m_tileData[bank][ cacheTileAddress + (tilePixelY * 8) + tilePixelX ];
+		DisplayPixel finalValue = m_displayPalette[0];	///<value is overwritten after the palette lookup
 
 		//Ok...so we have our pixel.  Now we still have to look it up in the palette.
-		int pixelPaletteShift = pixelValue * 2;	///<2 bits per entry
-		u8 pixelPaletteValue = (m_backgroundPalette & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
-		DisplayPixel finalValue = m_displayPalette[ pixelPaletteValue ];
+		if(m_machineType == EmulatedMachine::GameboyColor)
+		{
+			//CGB uses one of 8 background color palette registers
+			int paletteIndex = tileAttributes & 0x07;
+			finalValue = m_cgbBackgroundDisplayColor[(paletteIndex * 4) + pixelValue];	///<4 colors per palette
+		}
+		else
+		{
+			//DMG uses the background palette register
+			int PixelPaletteShift = pixelValue * 2;	///<2 bits per entry
+			u8 PixelPaletteValue = (m_backgroundPalette & (0x03 << PixelPaletteShift)) >> PixelPaletteShift;
+			finalValue = m_displayPalette[ PixelPaletteValue ];
+		}
 
 		//Done
 		m_frameWindowData.SetPixel(cacheScreenX, screenY, finalValue);
@@ -684,8 +887,13 @@ void Display::RenderSprites(int screenY)
 		u16 tileDataAddress = 0x8000 + (spriteTileValue * spriteTileSize);
 		u16 tileLineAddress = tileDataAddress + (targetTileLine * 2);
 
+		//Figure out which bank to read the tile data from (cgb only)
+		int bank = 0;
+		if(m_machineType == EmulatedMachine::GameboyColor && (spriteFlags & 0x08))
+			bank = 1;
+
 		//Read the two bytes for this line of the tile
-		u8* vram = m_memory->GetVram(0);
+		u8* vram = m_memory->GetVram(bank);
 		u8 tileLineLow = vram[tileLineAddress - m_vramOffset];
 		u8 tileLineHigh = vram[tileLineAddress+1 - m_vramOffset];
 
@@ -727,12 +935,25 @@ void Display::RenderSprites(int screenY)
 			else
 			{
 				//Look it up in the palette
-				u8 pixelPaletteShift = pixelValue * 2;	///<2 bits per palette entry
-				u8 pixelPaletteValue = (m_spritePalette0 & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
-				if(spriteFlags & (1<<4))	///<Use sprite palette 1 if set
-					pixelPaletteValue = (m_spritePalette1 & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
+				DisplayPixel finalValue = m_displayPalette[0];	///<value is overwritten after the palette lookup
 
-				DisplayPixel finalValue = m_displayPalette[ pixelPaletteValue ];
+				//Ok...so we have our pixel.  Now we still have to look it up in the palette.
+				if(m_machineType == EmulatedMachine::GameboyColor)
+				{
+					//CGB uses one of 8 background color palette registers
+					int paletteIndex = spriteFlags & 0x07;
+					finalValue = m_cgbBackgroundDisplayColor[(paletteIndex * 4) + pixelValue];	///<4 colors per palette
+				}
+				else
+				{
+					//DMG uses one of 2 sprite palette registers
+					u8 pixelPaletteShift = pixelValue * 2;	///<2 bits per palette entry
+					u8 pixelPaletteValue = (m_spritePalette0 & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
+					if(spriteFlags & (1<<4))	///<Use sprite palette 1 if set
+						pixelPaletteValue = (m_spritePalette1 & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
+
+					finalValue = m_displayPalette[ pixelPaletteValue ];
+				}
 
 				//Write the pixel
 				m_frameSpriteData.SetPixel(cacheScreenX, cacheScreenY, finalValue);
@@ -818,9 +1039,12 @@ void Display::CheckCoincidence()
 	}
 }
 
-void Display::UpdateTileData(u16 address, u8 data)
+void Display::UpdateTileData(int bank, u16 address, u8 data)
 {
-	u8* vram = m_memory->GetVram(0);
+	if(bank < 0 || bank > 1)
+		return;
+
+	u8* vram = m_memory->GetVram(bank);
 	int baseVramAddress = address - 0x8000;
 
 	//Get both bytes corresponding to the line
@@ -842,8 +1066,14 @@ void Display::UpdateTileData(u16 address, u8 data)
 	//Update the cache
 	for(int x=0;x<8;x++)
 	{
-		m_tileData[cacheLineAddress + x] = (tileDataLow & (1<<(7-x))) ? 1 : 0;
+		u8 pixelValue = 0;
+
+		if(tileDataLow & (1<<(7-x)))
+			pixelValue |= 0x01;
+
 		if(tileDataHigh & (1<<(7-x)))
-			m_tileData[cacheLineAddress + x] |= 0x02;
+			pixelValue |= 0x02;
+
+		m_tileData[bank][cacheLineAddress + x] = pixelValue;
 	}
 }

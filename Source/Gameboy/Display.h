@@ -63,7 +63,7 @@ public:
 
 
 	//Notifications
-	void WriteVram(u16 address, u8 value);
+	void WriteVram(int bank, u16 address, u8 value);
 	void WriteOam(u16 address, u8 value);
 
 
@@ -73,6 +73,12 @@ public:
 	void SetLcdStatus(u8 value);
 	void SetCurrentScanline(u8 value);
 	void SetScanlineCompare(u8 value);
+
+	void SetCgbBackgroundPaletteTarget(u8 value);
+	void SetCgbBackgroundPaletteData(u8 value);
+
+	void SetCgbSpritePaletteTarget(u8 value);
+	void SetCgbSpritePaletteData(u8 value);
 
 
 private:
@@ -115,6 +121,8 @@ private:
 
 
 	Gameboy* m_machine;
+	EmulatedMachine::Type m_machineType;
+
 	Memory* m_memory;
 
 	GameboyScreenBuffer m_screenBuffer;
@@ -157,9 +165,9 @@ private:
 
 	// Tile data
 
-	void UpdateTileData(u16 address, u8 value);
+	void UpdateTileData(int bank, u16 address, u8 value);
 
-	u8 m_tileData[(8*8) * (0x1800/16)];	///<0x8000 - 0x97ff
+	u8 m_tileData[2][(8*8) * (0x1800/16)];	///<0x8000 - 0x97ff
 
 
 	// Registers
@@ -179,6 +187,16 @@ private:
 
 	u8 m_windowX;
 	u8 m_windowY;
+
+	u16 m_cgbBackgroundPaletteColor[8 * 4];	///<8 palettes, 4 colors per palette
+	u8 m_cgbBackgroundPaletteIndex;
+	u8 m_cgbBackgroundPaletteData;
+	DisplayPixel m_cgbBackgroundDisplayColor[8 * 4];	///<cgb->rgb converted version of backgroundPaletteColor
+
+	u16 m_cgbSpritePaletteColor[8 * 4];	///<8 palettes, 4 colors per palette
+	u8 m_cgbSpritePaletteIndex;
+	u8 m_cgbSpritePaletteData;
+	DisplayPixel m_cgbSpriteDisplayColor[8 * 4];	///<cgb->rgb converted version of spritePaletteColor
 
 
 	// Properties from registers
