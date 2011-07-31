@@ -99,6 +99,11 @@ void Memory::SetMachine(Gameboy* machine)
 	m_callWriteRegister[0x44] = true;	//Display::SetCurrentScanline
 	m_callWriteRegister[0x45] = true;	//Display::SetScanlineCompare
 
+	m_callWriteRegister[0x68] = true;	//Display::SetCgbBackgroundPaletteTarget
+	m_callWriteRegister[0x69] = true;	//Display::SetCgbBackgroundPaletteData
+	m_callWriteRegister[0x6a] = true;	//Display::SetCgbSpritePaletteTarget
+	m_callWriteRegister[0x6b] = true;	//Display::SetCgbSpritePaletteData
+
 	m_callWriteRegister[0x00] = true;	//Input::SetJoypadMode
 
 	m_callWriteRegister[0x10] = true;	//Sound::SetNR10
@@ -175,8 +180,9 @@ void Memory::Serialize(Archive& archive)
 		//The Display doesn't save its vram and oam caches since they're already saved by Memory
 		// so this is here to restore those caches
 
+		//todo: vram banks
 		for(int address = 0x8000; address < 0xa000; address++)
-			m_display->WriteVram(address, m_memoryData[address]);
+			m_display->WriteVram(0, address, m_memoryData[address]);
 		
 		for(int address = 0xfe00; address < 0xfea0; address++)
 			m_display->WriteOam(address, m_memoryData[address]);
@@ -291,7 +297,7 @@ void Memory::Write8(u16 address, u8 value)
 
 	//Send notifications when applicable
 	if(address >= 0x8000 && address < 0xa000)
-		m_display->WriteVram(address, value);
+		m_display->WriteVram(m_selectedCgbVramBank, address, value);
 	if(address >= 0xfe00 && address < 0xfea0)
 		m_display->WriteOam(address, value);
 
@@ -517,6 +523,12 @@ void Memory::WriteRegister(u16 address, u8 value)
 	case 0xff46: SetDmaStartLocation(value); break;
 	case 0xff4f: SetCgbVramBank(value); break;
 	case 0xff50: DisableBootRom(value); break;
+
+	case 0xff68: m_display->SetCgbBackgroundPaletteTarget(value); break;
+	case 0xff69: m_display->SetCgbBackgroundPaletteData(value); break;
+	case 0xff6a: m_display->SetCgbSpritePaletteTarget(value); break;
+	case 0xff6b: m_display->SetCgbSpritePaletteData(value); break;
+
 	case 0xff70: SetCgbRamBank(value); break;
 	}
 }
