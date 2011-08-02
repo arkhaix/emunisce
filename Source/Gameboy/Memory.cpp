@@ -91,6 +91,12 @@ void Memory::SetMachine(Gameboy* machine)
 	m_callWriteRegister[0x50] = true;	//Memory::DisableBootRom
 	m_callWriteRegister[0x70] = true;	//Memory::SetCgbRamBank
 
+	m_callWriteRegister[0x51] = true;	//Memory::SetCgbDmaSourceHigh
+	m_callWriteRegister[0x52] = true;	//Memory::SetCgbDmaSourceLow
+	m_callWriteRegister[0x53] = true;	//Memory::SetCgbDmaDestinationHigh
+	m_callWriteRegister[0x54] = true;	//Memory::SetCgbDmaDestinationLow
+	m_callWriteRegister[0x55] = true;	//Memory::CgbDmaTrigger
+
 	m_callWriteRegister[0x04] = true;	//CPU::SetTimerDivider
 	m_callWriteRegister[0x07] = true;	//CPU::SetTimerControl
 
@@ -135,6 +141,11 @@ void Memory::SetMachine(Gameboy* machine)
 
 void Memory::Initialize()
 {
+	m_dmaMode = DmaMode::None;
+	SetRegisterLocation(0x55, &m_cgbDmaLength, false);
+	m_inHBlank = false;
+	m_hblankDoneThisLine = false;
+	
 	m_selectedCgbRamBank = 1;
 	m_selectedCgbVramBank = 0;
 
@@ -147,6 +158,54 @@ void Memory::Initialize()
 	//Tell the cpu to skip the bootrom if there isn't one loaded
 	if(m_bootRomEnabled == false && m_cpu)
 		m_cpu->pc = 0x100;
+}
+
+void Memory::Run(int ticks)
+{
+	if((m_cgbDmaLength & 0x80) == 0 || m_dmaMode == DmaMode::None)
+		return;
+
+	if(m_dmaMode == DmaMode::General)
+	{
+		int length = m_cgbDmaLength & 0x7f;
+		length += 1;
+		length *= 0x10;
+
+		for(int i=0;i<length;i++)
+		{
+			u8 value = Read8(m_cgbDmaSource + i);
+			Write8(m_cgbDmaDestination + i, value);
+		}
+
+		m_cgbDmaLength = 0;	///<DMA is done
+		m_dmaMode = DmaMode::None;
+	}
+
+	if(m_dmaMode == DmaMode::HBlank && m_inHBlank == true && m_hblankDoneThisLine == false)
+	{
+		//Transfer 10h bytes
+		for(int i=0;i<0x10;i++)
+		{
+			u8 value = Read8(m_cgbDmaSource);
+			Write8(m_cgbDmaDestination, value);
+
+			m_cgbDmaSource++;
+			m_cgbDmaDestination++;
+		}
+
+		//DMA done?
+		if( (m_cgbDmaLength & 0x7f) == 0 )
+		{
+			m_cgbDmaLength = 0;	///<Clears 0x80: the DMA-is-active flag
+			m_dmaMode = DmaMode::None;
+		}
+		else
+		{
+			m_cgbDmaLength--;
+		}
+
+		m_hblankDoneThisLine = true;
+	}
 }
 
 void Memory::Serialize(Archive& archive)
@@ -212,6 +271,17 @@ u8* Memory::GetVram(int bank)
 u8* Memory::GetOam()
 {
 	return &m_memoryData[0xfe00];
+}
+
+void Memory::BeginHBlank()
+{
+	m_hblankDoneThisLine = false;
+	m_inHBlank = true;
+}
+
+void Memory::EndHBlank()
+{
+	m_inHBlank = false;
 }
 
 u8 Memory::Read8(u16 address)
@@ -391,7 +461,44 @@ void Memory::SetWaveRamLock(WaveRamLock::Type lockType, u8 readValue)
 	m_waveRamLockMode = lockType;
 	m_waveRamReadValue = readValue;
 }
-	
+
+
+void Memory::SetCgbDmaSourceHigh(u8 value)
+{
+	m_cgbDmaSource &= 0x00ff;
+	m_cgbDmaSource |= (value << 8);
+}
+
+void Memory::SetCgbDmaSourceLow(u8 value)
+{
+	m_cgbDmaSource &= 0xff00;
+	m_cgbDmaSource |= value;
+}
+
+void Memory::SetCgbDmaDestinationHigh(u8 value)
+{
+	m_cgbDmaDestination &= 0x00ff;
+	m_cgbDmaDestination |= (value << 8);
+}
+
+void Memory::SetCgbDmaDestinationLow(u8 value)
+{
+	m_cgbDmaDestination &= 0xff00;
+	m_cgbDmaDestination |= value;
+}
+
+void Memory::CgbDmaTrigger(u8 value)
+{
+	if(value & 0x80)
+		m_dmaMode = DmaMode::HBlank;
+	else
+		m_dmaMode = DmaMode::General;
+
+	m_cgbDmaLength = value;
+	m_cgbDmaLength |= 0x80;	///<DMA-is-active flag
+}
+
+
 Memory* Memory::CreateFromFile(const char* filename)
 {
 	//Read the gb cart header out of the file
@@ -523,6 +630,11 @@ void Memory::WriteRegister(u16 address, u8 value)
 	case 0xff46: SetDmaStartLocation(value); break;
 	case 0xff4f: SetCgbVramBank(value); break;
 	case 0xff50: DisableBootRom(value); break;
+	case 0xff51: SetCgbDmaSourceHigh(value); break;
+	case 0xff52: SetCgbDmaSourceLow(value); break;
+	case 0xff53: SetCgbDmaDestinationHigh(value); break;
+	case 0xff54: SetCgbDmaDestinationLow(value); break;
+	case 0xff55: CgbDmaTrigger(value); break;
 
 	case 0xff68: m_display->SetCgbBackgroundPaletteTarget(value); break;
 	case 0xff69: m_display->SetCgbBackgroundPaletteData(value); break;

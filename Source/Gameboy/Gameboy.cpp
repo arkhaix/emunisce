@@ -276,6 +276,8 @@ void Gameboy::RunDuringInstruction(unsigned int ticks)
 
 	m_cpu->RunTimer(ticks);
 
+	m_memory->Run(ticks);
+
 	m_sound->Run(ticks);
 
 	m_subInstructionTicksSpent += ticks;
@@ -387,6 +389,8 @@ void Gameboy::InternalStep()
 	}
 
 	m_cpu->RunTimer(ticks);
+
+	m_memory->Run(ticks);
 
 	if(m_cpu->IsStopped() == false)
 		m_display->Run(ticks);

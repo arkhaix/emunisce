@@ -43,6 +43,21 @@ namespace WaveRamLock
 	};
 }
 
+namespace DmaMode
+{
+	typedef int Type;
+
+	enum
+	{
+		None = 0,	///<No DMA currently active
+		Classic,	///<DMG DMA
+		General,	///<General purpose DMA (instant xfer)
+		HBlank,		///<H-Blank DMA (0x10 byte blocks during each hblank)
+
+		NumDmaModes
+	};
+}
+
 class Memory : public IEmulatedMemory
 {
 public:
@@ -52,12 +67,17 @@ public:
 	virtual void SetMachine(Gameboy* machine);
 	virtual void Initialize();	///<Be sure to call the super if you override this
 
+	void Run(int ticks);
+
 	virtual void Serialize(Archive& archive);
 
 	void SetRegisterLocation(u8 registerOffset, u8* pRegister, bool writeable=false);	///<registerOffset is the offset from 0xff00 (so register = 0x7e is address 0xff7e).
 
 	u8* GetVram(int bank=-1);	///<Returns raw pointer to vram space.  Used by Display to avoid a bunch of Read8 calls.  bank = -1 returns the currently selected vram bank.
 	u8* GetOam();	///<Returns raw pointer to oam space.  Used by Display to avoid a bunch of Read8 calls.
+
+	void BeginHBlank();	///<Called from Display to facilitate HBlank DMA.
+	void EndHBlank();	///<Called from Display to facilitate HBlank DMA.
 
 	u8 Read8(u16 address);
 	u16 Read16(u16 address);
@@ -73,6 +93,12 @@ public:
 	void SetVramLock(bool locked);
 	void SetOamLock(bool locked);
 	void SetWaveRamLock(WaveRamLock::Type lockType, u8 readValue=0xff);	///<readValue is only necessary when locked=false.
+
+	void SetCgbDmaSourceHigh(u8 value);
+	void SetCgbDmaSourceLow(u8 value);
+	void SetCgbDmaDestinationHigh(u8 value);
+	void SetCgbDmaDestinationLow(u8 value);
+	void CgbDmaTrigger(u8 value);
 
 	static Memory* CreateFromFile(const char* filename);
 
@@ -119,6 +145,17 @@ protected:
 	u8* m_registerLocation[0x100];
 	bool m_registerWriteable[0x100];
 	bool m_callWriteRegister[0x100];
+
+
+	//DMA
+
+	u16 m_cgbDmaSource;
+	u16 m_cgbDmaDestination;
+	u8 m_cgbDmaLength;
+	DmaMode::Type m_dmaMode;
+
+	bool m_inHBlank;
+	bool m_hblankDoneThisLine;
 
 
 	//Display features
