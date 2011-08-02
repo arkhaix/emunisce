@@ -185,7 +185,10 @@ void Display::Run(int ticks)
 		else if(m_currentState == DisplayState::VideoRamLocked)
 			Begin_HBlank();
 		else //m_currentState == DisplayState::HBlank
+		{
+			m_memory->EndHBlank();
 			Begin_SpritesLocked();	///<This will trigger VBlank when appropriate
+		}
 	}
 }
 
@@ -296,6 +299,7 @@ void Display::SetLcdControl(u8 value)
 
 			//Behaves as though it's in h-blank while disabled
 			Begin_HBlank();
+			m_memory->EndHBlank();	///<No HBlank DMA if the screen is just disabled
 			m_currentScanline = 0;
 			m_stateTicksRemaining = 0;
 
@@ -473,6 +477,9 @@ void Display::Begin_HBlank()
 	//Unlock vram and oam
 	m_memory->SetVramLock(false);
 	m_memory->SetOamLock(false);
+
+	//Allow HBlank DMA
+	m_memory->BeginHBlank();
 
 	//LCDC interrupt
 	if(m_lcdStatus & STAT_Interrupt_HBlank)
