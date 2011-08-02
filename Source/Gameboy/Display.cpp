@@ -60,18 +60,10 @@ Display::Display()
 	m_displayPalette[2] = DisplayPixelFromRGBA(0.33f, 0.33f, 0.33f);
 	m_displayPalette[3] = DisplayPixelFromRGBA(0.00f, 0.00f, 0.00f);
 
-	//test
-	for(int i=0;i<8;i++)
+	for(int i=0;i<8*4;i++)	///<8 palettes * 4 colors per palette
 	{
-		m_cgbBackgroundDisplayColor[i*4 + 0] = DisplayPixelFromRGBA(0.f, 0.f, 0.f);
-		m_cgbBackgroundDisplayColor[i*4 + 1] = DisplayPixelFromRGBA(1.f, 0.f, 0.f);
-		m_cgbBackgroundDisplayColor[i*4 + 2] = DisplayPixelFromRGBA(0.f, 1.f, 0.f);
-		m_cgbBackgroundDisplayColor[i*4 + 3] = DisplayPixelFromRGBA(0.f, 0.f, 1.f);
-
-		m_cgbSpriteDisplayColor[i*4 + 0] = PIXEL_TRANSPARENT;
-		m_cgbSpriteDisplayColor[i*4 + 1] = DisplayPixelFromRGBA(1.f, 0.f, 0.f);
-		m_cgbSpriteDisplayColor[i*4 + 2] = DisplayPixelFromRGBA(0.f, 1.f, 0.f);
-		m_cgbSpriteDisplayColor[i*4 + 3] = DisplayPixelFromRGBA(0.f, 0.f, 1.f);
+		m_cgbBackgroundDisplayColor[i] = DisplayPixelFromRGBA(1.f, 1.f, 1.f);
+		m_cgbSpriteDisplayColor[i] = DisplayPixelFromRGBA(1.f, 1.f, 1.f);
 	}
 }
 
@@ -355,7 +347,7 @@ void Display::SetCgbBackgroundPaletteTarget(u8 value)
 {
 	m_cgbBackgroundPaletteIndex = value;
 
-	int index = value & 0x1f;
+	int index = value & 0x3f;
 	index /= 2;
 	u16 paletteData = m_cgbBackgroundPaletteColor[index];
 
@@ -372,7 +364,7 @@ void Display::SetCgbBackgroundPaletteData(u8 value)
 	int index = m_cgbBackgroundPaletteIndex;
 
 	bool autoIncrement = (index & 0x80) ? true : false;
-	index &= 0x1f;
+	index &= 0x3f;
 
 	bool highByte = (index & 0x01) ? true : false;
 	index /= 2;
@@ -412,7 +404,7 @@ void Display::SetCgbSpritePaletteTarget(u8 value)
 {
 	m_cgbSpritePaletteIndex = value;
 
-	int index = value & 0x1f;
+	int index = value & 0x3f;
 	index /= 2;
 	u16 paletteData = m_cgbSpritePaletteColor[index];
 
@@ -429,7 +421,7 @@ void Display::SetCgbSpritePaletteData(u8 value)
 	int index = m_cgbSpritePaletteIndex;
 
 	bool autoIncrement = (index & 0x80) ? true : false;
-	index &= 0x1f;
+	index &= 0x3f;
 
 	bool highByte = (index & 0x01) ? true : false;
 	index /= 2;
@@ -949,7 +941,7 @@ void Display::RenderSprites(int screenY)
 				{
 					//CGB uses one of 8 background color palette registers
 					int paletteIndex = spriteFlags & 0x07;
-					finalValue = m_cgbBackgroundDisplayColor[(paletteIndex * 4) + pixelValue];	///<4 colors per palette
+					finalValue = m_cgbSpriteDisplayColor[(paletteIndex * 4) + pixelValue];	///<4 colors per palette
 				}
 				else
 				{
