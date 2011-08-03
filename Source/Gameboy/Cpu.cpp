@@ -139,6 +139,8 @@ void Cpu::Serialize(Archive& archive)
 
 	SerializeItem(archive, m_timerControl);
 	SerializeItem(archive, m_timerEnabled);
+
+	SerializeItem(archive, m_cgbSpeedSwitch);
 }
 
 

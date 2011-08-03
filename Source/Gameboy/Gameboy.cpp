@@ -445,6 +445,8 @@ void Gameboy::Serialize(Archive& archive)
 	SerializeItem(archive, m_ticksPerFrame);
 	SerializeItem(archive, m_frameTicksRemaining);
 
+	SerializeItem(archive, m_doubleSpeed);
+
 	m_cpu->Serialize(archive);
 	m_display->Serialize(archive);
 	m_input->Serialize(archive);
