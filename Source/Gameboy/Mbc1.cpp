@@ -39,10 +39,22 @@ Mbc1::Mbc1()
 	m_numRamBanks = 0;
 
 	m_sramLoaded = false;
+
+	m_pendingSramGeneration = 0;
+	m_lastPersistedGeneration = 0;
+	m_lastPersistedFrameCount = 0;
 }
 
 Mbc1::~Mbc1()
 {
+}
+
+void Mbc1::Run(int ticks)
+{
+	Memory::Run(ticks);
+
+	//Make sure all sram data has been written
+	PersistRAM();
 }
 
 void Mbc1::Serialize(Archive& archive)
@@ -240,12 +252,10 @@ void Mbc1::SaveRAM()
 	if(isBatteryType == false)
 		return;
 	
-	IMachineToApplication* applicationInterface = m_machine->GetApplicationInterface();
-	if(applicationInterface != NULL)
-	{
-		applicationInterface->SaveRomData("sram", &m_ramBanks[0][0], 0x2000 * m_numRamBanks);
-		m_sramLoaded = true;	///<So we don't wind up re-loading this data we just wrote
-	}
+	memcpy(m_pendingSramWrite, &m_ramBanks[0][0], 0x2000 * m_numRamBanks);
+	m_pendingSramGeneration++;
+
+	m_sramLoaded = true;	///<So we don't wind up re-loading this data we just wrote
 }
 
 void Mbc1::LoadRAM()
@@ -270,5 +280,25 @@ void Mbc1::LoadRAM()
 		applicationInterface->LoadRomData("sram", &m_ramBanks[0][0], 0x2000 * m_numRamBanks);
 		m_sramLoaded = true;
 		SwitchRAM();
+	}
+}
+
+void Mbc1::PersistRAM()
+{
+	//Don't persist data we've already written
+	if(m_pendingSramGeneration == m_lastPersistedGeneration)
+		return;
+
+	//Restrict to once per second at most
+	if(m_machine->GetFrameCount() - m_lastPersistedFrameCount < 60)
+		return;
+
+	IMachineToApplication* applicationInterface = m_machine->GetApplicationInterface();
+	if(applicationInterface != NULL)
+	{
+		applicationInterface->SaveRomData("sram", &m_pendingSramWrite[0][0], 0x2000 * m_numRamBanks);
+
+		m_lastPersistedGeneration = m_pendingSramGeneration;
+		m_lastPersistedFrameCount = m_machine->GetFrameCount();
 	}
 }
