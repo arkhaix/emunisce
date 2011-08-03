@@ -33,6 +33,8 @@ public:
 	Mbc1();
 	~Mbc1();
 
+	virtual void Run(int ticks);
+
 	virtual void Serialize(Archive& archive);
 
 	virtual void Write8(u16 address, u8 value);
@@ -47,6 +49,8 @@ protected:
 	void SaveRAM();
 	void LoadRAM();
 
+	void PersistRAM();
+
 	char m_romFilename[1024];
 	char m_sramFilename[1024];
 
@@ -57,6 +61,11 @@ protected:
 
 	int m_numRamBanks;
 	u8 m_ramBanks[0x10][0x2000];
+
+	u8 m_pendingSramWrite[0x10][0x2000];
+	unsigned int m_pendingSramGeneration;	///<Incremented each time SaveRAM is called.
+	unsigned int m_lastPersistedGeneration;	///<The generation we last persisted.
+	unsigned int m_lastPersistedFrameCount;	///<The frame count the last time we persisted the sram data.
 
 	int m_selectedRomBank;
 	int m_selectedRamBank;

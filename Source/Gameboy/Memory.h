@@ -67,7 +67,7 @@ public:
 	virtual void SetMachine(Gameboy* machine);
 	virtual void Initialize();	///<Be sure to call the super if you override this
 
-	void Run(int ticks);
+	virtual void Run(int ticks);
 
 	virtual void Serialize(Archive& archive);
 
