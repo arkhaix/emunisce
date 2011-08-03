@@ -492,9 +492,19 @@ void Memory::SetCgbDmaDestinationLow(u8 value)
 void Memory::CgbDmaTrigger(u8 value)
 {
 	if(value & 0x80)
+	{
 		m_dmaMode = DmaMode::HBlank;
+	}
 	else
-		m_dmaMode = DmaMode::General;
+	{
+		//Writing 0 to bit 7 while HBlank DMA is active cancels that DMA
+		if(m_dmaMode == DmaMode::HBlank)
+			m_dmaMode = DmaMode::None;
+
+		//If HBlank DMA is not active, then writing 0 to bit 7 begins a general DMA
+		else
+			m_dmaMode = DmaMode::General;
+	}
 
 	m_cgbDmaLength = value;
 	m_cgbDmaLength |= 0x80;	///<DMA-is-active flag
