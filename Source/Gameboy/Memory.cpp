@@ -432,6 +432,8 @@ void Memory::SetCgbRamBank(u8 value)
 	int bank = (value & 0x07);
 	if(bank == 0)
 		bank = 1;
+
+	m_selectedCgbRamBank = bank;
 	
 	memcpy((void*)(&m_memoryData[0xd000]), (void*)(&m_cgbRamBanks[m_selectedCgbRamBank][0]), 0x1000);
 }
@@ -441,7 +443,7 @@ void Memory::SetCgbVramBank(u8 value)
 	if(m_machineType != EmulatedMachine::GameboyColor)
 		return;
 
-	int bank = (value & 0x01);
+	m_selectedCgbVramBank = (value & 0x01);
 
 	memcpy((void*)(&m_memoryData[0x8000]), (void*)(&m_cgbRamBanks[m_selectedCgbVramBank][0]), 0x2000);
 }
