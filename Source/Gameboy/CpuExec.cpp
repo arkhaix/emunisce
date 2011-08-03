@@ -244,8 +244,30 @@ int Cpu::Step()
 
 	case 0x10:
 		//10      DJNZ PC+dd      STOP
-		//m_stopped = true;
+		if(m_machineType == EmulatedMachine::GameboyColor && (m_cgbSpeedSwitch & 0x01))
+		{
+			bool enteringDoubleSpeed = true;
+			if(m_cgbSpeedSwitch & 0x80)
+				enteringDoubleSpeed = false;
+
+			if(enteringDoubleSpeed == true)
+			{
+				m_machine->SetDoubleSpeed(true);
+				m_cgbSpeedSwitch |= 0x80;
+			}
+			else
+			{
+				m_machine->SetDoubleSpeed(false);
+				m_cgbSpeedSwitch &= ~(0x80);
+			}
+		}
+		else
+		{
+			//m_stopped = true;
+		}
+
 		instructionTime += 4;
+
 	break;
 
 	case 0x11:

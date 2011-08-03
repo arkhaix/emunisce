@@ -106,6 +106,8 @@ public:
 	void SetTimerDivider(u8 value);
 	void SetTimerControl(u8 value);
 
+	void SetCgbSpeedSwitch(u8 value);
+
 private:
 
 	Gameboy* m_machine;
@@ -136,6 +138,8 @@ private:
 
 	u8 m_timerControl;	///<0xff07 - Timer Control.
 	bool m_timerEnabled;
+
+	u8 m_cgbSpeedSwitch;	///<0xff4d - Speed switch and flag (Key1).
 
 
 	u8 ReadNext8();

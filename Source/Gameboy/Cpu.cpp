@@ -53,6 +53,8 @@ void Cpu::SetMachine(Gameboy* machine)
 	m_memory->SetRegisterLocation(0x05, &m_timerCounter, true);
 	m_memory->SetRegisterLocation(0x06, &m_timerModulo, true);
 	m_memory->SetRegisterLocation(0x07, &m_timerControl, false);
+
+	m_memory->SetRegisterLocation(0x4d, &m_cgbSpeedSwitch, false);
 }
 
 void Cpu::Initialize()
@@ -65,6 +67,8 @@ void Cpu::Initialize()
 
 	m_interruptsEnabled = 0;		///<0xffff - Interrupt Enable.  Which interrupts are currently enabled.  Slaves to the IME flag.
 	m_interruptFlags = 0;		///<0xff0f - Interrupt Flag.  Which interrupts are currently set.
+
+	m_cgbSpeedSwitch = 0;	///<ff4d - Speed switch and flag (Key1).  Whether speed switching is enabled (0x01) and whether double-speed is currently active (0x80).
 
 	m_timerDivider = 0;	///<0xff04 - Timer Divider.
 	m_ticksPerDividerIncrement = 256;	///<The timer divider increments once every 256 ticks.
@@ -170,6 +174,16 @@ void Cpu::SetTimerControl(u8 value)
 	}
 
 	RunTimer(0);
+}
+
+void Cpu::SetCgbSpeedSwitch(u8 value)
+{
+	if(m_machineType != EmulatedMachine::GameboyColor)
+		return;
+
+	//Only bit 0 (speed switch enable) is writable
+	m_cgbSpeedSwitch &= ~(0x01);
+	m_cgbSpeedSwitch |= (value & 0x01);
 }
 
 void Cpu::RunTimer(int ticks)
