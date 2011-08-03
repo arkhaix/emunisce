@@ -271,16 +271,35 @@ void Gameboy::RunDuringInstruction(unsigned int ticks)
 		}
 	}
 
-	if(m_cpu->IsStopped() == false)
-		m_display->Run(ticks);
-
 	m_cpu->RunTimer(ticks);
 
-	m_memory->Run(ticks);
+	int slowTicks = ticks;	///<ticks to run for components that don't do double-speed
+	if(m_doubleSpeed == true)
+	{
+		//This naive integer divide is safe because all instruction times are even multiples of two
+		// and so are all the sub-instruction tick calls, so ticks and ticksThisStep will always be even
+		// prior to this divide.
+		slowTicks /= 2;
+	}
 
-	m_sound->Run(ticks);
+	m_memory->Run(slowTicks);
 
-	m_subInstructionTicksSpent += ticks;
+	if(m_cpu->IsStopped() == false)
+		m_display->Run(slowTicks);
+
+	m_sound->Run(slowTicks);
+
+	m_subInstructionTicksSpent += ticks;	///<Not slowTicks.  This is the number of double-speed ticks used because it's later subtracted from the instruction time in InternalStep.
+}
+
+bool Gameboy::IsDoubleSpeed()
+{
+	return m_doubleSpeed;
+}
+
+void Gameboy::SetDoubleSpeed(bool doubleSpeed)
+{
+	m_doubleSpeed = doubleSpeed;
 }
 
 
@@ -309,6 +328,8 @@ Gameboy::Gameboy(Memory* memory, EmulatedMachine::Type machineType)
 
 	m_executingInstruction = false;
 	m_subInstructionTicksSpent = 0;
+
+	m_doubleSpeed = false;
 
 	m_nextApplicationEvent = m_applicationEvents.end();
 }
@@ -390,14 +411,24 @@ void Gameboy::InternalStep()
 
 	m_cpu->RunTimer(ticks);
 
-	m_memory->Run(ticks);
+	int slowTicks = ticks;	///<Number of ticks to run for components that don't do double-speed.
+	if(m_doubleSpeed == true)
+	{
+		//This naive integer divide is safe because all instruction times are even multiples of two
+		// and so are all the sub-instruction tick calls, so ticks and ticksThisStep will always be even
+		// prior to this divide.
+		slowTicks /= 2;
+		ticksThisStep /= 2;
+	}
+
+	m_memory->Run(slowTicks);
 
 	if(m_cpu->IsStopped() == false)
-		m_display->Run(ticks);
+		m_display->Run(slowTicks);
 
-	m_sound->Run(ticks);
+	m_sound->Run(slowTicks);
 
-	m_frameTicksRemaining -= ticksThisStep;
+	m_frameTicksRemaining -= ticksThisStep;	///<This is halved during double-speed.
 	if(m_frameTicksRemaining<= 0)
 	{
 		m_frameCount++;

@@ -95,6 +95,10 @@ public:
 	//Execution
 	void RunDuringInstruction(unsigned int ticks);	///<Should only be called by the CPU.  Won't do anything if called externally.
 
+	//Double-speed mode (CGB only)
+	bool IsDoubleSpeed();
+	void SetDoubleSpeed(bool doubleSpeed);
+
 protected:
 
 	Gameboy(Memory* memory, EmulatedMachine::Type machineType);
@@ -125,6 +129,8 @@ protected:
 
 	bool m_executingInstruction;
 	unsigned int m_subInstructionTicksSpent;	///<Tracks how many ticks were used during instruction execution
+
+	bool m_doubleSpeed;
 
 	list<ApplicationEvent> m_applicationEvents;
 	list<ApplicationEvent>::iterator m_nextApplicationEvent;

@@ -99,6 +99,7 @@ void Memory::SetMachine(Gameboy* machine)
 
 	m_callWriteRegister[0x04] = true;	//CPU::SetTimerDivider
 	m_callWriteRegister[0x07] = true;	//CPU::SetTimerControl
+	m_callWriteRegister[0x4d] = true;	//CPU::SetCgbSpeedSwitch
 
 	m_callWriteRegister[0x40] = true;	//Display::SetLcdControl
 	m_callWriteRegister[0x41] = true;	//Display::SetLcdStatus
@@ -640,6 +641,9 @@ void Memory::WriteRegister(u16 address, u8 value)
 	case 0xff45: m_display->SetScanlineCompare(value); break;
 
 	case 0xff46: SetDmaStartLocation(value); break;
+
+	case 0xff4d: m_cpu->SetCgbSpeedSwitch(value); break;
+
 	case 0xff4f: SetCgbVramBank(value); break;
 	case 0xff50: DisableBootRom(value); break;
 	case 0xff51: SetCgbDmaSourceHigh(value); break;
