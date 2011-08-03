@@ -234,15 +234,40 @@ void Memory::Serialize(Archive& archive)
 	SerializeItem(archive, m_waveRamReadValue);
 
 
+	//DMA state
+
+	SerializeItem(archive, m_cgbDmaSource);
+	SerializeItem(archive, m_cgbDmaDestination);
+	SerializeItem(archive, m_cgbDmaLength);
+	SerializeItem(archive, m_dmaMode);
+
+	SerializeItem(archive, m_inHBlank);
+	SerializeItem(archive, m_hblankDoneThisLine);
+
+
+	//CGB banks
+
+	SerializeItem(archive, m_selectedCgbRamBank);
+	SerializeItem(archive, m_selectedCgbVramBank);
+
+	for(int i=0;i<8;i++)
+		SerializeBuffer(archive, &m_cgbRamBanks[i][0], 0x1000);
+
+	for(int i=0;i<2;i++)
+		SerializeBuffer(archive, &m_cgbVramBanks[i][0], 0x2000);
+
+
 	//Update Display caches on load
 	if(archive.GetArchiveMode() == ArchiveMode::Loading)
 	{
 		//The Display doesn't save its vram and oam caches since they're already saved by Memory
 		// so this is here to restore those caches
 
-		//todo: vram banks
-		for(int address = 0x8000; address < 0xa000; address++)
-			m_display->WriteVram(0, address, m_memoryData[address]);
+		for(int bank=0;bank<2;bank++)
+		{
+			for(int address = 0x8000; address < 0xa000; address++)
+				m_display->WriteVram(bank, address, m_cgbVramBanks[bank][address - 0x8000]);
+		}
 		
 		for(int address = 0xfe00; address < 0xfea0; address++)
 			m_display->WriteOam(address, m_memoryData[address]);

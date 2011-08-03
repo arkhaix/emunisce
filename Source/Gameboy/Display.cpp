@@ -237,6 +237,24 @@ void Display::Serialize(Archive& archive)
 	// Properties from registers
 
 	SerializeItem(archive, m_lcdEnabled);
+
+
+	// CGB
+
+	SerializeItem(archive, m_cgbBackgroundPaletteIndex);
+	SerializeItem(archive, m_cgbBackgroundPaletteData);
+
+	SerializeItem(archive, m_cgbSpritePaletteIndex);
+	SerializeItem(archive, m_cgbSpritePaletteData);
+
+	for(int i=0;i<8*4;i++)	///<8 palettes, 4 colors per palette
+	{
+		SerializeItem(archive, m_cgbBackgroundPaletteColor[i]);
+		SerializeItem(archive, m_cgbBackgroundDisplayColor[i]);
+
+		SerializeItem(archive, m_cgbSpritePaletteColor[i]);
+		SerializeItem(archive, m_cgbSpriteDisplayColor[i]);
+	}
 }
 
 void Display::WriteVram(int bank, u16 address, u8 value)
