@@ -685,13 +685,22 @@ void Display::RenderBackgroundPixel(int screenX, int screenY)
 	while(tilePixelX <= 7)
 	{
 		int bank = 0;
+		int finalPixelX = tilePixelX;
+		int finalPixelY = tilePixelY;
+
 		if(m_machineType == EmulatedMachine::GameboyColor)
 		{
 			if(bgTileAttributes & 0x08)
 				bank = 1;
+
+			if(bgTileAttributes & 0x20)
+				finalPixelX = 7 - finalPixelX;
+
+			if(bgTileAttributes & 0x40)
+				finalPixelY = 7 - finalPixelY;
 		}
 
-		u8 bgPixelValue = m_tileData[bank][ cacheTileAddress + (tilePixelY * 8) + tilePixelX ];
+		u8 bgPixelValue = m_tileData[bank][ cacheTileAddress + (finalPixelY * 8) + finalPixelX ];
 		DisplayPixel finalValue = m_displayPalette[0];	///<Re-assigned after a palette lookup
 
 		//Ok...so we have our pixel.  Now we still have to look it up in the palette.
@@ -815,13 +824,22 @@ void Display::RenderWindowPixel(int screenX, int screenY)
 	while(tilePixelX <= 7)
 	{
 		int bank = 0;
+		int finalPixelX = tilePixelX;
+		int finalPixelY = tilePixelY;
+
 		if(m_machineType == EmulatedMachine::GameboyColor)
 		{
 			if(tileAttributes & 0x08)
 				bank = 1;
+
+			if(tileAttributes & 0x20)
+				finalPixelX = 7 - finalPixelX;
+
+			if(tileAttributes & 0x40)
+				finalPixelY = 7 - finalPixelY;
 		}
 
-		u8 pixelValue = m_tileData[bank][ cacheTileAddress + (tilePixelY * 8) + tilePixelX ];
+		u8 pixelValue = m_tileData[bank][ cacheTileAddress + (finalPixelY * 8) + finalPixelX ];
 		DisplayPixel finalValue = m_displayPalette[0];	///<value is overwritten after the palette lookup
 
 		//Ok...so we have our pixel.  Now we still have to look it up in the palette.

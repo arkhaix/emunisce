@@ -34,6 +34,8 @@ void Mbc5::Write8(u16 address, u8 value)
 			SaveRAM();
 		else if(m_sramLoaded == false)
 			LoadRAM();
+
+		return;
 	}
 
 	//ROM Bank Select (low 8 bits)
