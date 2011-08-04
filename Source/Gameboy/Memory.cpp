@@ -344,7 +344,7 @@ u8 Memory::Read8(u16 address)
 	{
 		return 0xff;
 	}
-	else if(address < 0x100 && m_bootRomEnabled == true)
+	else if(address < 0x0100 && m_bootRomEnabled == true)
 	{
 		return m_bootRom[address];
 	}
@@ -454,13 +454,12 @@ void Memory::SetCgbRamBank(u8 value)
 	if(m_machineType != EmulatedMachine::GameboyColor)
 		return;
 
-	int bank = (value & 0x07);
-	if(bank == 0)
-		bank = 1;
+	m_selectedCgbRamBank = value & 0x07;
+	if(m_selectedCgbRamBank == 0)
+		m_selectedCgbRamBank = 1;
 
-	m_selectedCgbRamBank = bank;
-	
 	memcpy((void*)(&m_memoryData[0xd000]), (void*)(&m_cgbRamBanks[m_selectedCgbRamBank][0]), 0x1000);
+	memcpy((void*)(&m_memoryData[0xf000]), (void*)(&m_cgbRamBanks[m_selectedCgbRamBank][0]), 0x0e00);
 }
 
 void Memory::SetCgbVramBank(u8 value)
@@ -470,7 +469,7 @@ void Memory::SetCgbVramBank(u8 value)
 
 	m_selectedCgbVramBank = (value & 0x01);
 
-	memcpy((void*)(&m_memoryData[0x8000]), (void*)(&m_cgbRamBanks[m_selectedCgbVramBank][0]), 0x2000);
+	memcpy((void*)(&m_memoryData[0x8000]), (void*)(&m_cgbVramBanks[m_selectedCgbVramBank][0]), 0x2000);
 }
 
 void Memory::SetVramLock(bool locked)
@@ -504,6 +503,8 @@ void Memory::SetCgbDmaSourceLow(u8 value)
 	if(m_machineType != EmulatedMachine::GameboyColor)
 		return;
 
+	value &= 0xf0;	///<Lower 4 bits are ignored since it must be aligned on a 0x10 boundary.
+
 	m_cgbDmaSource &= 0xff00;
 	m_cgbDmaSource |= value;
 }
@@ -513,6 +514,8 @@ void Memory::SetCgbDmaDestinationHigh(u8 value)
 	if(m_machineType != EmulatedMachine::GameboyColor)
 		return;
 
+	value &= 0x1f;	///<Upper 3 bits are ignored since destination is always in vram.
+
 	m_cgbDmaDestination &= 0x00ff;
 	m_cgbDmaDestination |= (value << 8);
 }
@@ -521,6 +524,8 @@ void Memory::SetCgbDmaDestinationLow(u8 value)
 {
 	if(m_machineType != EmulatedMachine::GameboyColor)
 		return;
+
+	value &= 0xf0;	///<Lower 4 bits are ignored since it must be aligned on a 0x10 boundary.
 
 	m_cgbDmaDestination &= 0xff00;
 	m_cgbDmaDestination |= value;
@@ -569,13 +574,25 @@ Memory* Memory::CreateFromFile(const char* filename)
 	u8 cartType = header[0x147];
 
 	if(cartType == 0 || cartType == 8 || cartType == 9)
+	{
 		memoryController = new RomOnly();
+		printf("Memory controller: RomOnly\n");
+	}
 	else if(cartType >= 1 && cartType <= 3)
+	{
 		memoryController = new Mbc1();
+		printf("Memory controller: MBC1\n");
+	}
 	else if(cartType >= 0x0f && cartType <= 0x13)
+	{
 		memoryController = new Mbc3();
+		printf("Memory controller: MBC3\n");
+	}
 	else if(cartType >= 0x19 && cartType <= 0x1e)
+	{
 		memoryController = new Mbc5();
+		printf("Memory controller: MBC5\n");
+	}
 
 	if(memoryController != NULL)
 		printf("Cartridge type ok: %d (0x%02X)\n", cartType, cartType);

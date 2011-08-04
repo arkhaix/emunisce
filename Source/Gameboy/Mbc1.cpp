@@ -165,7 +165,7 @@ bool Mbc1::LoadFile(const char* filename)
 	//Load all the banks
 
 	int romBank = 0;
-	while(romBank < 0x80 && ifile.good() && !ifile.eof() && !ifile.fail())
+	while(romBank < m_maxRomBanks && ifile.good() && !ifile.eof() && !ifile.fail())
 	{
 		if(m_fiveBitBankCheck && (romBank == 0x20 || romBank == 0x40 || romBank == 0x60))
 			romBank++;
