@@ -57,7 +57,8 @@ protected:
 	bool m_sramLoaded;
 
 	int m_numRomBanks;
-	u8 m_romBanks[0x200][0x4000];
+	static const unsigned int m_maxRomBanks = 0x200;
+	u8 m_romBanks[m_maxRomBanks][0x4000];
 
 	int m_numRamBanks;
 	u8 m_ramBanks[0x10][0x2000];
