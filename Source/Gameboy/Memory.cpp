@@ -175,7 +175,7 @@ void Memory::Run(int ticks)
 		for(int i=0;i<length;i++)
 		{
 			u8 value = Read8(m_cgbDmaSource + i);
-			Write8(m_cgbDmaDestination + i, value);
+			Write8(0x8000 + m_cgbDmaDestination + i, value);
 		}
 
 		m_cgbDmaLength = 0;	///<DMA is done
@@ -188,7 +188,7 @@ void Memory::Run(int ticks)
 		for(int i=0;i<0x10;i++)
 		{
 			u8 value = Read8(m_cgbDmaSource);
-			Write8(m_cgbDmaDestination, value);
+			Write8(0x8000 + m_cgbDmaDestination, value);
 
 			m_cgbDmaSource++;
 			m_cgbDmaDestination++;
@@ -288,8 +288,7 @@ u8* Memory::GetVram(int bank)
 	if(bank < 0)
 		return &m_cgbVramBanks[m_selectedCgbVramBank][0];
 
-	if(bank > 1)
-		bank = 1;
+	bank = bank & 0x01;	///<The only valid banks are 0 and 1.
 
 	return &m_cgbVramBanks[bank][0];
 }
@@ -493,30 +492,45 @@ void Memory::SetWaveRamLock(WaveRamLock::Type lockType, u8 readValue)
 
 void Memory::SetCgbDmaSourceHigh(u8 value)
 {
+	if(m_machineType != EmulatedMachine::GameboyColor)
+		return;
+
 	m_cgbDmaSource &= 0x00ff;
 	m_cgbDmaSource |= (value << 8);
 }
 
 void Memory::SetCgbDmaSourceLow(u8 value)
 {
+	if(m_machineType != EmulatedMachine::GameboyColor)
+		return;
+
 	m_cgbDmaSource &= 0xff00;
 	m_cgbDmaSource |= value;
 }
 
 void Memory::SetCgbDmaDestinationHigh(u8 value)
 {
+	if(m_machineType != EmulatedMachine::GameboyColor)
+		return;
+
 	m_cgbDmaDestination &= 0x00ff;
 	m_cgbDmaDestination |= (value << 8);
 }
 
 void Memory::SetCgbDmaDestinationLow(u8 value)
 {
+	if(m_machineType != EmulatedMachine::GameboyColor)
+		return;
+
 	m_cgbDmaDestination &= 0xff00;
 	m_cgbDmaDestination |= value;
 }
 
 void Memory::CgbDmaTrigger(u8 value)
 {
+	if(m_machineType != EmulatedMachine::GameboyColor)
+		return;
+
 	if(value & 0x80)
 	{
 		m_dmaMode = DmaMode::HBlank;
