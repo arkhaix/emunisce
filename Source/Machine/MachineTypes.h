@@ -60,9 +60,9 @@ inline DisplayPixel DisplayPixelFromRGBA(float r, float g, float b, float a = 1.
 inline void DisplayPixelToRGBA(DisplayPixel pixel, u8& r, u8& g, u8& b, u8&a)
 {
 	a = (u8)(pixel >> 24);
-	b = (u8)(pixel >> 16);
+	r = (u8)(pixel >> 16);
 	g = (u8)(pixel >> 8);
-	r = (u8)(pixel >> 0);
+	b = (u8)(pixel >> 0);
 }
 
 inline void DisplayPixelToRGBA(DisplayPixel pixel, float& r, float& g, float& b, float& a)
