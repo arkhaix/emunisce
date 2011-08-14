@@ -168,6 +168,9 @@ void Memory::Run(int ticks)
 
 	if(m_dmaMode == DmaMode::General)
 	{
+		bool vramLocked = m_vramLocked;
+		m_vramLocked = false;
+
 		int length = m_cgbDmaLength & 0x7f;
 		length += 1;
 		length *= 0x10;
@@ -180,6 +183,8 @@ void Memory::Run(int ticks)
 
 		m_cgbDmaLength = 0;	///<DMA is done
 		m_dmaMode = DmaMode::None;
+
+		m_vramLocked = vramLocked;
 	}
 
 	if(m_dmaMode == DmaMode::HBlank && m_inHBlank == true && m_hblankDoneThisLine == false)
