@@ -135,6 +135,7 @@ protected:
 	list<ApplicationEvent> m_applicationEvents;
 	list<ApplicationEvent>::iterator m_nextApplicationEvent;
 	Mutex m_applicationEventsLock;
+	bool m_applicationEventsPending;
 };
 
 }	//namespace Emunisce
