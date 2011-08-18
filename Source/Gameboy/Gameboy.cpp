@@ -63,6 +63,8 @@ void Gameboy::AddApplicationEvent(ApplicationEvent& applicationEvent, bool relat
 	}
 
 	m_nextApplicationEvent = min_element(m_applicationEvents.begin(), m_applicationEvents.end());
+
+	m_applicationEventsPending = true;
 }
 
 void Gameboy::RemoveApplicationEvent(unsigned int eventId)
@@ -79,6 +81,9 @@ void Gameboy::RemoveApplicationEvent(unsigned int eventId)
 	}
 
 	m_nextApplicationEvent = min_element(m_applicationEvents.begin(), m_applicationEvents.end());
+
+	if(m_applicationEvents.empty())
+		m_applicationEventsPending = false;
 }
 
 
@@ -253,6 +258,7 @@ void Gameboy::RunDuringInstruction(unsigned int ticks)
 	if(m_executingInstruction == false)
 		return;
 	
+	if(m_applicationEventsPending == true)
 	{
 		ScopedMutex scopedLock(m_applicationEventsLock);
 
@@ -267,6 +273,9 @@ void Gameboy::RunDuringInstruction(unsigned int ticks)
 				m_applicationInterface->HandleApplicationEvent(m_nextApplicationEvent->eventId);
 				m_applicationEvents.erase(m_nextApplicationEvent);
 				m_nextApplicationEvent = min_element(m_applicationEvents.begin(), m_applicationEvents.end());
+
+				if(m_applicationEvents.empty())
+					m_applicationEventsPending = false;
 			}
 		}
 	}
@@ -323,7 +332,7 @@ Gameboy::Gameboy(Memory* memory, EmulatedMachine::Type machineType)
 	m_frameCount = 0;
 
 	m_ticksPerSecond = 4194304;
-	m_ticksPerFrame = 69905;	///<todo: 70224
+	m_ticksPerFrame = 69905;
 	m_frameTicksRemaining = m_ticksPerFrame;
 
 	m_executingInstruction = false;
@@ -332,6 +341,7 @@ Gameboy::Gameboy(Memory* memory, EmulatedMachine::Type machineType)
 	m_doubleSpeed = false;
 
 	m_nextApplicationEvent = m_applicationEvents.end();
+	m_applicationEventsPending = false;
 }
 
 Gameboy::~Gameboy()
@@ -370,6 +380,7 @@ void Gameboy::Initialize()
 
 void Gameboy::InternalStep()
 {
+	if(m_applicationEventsPending == true)
 	{
 		ScopedMutex scopedLock(m_applicationEventsLock);
 
@@ -384,6 +395,9 @@ void Gameboy::InternalStep()
 				m_applicationInterface->HandleApplicationEvent(m_nextApplicationEvent->eventId);
 				m_applicationEvents.erase(m_nextApplicationEvent);
 				m_nextApplicationEvent = min_element(m_applicationEvents.begin(), m_applicationEvents.end());
+
+				if(m_applicationEvents.empty())
+					m_applicationEventsPending = false;
 			}
 		}
 	}
