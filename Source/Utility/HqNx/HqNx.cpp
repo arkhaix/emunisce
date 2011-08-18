@@ -72,7 +72,7 @@ public:
 		int originalWidth = originalScreen->GetWidth();
 		int originalHeight = originalScreen->GetHeight();
 
-		u16* rgb15Screen = HqHelper::ConvertToRgb15(originalScreen);
+		u16* rgb15Screen = ConvertToRgb15(originalScreen);
 
 		int newWidth = originalWidth * scale;
 		int newHeight = originalHeight * scale;

@@ -162,8 +162,6 @@ void Display::Run(int ticks)
 	if(m_lcdEnabled == false)
 		return;
 
-	Render(ticks);
-
 	if(m_currentState == DisplayState::VBlank)
 		Run_VBlank(ticks);
 
@@ -182,6 +180,8 @@ void Display::Run(int ticks)
 			Begin_SpritesLocked();	///<This will trigger VBlank when appropriate
 		}
 	}
+
+	Render(ticks);
 }
 
 void Display::Serialize(Archive& archive)
@@ -682,7 +682,7 @@ void Display::RenderBackgroundPixel(int screenX, int screenY)
 
 	//Write all the tile pixels on this line to the cache
 	int cacheScreenX = screenX;
-	while(tilePixelX <= 7)
+	while(tilePixelX <= 7 && cacheScreenX < 160)
 	{
 		int bank = 0;
 		int finalPixelX = tilePixelX;
@@ -1026,7 +1026,7 @@ void Display::Render(int ticks)
 	if(m_currentState != DisplayState::VideoRamLocked)
 		return;
 
-	if(m_stateTicksRemaining > 160)
+	if(m_stateTicksRemaining > 168)
 		return;
 
 	//Figure out how many pixels we should have rendered by now

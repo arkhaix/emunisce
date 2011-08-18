@@ -357,13 +357,15 @@ public:
 
 	void SetVsync(bool enabled)
 	{
-		int mode = 1;
-		if(enabled == false)
-			mode = 0;
-
 #ifdef EMUNISCE_PLATFORM_WINDOWS
 		if(wglSwapIntervalEXT != NULL)
+		{
+			int mode = 1;
+			if(enabled == false)
+				mode = 0;
+
 			wglSwapIntervalEXT(mode);
+		}
 #endif
 	}
 

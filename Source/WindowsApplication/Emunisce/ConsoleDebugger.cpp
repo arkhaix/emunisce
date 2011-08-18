@@ -166,7 +166,7 @@ void ConsoleDebugger::FetchCommand()
 	getline(cin, line);
 
 	vector<string> args = SplitCommand(line);
-	if(args.size() == 0)
+	if(args.empty())
 		return;
 
 	const char* command = args[0].c_str();
@@ -389,7 +389,7 @@ void ConsoleDebugger::RunMachineTo(int address)
 	if(addedBreakpoint && iter != m_breakpoints.end())
 	{
 		m_breakpoints.erase(iter);
-		if(m_breakpoints.size() == 0)
+		if(m_breakpoints.empty())
 			m_breakpointsEnabled = false;
 	}
 }
@@ -443,7 +443,7 @@ void ConsoleDebugger::ToggleBreakpoint(int address)
 		printf("Removed a breakpoint at: %04X\n", gbAddress);
 	}
 
-	if(m_breakpoints.size() > 0)
+	if(m_breakpoints.empty() == false)
 		m_breakpointsEnabled = true;
 	else
 		m_breakpointsEnabled = false;
