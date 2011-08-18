@@ -62,7 +62,9 @@ public:
 
 	GdiPlusRenderer_Private()
 	{
+		_Phoenix = NULL;
 		_WindowHandle = NULL;
+		_Bitmap = NULL;
 
 		_LastFrameRendered = -1;
 

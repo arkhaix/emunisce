@@ -333,7 +333,7 @@ Rewinder::~Rewinder()
 
 void Rewinder::StartRewinding()
 {
-	if(m_segments.size() == 0)
+	if(m_segments.empty())
 		return;
 
 	bool wasPaused = m_application->GetMachineRunner()->IsPaused();
@@ -358,7 +358,7 @@ void Rewinder::StartRewinding()
 
 		m_isRewinding = true;
 		m_playbackFrame = m_frameHistory.end();
-		m_playbackFrame--;
+		--m_playbackFrame;
 	}
 
 	if(wasPaused == false)
@@ -416,7 +416,7 @@ void Rewinder::StopRewinding()
 
 		unsigned int oldFutureSegmentIndex = visibleSegmentIndex + 1;
 
-		if(m_segments.size() > 0 && oldFutureSegmentIndex < m_segments.size())
+		if(m_segments.empty() == false && oldFutureSegmentIndex < m_segments.size())
 		{
 			for(unsigned int i=oldFutureSegmentIndex;i<m_segments.size();i++)
 				delete m_segments[i];
@@ -508,7 +508,7 @@ unsigned int Rewinder::GetFrameCount()
 {
 	ScopedMutex copedLock(m_frameHistoryLock);
 
-	if(m_isRewinding == false || m_frameHistory.size() == 0)
+	if(m_isRewinding == false || m_frameHistory.empty())
 	{
 		//Not rewinding.  Just pass through.
 		return MachineFeature::GetFrameCount();
@@ -522,7 +522,7 @@ void Rewinder::RunToNextFrame()
 {
 	ScopedMutex scopedLock(m_frameHistoryLock);
 
-	if(m_isRewinding == false || m_frameHistory.size() == 0)
+	if(m_isRewinding == false || m_frameHistory.empty())
 	{
 		//Not rewinding.  Just run the machine normally and capture its frame for the history.
 		// Segment::RecordFrame runs the machine
@@ -602,7 +602,7 @@ void Rewinder::RunToNextFrame()
 		//If we're not at the beginning of the frame history, then advance backward one frame.
 		// The frame history might have been refilled by the block above just before this, so use a bare if-check and not an else.
 		if(m_playbackFrame != m_frameHistory.begin())
-			m_playbackFrame--;
+			--m_playbackFrame;
 
 		//Advance the segment cache
 		Segment* playingSegment = NULL;
@@ -622,7 +622,7 @@ ScreenBuffer* Rewinder::GetStableScreenBuffer()
 {
 	ScopedMutex scopedLock(m_frameHistoryLock);
 
-	if(m_isRewinding == false || m_frameHistory.size() == 0 || m_playbackFrame == m_frameHistory.end())
+	if(m_isRewinding == false || m_frameHistory.empty() || m_playbackFrame == m_frameHistory.end())
 	{
 		//Not rewinding.  Just pass through.
 		return MachineFeature::GetStableScreenBuffer();
@@ -638,7 +638,7 @@ int Rewinder::GetScreenBufferCount()
 {
 	ScopedMutex scopedLock(m_frameHistoryLock);
 
-	if(m_isRewinding == false || m_frameHistory.size() == 0 || m_playbackFrame == m_frameHistory.end())
+	if(m_isRewinding == false || m_frameHistory.empty() || m_playbackFrame == m_frameHistory.end())
 	{
 		//Not rewinding.  Just pass through.
 		return MachineFeature::GetScreenBufferCount();
@@ -657,7 +657,7 @@ AudioBuffer Rewinder::GetStableAudioBuffer()
 {
 	ScopedMutex scopedLock(m_frameHistoryLock);
 
-	if(m_isRewinding == false || m_frameHistory.size() == 0 || m_playbackFrame == m_frameHistory.end())
+	if(m_isRewinding == false || m_frameHistory.empty() || m_playbackFrame == m_frameHistory.end())
 	{
 		//Not rewinding.  Just pass through.
 		return MachineFeature::GetStableAudioBuffer();
@@ -673,7 +673,7 @@ int Rewinder::GetAudioBufferCount()
 {
 	ScopedMutex scopedLock(m_frameHistoryLock);
 
-	if(m_isRewinding == false || m_frameHistory.size() == 0 || m_playbackFrame == m_frameHistory.end())
+	if(m_isRewinding == false || m_frameHistory.empty() || m_playbackFrame == m_frameHistory.end())
 	{
 		//Not rewinding.  Just pass through.
 		return MachineFeature::GetAudioBufferCount();

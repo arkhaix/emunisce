@@ -132,7 +132,7 @@ void Mbc1::Write8(u16 address, u8 value)
 		return;
 	}
 
-	//Switchable RAM Write 
+	//Switchable RAM Write
 	else if(address >= 0xa000 && address < 0xc000)
 	{
 		//We need to save this value in addition to letting base memory handle it.
@@ -164,7 +164,7 @@ bool Mbc1::LoadFile(const char* filename)
 
 	//Load all the banks
 
-	int romBank = 0;
+	unsigned int romBank = 0;
 	while(romBank < m_maxRomBanks && ifile.good() && !ifile.eof() && !ifile.fail())
 	{
 		if(m_fiveBitBankCheck && (romBank == 0x20 || romBank == 0x40 || romBank == 0x60))
@@ -251,7 +251,7 @@ void Mbc1::SaveRAM()
 
 	if(isBatteryType == false)
 		return;
-	
+
 	memcpy(m_pendingSramWrite, &m_ramBanks[0][0], 0x2000 * m_numRamBanks);
 	m_pendingSramGeneration++;
 

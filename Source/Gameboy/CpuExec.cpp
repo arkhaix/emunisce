@@ -121,10 +121,18 @@ int Cpu::Step()
 	{
 		opcode = m_memory->Read8(pc);
 
-		if(m_haltBug == false)
+		if(m_machineType == EmulatedMachine::GameboyColor)
+		{
+			//Apparently (demotronic demo), CGB has no halt bug?
 			pc++;
+		}
 		else
-			m_haltBug = false;	///<Skips incrementing the pc once
+		{
+			if(m_haltBug == false)
+				pc++;
+			else
+				m_haltBug = false;	///<Skips incrementing the pc once
+		}
 	}
 
 	switch(opcode)

@@ -256,7 +256,7 @@ void Gameboy::RunDuringInstruction(unsigned int ticks)
 	{
 		ScopedMutex scopedLock(m_applicationEventsLock);
 
-		if(m_applicationEvents.size() > 0 && m_nextApplicationEvent != m_applicationEvents.end())
+		if(m_applicationEvents.empty() == false && m_nextApplicationEvent != m_applicationEvents.end())
 		{
 			ApplicationEvent currentTime;
 			currentTime.frameCount = m_frameCount;
@@ -373,7 +373,7 @@ void Gameboy::InternalStep()
 	{
 		ScopedMutex scopedLock(m_applicationEventsLock);
 
-		if(m_applicationEvents.size() > 0 && m_nextApplicationEvent != m_applicationEvents.end())
+		if(m_applicationEvents.empty() == false && m_nextApplicationEvent != m_applicationEvents.end())
 		{
 			ApplicationEvent currentTime;
 			currentTime.frameCount = m_frameCount;
