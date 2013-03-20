@@ -83,13 +83,13 @@ ScreenResolution Display::GetScreenResolution()
 
 ScreenBuffer* Display::GetStableScreenBuffer()
 {
-    if(m_screenBufferCopyId == m_screenBufferCount)
-        return &m_screenBufferCopy;
+	if(m_screenBufferCopyId == m_screenBufferCount)
+		return &m_screenBufferCopy;
 
-    m_screenBufferLock.Acquire();
-        m_screenBufferCopy = *m_stableScreenBuffer;
-        m_screenBufferCopyId = m_screenBufferCount;
-    m_screenBufferLock.Release();
+	m_screenBufferLock.Acquire();
+		m_screenBufferCopy = *m_stableScreenBuffer;
+		m_screenBufferCopyId = m_screenBufferCount;
+	m_screenBufferLock.Release();
 
 	return &m_screenBufferCopy;
 }
@@ -293,30 +293,27 @@ void Display::SetLcdControl(u8 value)
 	}
 	else
 	{
-		if(m_currentState == DisplayState::VBlank)
+		//Clear caches
+		for(int y=0;y<144;y++)
 		{
-			//Clear caches
-			for(int y=0;y<144;y++)
+			for(int x=0;x<160;x++)
 			{
-				for(int x=0;x<160;x++)
-				{
-					m_frameBackgroundData.SetPixel(x, y, PIXEL_NOT_CACHED);
-					m_frameWindowData.SetPixel(x, y, PIXEL_NOT_CACHED);
-					m_frameSpriteData.SetPixel(x, y, PIXEL_NOT_CACHED);
-					m_activeScreenBuffer->SetPixel(x, y, m_displayPalette[0]);
-				}
+				m_frameBackgroundData.SetPixel(x, y, PIXEL_NOT_CACHED);
+				m_frameWindowData.SetPixel(x, y, PIXEL_NOT_CACHED);
+				m_frameSpriteData.SetPixel(x, y, PIXEL_NOT_CACHED);
+				m_activeScreenBuffer->SetPixel(x, y, m_displayPalette[0]);
 			}
-
-			//Behaves as though it's in h-blank while disabled
-			Begin_HBlank();
-			m_memory->EndHBlank();	///<No HBlank DMA if the screen is just disabled
-			m_currentScanline = 0;
-			m_stateTicksRemaining = 0;
-
-			CheckCoincidence();	///<Disabling this breaks bubsy2
-
-			m_lcdEnabled = false;
 		}
+
+		//Behaves as though it's in h-blank while disabled
+		Begin_HBlank();
+		m_memory->EndHBlank();	///<No HBlank DMA if the screen is just disabled
+		m_currentScanline = 0;
+		m_stateTicksRemaining = 0;
+
+		CheckCoincidence();	///<Disabling this breaks bubsy2
+
+		m_lcdEnabled = false;
 	}
 }
 
@@ -600,11 +597,11 @@ void Display::Run_VBlank(int ticks)
 	{
 		//Swap buffers
 		m_screenBufferLock.Acquire();
-            GameboyScreenBuffer* temp = m_stableScreenBuffer;
-            m_stableScreenBuffer = m_activeScreenBuffer;
-            m_activeScreenBuffer = temp;
+			GameboyScreenBuffer* temp = m_stableScreenBuffer;
+			m_stableScreenBuffer = m_activeScreenBuffer;
+			m_activeScreenBuffer = temp;
 
-            m_screenBufferCount++;
+			m_screenBufferCount++;
 		m_screenBufferLock.Release();
 
 		//Clear caches
