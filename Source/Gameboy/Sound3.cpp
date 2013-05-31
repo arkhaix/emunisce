@@ -30,7 +30,7 @@ using namespace Emunisce;
 
 Sound3::Sound3()
 {
-	m_machine = NULL;
+	m_machine = nullptr;
 
 	m_lengthUnit->SetMaxValue(256);
 

@@ -49,7 +49,7 @@ void Thread::Start(void* param)
     m_threadStartData.instance = this;
 	m_threadStartData.userData = param;
 
-    pthread_create(&m_thread, NULL, StaticEntryPoint, (void*)&m_threadStartData);
+    pthread_create(&m_thread, nullptr, StaticEntryPoint, (void*)&m_threadStartData);
 }
 
 void Thread::Stop()
@@ -63,7 +63,7 @@ void Thread::Stop()
 void Thread::Join(unsigned int timeoutMilliseconds)
 {
     Stop();
-    pthread_join(m_thread, NULL);
+    pthread_join(m_thread, nullptr);
     //todo: timeout support
 }
 
@@ -86,11 +86,11 @@ bool Thread::IsCallingThread()
 void* Thread::StaticEntryPoint(void* param)
 {
     ThreadStartData* data = (ThreadStartData*)param;
-	if(data == NULL)
-		return NULL;
+	if(data == nullptr)
+		return nullptr;
 
-	if(data->instance == NULL)
-		return NULL;
+	if(data->instance == nullptr)
+		return nullptr;
 
     pthread_cleanup_push(StaticCleanup, (void*)data->instance);
 
@@ -98,15 +98,15 @@ void* Thread::StaticEntryPoint(void* param)
 	data->instance->EntryPoint( data->userData );
 
     pthread_cleanup_pop(1);
-	pthread_exit(NULL);
+	pthread_exit(nullptr);
 
-	return NULL;
+	return nullptr;
 }
 
 void Thread::StaticCleanup(void* param)
 {
     Thread* instance = (Thread*)param;
-    if(instance == NULL)
+    if(instance == nullptr)
         return;
 
     instance->m_isRunning = false;

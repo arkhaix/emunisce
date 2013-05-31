@@ -39,7 +39,7 @@ class Sound2 : public SoundGenerator
 public:
 
 	Sound2();
-	~Sound2();
+	virtual ~Sound2();
 
 
 	//Sound component

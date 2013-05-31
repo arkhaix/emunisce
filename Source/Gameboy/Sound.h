@@ -44,7 +44,7 @@ class Sound : public IEmulatedSound
 public:
 
 	Sound();
-	~Sound();
+	virtual ~Sound();
 
 
 	// IEmulatedSound

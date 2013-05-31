@@ -33,7 +33,7 @@ Window::Window()
 	m_needsDestroy = false;
 	m_requestingExit = false;
 
-	m_windowHandle = NULL;
+	m_windowHandle = nullptr;
 
 	m_size.width = 320;
 	m_size.height = 240;
@@ -60,11 +60,11 @@ void Window::Create(int width, int height, const char* title, const char* classN
 	wndClass.lpfnWndProc    = Window::StaticWndProc;
 	wndClass.cbClsExtra     = 0;
 	wndClass.cbWndExtra     = 0;
-	wndClass.hInstance      = NULL;//hInstance;
-	wndClass.hIcon          = LoadIcon(NULL, IDI_APPLICATION);
-	wndClass.hCursor        = LoadCursor(NULL, IDC_ARROW);
+	wndClass.hInstance      = nullptr;//hInstance;
+	wndClass.hIcon          = LoadIcon(nullptr, IDI_APPLICATION);
+	wndClass.hCursor        = LoadCursor(nullptr, IDC_ARROW);
 	wndClass.hbrBackground  = (HBRUSH)GetStockObject(WHITE_BRUSH);
-	wndClass.lpszMenuName   = NULL;
+	wndClass.lpszMenuName   = nullptr;
 	wndClass.lpszClassName  = className;
 
 	RegisterClass(&wndClass);
@@ -77,12 +77,12 @@ void Window::Create(int width, int height, const char* title, const char* classN
 		m_position.y,            // initial y position
 		m_size.width,            // initial x size
 		m_size.height,            // initial y size
-		NULL,                     // parent window handle
-		NULL,                     // window menu handle
-		NULL,//hInstance,                // program instance handle
-		NULL);                    // creation parameters
+		nullptr,                     // parent window handle
+		nullptr,                     // window menu handle
+		nullptr,//hInstance,                // program instance handle
+		nullptr);                    // creation parameters
 
-	if(m_windowHandle != NULL)
+	if(m_windowHandle != nullptr)
 	{
 		m_hwndInstanceMapLock.Acquire();
 		m_hwndInstanceMap[m_windowHandle] = this;
@@ -111,7 +111,7 @@ void Window::Destroy()
 		m_hwndInstanceMap.erase(iter);
 	m_hwndInstanceMapLock.Release();
 
-	m_windowHandle = NULL;
+	m_windowHandle = nullptr;
 	m_needsDestroy = false;
 }
 
@@ -212,7 +212,7 @@ LRESULT CALLBACK Window::StaticWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARA
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 
 	Window* instance = iter->second;
-	if(instance == NULL)
+	if(instance == nullptr)
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 
 	return instance->WndProc(hWnd, msg, wParam, lParam);
@@ -232,7 +232,7 @@ LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 			for(auto iter = m_listeners.begin(); iter != m_listeners.end(); ++iter)
 				(*iter)->Draw();
 
-			ValidateRect(m_windowHandle, NULL);
+			ValidateRect(m_windowHandle, nullptr);
 
 			return 0;
 		}

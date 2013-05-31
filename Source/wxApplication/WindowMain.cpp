@@ -56,13 +56,13 @@ END_EVENT_TABLE()
 
 void WindowMain::OnKeyDown(wxKeyEvent& event)
 {
-    if(m_application != NULL)
+    if(m_application != nullptr)
         m_application->KeyDown(event.GetKeyCode());
 }
 
 void WindowMain::OnKeyUp(wxKeyEvent& event)
 {
-    if(m_application != NULL)
+    if(m_application != nullptr)
         m_application->KeyUp(event.GetKeyCode());
 }
 
@@ -72,7 +72,7 @@ void WindowMain::OnResize(wxSizeEvent& event)
 
     Refresh();
 
-    if(m_application != NULL)
+    if(m_application != nullptr)
         m_application->Resize(event.GetSize().GetWidth(), event.GetSize().GetHeight());
 }
 
@@ -83,7 +83,7 @@ void WindowMain::OnPaint(wxPaintEvent& event)
     wxGLCanvas::SetCurrent(*m_context);
     wxPaintDC(this); // only to be used in paint events. use wxClientDC to paint outside the paint event
 
-	if(m_application != NULL)
+	if(m_application != nullptr)
 		m_application->Draw();
 
 	glFlush();
@@ -106,7 +106,7 @@ void WindowMain::OnIdle(wxIdleEvent &event)
 WindowMain::WindowMain(wxFrame* parent, int* args) :
     wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE)
 {
-    m_application = NULL;
+    m_application = nullptr;
 
 
 	m_context = new wxGLContext(this);

@@ -41,7 +41,7 @@ class Display : public IEmulatedDisplay
 public:
 
 	Display();
-	~Display();
+	virtual ~Display();
 
 
 	// IEmulatedDisplay

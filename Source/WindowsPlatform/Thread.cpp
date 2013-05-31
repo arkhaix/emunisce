@@ -23,13 +23,13 @@ using namespace Emunisce;
 
 Thread::Thread()
 {
-	m_threadHandle = NULL;
+	m_threadHandle = nullptr;
 	m_threadId = 0;
 }
 
 Thread::~Thread()
 {
-	if(m_threadHandle != NULL)
+	if(m_threadHandle != nullptr)
 	{
 		if(IsRunning())
 			Join(250);
@@ -38,7 +38,7 @@ Thread::~Thread()
 		{
 			TerminateThread(m_threadHandle, 3);
 			CloseHandle(m_threadHandle);
-			m_threadHandle = NULL;
+			m_threadHandle = nullptr;
 		}
 	}
 }
@@ -47,18 +47,18 @@ Thread::~Thread()
 void Thread::Start(void* param)
 {
 	DWORD exitCode = STILL_ACTIVE;
-	if(m_threadHandle != NULL && GetExitCodeThread(m_threadHandle, &exitCode) && exitCode == STILL_ACTIVE)
+	if(m_threadHandle != nullptr && GetExitCodeThread(m_threadHandle, &exitCode) && exitCode == STILL_ACTIVE)
 		return;
 
 	m_threadStartData.instance = this;
 	m_threadStartData.userData = param;
 
-	m_threadHandle = CreateThread(NULL, 0, StaticEntryPoint, (LPVOID)&m_threadStartData, 0, &m_threadId);
+	m_threadHandle = CreateThread(nullptr, 0, StaticEntryPoint, (LPVOID)&m_threadStartData, 0, &m_threadId);
 }
 
 void Thread::Stop()
 {
-	if(m_threadHandle == NULL)
+	if(m_threadHandle == nullptr)
 		return;
 
 	DWORD exitCode = STILL_ACTIVE;
@@ -81,7 +81,7 @@ void Thread::Join(unsigned int timeoutMilliseconds)
 
 bool Thread::IsRunning()
 {
-	if(m_threadHandle == NULL)
+	if(m_threadHandle == nullptr)
 		return false;
 
 	DWORD exitCode = STILL_ACTIVE;
@@ -110,10 +110,10 @@ void Thread::Sleep(unsigned int milliseconds)
 DWORD WINAPI Thread::StaticEntryPoint(LPVOID param)
 {
 	ThreadStartData* data = (ThreadStartData*)param;
-	if(data == NULL)
+	if(data == nullptr)
 		return 1;
 
-	if(data->instance == NULL)
+	if(data->instance == nullptr)
 		return 2;
 
 	class HandleCloser
@@ -122,7 +122,7 @@ DWORD WINAPI Thread::StaticEntryPoint(LPVOID param)
 
 		HANDLE& _Handle;
 		HandleCloser(HANDLE& handle) : _Handle(handle) { }
-		~HandleCloser() { CloseHandle(_Handle); _Handle = NULL; }
+		~HandleCloser() { CloseHandle(_Handle); _Handle = nullptr; }
 	};
 
 	HandleCloser handleCloser(data->instance->m_threadHandle);

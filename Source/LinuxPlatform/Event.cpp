@@ -27,8 +27,8 @@ Event::Event(bool autoReset)
 
     m_signalled = false;
 
-    pthread_mutex_init(&m_mutex, NULL);
-    pthread_cond_init(&m_condition, NULL);
+    pthread_mutex_init(&m_mutex, nullptr);
+    pthread_cond_init(&m_condition, nullptr);
 }
 
 Event::~Event()

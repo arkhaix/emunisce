@@ -67,7 +67,7 @@ EmunisceApplication::EmunisceApplication()
 
 	//Calling HandlePendingMachineChange here with just the MachineFeature components
 	//(no emulated machine yet) so we don't have to force a LoadROM immediately.
-	if(m_machine != NULL)
+	if(m_machine != nullptr)
 	{
 		m_pendingMachine = m_machine;
 		HandlePendingMachineChange();
@@ -148,7 +148,7 @@ void EmunisceApplication::NotifyMachineChanged(IEmulatedMachine* newMachine)
 {
 	//RunWindow must handle machine changes (rendering things have to happen on that thread)
 	m_pendingMachine = newMachine;
-	while(m_pendingMachine != NULL)
+	while(m_pendingMachine != nullptr)
 		Sleep(10);
 }
 
@@ -156,14 +156,14 @@ void EmunisceApplication::RequestShutdown()
 {
 	BaseApplication::RequestShutdown();
 
-	if(m_window != NULL)
+	if(m_window != nullptr)
 		m_window->RequestExit();
 }
 
 
 void EmunisceApplication::SetVsync(bool enabled)
 {
-	if(m_renderer != NULL)
+	if(m_renderer != nullptr)
 		m_renderer->SetVsync(enabled);
 }
 
@@ -183,7 +183,7 @@ void EmunisceApplication::DisplayImportantMessage(MessageType::Type messageType,
 	else if(messageType == MessageType::Error)
 		iconType = MB_ICONERROR;
 
-	MessageBox(NULL, message, "Phoenix", iconType | MB_OK);
+	MessageBox(nullptr, message, "Phoenix", iconType | MB_OK);
 }
 
 PromptResult::Type EmunisceApplication::DisplayPrompt(PromptType::Type promptType, const char* title, const char* message, void** /*extraResult*/)
@@ -196,7 +196,7 @@ PromptResult::Type EmunisceApplication::DisplayPrompt(PromptType::Type promptTyp
 	else if(promptType == PromptType::YesNoCancel)
 		windowsPromptType = MB_YESNOCANCEL;
 
-	int windowsResult = MessageBox(NULL, message, title, windowsPromptType);
+	int windowsResult = MessageBox(nullptr, message, title, windowsPromptType);
 
 	PromptResult::Type result = PromptResult::Cancel;
 	if(windowsResult == IDOK)
@@ -214,7 +214,7 @@ PromptResult::Type EmunisceApplication::DisplayPrompt(PromptType::Type promptTyp
 
 bool EmunisceApplication::SelectFile(char** result, const char* fileMask)
 {
-	if(result == NULL)
+	if(result == nullptr)
 		return false;
 
 	char selectedFile[MAX_PATH] = {0};
@@ -267,13 +267,13 @@ void EmunisceApplication::Closed()
 
 void EmunisceApplication::Draw()
 {
-	if(m_renderer != NULL)
+	if(m_renderer != nullptr)
 		m_renderer->Draw();
 }
 
 void EmunisceApplication::Resize(int newWidth, int newHeight)
 {
-	if(m_renderer != NULL)
+	if(m_renderer != nullptr)
 		m_renderer->Resize(newWidth, newHeight);
 
 	AdjustWindowSize();
@@ -294,10 +294,10 @@ void EmunisceApplication::AdjustWindowSize()
 {
 	//Resize the window so that the client area is a whole multiple of the display resolution
 
-	if(m_machine == NULL)
+	if(m_machine == nullptr)
 		return;
 
-	if(m_window == NULL)
+	if(m_window == nullptr)
 		return;
 
 	HWND windowHandle = (HWND)m_window->GetHandle();
@@ -351,7 +351,7 @@ void EmunisceApplication::AdjustWindowSize()
 
 void EmunisceApplication::HandlePendingMachineChange()
 {
-	if(m_pendingMachine == NULL)
+	if(m_pendingMachine == nullptr)
 		return;
 
 	IEmulatedMachine* newMachine = m_pendingMachine;
@@ -381,7 +381,7 @@ void EmunisceApplication::HandlePendingMachineChange()
 	//Adjust to make up for aspect ratio, borders, titlebar, menu, etc
 	AdjustWindowSize();
 
-	m_pendingMachine = NULL;
+	m_pendingMachine = nullptr;
 }
 
 
@@ -402,7 +402,7 @@ Archive* EmunisceApplication::OpenFileArchive(const char* filename, bool saving)
 
 void EmunisceApplication::ReleaseArchive(Archive* archive)
 {
-	if(archive == NULL)
+	if(archive == nullptr)
 		return;
 
 	ISerializer* serializer = archive->GetSerializer();
@@ -462,11 +462,11 @@ std::string EmunisceApplication::GetDataFolder()
 {
 	char path[MAX_PATH];
 
-	SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, path);
+	SHGetFolderPath(nullptr, CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE, nullptr, 0, path);
 
 	PathAppend(path, "Emunisce");
 
-	SHCreateDirectoryEx(NULL, path, NULL);
+	SHCreateDirectoryEx(nullptr, path, nullptr);
 
 	return std::string(path);
 }
@@ -481,7 +481,7 @@ std::string EmunisceApplication::GetBaseSaveStateFolder()
 
 	PathAppend(path, "SaveStates");
 
-	SHCreateDirectoryEx(NULL, path, NULL);
+	SHCreateDirectoryEx(nullptr, path, nullptr);
 
 	return std::string(path);
 }
@@ -496,7 +496,7 @@ std::string EmunisceApplication::GetCurrentSaveStateFolder()
 	PathAppend(path, EmulatedMachine::ToString[ m_machine->GetType() ]);
 	PathAppend(path, m_machine->GetRomTitle());
 
-	SHCreateDirectoryEx(NULL, path, NULL);
+	SHCreateDirectoryEx(nullptr, path, nullptr);
 
 	return std::string(path);
 }
@@ -526,7 +526,7 @@ std::string EmunisceApplication::GetBaseRomDataFolder()
 
 	PathAppend(path, "RomData");
 
-	SHCreateDirectoryEx(NULL, path, NULL);
+	SHCreateDirectoryEx(nullptr, path, nullptr);
 
 	return std::string(path);
 }
@@ -541,7 +541,7 @@ std::string EmunisceApplication::GetCurrentRomDataFolder()
 	PathAppend(path, EmulatedMachine::ToString[ m_machine->GetType() ]);
 	PathAppend(path, m_machine->GetRomTitle());
 
-	SHCreateDirectoryEx(NULL, path, NULL);
+	SHCreateDirectoryEx(nullptr, path, nullptr);
 
 	return std::string(path);
 }
@@ -569,7 +569,7 @@ std::string EmunisceApplication::GetBaseMovieFolder()
 
 	PathAppend(path, "Movies");
 
-	SHCreateDirectoryEx(NULL, path, NULL);
+	SHCreateDirectoryEx(nullptr, path, nullptr);
 
 	return std::string(path);
 }
@@ -584,7 +584,7 @@ std::string EmunisceApplication::GetCurrentMovieFolder()
 	PathAppend(path, EmulatedMachine::ToString[ m_machine->GetType() ]);
 	PathAppend(path, m_machine->GetRomTitle());
 
-	SHCreateDirectoryEx(NULL, path, NULL);
+	SHCreateDirectoryEx(nullptr, path, nullptr);
 
 	return std::string(path);
 }
@@ -612,7 +612,7 @@ std::string EmunisceApplication::GetBaseMacroFolder()
 
 	PathAppend(path, "Macros");
 
-	SHCreateDirectoryEx(NULL, path, NULL);
+	SHCreateDirectoryEx(nullptr, path, nullptr);
 
 	return std::string(path);
 }

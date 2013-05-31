@@ -30,7 +30,7 @@ using namespace Emunisce;
 
 Sound4::Sound4()
 {
-	m_machine = NULL;
+	m_machine = nullptr;
 
 	m_envelopeUnit = new EnvelopeUnit(this);
 

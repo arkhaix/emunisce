@@ -64,7 +64,7 @@ unsigned int Input::NumButtons()
 const char* Input::GetButtonName(unsigned int index)
 {
 	if(index >= GameboyButtons::NumGameboyButtons)
-		return NULL;
+		return nullptr;
 
 	return GameboyButtons::ToString[ index ];
 }

@@ -23,13 +23,13 @@ using namespace Emunisce;
 
 Event::Event(bool autoReset)
 {
-	m_event = CreateEvent(NULL, !autoReset, FALSE, NULL);
+	m_event = CreateEvent(nullptr, !autoReset, FALSE, nullptr);
 }
 
 Event::~Event()
 {
 	CloseHandle(m_event);
-	m_event = NULL;
+	m_event = nullptr;
 }
 
 
