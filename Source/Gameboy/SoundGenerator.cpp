@@ -33,7 +33,7 @@ using namespace Emunisce;
 SoundGenerator::SoundGenerator()
 {
 	m_lengthUnit = new LengthUnit(this);
-	m_envelopeUnit = NULL;
+	m_envelopeUnit = nullptr;
 	m_hasPower = true;
 }
 
@@ -61,7 +61,7 @@ void SoundGenerator::Serialize(Archive& archive)
 
 	m_lengthUnit->Serialize(archive);
 
-	if(m_envelopeUnit != NULL)
+	if(m_envelopeUnit != nullptr)
 		m_envelopeUnit->Serialize(archive);
 }
 

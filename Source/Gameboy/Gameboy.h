@@ -102,7 +102,7 @@ public:
 protected:
 
 	Gameboy(Memory* memory, EmulatedMachine::Type machineType);
-	~Gameboy();
+	virtual ~Gameboy();
 	void Initialize();
 
 	void InternalStep();	///<Non-virtual Step.

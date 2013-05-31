@@ -29,8 +29,8 @@ using namespace Emunisce;
 
 InputManager::InputManager()
 {
-	m_machine = NULL;
-    m_input = NULL;
+	m_machine = nullptr;
+    m_input = nullptr;
 }
 
 void InputManager::Initialize(BaseApplication* application)
@@ -83,7 +83,7 @@ void InputManager::MapKey(const char* name, int keyCode)
 
 void InputManager::GenerateKeymap()
 {
-    if(m_input == NULL)
+    if(m_input == nullptr)
         return;
 
     m_keyMap.clear();

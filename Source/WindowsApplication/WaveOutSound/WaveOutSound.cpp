@@ -68,8 +68,8 @@ public:
 
 	WaveOutSound_Private()
 	{
-		_Phoenix = NULL;
-		_Machine = NULL;
+		_Phoenix = nullptr;
+		_Machine = nullptr;
 
 		_LastFrameQueued = 0;
 
@@ -88,13 +88,13 @@ public:
 
 		InitializeWaveOut();
 
-		_MonitorThreadHandle = CreateThread(NULL, 0, StaticMonitorThread, (LPVOID)this, 0, NULL);
-		_PlaybackThreadHandle = CreateThread(NULL, 0, StaticPlaybackThread, (LPVOID)this, 0, NULL);
+		_MonitorThreadHandle = CreateThread(nullptr, 0, StaticMonitorThread, (LPVOID)this, 0, nullptr);
+		_PlaybackThreadHandle = CreateThread(nullptr, 0, StaticPlaybackThread, (LPVOID)this, 0, nullptr);
 	}
 
 	void InitializeWaveOut()
 	{
-		_BufferFinishedEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+		_BufferFinishedEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
 
 		WAVEFORMATEX waveFormat;
 
@@ -128,7 +128,7 @@ public:
 
 	DWORD MonitorThread()
 	{
-		while(_Machine == NULL && _Phoenix->ShutdownRequested() == false)
+		while(_Machine == nullptr && _Phoenix->ShutdownRequested() == false)
 			Sleep(100);
 
 		if(_Phoenix->ShutdownRequested())
@@ -136,7 +136,7 @@ public:
 
 		while(_Phoenix->ShutdownRequested() == false)
 		{
-			if(_Mute == false && _Machine != NULL && _Machine->GetSound()->GetAudioBufferCount() != (int)_LastFrameQueued)
+			if(_Mute == false && _Machine != nullptr && _Machine->GetSound()->GetAudioBufferCount() != (int)_LastFrameQueued)
 			{
 				AudioBuffer buffer = _Machine->GetSound()->GetStableAudioBuffer();
 
@@ -176,7 +176,7 @@ public:
 	static DWORD WINAPI StaticMonitorThread(LPVOID param)
 	{
 		WaveOutSound_Private* instance = (WaveOutSound_Private*)param;
-		if(instance == NULL)
+		if(instance == nullptr)
 			return 1;
 
 		return instance->MonitorThread();
@@ -184,7 +184,7 @@ public:
 
 	DWORD PlaybackThread()
 	{
-		while(_Machine == NULL && _Phoenix->ShutdownRequested() == false)
+		while(_Machine == nullptr && _Phoenix->ShutdownRequested() == false)
 			Sleep(100);
 
 		if(_Phoenix->ShutdownRequested())
@@ -315,7 +315,7 @@ public:
 	static DWORD WINAPI StaticPlaybackThread(LPVOID param)
 	{
 		WaveOutSound_Private* instance = (WaveOutSound_Private*)param;
-		if(instance != NULL)
+		if(instance != nullptr)
 			return instance->PlaybackThread();
 
 		return 1;

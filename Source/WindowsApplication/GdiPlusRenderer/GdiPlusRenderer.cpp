@@ -62,13 +62,13 @@ public:
 
 	GdiPlusRenderer_Private()
 	{
-		_Phoenix = NULL;
-		_WindowHandle = NULL;
-		_Bitmap = NULL;
+		_Phoenix = nullptr;
+		_WindowHandle = nullptr;
+		_Bitmap = nullptr;
 
 		_LastFrameRendered = -1;
 
-		_Machine = NULL;
+		_Machine = nullptr;
 	}
 
 	~GdiPlusRenderer_Private()
@@ -77,9 +77,9 @@ public:
 
 	void InitializeGdiPlus()
 	{
-		GdiplusStartup(&_GdiplusToken, &_GdiplusStartupInput, NULL);
+		GdiplusStartup(&_GdiplusToken, &_GdiplusStartupInput, nullptr);
 
-		_Bitmap = NULL;
+		_Bitmap = nullptr;
 	}
 
 	void ShutdownGdiPlus()
@@ -94,7 +94,7 @@ public:
 	{
 		//Check conditions
 
-		if(_Machine == NULL)
+		if(_Machine == nullptr)
 			return;
 
 		if(_LastFrameRendered == _Machine->GetDisplay()->GetScreenBufferCount())
@@ -125,7 +125,7 @@ public:
 
 	void Render()
 	{
-		if(_Machine == NULL || _Machine->GetDisplay() == NULL)
+		if(_Machine == nullptr || _Machine->GetDisplay() == nullptr)
 			return;
 
 		IEmulatedDisplay* display = _Machine->GetDisplay();
@@ -141,9 +141,9 @@ public:
 		int screenWidth = screen->GetWidth();
 		int screenHeight = screen->GetHeight();
 
-		if(_Bitmap == NULL || (int)_Bitmap->GetWidth() != screenWidth || (int)_Bitmap->GetHeight() != screenHeight)
+		if(_Bitmap == nullptr || (int)_Bitmap->GetWidth() != screenWidth || (int)_Bitmap->GetHeight() != screenHeight)
 		{
-			if(_Bitmap != NULL)
+			if(_Bitmap != nullptr)
 				delete _Bitmap;
 
 			_Bitmap = new Bitmap(screenWidth, screenHeight, PixelFormat32bppARGB);

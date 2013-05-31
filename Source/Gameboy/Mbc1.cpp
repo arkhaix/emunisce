@@ -275,7 +275,7 @@ void Mbc1::LoadRAM()
 		return;
 
 	IMachineToApplication* applicationInterface = m_machine->GetApplicationInterface();
-	if(applicationInterface != NULL)
+	if(applicationInterface != nullptr)
 	{
 		applicationInterface->LoadRomData("sram", &m_ramBanks[0][0], 0x2000 * m_numRamBanks);
 		m_sramLoaded = true;
@@ -294,7 +294,7 @@ void Mbc1::PersistRAM()
 		return;
 
 	IMachineToApplication* applicationInterface = m_machine->GetApplicationInterface();
-	if(applicationInterface != NULL)
+	if(applicationInterface != nullptr)
 	{
 		applicationInterface->SaveRomData("sram", &m_pendingSramWrite[0][0], 0x2000 * m_numRamBanks);
 

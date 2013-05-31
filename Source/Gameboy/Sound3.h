@@ -38,6 +38,7 @@ class Sound3 : public SoundGenerator
 public:
 
 	Sound3();
+	virtual ~Sound3() = default;
 
 
 	//Sound component

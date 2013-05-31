@@ -29,11 +29,11 @@ using namespace Emunisce;
 
 KingsDream::KingsDream()
 {
-	srand((unsigned int)time(NULL));
+	srand((unsigned int)time(nullptr));
 
-	m_screenBuffer = NULL;
+	m_screenBuffer = nullptr;
 	for(unsigned int i=0;i<m_maxNumBlendFrames;i++)
-		m_frames[i] = NULL;
+		m_frames[i] = nullptr;
 
 	ResizeScreenBuffers(320, 240);
 
@@ -163,7 +163,7 @@ unsigned int KingsDream::GetBlendFrames()
 
 void KingsDream::ResizeScreenBuffers(unsigned int width, unsigned int height)
 {
-	if(m_screenBuffer != NULL && m_screenBuffer->GetWidth() == (int)width && m_screenBuffer->GetHeight() == (int)height)
+	if(m_screenBuffer != nullptr && m_screenBuffer->GetWidth() == (int)width && m_screenBuffer->GetHeight() == (int)height)
 		return;
 
 	delete m_screenBuffer;
@@ -196,7 +196,7 @@ void KingsDream::BlendBuffers()
 {
 	DisplayPixel* screenPixels = m_screenBuffer->GetPixels();
 
-	DisplayPixel* framePixels[m_maxNumBlendFrames] = {NULL};
+	DisplayPixel* framePixels[m_maxNumBlendFrames] = {nullptr};
 	for(unsigned int i=0;i<m_numBlendFrames;i++)
 		framePixels[i] = m_frames[i]->GetPixels();
 

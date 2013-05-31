@@ -36,7 +36,7 @@ Rewinder::Segment::Segment(Rewinder* rewinder, InputRecording* recorder)
 	m_rewinder = rewinder;
 	m_recorder = recorder;
 
-	m_inputMovieData = NULL;
+	m_inputMovieData = nullptr;
 	m_inputMovieDataSize = 0;
 
 	m_numFramesRecorded = 0;
@@ -49,7 +49,7 @@ Rewinder::Segment::~Segment()
 {
 	ClearCache();
 
-	if(m_inputMovieData != NULL)
+	if(m_inputMovieData != nullptr)
 		delete m_inputMovieData;
 }
 
@@ -197,7 +197,7 @@ void Rewinder::Segment::ClearCache()
 
 void Rewinder::Segment::RestoreState()
 {
-	if(m_inputMovieData != NULL && m_inputMovieDataSize > 0)
+	if(m_inputMovieData != nullptr && m_inputMovieDataSize > 0)
 	{
 		MemorySerializer serializer;
 		serializer.SetBuffer(m_inputMovieData, m_inputMovieDataSize);
@@ -219,7 +219,7 @@ void Rewinder::Segment::LockAtFrame(unsigned int frameId)
 			CachedFrame defaultFrame;
 			for(unsigned int j=i+1;j<m_numFramesRecorded;j++)
 			{
-				if(m_frameCache[j].Screen != NULL)
+				if(m_frameCache[j].Screen != nullptr)
 					delete m_frameCache[j].Screen;
 
 				m_frameCache[j] = defaultFrame;
@@ -272,7 +272,7 @@ unsigned int Rewinder::InputHandler::NumButtons()
 const char* Rewinder::InputHandler::GetButtonName(unsigned int index)
 {
 	if(index >= RewinderButtons::NumButtons)
-		return NULL;
+		return nullptr;
 
 	return RewinderButtons::ToString[index];
 }
@@ -326,7 +326,7 @@ Rewinder::~Rewinder()
 	m_segments.clear();
 	m_frameHistory.clear();	///<Don't need to delete anything here because the screens are shallow copied from the segments
 
-	m_featureInput = NULL;
+	m_featureInput = nullptr;
 	delete m_inputHandler;
 }
 
@@ -371,13 +371,13 @@ void Rewinder::StopRewinding()
 	m_application->GetMachineRunner()->Pause();
 
 	unsigned int visibleSegmentIndex = m_playingSegment+1;
-	Segment* visibleSegment = NULL;
+	Segment* visibleSegment = nullptr;
 
 	{
 		ScopedMutex scopedLock(m_frameHistoryLock);
 
 		visibleSegmentIndex = m_playingSegment+1;
-		visibleSegment = NULL;
+		visibleSegment = nullptr;
 
 		m_isRewinding = false;
 
@@ -394,7 +394,7 @@ void Rewinder::StopRewinding()
 
 	//Run the visible segment up until we hit the frame that's currently being displayed
 
-	if(visibleSegment != NULL)
+	if(visibleSegment != nullptr)
 	{
 		visibleSegment->ClearCache();
 
@@ -429,7 +429,7 @@ void Rewinder::StopRewinding()
 
 
 		//Clear input state so keys don't get stuck
-		if(m_wrappedInput != NULL)
+		if(m_wrappedInput != nullptr)
 		{
 			for(unsigned int i=0;i<m_wrappedInput->NumButtons();i++)
 			{
@@ -529,11 +529,11 @@ void Rewinder::RunToNextFrame()
 
 		unsigned int lastSegmentIndex = (unsigned int)m_segments.size()-1;
 
-		Segment* recordingSegment = NULL;
+		Segment* recordingSegment = nullptr;
 		if(lastSegmentIndex < m_segments.size())	///<This check is here in case m_segments.size() == 0
 			recordingSegment = m_segments[ lastSegmentIndex ];
 
-		if(recordingSegment == NULL || recordingSegment->CanRecordMoreFrames() == false)
+		if(recordingSegment == nullptr || recordingSegment->CanRecordMoreFrames() == false)
 		{
 			m_segments.push_back(new Segment(this, m_recorder));
 			lastSegmentIndex = (unsigned int)m_segments.size()-1;
@@ -561,11 +561,11 @@ void Rewinder::RunToNextFrame()
 		//If we're at the beginning of the frame history, try to get more history from the segments.
 		if(m_playbackFrame == m_frameHistory.begin())
 		{
-			Segment* playingSegment = NULL;
+			Segment* playingSegment = nullptr;
 			if(m_playingSegment < m_segments.size())
 				playingSegment = m_segments[ m_playingSegment ];
 
-			if(playingSegment != NULL)
+			if(playingSegment != nullptr)
 			{
 				//The segment should already be fully cached (except the first segment when rewinding has just begun).
 				while(playingSegment->CanCacheMoreFrames() == true)
@@ -605,11 +605,11 @@ void Rewinder::RunToNextFrame()
 			--m_playbackFrame;
 
 		//Advance the segment cache
-		Segment* playingSegment = NULL;
+		Segment* playingSegment = nullptr;
 		if(m_playingSegment < m_segments.size())
 			playingSegment = m_segments[ m_playingSegment ];
 
-		if(playingSegment != NULL && playingSegment->CanCacheMoreFrames())
+		if(playingSegment != nullptr && playingSegment->CanCacheMoreFrames())
 			playingSegment->CacheFrame();
 	}
 }

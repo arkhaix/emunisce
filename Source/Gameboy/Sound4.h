@@ -37,7 +37,7 @@ class Sound4 : public SoundGenerator
 public:
 
 	Sound4();
-	~Sound4();
+	virtual ~Sound4();
 
 
 	//Sound component

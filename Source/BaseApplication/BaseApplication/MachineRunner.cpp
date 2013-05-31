@@ -26,7 +26,7 @@ using namespace Emunisce;
 MachineRunner::MachineRunner()
 : m_waitEvent(true)
 {
-	m_machine = NULL;
+	m_machine = nullptr;
 
 	m_shutdownRequested = false;
 	m_waitRequested = true;
@@ -148,7 +148,7 @@ int MachineRunner::RunnerThread()
 		if(m_shutdownRequested == true)
 			break;
 
-		if(m_machine == NULL)
+		if(m_machine == nullptr)
 		{
 		    Thread::Sleep(250);
 			continue;

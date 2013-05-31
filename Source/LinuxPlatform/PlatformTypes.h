@@ -20,25 +20,21 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef PLATFORMTYPES_H
 #define PLATFORMTYPES_H
 
-//todo: ifdef things
+#include <cstdint>
 
 
 namespace Emunisce
 {
 
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef unsigned long long u64;
+using u8 = std::uint8_t;
+using u16 = std::uint16_t;
+using u32 = std::uint32_t;
+using u64 = std::uint64_t;
 
-typedef signed char s8;
-typedef signed short s16;
-typedef signed int s32;
-typedef signed long long s64;
-
-#ifndef NULL
-#define NULL 0
-#endif
+using s8 = std::int8_t;
+using s16 = std::int16_t;
+using s32 = std::int32_t;
+using s64 = std::int64_t;
 
 }	//namespace Emunisce
 

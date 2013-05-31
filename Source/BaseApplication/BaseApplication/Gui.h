@@ -92,6 +92,7 @@ protected:
 		// GuiFeature
 
 		GuiFeature();
+		virtual ~GuiFeature() = default;
 
 		void EnableBackgroundAnimation();
 		void DisableBackgroundAnimation();

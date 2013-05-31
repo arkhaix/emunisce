@@ -37,7 +37,7 @@ MemorySerializer::MemorySerializer()
 
 MemorySerializer::~MemorySerializer()
 {
-	if(m_buffer != NULL)
+	if(m_buffer != nullptr)
 		free(m_buffer);
 }
 
@@ -54,13 +54,13 @@ unsigned int MemorySerializer::GetBufferSize()
 
 void MemorySerializer::TransferBuffer(unsigned char** buffer, unsigned int* size)
 {
-	if(buffer == NULL || size == NULL)
+	if(buffer == nullptr || size == nullptr)
 		return;
 
 	*buffer = m_buffer;
 	*size = m_usedSize;
 
-	m_buffer = NULL;
+	m_buffer = nullptr;
 	m_usedSize = 0;
 	m_reservedSize = 0;
 
@@ -96,7 +96,7 @@ void MemorySerializer::Save(unsigned char* data, unsigned int bytes)
 
 		memcpy((void*)newBuffer, m_buffer, m_usedSize);
 
-		if(m_buffer != NULL)
+		if(m_buffer != nullptr)
 			free(m_buffer);
 
 		m_buffer = newBuffer;
@@ -109,7 +109,7 @@ void MemorySerializer::Save(unsigned char* data, unsigned int bytes)
 
 void MemorySerializer::Restore(unsigned char* buffer, unsigned int bytes)
 {
-	if(m_buffer == NULL || buffer == NULL)
+	if(m_buffer == nullptr || buffer == nullptr)
 		return;
 
 	memcpy((void*)buffer, (void*)(m_buffer + m_usedSize), bytes);

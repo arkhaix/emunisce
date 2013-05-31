@@ -57,7 +57,7 @@ BaseApplication::BaseApplication()
 	m_gui->SetFocus(true);
 
 	m_machine = m_gui;
-	m_wrappedMachine = NULL;
+	m_wrappedMachine = nullptr;
 
 	m_gui->SetApplication(this);
 	m_rewinder->SetApplication(this);
@@ -165,8 +165,8 @@ void BaseApplication::RequestShutdown()
 bool BaseApplication::LoadRom(const char* filename)
 {
 	//Prompt for a file if one wasn't provided
-	char* selectedFilename = NULL;
-	if(filename == NULL || strlen(filename) == 0)
+	char* selectedFilename = nullptr;
+	if(filename == nullptr || strlen(filename) == 0)
 	{
 		bool fileSelected = SelectFile(&selectedFilename);
 
@@ -178,9 +178,9 @@ bool BaseApplication::LoadRom(const char* filename)
 
 	//Load it
 	IEmulatedMachine* machine = MachineFactory::CreateMachine(filename);
-	if(machine == NULL)
+	if(machine == nullptr)
 	{
-		if(selectedFilename != NULL)
+		if(selectedFilename != nullptr)
 			free((void*)selectedFilename);
 
 		return false;
@@ -199,13 +199,13 @@ bool BaseApplication::LoadRom(const char* filename)
 		m_machineRunner->Run();
 
 	//Release the old one
-	if(oldMachine != NULL)
+	if(oldMachine != nullptr)
 		MachineFactory::ReleaseMachine(oldMachine);
 
 	//Remember the file used so we can reset later if necessary
 	strcpy_s(m_lastRomLoaded, 1024, filename);
 
-	if(selectedFilename != NULL)
+	if(selectedFilename != nullptr)
 		free((void*)selectedFilename);
 
 	return true;
@@ -250,7 +250,7 @@ void BaseApplication::StepFrame()
 void BaseApplication::SaveState(const char* name)
 {
 	Archive* archive = OpenSavestate(name, true);
-	if(archive == NULL)
+	if(archive == nullptr)
 		return;
 
 	bool wasPaused = m_machineRunner->IsPaused();
@@ -267,7 +267,7 @@ void BaseApplication::SaveState(const char* name)
 void BaseApplication::LoadState(const char* name)
 {
 	Archive* archive = OpenSavestate(name, false);
-	if(archive == NULL)
+	if(archive == nullptr)
 		return;
 
 	bool wasPaused = m_machineRunner->IsPaused();
@@ -285,13 +285,13 @@ void BaseApplication::LoadState(const char* name)
 //Gui
 void BaseApplication::EnableBackgroundAnimation()
 {
-	if(m_gui != NULL)
+	if(m_gui != nullptr)
 		m_gui->EnableBackgroundAnimation();
 }
 
 void BaseApplication::DisableBackgroundAnimation()
 {
-	if(m_gui != NULL)
+	if(m_gui != nullptr)
 		m_gui->DisableBackgroundAnimation();
 }
 
@@ -299,7 +299,7 @@ void BaseApplication::DisableBackgroundAnimation()
 //Display
 void BaseApplication::SetDisplayFilter(DisplayFilter::Type displayFilter)
 {
-	if(m_gui != NULL)
+	if(m_gui != nullptr)
 		m_gui->SetDisplayFilter(displayFilter);
 }
 
@@ -307,26 +307,26 @@ void BaseApplication::SetDisplayFilter(DisplayFilter::Type displayFilter)
 //Input movie
 void BaseApplication::StartRecordingInput()
 {
-	if(m_inputRecorder != NULL)
+	if(m_inputRecorder != nullptr)
 		m_inputRecorder->StartRecording();
 }
 
 void BaseApplication::StopRecordingInput()
 {
-	if(m_inputRecorder != NULL)
+	if(m_inputRecorder != nullptr)
 		m_inputRecorder->StopRecording();
 }
 
 
 void BaseApplication::PlayMovie()
 {
-	if(m_inputRecorder != NULL)
+	if(m_inputRecorder != nullptr)
 		m_inputRecorder->StartPlayback(true, true, false);
 }
 
 void BaseApplication::StopMovie()
 {
-	if(m_inputRecorder != NULL)
+	if(m_inputRecorder != nullptr)
 		m_inputRecorder->StopPlayback();
 }
 
@@ -334,7 +334,7 @@ void BaseApplication::StopMovie()
 void BaseApplication::SaveMovie(const char* name)
 {
 	Archive* archive = OpenMovie(name, true);
-	if(archive == NULL)
+	if(archive == nullptr)
 		return;
 
 	m_inputRecorder->SerializeMovie(*archive);
@@ -345,7 +345,7 @@ void BaseApplication::SaveMovie(const char* name)
 void BaseApplication::LoadMovie(const char* name)
 {
 	Archive* archive = OpenMovie(name, false);
-	if(archive == NULL)
+	if(archive == nullptr)
 		return;
 
 	m_inputRecorder->SerializeMovie(*archive);
@@ -356,13 +356,13 @@ void BaseApplication::LoadMovie(const char* name)
 
 void BaseApplication::PlayMacro(bool loop)
 {
-	if(m_inputRecorder != NULL)
+	if(m_inputRecorder != nullptr)
 		m_inputRecorder->StartPlayback(false, false, loop);
 }
 
 void BaseApplication::StopMacro()
 {
-	if(m_inputRecorder != NULL)
+	if(m_inputRecorder != nullptr)
 		m_inputRecorder->StopPlayback();
 }
 
@@ -370,7 +370,7 @@ void BaseApplication::StopMacro()
 void BaseApplication::SaveMacro(const char* name)
 {
 	Archive* archive = OpenMacro(name, true);
-	if(archive == NULL)
+	if(archive == nullptr)
 		return;
 
 	m_inputRecorder->SerializeHistory(*archive);
@@ -381,7 +381,7 @@ void BaseApplication::SaveMacro(const char* name)
 void BaseApplication::LoadMacro(const char* name)
 {
 	Archive* archive = OpenMacro(name, false);
-	if(archive == NULL)
+	if(archive == nullptr)
 		return;
 
 	m_inputRecorder->SerializeHistory(*archive);
@@ -396,12 +396,12 @@ void BaseApplication::HandleApplicationEvent(unsigned int eventId)
 {
 	if(eventId >= 0x01000000 && eventId < 0x02000000)
 	{
-		if(m_inputRecorder != NULL)
+		if(m_inputRecorder != nullptr)
 			m_inputRecorder->ApplicationEvent(eventId);
 	}
 	else if(eventId >= 0x02000000 && eventId < 0x03000000)
 	{
-		if(m_rewinder != NULL)
+		if(m_rewinder != nullptr)
 			m_rewinder->ApplicationEvent(eventId);
 	}
 }
@@ -410,7 +410,7 @@ void BaseApplication::HandleApplicationEvent(unsigned int eventId)
 void BaseApplication::SaveRomData(const char* title, unsigned char* buffer, unsigned int bytes)
 {
 	Archive* archive = OpenRomData(title, true);
-	if(archive == NULL)
+	if(archive == nullptr)
 		return;
 
 	archive->SerializeBuffer(buffer, bytes);
@@ -421,7 +421,7 @@ void BaseApplication::SaveRomData(const char* title, unsigned char* buffer, unsi
 void BaseApplication::LoadRomData(const char* title, unsigned char* buffer, unsigned int bytes)
 {
 	Archive* archive = OpenRomData(title, false);
-	if(archive == NULL)
+	if(archive == nullptr)
 		return;
 
 	archive->SerializeBuffer(buffer, bytes);

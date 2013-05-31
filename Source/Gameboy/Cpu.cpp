@@ -35,8 +35,8 @@ Cpu::Cpu()
 , h(*(((u8*)&hl)+1))
 , l(*(((u8*)&hl)+0))
 {
-	m_machine = NULL;
-	m_memory = NULL;
+	m_machine = nullptr;
+	m_memory = nullptr;
 }
 
 void Cpu::SetMachine(Gameboy* machine)

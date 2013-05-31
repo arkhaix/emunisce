@@ -116,6 +116,6 @@ ScreenBuffer* HqNx::Hq4x(ScreenBuffer* originalScreen)
 void HqNx::Release(ScreenBuffer* buffer)
 {
 	DynamicScreenBuffer* rtBuffer = dynamic_cast<DynamicScreenBuffer*>(buffer);
-	if(rtBuffer != NULL)
+	if(rtBuffer != nullptr)
 		delete rtBuffer;
 }

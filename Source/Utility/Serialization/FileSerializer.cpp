@@ -29,7 +29,7 @@ using namespace Emunisce;
 
 FileSerializer::FileSerializer()
 {
-	m_fileStream = NULL;
+	m_fileStream = nullptr;
 
 	strcpy_s(m_filename, 1024, "");
 	m_archiveMode = -1;
@@ -49,11 +49,11 @@ void FileSerializer::SetFile(const char* filename)
 
 void FileSerializer::CloseFile()
 {
-	if(m_fileStream != NULL)
+	if(m_fileStream != nullptr)
 	{
 		m_fileStream->close();
 		delete m_fileStream;
-		m_fileStream = NULL;
+		m_fileStream = nullptr;
 	}
 }
 
@@ -63,7 +63,7 @@ void FileSerializer::CloseFile()
 
 void FileSerializer::SetArchive(Archive* archive)
 {
-	if(archive == NULL)
+	if(archive == nullptr)
 		return;
 
 	m_archiveMode = (int)archive->GetArchiveMode();
@@ -72,7 +72,7 @@ void FileSerializer::SetArchive(Archive* archive)
 
 void FileSerializer::Save(unsigned char* data, unsigned int bytes)
 {
-	if(m_fileStream == NULL || m_fileStream->fail())
+	if(m_fileStream == nullptr || m_fileStream->fail())
 		return;
 
 	m_fileStream->write((const char*)data, bytes);
@@ -80,7 +80,7 @@ void FileSerializer::Save(unsigned char* data, unsigned int bytes)
 
 void FileSerializer::Restore(unsigned char* buffer, unsigned int bytes)
 {
-	if(m_fileStream == NULL || m_fileStream->fail())
+	if(m_fileStream == nullptr || m_fileStream->fail())
 		return;
 
 	m_fileStream->read((char*)buffer, bytes);
@@ -95,7 +95,7 @@ void FileSerializer::Close()
 
 void FileSerializer::OpenStream()
 {
-	if(m_fileStream != NULL)
+	if(m_fileStream != nullptr)
 		return;
 
 	if(strlen(m_filename) == 0)
@@ -112,7 +112,7 @@ void FileSerializer::OpenStream()
 		if(m_fileStream->fail())
 		{
 			delete m_fileStream;
-			m_fileStream = NULL;
+			m_fileStream = nullptr;
 		}
 	}
 	else if(m_archiveMode == ArchiveMode::Loading)
@@ -123,7 +123,7 @@ void FileSerializer::OpenStream()
 		if(m_fileStream->fail())
 		{
 			delete m_fileStream;
-			m_fileStream = NULL;
+			m_fileStream = nullptr;
 		}
 	}
 }

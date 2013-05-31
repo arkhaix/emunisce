@@ -103,7 +103,7 @@ protected:
 			MachineFrameId = (unsigned int)-1;
 
 			ScreenBufferId = (unsigned int)-1;
-			Screen = NULL;
+			Screen = nullptr;
 
 			AudioBufferId = (unsigned int)-1;
 		}
@@ -166,6 +166,7 @@ protected:
 	public:
 
 		InputHandler(Rewinder* rewinder);
+		virtual ~InputHandler() = default;
 
 
 		//IEmulatedInput

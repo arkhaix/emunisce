@@ -86,6 +86,7 @@ class Input : public IEmulatedInput
 public:
 
 	Input();
+	virtual ~Input() = default;
 
 
 	// IEmulatedInput

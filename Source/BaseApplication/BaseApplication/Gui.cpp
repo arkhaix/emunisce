@@ -38,8 +38,8 @@ using namespace Emunisce;
 
 Gui::Gui()
 {
-	m_screenBufferCopy = NULL;
-    m_filteredScreenBuffer = NULL;
+	m_screenBufferCopy = nullptr;
+    m_filteredScreenBuffer = nullptr;
 	m_filteredScreenBufferId = -1;
 	m_displayFilter = DisplayFilter::NoFilter;
 
@@ -51,12 +51,12 @@ Gui::Gui()
 
 Gui::~Gui()
 {
-	m_featureExecution = NULL;
-	m_featureDisplay = NULL;
-	m_featureInput = NULL;
+	m_featureExecution = nullptr;
+	m_featureDisplay = nullptr;
+	m_featureInput = nullptr;
 	delete m_guiFeature;
 
-	if(m_screenBufferCopy != NULL)
+	if(m_screenBufferCopy != nullptr)
         delete m_screenBufferCopy;
 }
 
@@ -170,10 +170,10 @@ ScreenBuffer* Gui::GetStableScreenBuffer()
     ScreenBuffer* screenBuffer = MachineFeature::GetStableScreenBuffer();
 
     bool needToDeleteFilteredBuffer = false;
-    if(m_filteredScreenBuffer != NULL && m_filteredScreenBuffer != m_screenBufferCopy)
+    if(m_filteredScreenBuffer != nullptr && m_filteredScreenBuffer != m_screenBufferCopy)
         needToDeleteFilteredBuffer = true;
 
-	if(m_screenBufferCopy != NULL)
+	if(m_screenBufferCopy != nullptr)
 		delete m_screenBufferCopy;
 
 	int width = screenBuffer->GetWidth();
@@ -206,13 +206,13 @@ ScreenBuffer* Gui::GetStableScreenBuffer()
 
 void Gui::EnableBackgroundAnimation()
 {
-	if(m_guiFeature != NULL)
+	if(m_guiFeature != nullptr)
 		m_guiFeature->EnableBackgroundAnimation();
 }
 
 void Gui::DisableBackgroundAnimation()
 {
-	if(m_guiFeature != NULL)
+	if(m_guiFeature != nullptr)
 		m_guiFeature->DisableBackgroundAnimation();
 }
 
@@ -330,7 +330,7 @@ const char* Gui::GuiFeature::GetButtonName(unsigned int index)
 	if(index < GuiButtons::NumGuiButtons)
 		return GuiButtons::ToString[index];
 
-	return NULL;
+	return nullptr;
 }
 
 

@@ -89,6 +89,7 @@ public:
 
 	
 	Cpu();
+	virtual ~Cpu() = default;
 
 	//Component
 	void SetMachine(Gameboy* machine);

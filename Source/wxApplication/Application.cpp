@@ -79,7 +79,7 @@ void Application::RequestShutdown()
 
 void Application::SetVsync(bool enabled)
 {
-	if(m_renderer != NULL)
+	if(m_renderer != nullptr)
 		m_renderer->SetVsync(enabled);
 }
 
@@ -130,13 +130,13 @@ PromptResult::Type Application::DisplayPrompt(PromptType::Type promptType, const
 
 bool Application::SelectFile(char** result, const char* fileMask)
 {
-    if(result == NULL)
+    if(result == nullptr)
 		return false;
 
-    if(fileMask == NULL)
+    if(fileMask == nullptr)
         fileMask = "*.*|*.*";
 
-    wxFileDialog openFileDialog(NULL, _("Open File"), _(""), _(""), wxString::FromAscii(fileMask), wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+    wxFileDialog openFileDialog(nullptr, _("Open File"), _(""), _(""), wxString::FromAscii(fileMask), wxFD_OPEN|wxFD_FILE_MUST_EXIST);
 
     if (openFileDialog.ShowModal() == wxID_CANCEL)
         return false;
@@ -166,21 +166,21 @@ void Application::Closed()
 
 void Application::Draw()
 {
-	if(m_renderer != NULL)
+	if(m_renderer != nullptr)
 		m_renderer->Draw();
 }
 
 
 void Application::Resize(int newWidth, int newHeight)
 {
-	if(m_renderer != NULL)
+	if(m_renderer != nullptr)
 		m_renderer->Resize(newWidth, newHeight);
 }
 
 
 void Application::KeyDown(int key)
 {
-    char* fileSelected = NULL;
+    char* fileSelected = nullptr;
 
     if(key >= 'a' && key <= 'z')
         key = 'A' + (key-'a');
@@ -193,9 +193,9 @@ void Application::KeyDown(int key)
 
     else if(key == 'O')
     {
-        SelectFile(&fileSelected, NULL);
+        SelectFile(&fileSelected, nullptr);
 
-        if(fileSelected != NULL)
+        if(fileSelected != nullptr)
         {
             bool result = LoadRom(fileSelected);
             if(result == false)
@@ -286,7 +286,7 @@ Archive* Application::OpenFileArchive(const char* filename, bool saving)
 
 void Application::ReleaseArchive(Archive* archive)
 {
-    if(archive == NULL)
+    if(archive == nullptr)
 		return;
 
 	ISerializer* serializer = archive->GetSerializer();
@@ -454,7 +454,7 @@ IMPLEMENT_APP(Application)
 bool Application::OnInit()
 {
     wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
-    m_frame = new wxFrame((wxFrame *)NULL, -1, wxT("Emunisce"), wxPoint(50,50), wxSize(320,240));
+    m_frame = new wxFrame((wxFrame *)nullptr, -1, wxT("Emunisce"), wxPoint(50,50), wxSize(320,240));
 
     int args[] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0};
 
@@ -471,9 +471,9 @@ bool Application::OnInit()
     m_windowMain->SetFocus();
 
 
-	m_renderer->Initialize(this, NULL);
+	m_renderer->Initialize(this, nullptr);
 
-	if(m_machine != NULL)
+	if(m_machine != nullptr)
 	{
 		BaseApplication::NotifyMachineChanged(m_machine);
 		m_renderer->SetMachine(m_machine);

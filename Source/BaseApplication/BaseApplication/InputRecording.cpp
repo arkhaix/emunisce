@@ -53,7 +53,7 @@ InputRecording::InputRecording()
 
 	m_loopPlayback = false;
 
-	m_startState = NULL;
+	m_startState = nullptr;
 	m_startStateSize = 0;
 
 	m_eventIdOffset = m_defaultEventIdOffset;
@@ -61,7 +61,7 @@ InputRecording::InputRecording()
 
 InputRecording::~InputRecording()
 {
-	if(m_startState != NULL)
+	if(m_startState != nullptr)
 		delete m_startState;
 }
 
@@ -114,7 +114,7 @@ void InputRecording::SerializeMovie(Archive& archive)
 
 void InputRecording::StartRecording()
 {
-	if(m_wrappedMachine != NULL)
+	if(m_wrappedMachine != nullptr)
 	{
 		//Pause the machine
 		bool wasPaused = m_application->GetMachineRunner()->IsPaused();
@@ -131,7 +131,7 @@ void InputRecording::StartRecording()
 		Archive archive(&serializer, ArchiveMode::Saving);
 		m_wrappedMachine->SaveState(archive);
 		
-		if(m_startState != NULL)
+		if(m_startState != nullptr)
 			delete m_startState;
 
 		serializer.TransferBuffer(&m_startState, &m_startStateSize);
@@ -151,7 +151,7 @@ void InputRecording::StopRecording()
 
 void InputRecording::StartPlayback(bool absoluteFrames, bool restoreState, bool loop)
 {
-	if(m_wrappedMachine != NULL)
+	if(m_wrappedMachine != nullptr)
 	{
 		//Pause the machine
 		bool wasPaused = m_application->GetMachineRunner()->IsPaused();
@@ -196,7 +196,7 @@ void InputRecording::StopPlayback()
 {
 	m_playing = false;
 	
-	if(m_wrappedMachine != NULL)
+	if(m_wrappedMachine != nullptr)
 	{
 		for(unsigned int i=0;i<m_inputHistory.size();i++)
 		{
@@ -208,7 +208,7 @@ void InputRecording::StopPlayback()
 
 void InputRecording::ApplicationEvent(unsigned int eventId)
 {
-	if(m_wrappedInput == NULL)
+	if(m_wrappedInput == nullptr)
 		return;
 
 	if(m_playing == false)
@@ -243,7 +243,7 @@ void InputRecording::SetEventIdOffset(unsigned int offset)
 
 void InputRecording::RunToNextFrame()
 {
-	if(m_recording == true && m_wrappedMachine != NULL)
+	if(m_recording == true && m_wrappedMachine != nullptr)
 	{
 		while(m_pendingEvents.empty() == false)
 		{
@@ -274,7 +274,7 @@ void InputRecording::ButtonDown(unsigned int index)
 
 	m_isButtonDown[index] = true;
 
-	if(m_recording == true && m_wrappedMachine != NULL)
+	if(m_recording == true && m_wrappedMachine != nullptr)
 	{
 		InputEvent inputEvent;
 
@@ -297,7 +297,7 @@ void InputRecording::ButtonUp(unsigned int index)
 
 	m_isButtonDown[index] = false;
 
-	if(m_recording == true && m_wrappedMachine != NULL)
+	if(m_recording == true && m_wrappedMachine != nullptr)
 	{
 		InputEvent inputEvent;
 

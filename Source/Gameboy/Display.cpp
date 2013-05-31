@@ -650,7 +650,7 @@ void Display::RenderBackgroundPixel(int screenX, int screenY)
 	u8 bgTileValue = vram[bgTileMapAddress + bgTileIndex - m_vramOffset];
 
 	//Get the tile attributes (cgb only)
-	u8* cgbVram = NULL;
+	u8* cgbVram = nullptr;
 	u8 bgTileAttributes = 0;
 	if(m_machineType == EmulatedMachine::GameboyColor)
 	{
@@ -789,7 +789,7 @@ void Display::RenderWindowPixel(int screenX, int screenY)
 	u8 tileValue = vram[tileMapAddress + tilePositionIndex - m_vramOffset];
 
 	//Get the tile attributes (cgb only)
-	u8* cgbVram = NULL;
+	u8* cgbVram = nullptr;
 	u8 tileAttributes = 0;
 	if(m_machineType == EmulatedMachine::GameboyColor)
 	{

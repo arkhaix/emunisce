@@ -79,7 +79,7 @@ struct OpenGLScreenBuffer
 	{
 		Width = -1;
 		Height = -1;
-		Pixels = NULL;
+		Pixels = nullptr;
 	}
 
 	OpenGLScreenBuffer(int width, int height)
@@ -91,10 +91,10 @@ struct OpenGLScreenBuffer
 
 	~OpenGLScreenBuffer()
 	{
-		if(Pixels != NULL)
+		if(Pixels != nullptr)
 		{
 			free((void*)Pixels);
-			Pixels = NULL;
+			Pixels = nullptr;
 
 			Width = -1;
 			Height = -1;
@@ -156,25 +156,25 @@ public:
 
 	OpenGLRenderer_Private()
 	{
-		_Application = NULL;
+		_Application = nullptr;
 
-		_Machine = NULL;
-		_Display = NULL;
+		_Machine = nullptr;
+		_Display = nullptr;
 
 		_NeedsShutdown = false;
 
 #ifdef EMUNISCE_PLATFORM_WINDOWS
-		_WindowHandle = NULL;
-		_DeviceContext = NULL;
-		_RenderContext = NULL;
+		_WindowHandle = nullptr;
+		_DeviceContext = nullptr;
+		_RenderContext = nullptr;
 
-		_PreservedDeviceContext = NULL;
-		_PreservedRenderContext = NULL;
+		_PreservedDeviceContext = nullptr;
+		_PreservedRenderContext = nullptr;
 
-		wglSwapIntervalEXT = NULL;
+		wglSwapIntervalEXT = nullptr;
 #endif
 
-		_ScreenBuffer = NULL;
+		_ScreenBuffer = nullptr;
 		_LastFrameRendered = -1;
 		_LastFrameDrawn = -1;
 
@@ -184,12 +184,12 @@ public:
 		_ClientHeight = 1;
 
 		_PboSupported = false;
-		glGenBuffersARB = NULL;
-		glBindBufferARB = NULL;
-		glBufferDataARB = NULL;
-		glDeleteBuffersARB = NULL;
-		glMapBufferARB = NULL;
-		glUnmapBufferARB = NULL;
+		glGenBuffersARB = nullptr;
+		glBindBufferARB = nullptr;
+		glBufferDataARB = nullptr;
+		glDeleteBuffersARB = nullptr;
+		glMapBufferARB = nullptr;
+		glUnmapBufferARB = nullptr;
 		_PixelBufferObject = 0;
 	}
 
@@ -199,7 +199,7 @@ public:
 		//http://nehe.gamedev.net/data/lessons/lesson.asp?lesson=46
 
 		const size_t extlen = strlen(extension);
-		const char *supported = NULL;
+		const char *supported = nullptr;
 
 #ifdef EMUNISCE_PLATFORM_WINDOWS
 		// Try To Use wglGetExtensionStringARB On Current DC, If Possible
@@ -209,7 +209,7 @@ public:
 			supported = ((char*(__stdcall*)(HDC))wglGetExtString)(wglGetCurrentDC());
 #endif
 
-		if(supported != NULL)
+		if(supported != nullptr)
 		{
 			// Begin Examination At Start Of String, Increment By 1 On False Match
 			for (const char* p = supported; ; p++)
@@ -217,14 +217,14 @@ public:
 				// Advance p Up To The Next Possible Match
 				p = strstr(p, extension);
 
-				if (p == NULL)
+				if (p == nullptr)
 					break;						// No Match
 
 				// Make Sure That Match Is At The Start Of The String Or That
 				// The Previous Char Is A Space, Or Else We Could Accidentally
 				// Match "wglFunkywglExtension" With "wglExtension"
 
-				// Also, Make Sure That The Following Character Is Space Or NULL
+				// Also, Make Sure That The Following Character Is Space Or nullptr
 				// Or Else "wglExtensionTwo" Might Match "wglExtension"
 				if ((p==supported || p[-1]==' ') && (p[extlen]=='\0' || p[extlen]==' '))
 					return true;						// Match
@@ -233,7 +233,7 @@ public:
 
 		//Not found in wgl extensions.  Try standard opengl extensions.
 		supported = (char*)glGetString(GL_EXTENSIONS);
-		if (supported != NULL)
+		if (supported != nullptr)
 		{
 			// Begin Examination At Start Of String, Increment By 1 On False Match
 			for (const char* p = supported; ; p++)
@@ -241,14 +241,14 @@ public:
 				// Advance p Up To The Next Possible Match
 				p = strstr(p, extension);
 
-				if (p == NULL)
+				if (p == nullptr)
 					break;						// No Match
 
 				// Make Sure That Match Is At The Start Of The String Or That
 				// The Previous Char Is A Space, Or Else We Could Accidentally
 				// Match "wglFunkywglExtension" With "wglExtension"
 
-				// Also, Make Sure That The Following Character Is Space Or NULL
+				// Also, Make Sure That The Following Character Is Space Or nullptr
 				// Or Else "wglExtensionTwo" Might Match "wglExtension"
 				if ((p==supported || p[-1]==' ') && (p[extlen]=='\0' || p[extlen]==' '))
 					return true;						// Match
@@ -264,7 +264,7 @@ public:
 		_NeedsShutdown = true;
 
 #ifdef EMUNISCE_PLATFORM_WINDOWS
-		if(_WindowHandle != NULL)
+		if(_WindowHandle != nullptr)
 		{
 			_DeviceContext = GetDC(_WindowHandle);
 
@@ -314,12 +314,12 @@ public:
 			glMapBufferARB = (TglMapBufferARB)wglGetProcAddress("glMapBufferARB");
 			glUnmapBufferARB = (TglUnmapBufferARB)wglGetProcAddress("glUnmapBufferARB");
 
-			if(glGenBuffersARB == NULL || glBindBufferARB == NULL || glBufferDataARB == NULL ||
-				glDeleteBuffersARB == NULL || glMapBufferARB == NULL || glUnmapBufferARB == NULL)
+			if(glGenBuffersARB == nullptr || glBindBufferARB == nullptr || glBufferDataARB == nullptr ||
+				glDeleteBuffersARB == nullptr || glMapBufferARB == nullptr || glUnmapBufferARB == nullptr)
 				_PboSupported = false;
 		}
 
-		if(_WindowHandle != NULL)
+		if(_WindowHandle != nullptr)
 			RestorePreservedContext();
 #endif
 	}
@@ -332,7 +332,7 @@ public:
 		_NeedsShutdown = false;
 
 #ifdef EMUNISCE_PLATFORM_WINDOWS
-		if(_WindowHandle != NULL)
+		if(_WindowHandle != nullptr)
 		{
 			wglDeleteContext(_RenderContext);
 			ReleaseDC(_WindowHandle, _DeviceContext);
@@ -358,7 +358,7 @@ public:
 	void SetVsync(bool enabled)
 	{
 #ifdef EMUNISCE_PLATFORM_WINDOWS
-		if(wglSwapIntervalEXT != NULL)
+		if(wglSwapIntervalEXT != nullptr)
 		{
 			int mode = 1;
 			if(enabled == false)
@@ -371,7 +371,7 @@ public:
 
 	void UpdateTexture()
 	{
-		if(_Display == NULL)
+		if(_Display == nullptr)
 			return;
 
 		if(_Display->GetScreenBufferCount() == _LastFrameRendered)
@@ -387,9 +387,9 @@ public:
 		int displayDataSize = displayWidth * displayHeight * sizeof(DisplayPixel);
 
 		bool resizeTexture = false;
-		if(_ScreenBuffer == NULL || _ScreenBuffer->Width != displayWidth || _ScreenBuffer->Height != displayHeight)
+		if(_ScreenBuffer == nullptr || _ScreenBuffer->Width != displayWidth || _ScreenBuffer->Height != displayHeight)
 		{
-			if(_ScreenBuffer != NULL)
+			if(_ScreenBuffer != nullptr)
 				delete _ScreenBuffer;
 
 			_ScreenBuffer = new OpenGLScreenBuffer(displayWidth, displayHeight);
@@ -428,13 +428,13 @@ public:
 				glBindTexture(GL_TEXTURE_2D, _ScreenTexture);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, displayWidth, displayHeight, 0, GL_BGRA_EXT, GL_UNSIGNED_INT_8_8_8_8_REV, NULL);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, displayWidth, displayHeight, 0, GL_BGRA_EXT, GL_UNSIGNED_INT_8_8_8_8_REV, nullptr);
 				glBindTexture(GL_TEXTURE_2D, 0);
 
 				//PBO
 				glGenBuffersARB(1, &_PixelBufferObject);
 				glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, _PixelBufferObject);
-				glBufferDataARB(GL_PIXEL_UNPACK_BUFFER_ARB, displayDataSize, NULL, GL_STREAM_DRAW_ARB);
+				glBufferDataARB(GL_PIXEL_UNPACK_BUFFER_ARB, displayDataSize, nullptr, GL_STREAM_DRAW_ARB);
 				glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
 			}
 
@@ -455,7 +455,7 @@ public:
 
 			//Copy data from the pbo to the texture
 			glBindTexture(GL_TEXTURE_2D, _ScreenTexture);
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, displayWidth, displayHeight, GL_BGRA_EXT, GL_UNSIGNED_INT_8_8_8_8_REV, NULL);
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, displayWidth, displayHeight, GL_BGRA_EXT, GL_UNSIGNED_INT_8_8_8_8_REV, nullptr);
 			glBindTexture(GL_TEXTURE_2D, 0);
 
 			//We're done. Unbind the buffer.
@@ -476,7 +476,7 @@ public:
 				glBindTexture(GL_TEXTURE_2D, _ScreenTexture);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, displayWidth, displayHeight, 0, GL_BGRA_EXT, GL_UNSIGNED_INT_8_8_8_8_REV, NULL);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, displayWidth, displayHeight, 0, GL_BGRA_EXT, GL_UNSIGNED_INT_8_8_8_8_REV, nullptr);
 				glBindTexture(GL_TEXTURE_2D, 0);
 			}
 
@@ -491,7 +491,7 @@ public:
 
 	void RenderToDisplay()
 	{
-		if(_ScreenBuffer == NULL || _ScreenBuffer->Width <= 0 || _ScreenBuffer->Height <= 0)
+		if(_ScreenBuffer == nullptr || _ScreenBuffer->Width <= 0 || _ScreenBuffer->Height <= 0)
 			return;
 
 		if(_LastFrameDrawn == _LastFrameRendered)
@@ -546,7 +546,7 @@ public:
 
 		//Display the rendered frame to the window
 #ifdef EMUNISCE_PLATFORM_WINDOWS
-		if(_DeviceContext != NULL)
+		if(_DeviceContext != nullptr)
 			SwapBuffers(_DeviceContext);
 #endif
 	}
@@ -556,7 +556,7 @@ public:
 	{
 		PreserveExistingContext();
 #ifdef EMUNISCE_PLATFORM_WINDOWS
-		if(_DeviceContext != NULL && _RenderContext != NULL)
+		if(_DeviceContext != nullptr && _RenderContext != nullptr)
 			wglMakeCurrent(_DeviceContext, _RenderContext);
 #endif
 

@@ -47,6 +47,7 @@ class MachineRunner
 public:
 
 	MachineRunner();
+	virtual ~MachineRunner() = default;
 
 
 	// Application component
@@ -81,7 +82,7 @@ protected:
 		virtual void EntryPoint(void* param)
 		{
 			MachineRunner* instance = (MachineRunner*)param;
-			if(instance == NULL)
+			if(instance == nullptr)
 				return;
 
 			instance->RunnerThread();

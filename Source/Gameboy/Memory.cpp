@@ -40,14 +40,14 @@ using namespace std;
 
 Memory::Memory()
 {
-	srand((unsigned int)time(NULL));
+	srand((unsigned int)time(nullptr));
 
-	m_machine = NULL;
+	m_machine = nullptr;
 
-	m_cpu = NULL;
-	m_display = NULL;
-	m_input = NULL;
-	m_sound = NULL;
+	m_cpu = nullptr;
+	m_display = nullptr;
+	m_input = nullptr;
+	m_sound = nullptr;
 
 	m_oamLocked = false;
 	m_vramLocked = false;
@@ -55,7 +55,7 @@ Memory::Memory()
 
 	for(int i=0;i<0x100;i++)
 	{
-		m_registerLocation[i] = NULL;
+		m_registerLocation[i] = nullptr;
 		m_callWriteRegister[i] = false;
 	}
 
@@ -74,7 +74,7 @@ void Memory::SetMachine(Gameboy* machine)
 	//Reset Machine-dependent values
 	for(int i=0;i<0x100;i++)
 	{
-		m_registerLocation[i] = NULL;
+		m_registerLocation[i] = nullptr;
 		m_callWriteRegister[i] = false;
 	}
 
@@ -320,7 +320,7 @@ u8 Memory::Read8(u16 address)
 	{
 		u8 offset = (u8)(address & 0x00ff);
 		u8* pRegister = m_registerLocation[offset];
-		if(pRegister != NULL)
+		if(pRegister != nullptr)
 			return *pRegister;
 
 		if(address >= 0xff30 && address < 0xff40)
@@ -380,7 +380,7 @@ void Memory::Write8(u16 address, u8 value)
 		if(m_callWriteRegister[offset])
 			WriteRegister(address, value);
 
-		if(m_registerWriteable[offset] && m_registerLocation[offset] != NULL)
+		if(m_registerWriteable[offset] && m_registerLocation[offset] != nullptr)
 		{
 			*(m_registerLocation[offset]) = value;
 			return;
@@ -567,7 +567,7 @@ Memory* Memory::CreateFromFile(const char* filename)
 	ifstream ifile(filename, ios::in | ios::binary);
 	
 	if(ifile.fail() || ifile.eof() || !ifile.good())
-		return NULL;
+		return nullptr;
 
 	u8 header[0x150] = {0};
 	ifile.read((char*)&header[0], 0x150);
@@ -575,7 +575,7 @@ Memory* Memory::CreateFromFile(const char* filename)
 
 	
 	//Instantiate the appropriate MBC class from the header info
-	Memory* memoryController = NULL;
+	Memory* memoryController = nullptr;
 	u8 cartType = header[0x147];
 
 	if(cartType == 0 || cartType == 8 || cartType == 9)
@@ -599,20 +599,20 @@ Memory* Memory::CreateFromFile(const char* filename)
 		printf("Memory controller: MBC5\n");
 	}
 
-	if(memoryController != NULL)
+	if(memoryController != nullptr)
 		printf("Cartridge type ok: %d (0x%02X)\n", cartType, cartType);
 	else
 		printf("Unsupported cartridge type: %d (0x%02X)\n", cartType, cartType);
 
-	if(memoryController == NULL)
-		return NULL;
+	if(memoryController == nullptr)
+		return nullptr;
 
 
 	//Have the MBC class load the file
 	if(memoryController->LoadFile(filename) == false)
 	{
 		delete memoryController;
-		return NULL;
+		return nullptr;
 	}
 
 	return memoryController;

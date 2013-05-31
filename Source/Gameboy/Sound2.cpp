@@ -31,7 +31,7 @@ using namespace Emunisce;
 
 Sound2::Sound2()
 {
-	m_machine = NULL;
+	m_machine = nullptr;
 
 	m_dutyUnit = new DutyUnit();
 	m_envelopeUnit = new EnvelopeUnit(this);

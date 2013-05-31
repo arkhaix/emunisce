@@ -23,8 +23,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "PlatformDefines.h"
 #ifndef EMUNISCE_COMPILER_MSVC
 
-#ifndef NULL
-#define NULL 0
+#ifndef nullptr
+#define nullptr 0
 #endif
 
 //todo: the files that include SecureCrt.h should also be responsible for including the necessary dependencies.
@@ -40,7 +40,7 @@ inline int freopen_s(FILE** outFile, const char* path, const char* mode, FILE* s
 
     FILE* result = freopen(path, mode, stream);
 
-    if(outFile != NULL)
+    if(outFile != nullptr)
         *outFile = result;
 
     return 0;
@@ -55,12 +55,12 @@ inline int strcat_s(char* destination, unsigned int sizeBytes, const char* sourc
 
 inline int strcpy_s(char* destination, unsigned int sizeBytes, const char* source)
 {
-    if(destination == NULL)
+    if(destination == nullptr)
     {
         return -1;
     }
 
-    if(source == NULL)
+    if(source == nullptr)
     {
         destination[0] = 0;
         return -1;
