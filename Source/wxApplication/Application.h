@@ -20,6 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+#define __GXX_ABI_VERSION 1002
 #include "wx/wx.h"
 
 #include "BaseApplication/BaseApplication.h"

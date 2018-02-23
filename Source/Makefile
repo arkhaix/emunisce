@@ -1,8 +1,8 @@
 SRCDIRS=Utility/Serialization Utility/HqNx LinuxPlatform Machine BaseApplication/BaseApplication BaseApplication/OpenGLRenderer Gameboy wxApplication
-INCDIRS=Utility Platform BaseApplication ../Import/freetype/Export/x86/include
+INCDIRS=Utility Platform BaseApplication
 LIBDIRS=
 IMPORTLIBS=GL
-STATICLIBS=../Import/freetype/Export/x86/lib/freetype.a
+STATICLIBS=
 
 CC=gcc
 CXX=g++
