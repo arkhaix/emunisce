@@ -59,10 +59,7 @@ void WindowMain::OnKeyDown(wxKeyEvent& event)
     if(m_application != nullptr)
     {
         if(event.GetKeyCode() == (int)'`')
-        {
             m_application->ShowConsoleWindow();
-        }
-
         else
             m_application->KeyDown(event.GetKeyCode());
     }

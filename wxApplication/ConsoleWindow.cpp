@@ -23,18 +23,18 @@ using namespace Emunisce;
 
 #include "Application.h"
 
-class WtfTextCtrl : public wxTextCtrl
+class ConsoleTextCtrl : public wxTextCtrl
 {
 public:
 
-    WtfTextCtrl(ConsoleWindow* console, wxWindow *parent, wxWindowID id, const wxString &value = wxEmptyString, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize, long style = 0L, const wxValidator &validator = wxDefaultValidator, const wxString &name = wxTextCtrlNameStr) :
+    ConsoleTextCtrl(ConsoleWindow* console, wxWindow *parent, wxWindowID id, const wxString &value = wxEmptyString, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize, long style = 0L, const wxValidator &validator = wxDefaultValidator, const wxString &name = wxTextCtrlNameStr) :
         wxTextCtrl(parent, id, value, pos, size, style, validator, name)
     {
-        Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(WtfTextCtrl::OnKeyDown));
-        Connect(wxEVT_KEY_UP, wxKeyEventHandler(WtfTextCtrl::OnKeyUp));
-        Connect(wxEVT_COMMAND_TEXT_UPDATED, wxTextEventHandler(WtfTextCtrl::OnText));
-        Connect(wxEVT_COMMAND_TEXT_ENTER, wxTextEventHandler(WtfTextCtrl::OnTextEnter));
-        Connect(wxEVT_SET_FOCUS, wxFocusEventHandler(WtfTextCtrl::OnSetFocus));
+        Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(ConsoleTextCtrl::OnKeyDown));
+        Connect(wxEVT_KEY_UP, wxKeyEventHandler(ConsoleTextCtrl::OnKeyUp));
+        Connect(wxEVT_COMMAND_TEXT_UPDATED, wxTextEventHandler(ConsoleTextCtrl::OnText));
+        Connect(wxEVT_COMMAND_TEXT_ENTER, wxTextEventHandler(ConsoleTextCtrl::OnTextEnter));
+        Connect(wxEVT_SET_FOCUS, wxFocusEventHandler(ConsoleTextCtrl::OnSetFocus));
 
         m_console = console;
     }
@@ -112,12 +112,12 @@ void ConsoleWindow::Initialize(Application* application, wxFrame* mainFrame)
 
     m_frame = new ConsoleFrame(this, mainFrame, title, consolePos, consoleSize);
 
-    m_output =  new WtfTextCtrl(this, m_frame, wxID_ANY, wxT(""), wxPoint(0,0), wxSize(400,180),
+    m_output =  new ConsoleTextCtrl(this, m_frame, wxID_ANY, wxT(""), wxPoint(0,0), wxSize(400,180),
         wxTE_READONLY | wxTE_MULTILINE | wxTE_RICH | wxTE_BESTWRAP | wxTE_AUTO_SCROLL);
     m_output->SetBackgroundColour(*wxBLACK);
     m_output->SetDefaultStyle(wxTextAttr(*wxLIGHT_GREY, *wxBLACK));
 
-    m_input =  new WtfTextCtrl(this, m_frame, wxID_ANY, wxT(""), wxPoint(0,180), wxSize(400,20),
+    m_input =  new ConsoleTextCtrl(this, m_frame, wxID_ANY, wxT(""), wxPoint(0,180), wxSize(400,20),
         wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB);
     m_input->SetBackgroundColour(*wxBLACK);
     m_input->SetDefaultStyle(wxTextAttr(*wxLIGHT_GREY, *wxBLACK));
