@@ -33,9 +33,6 @@ using namespace Emunisce;
 
 #include "MachineIncludes.h"
 
-#include "BaseApplication/BaseApplication.h"
-
-
 
 namespace Emunisce
 {
@@ -106,8 +103,6 @@ class OpenGLRenderer_Private
 {
 public:
 
-	BaseApplication* _Application;
-
 	IEmulatedMachine* _Machine;
 	IEmulatedDisplay* _Display;
 
@@ -156,8 +151,6 @@ public:
 
 	OpenGLRenderer_Private()
 	{
-		_Application = nullptr;
-
 		_Machine = nullptr;
 		_Display = nullptr;
 
@@ -587,9 +580,8 @@ OpenGLRenderer::~OpenGLRenderer()
 }
 
 
-void OpenGLRenderer::Initialize(BaseApplication* phoenix, void* windowHandle)
+void OpenGLRenderer::Initialize(void* windowHandle)
 {
-	m_private->_Application = phoenix;
 #ifdef EMUNISCE_PLATFORM_WINDOWS
 	m_private->_WindowHandle = (HWND)windowHandle;
 #endif

@@ -471,7 +471,7 @@ bool Application::OnInit()
     m_windowMain->SetFocus();
 
 
-	m_renderer->Initialize(this, nullptr);
+	m_renderer->Initialize(nullptr);
 
 	if(m_machine != nullptr)
 	{

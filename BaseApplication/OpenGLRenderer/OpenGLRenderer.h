@@ -24,7 +24,6 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class BaseApplication;
 class IEmulatedMachine;
 
 class OpenGLRenderer
@@ -34,7 +33,7 @@ public:
 	OpenGLRenderer();
 	~OpenGLRenderer();
 
-	void Initialize(BaseApplication* phoenix, void* windowHandle);
+	void Initialize(void* windowHandle);
 	void Shutdown();
 
 	void SetMachine(IEmulatedMachine* machine);
