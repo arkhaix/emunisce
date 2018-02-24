@@ -34,6 +34,7 @@ namespace Emunisce
 {
 
 class WindowMain;
+class ConsoleWindow;
 
 class Application : public wxApp, public BaseApplication
 {
@@ -72,6 +73,12 @@ public:
 
 	virtual void KeyDown(int key);
 	virtual void KeyUp(int key);
+
+
+    // wxApplication
+
+    void ShowConsoleWindow();
+    void ShowGameWindow();
 
 
 protected:
@@ -120,6 +127,7 @@ protected:
 
     wxFrame* m_frame;
     WindowMain* m_windowMain;
+    ConsoleWindow* m_consoleWindow;
 };
 
 }   //namespace Emunisce

@@ -57,7 +57,15 @@ END_EVENT_TABLE()
 void WindowMain::OnKeyDown(wxKeyEvent& event)
 {
     if(m_application != nullptr)
-        m_application->KeyDown(event.GetKeyCode());
+    {
+        if(event.GetKeyCode() == (int)'`')
+        {
+            m_application->ShowConsoleWindow();
+        }
+
+        else
+            m_application->KeyDown(event.GetKeyCode());
+    }
 }
 
 void WindowMain::OnKeyUp(wxKeyEvent& event)
