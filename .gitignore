@@ -1,3 +1,5 @@
 **.o
-Source/Emunisce
-Source/.depend
+Emunisce
+.depend
+.vscode
+**bazel-*
