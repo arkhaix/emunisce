@@ -1,12 +1,5 @@
-genrule(
-    name = "emunisce_linux",
-    srcs = [":emunisce_linux_app"],
-    outs = ["emunisce"],
-    cmd = "cp $(location :emunisce_linux_app) $@"
-)
-
 cc_binary(
-    name = "emunisce_linux_app",
+    name = "emunisce_linux",
     visibility = ["//visibility:public"],
 
     deps = [
