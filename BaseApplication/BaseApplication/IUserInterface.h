@@ -160,6 +160,8 @@ public:
 	virtual PromptResult::Type DisplayPrompt(PromptType::Type promptType, const char* title, const char* message, void** extraResult) = 0;	///<Displays a prompt the user and blocks until the prompt is answered.  extraResult is for responses from the user that can't be returned as PromptResult values.
 
 	virtual bool SelectFile(char** result, const char* fileMask = 0) = 0;	///<Prompts the user to select a file.  Allocates result, sets it to the absolute path to the file, and returns true on success.  On cancellation, failure, or an invalid file selection, result is unchanged and the function returns false.
+
+    virtual void ConsolePrint(const char* text) = 0;    ///<Displays a message in the console.
 };
 
 }	//namespace Emunisce

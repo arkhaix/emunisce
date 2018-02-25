@@ -73,6 +73,7 @@ void Application::NotifyMachineChanged(IEmulatedMachine* newMachine)
 void Application::RequestShutdown()
 {
 	BaseApplication::RequestShutdown();
+    m_consoleWindow->Close();
 	m_windowMain->Close();
 	m_frame->Close();
 }
@@ -151,6 +152,11 @@ bool Application::SelectFile(char** result, const char* fileMask)
     strcpy_s(*result, bufferSize, openFileDialog.GetPath().ToAscii());
 
     return true;
+}
+
+void Application::ConsolePrint(const char* text)
+{
+    m_consoleWindow->ConsolePrint(text);
 }
 
 
@@ -480,6 +486,12 @@ bool Application::OnInit()
     m_consoleWindow = new ConsoleWindow(this, m_frame);
     m_consoleWindow->GiveFocus();
 
+    ConsolePrint("Welcome to Emunisce\n");
+    ConsolePrint("===================\n");
+    ConsolePrint("Press tilde (`) to switch focus between the console and the game\n");
+    ConsolePrint("Type 'help' to see a list of commands\n");
+    ConsolePrint("\n");
+
 
     // Initialize the renderer and hand off to the machine
 
@@ -507,4 +519,9 @@ void Application::ShowGameWindow()
     m_frame->Raise();
 
     m_windowMain->SetFocus();
+}
+
+bool Application::ExecuteConsoleCommand(const char* command)
+{
+    return BaseApplication::ExecuteConsoleCommand(command);
 }

@@ -122,6 +122,8 @@ public:
 
 	virtual bool SelectFile(char** result, const char* fileMask = 0) = 0;
 
+    virtual void ConsolePrint(const char* text) = 0;
+
 
 	// IMachineToApplication
 
@@ -148,15 +150,31 @@ protected:
 	virtual void CloseMacro(Archive* archive) = 0;
 
 
-    //Console
+    // Console command framework
 
     typedef void (BaseApplication::*ConsoleCommandHandler)(const char* command, const char* params);
-    virtual void AddConsoleCommandHandler(const char* command, ConsoleCommandHandler func);
+    virtual void AddConsoleCommand(const char* command, ConsoleCommandHandler func, const char* helpText);
     
     virtual unsigned int NumConsoleCommands();
     virtual const char* GetConsoleCommand(unsigned int index);
 
-    virtual void ExecuteConsoleCommand(const char* command);
+    virtual bool ExecuteConsoleCommand(const char* command); ///< Returns true if the command was successfully executed. False otherwise.
+
+
+    // Built-in console commands
+
+    virtual void CommandHelp(const char* command, const char* params);
+    virtual void CommandQuit(const char* command, const char* params);
+    virtual void CommandLoad(const char* command, const char* params);
+    virtual void CommandPause(const char* command, const char* params);
+    virtual void CommandRun(const char* command, const char* params);
+    virtual void CommandSaveState(const char* command, const char* params);
+    virtual void CommandLoadState(const char* command, const char* params);
+    virtual void CommandSpeed(const char* command, const char* params);
+    virtual void CommandMute(const char* command, const char* params);
+    virtual void CommandDisplayFilter(const char* command, const char* params);
+    virtual void CommandVsync(const char* command, const char* params);
+    virtual void CommandBackground(const char* command, const char* params);
 
 
 	bool m_shutdownRequested;
@@ -180,6 +198,7 @@ protected:
     struct ConsoleCommandInfo
     {
         char command[16];
+        char helpText[256];
         ConsoleCommandHandler func;
     };
     static const unsigned int MaxConsoleCommands = 1024;

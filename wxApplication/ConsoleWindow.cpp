@@ -136,6 +136,19 @@ void ConsoleWindow::GiveFocus()
     m_input->SetFocus();
 }
 
+void ConsoleWindow::Close()
+{
+    m_frame->Close();
+}
+
+void ConsoleWindow::ConsolePrint(const char* text)
+{
+    if(m_output != nullptr)
+    {
+        *m_output << wxString::FromAscii(text);
+    }
+}
+
 
 void ConsoleWindow::OnKeyDown(wxKeyEvent& event)
 {
@@ -165,7 +178,14 @@ void ConsoleWindow::OnText(wxCommandEvent& event)
 
 void ConsoleWindow::OnTextEnter(wxCommandEvent& event)
 {
-    *m_output << m_input->GetValue() << wxT("\n");
+    *m_output << wxT("> ") << m_input->GetValue() << wxT("\n");
+
+    bool result = m_application->ExecuteConsoleCommand(m_input->GetValue().ToAscii());
+    if(result == false)
+    {
+        ConsolePrint("Invalid command\n");
+    }
+
     m_input->SetValue(wxT(""));
     event.Skip(true);
 }

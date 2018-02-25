@@ -20,11 +20,15 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "BaseApplication.h"
 using namespace Emunisce;
 
+#include <algorithm>
 #include <string>
 #include <vector>
 using namespace std;
 
+#include <cstdlib>
+
 #include "PlatformIncludes.h"
+#include "SecureCrt.h"
 
 #include "MachineIncludes.h"
 
@@ -75,6 +79,22 @@ BaseApplication::BaseApplication()
 
 	m_machineRunner = new MachineRunner();
 	m_machineRunner->Initialize();
+
+
+    // Console commands
+
+    m_numConsoleCommands = 0;
+    AddConsoleCommand("help", &BaseApplication::CommandHelp, "Displays this help text");
+    AddConsoleCommand("quit", &BaseApplication::CommandQuit, "Exits the application");
+    AddConsoleCommand("load", &BaseApplication::CommandLoad, "Select a ROM to load");
+    AddConsoleCommand("pause", &BaseApplication::CommandPause, "Pauses the game");
+    AddConsoleCommand("run", &BaseApplication::CommandRun, "Resumes the game");
+    AddConsoleCommand("savestate", &BaseApplication::CommandSaveState, "(name) Saves the current state to disk");
+    AddConsoleCommand("loadstate", &BaseApplication::CommandLoadState, "(name) Loads the state from disk");
+    AddConsoleCommand("speed", &BaseApplication::CommandSpeed, "(speed) Sets the emulation speed. 1=normal, 0.5=half, 2=double, etc");
+    AddConsoleCommand("displayfilter", &BaseApplication::CommandDisplayFilter, "(filter) Sets the display filter. 1=normal, 2=hq2x, 3=hq3x, 4=hq4x");
+    AddConsoleCommand("vsync", &BaseApplication::CommandVsync, "(on/off) Toggles vsync on or off");
+    AddConsoleCommand("background", &BaseApplication::CommandBackground, "(on/off) Toggles the background animation on or off");
 }
 
 BaseApplication::~BaseApplication()
@@ -434,15 +454,19 @@ void BaseApplication::LoadRomData(const char* title, unsigned char* buffer, unsi
 }
 
 
-void BaseApplication::AddConsoleCommandHandler(const char* command, ConsoleCommandHandler func)
+void BaseApplication::AddConsoleCommand(const char* command, ConsoleCommandHandler func, const char* helpText)
 {
     if(m_numConsoleCommands >= MaxConsoleCommands)
         return;
 
     if(func == nullptr)
         return;
+
+    string lowercaseCommand = command;
+    transform(lowercaseCommand.begin(), lowercaseCommand.end(), lowercaseCommand.begin(), ::tolower);
     
-    strcpy_s(m_consoleCommands[m_numConsoleCommands].command, 16, command);
+    strcpy_s(m_consoleCommands[m_numConsoleCommands].command, 16, lowercaseCommand.c_str());
+    strcpy_s(m_consoleCommands[m_numConsoleCommands].helpText, 256, helpText);
     m_consoleCommands[m_numConsoleCommands].func = func;
 
     m_numConsoleCommands++;
@@ -480,11 +504,11 @@ vector<string> SplitCommand(string command)
 	return result;
 }
 
-void BaseApplication::ExecuteConsoleCommand(const char* command)
+bool BaseApplication::ExecuteConsoleCommand(const char* command)
 {
     vector<string> splitCommand = SplitCommand(command);
     if(splitCommand.size() < 1)
-        return;
+        return false;
 
     const char* commandName = splitCommand[0].c_str();
 
@@ -497,6 +521,168 @@ void BaseApplication::ExecuteConsoleCommand(const char* command)
                 params = strstr(command, splitCommand[1].c_str());
 
             ((*this).*m_consoleCommands[i].func)(commandName, params);
+
+            return true;
         }
+    }
+
+    return false;
+}
+
+
+// Built-in console commands
+
+void BaseApplication::CommandHelp(const char* command, const char* params)
+{
+    char buffer[1024];
+
+    for(unsigned int i = 0; i < m_numConsoleCommands; i++)
+    {
+        sprintf_s(buffer, 1024, "%s - %s\n", m_consoleCommands[i].command, m_consoleCommands[i].helpText);
+        ConsolePrint(buffer);
+    }
+
+    ConsolePrint("\n");
+}
+
+void BaseApplication::CommandQuit(const char* command, const char* params)
+{
+    ConsolePrint("Shutting down...\n");
+    RequestShutdown();
+}
+
+void BaseApplication::CommandLoad(const char* command, const char* params)
+{
+    char* fileSelected = nullptr;
+
+    SelectFile(&fileSelected, nullptr);
+
+    if(fileSelected != nullptr)
+    {
+        bool result = LoadRom(fileSelected);
+        if(result == false)
+        {
+            ConsolePrint("Failed to load the specified file\n");
+        }
+        else
+        {
+            ConsolePrint("Loaded "); ConsolePrint(fileSelected); ConsolePrint("\n");
+        }
+
+        free(fileSelected);
+    }
+}
+
+void BaseApplication::CommandPause(const char* command, const char* params)
+{
+    Pause();    
+    ConsolePrint("Emulation paused\n");
+}
+void BaseApplication::CommandRun(const char* command, const char* params)
+{
+   Run(); 
+   ConsolePrint("Emulation resumed\n");
+}
+
+void BaseApplication::CommandSaveState(const char* command, const char* params)
+{
+    const char* stateName = "default";
+    if(params != nullptr && strlen(params) == 0)
+        stateName = params;
+
+    SaveState(stateName);
+
+    ConsolePrint("Saved state "); ConsolePrint(stateName); ConsolePrint("\n");
+}
+
+void BaseApplication::CommandLoadState(const char* command, const char* params)
+{
+    const char* stateName = "default";
+    if(params != nullptr && strlen(params) == 0)
+        stateName = params;
+
+    LoadState(stateName);
+
+    ConsolePrint("Loaded state "); ConsolePrint(stateName); ConsolePrint("\n");
+}
+
+void BaseApplication::CommandSpeed(const char* command, const char* params)
+{
+    double speed = 1.0;
+
+    if(params != nullptr && strlen(params) > 0)
+        speed = atof(params);
+
+    SetEmulationSpeed((float)speed);
+
+    char buffer[1024];
+    sprintf_s(buffer, 1024, "Set emulation speed to %f\n", (float)speed);
+    ConsolePrint(buffer);
+}
+
+void BaseApplication::CommandMute(const char* command, const char* params)
+{
+    ConsolePrint("Unsupported\n");
+}
+
+void BaseApplication::CommandDisplayFilter(const char* command, const char* params)
+{
+	if(params == nullptr || strlen(params) == 0)
+		params = "none";
+
+	DisplayFilter::Type filter = DisplayFilter::NoFilter;
+
+	if( _stricmp(params, "none") == 0 || _stricmp(params, "0") == 0 ||
+		_stricmp(params, "1") == 0 )
+		filter = DisplayFilter::NoFilter;
+
+	else if( _stricmp(params, "hq2x") == 0 || _stricmp(params, "2x") == 0 ||
+		_stricmp(params, "2") == 0 )
+		filter = DisplayFilter::Hq2x;
+
+	else if( _stricmp(params, "hq3x") == 0 || _stricmp(params, "3x") == 0 ||
+		_stricmp(params, "3") == 0 )
+		filter = DisplayFilter::Hq3x;
+
+	else if( _stricmp(params, "hq4x") == 0 || _stricmp(params, "4x") == 0 ||
+		_stricmp(params, "4") == 0 )
+		filter = DisplayFilter::Hq4x;
+
+	SetDisplayFilter(filter);
+
+    const char* filterNames[] = {
+        "None",
+        "Hq2x",
+        "Hq3x",
+        "Hq4x"
+    };
+    ConsolePrint("Set display filter to "); ConsolePrint(filterNames[filter]); ConsolePrint("\n");
+}
+
+void BaseApplication::CommandVsync(const char* command, const char* params)
+{
+	if(params == nullptr || strlen(params) == 0 || _stricmp(params, "0") == 0 || _stricmp(params, "off") == 0)
+    {
+		SetVsync(false);
+        ConsolePrint("Disabled vsync\n");
+    }
+    else
+    {
+        SetVsync(true);
+        ConsolePrint("Enabled vsync\n");
+    }
+}
+
+void BaseApplication::CommandBackground(const char* command, const char* params)
+{
+	if(params == nullptr || strlen(params) == 0 || _stricmp(params, "0") == 0 || _stricmp(params, "off") == 0)
+    {
+		DisableBackgroundAnimation();
+        ConsolePrint("Disabled background animation\n");
+    }
+    else
+    {
+        EnableBackgroundAnimation();
+        ConsolePrint("Enabled background animation\n");
     }
 }

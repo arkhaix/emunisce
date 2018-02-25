@@ -38,6 +38,9 @@ public:
 	virtual ~ConsoleWindow();
 
     void GiveFocus();
+    void Close();
+
+    void ConsolePrint(const char* text);
 
 	// events
 	void OnKeyDown(wxKeyEvent& event);
