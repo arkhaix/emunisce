@@ -63,56 +63,56 @@ public:
 	// IEmulatedMachine
 
 	//Machine type
-	virtual EmulatedMachine::Type GetType();
-	virtual const char* GetRomTitle();
+	EmulatedMachine::Type GetType() override;
+	const char* GetRomTitle() override;
 	
 	//Application interface
-	virtual void SetApplicationInterface(IMachineToApplication* applicationInterface);
-	virtual void AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount /*= true*/);
-	virtual void RemoveApplicationEvent(unsigned int eventId);
+	void SetApplicationInterface(IMachineToApplication* applicationInterface) override;
+	void AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount /*= true*/) override;
+	void RemoveApplicationEvent(unsigned int eventId) override;
 
 	//Component access
-	virtual IEmulatedDisplay* GetDisplay();
-	virtual IEmulatedInput* GetInput();
-	virtual IEmulatedMemory* GetMemory();
-	virtual IEmulatedProcessor* GetProcessor();
-	virtual IEmulatedSound* GetSound();
+	IEmulatedDisplay* GetDisplay() override;
+	IEmulatedInput* GetInput() override;
+	IEmulatedMemory* GetMemory() override;
+	IEmulatedProcessor* GetProcessor() override;
+	IEmulatedSound* GetSound() override;
 
 	//Machine info
-	virtual unsigned int GetFrameCount();
-	virtual unsigned int GetTickCount();
-	virtual unsigned int GetTicksPerSecond();
-	virtual unsigned int GetTicksUntilNextFrame();
+	unsigned int GetFrameCount() override;
+	unsigned int GetTickCount() override;
+	unsigned int GetTicksPerSecond() override;
+	unsigned int GetTicksUntilNextFrame() override;
 
 	//Execution
-	virtual void Step();
-	virtual void RunToNextFrame();
+	void Step() override;
+	void RunToNextFrame() override;
 
 	//Persistence
-	virtual void SaveState(Archive& archive);
-	virtual void LoadState(Archive& archive);
+	void SaveState(Archive& archive) override;
+	void LoadState(Archive& archive) override;
 
 	//Debugging
-	virtual void EnableBreakpoint(int address);
-	virtual void DisableBreakpoint(int address);
+	void EnableBreakpoint(int address) override;
+	void DisableBreakpoint(int address) override;
 
 
 	// IEmulatedDisplay
 
-	virtual ScreenResolution GetScreenResolution();
-	virtual ScreenBuffer* GetStableScreenBuffer();
-	virtual int GetScreenBufferCount();
+	ScreenResolution GetScreenResolution() override;
+	ScreenBuffer* GetStableScreenBuffer() override;
+	int GetScreenBufferCount() override;
 
 
 	// IEmulatedInput
 
-	virtual unsigned int NumButtons();
-	virtual const char* GetButtonName(unsigned int index);
+	unsigned int NumButtons() override;
+	const char* GetButtonName(unsigned int index) override;
 
-	virtual void ButtonDown(unsigned int index);
-	virtual void ButtonUp(unsigned int index);
+	void ButtonDown(unsigned int index) override;
+	void ButtonUp(unsigned int index) override;
 
-	virtual bool IsButtonDown(unsigned int index);
+	bool IsButtonDown(unsigned int index) override;
 
 
 	// IEmulatedMemory
@@ -121,10 +121,10 @@ public:
 
 	// IEmulatedSound
 
-	virtual AudioBuffer GetStableAudioBuffer();
-	virtual int GetAudioBufferCount();
+	AudioBuffer GetStableAudioBuffer() override;
+	int GetAudioBufferCount() override;
 
-	virtual void SetSquareSynthesisMethod(SquareSynthesisMethod::Type method);
+	void SetSquareSynthesisMethod(SquareSynthesisMethod::Type method) override;
 
 
 protected:

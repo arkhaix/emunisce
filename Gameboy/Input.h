@@ -91,13 +91,13 @@ public:
 
 	// IEmulatedInput
 
-	virtual unsigned int NumButtons();
-	virtual const char* GetButtonName(unsigned int index);
+	unsigned int NumButtons() override;
+	const char* GetButtonName(unsigned int index) override;
 
-	virtual void ButtonDown(unsigned int index);
-	virtual void ButtonUp(unsigned int index);
+	void ButtonDown(unsigned int index) override;
+	void ButtonUp(unsigned int index) override;
 
-	virtual bool IsButtonDown(unsigned int index);
+	bool IsButtonDown(unsigned int index) override;
 
 
 	// Input

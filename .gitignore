@@ -3,3 +3,4 @@ Emunisce
 .depend
 .vscode
 **bazel-*
+compile_commands.json

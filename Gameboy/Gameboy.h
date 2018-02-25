@@ -40,40 +40,40 @@ public:
 	// IEmulatedMachine
 
 	//Machine type
-	virtual EmulatedMachine::Type GetType();
-	virtual const char* GetRomTitle();
+	EmulatedMachine::Type GetType() override;
+	const char* GetRomTitle() override;
 
 	//Application interface
-	virtual void SetApplicationInterface(IMachineToApplication* applicationInterface);
-	virtual void AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount);
-	virtual void RemoveApplicationEvent(unsigned int eventId);
+	void SetApplicationInterface(IMachineToApplication* applicationInterface) override;
+	void AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount) override;
+	void RemoveApplicationEvent(unsigned int eventId) override;
 
 	//Component access
-	virtual IEmulatedDisplay* GetDisplay();
-	virtual IEmulatedInput* GetInput();
-	virtual IEmulatedMemory* GetMemory();
-	virtual IEmulatedProcessor* GetProcessor();
-	virtual IEmulatedSound* GetSound();
+	IEmulatedDisplay* GetDisplay() override;
+	IEmulatedInput* GetInput() override;
+	IEmulatedMemory* GetMemory() override;
+	IEmulatedProcessor* GetProcessor() override;
+	IEmulatedSound* GetSound() override;
 
 	//Machine info
-	virtual unsigned int GetFrameCount();
-	virtual unsigned int GetTickCount();
-	virtual unsigned int GetTicksPerSecond();
-	virtual unsigned int GetTicksUntilNextFrame();
+	unsigned int GetFrameCount() override;
+	unsigned int GetTickCount() override;
+	unsigned int GetTicksPerSecond() override;
+	unsigned int GetTicksUntilNextFrame() override;
 
 	//Execution
-	virtual void Step();
-	virtual void RunToNextFrame();
+	void Step() override;
+	void RunToNextFrame() override;
 	virtual void Run();
 	virtual void Stop();
 
 	//Persistence
-	virtual void SaveState(Archive& archive);
-	virtual void LoadState(Archive& archive);
+	void SaveState(Archive& archive) override;
+	void LoadState(Archive& archive) override;
 
 	//Debugging
-	virtual void EnableBreakpoint(int address);
-	virtual void DisableBreakpoint(int address);
+	void EnableBreakpoint(int address) override;
+	void DisableBreakpoint(int address) override;
 
 
 	// Gameboy

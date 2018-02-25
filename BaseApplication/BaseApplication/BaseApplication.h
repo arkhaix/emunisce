@@ -73,64 +73,64 @@ public:
 	//User to application
 
 	//Rom
-	virtual bool LoadRom(const char* filename);
-	virtual void Reset();
+	bool LoadRom(const char* filename) override;
+	void Reset() override;
 
 	//Emulation
-	virtual void SetEmulationSpeed(float multiplier);
+	void SetEmulationSpeed(float multiplier) override;
 
-	virtual void Run();
-	virtual void Pause();
+	void Run() override;
+	void Pause() override;
 
-	virtual void StepInstruction();
-	virtual void StepFrame();
+	void StepInstruction() override;
+	void StepFrame() override;
 
 	//State
-	virtual void SaveState(const char* name);
-	virtual void LoadState(const char* name);
+	void SaveState(const char* name) override;
+	void LoadState(const char* name) override;
 
 	//Gui
-	virtual void EnableBackgroundAnimation();
-	virtual void DisableBackgroundAnimation();
+	void EnableBackgroundAnimation() override;
+	void DisableBackgroundAnimation() override;
 
 	//Display
-	virtual void SetDisplayFilter(DisplayFilter::Type displayFilter);
-	virtual void SetVsync(bool enabled) = 0;
+	void SetDisplayFilter(DisplayFilter::Type displayFilter) override;
+	void SetVsync(bool enabled) override = 0;
 
 	//Input movie
-	virtual void StartRecordingInput();
-	virtual void StopRecordingInput();
+	void StartRecordingInput() override;
+	void StopRecordingInput() override;
 
-	virtual void PlayMovie();
-	virtual void StopMovie();
+	void PlayMovie() override;
+	void StopMovie() override;
 
-	virtual void SaveMovie(const char* name);
-	virtual void LoadMovie(const char* name);
+	void SaveMovie(const char* name) override;
+	void LoadMovie(const char* name) override;
 
-	virtual void PlayMacro(bool loop);
-	virtual void StopMacro();
+	void PlayMacro(bool loop) override;
+	void StopMacro() override;
 
-	virtual void SaveMacro(const char* name);
-	virtual void LoadMacro(const char* name);
+	void SaveMacro(const char* name) override;
+	void LoadMacro(const char* name) override;
 
 
 	//Application to user
 
-	virtual void DisplayStatusMessage(const char* message) = 0;
-	virtual void DisplayImportantMessage(MessageType::Type messageType, const char* message) = 0;
-	virtual PromptResult::Type DisplayPrompt(PromptType::Type promptType, const char* title, const char* message, void** extraResult) = 0;
+	void DisplayStatusMessage(const char* message) override = 0;
+	void DisplayImportantMessage(MessageType::Type messageType, const char* message) override = 0;
+	PromptResult::Type DisplayPrompt(PromptType::Type promptType, const char* title, const char* message, void** extraResult) override = 0;
 
-	virtual bool SelectFile(char** result, const char* fileMask = 0) = 0;
+	bool SelectFile(char** result, const char* fileMask = 0) override = 0;
 
 
 	// IMachineToApplication
 
-	virtual void HandleApplicationEvent(unsigned int eventId);
+	void HandleApplicationEvent(unsigned int eventId) override;
 
-	virtual void SaveRomData(const char* name, unsigned char* buffer, unsigned int bytes);
+	void SaveRomData(const char* name, unsigned char* buffer, unsigned int bytes) override;
 
-	virtual unsigned int GetRomDataSize(const char* name) = 0;
-	virtual void LoadRomData(const char* name, unsigned char* buffer, unsigned int bytes);
+	unsigned int GetRomDataSize(const char* name) override = 0;
+	void LoadRomData(const char* name, unsigned char* buffer, unsigned int bytes) override;
 
 
 protected:
