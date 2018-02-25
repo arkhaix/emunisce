@@ -24,6 +24,8 @@ using namespace Emunisce;
 
 //wx
 #include "wx/sizer.h"
+#include "wx/textctrl.h"
+#include "ConsoleWindow.h"
 #include "WindowMain.h"
 
 //Platform
@@ -50,6 +52,8 @@ Application::Application()
 {
 	m_renderer = new OpenGLRenderer();
 
+    m_consoleWindow = nullptr;
+
 	MapDefaultKeys();
 }
 
@@ -69,6 +73,7 @@ void Application::NotifyMachineChanged(IEmulatedMachine* newMachine)
 void Application::RequestShutdown()
 {
 	BaseApplication::RequestShutdown();
+    m_consoleWindow->Close();
 	m_windowMain->Close();
 	m_frame->Close();
 }
@@ -149,6 +154,11 @@ bool Application::SelectFile(char** result, const char* fileMask)
     return true;
 }
 
+void Application::ConsolePrint(const char* text)
+{
+    m_consoleWindow->ConsolePrint(text);
+}
+
 
 unsigned int Application::GetRomDataSize(const char* title)
 {
@@ -190,6 +200,9 @@ void Application::KeyDown(int key)
 
     else if(key == 'T')
         DisplayImportantMessage(MessageType::Information, "test");
+
+    else if(key == '`')
+        ShowConsoleWindow();
 
     else if(key == 'O')
     {
@@ -453,7 +466,8 @@ IMPLEMENT_APP(Application)
 
 bool Application::OnInit()
 {
-    wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
+    // Set up the main window and renderer frame
+
     m_frame = new wxFrame((wxFrame *)nullptr, -1, wxT("Emunisce"), wxPoint(50,50), wxSize(320,240));
 
     int args[] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0};
@@ -461,6 +475,7 @@ bool Application::OnInit()
     m_windowMain = new WindowMain(m_frame, args);
     m_windowMain->SetApplication(this);
 
+    wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
     sizer->Add(m_windowMain, 1, wxEXPAND);
 
     m_frame->SetSizer(sizer);
@@ -468,8 +483,17 @@ bool Application::OnInit()
 
     m_frame->Show();
 
-    m_windowMain->SetFocus();
+    m_consoleWindow = new ConsoleWindow(this, m_frame);
+    m_consoleWindow->GiveFocus();
 
+    ConsolePrint("Welcome to Emunisce\n");
+    ConsolePrint("===================\n");
+    ConsolePrint("Press tilde (`) to switch focus between the console and the game\n");
+    ConsolePrint("Type 'help' to see a list of commands\n");
+    ConsolePrint("\n");
+
+
+    // Initialize the renderer and hand off to the machine
 
 	m_renderer->Initialize(nullptr);
 
@@ -482,4 +506,22 @@ bool Application::OnInit()
 	Run();
 
     return true;
+}
+
+void Application::ShowConsoleWindow()
+{
+    m_consoleWindow->GiveFocus();
+}
+
+void Application::ShowGameWindow()
+{
+    m_frame->Show();
+    m_frame->Raise();
+
+    m_windowMain->SetFocus();
+}
+
+bool Application::ExecuteConsoleCommand(const char* command)
+{
+    return BaseApplication::ExecuteConsoleCommand(command);
 }
