@@ -49,10 +49,10 @@ public:
 
 	// IEmulatedSound
 
-	virtual AudioBuffer GetStableAudioBuffer();
-	virtual int GetAudioBufferCount();
+	AudioBuffer GetStableAudioBuffer() override;
+	int GetAudioBufferCount() override;
 
-	virtual void SetSquareSynthesisMethod(SquareSynthesisMethod::Type method);
+	void SetSquareSynthesisMethod(SquareSynthesisMethod::Type method) override;
 
 
 	// Sound

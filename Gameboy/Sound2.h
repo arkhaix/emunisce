@@ -44,24 +44,24 @@ public:
 
 	//Sound component
 
-	virtual void Initialize(ChannelController* channelController);
-	void SetMachine(Gameboy* machine);
+	void Initialize(ChannelController* channelController) override;
+	void SetMachine(Gameboy* machine) override;
 
-	virtual void Serialize(Archive& archive);
+	void Serialize(Archive& archive) override;
 
 	void SetSynthesisMethod(SquareSynthesisMethod::Type method);
 
 
 	//Sound generation
 
-	virtual void PowerOff();
-	virtual void PowerOn();
+	void PowerOff() override;
+	void PowerOn() override;
 
-	virtual void Run(int ticks);
+	void Run(int ticks) override;
 
 	void TickEnvelope();
 
-	virtual float GetSample();
+	float GetSample() override;
 
 
 	//Registers
@@ -74,7 +74,7 @@ public:
 
 private:
 
-	virtual void Trigger();
+	void Trigger() override;
 
 
 	//Sound generation

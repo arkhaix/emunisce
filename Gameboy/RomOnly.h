@@ -32,7 +32,7 @@ public:
 
 protected:
 
-	virtual bool LoadFile(const char* filename);
+	bool LoadFile(const char* filename) override;
 };
 
 }	//namespace Emunisce

@@ -32,8 +32,8 @@ KingsDream::KingsDream()
 	srand((unsigned int)time(nullptr));
 
 	m_screenBuffer = nullptr;
-	for(unsigned int i=0;i<m_maxNumBlendFrames;i++)
-		m_frames[i] = nullptr;
+	for(auto& frame : m_frames)
+		frame = nullptr;
 
 	ResizeScreenBuffers(320, 240);
 
@@ -167,12 +167,12 @@ void KingsDream::ResizeScreenBuffers(unsigned int width, unsigned int height)
 		return;
 
 	delete m_screenBuffer;
-	for(unsigned int i=0;i<m_maxNumBlendFrames;i++)
-		delete m_frames[i];
+	for(auto & m_frame : m_frames)
+		delete m_frame;
 
 	m_screenBuffer = new DynamicScreenBuffer(width, height);
-	for(unsigned int i=0;i<m_maxNumBlendFrames;i++)
-		m_frames[i] = new DynamicScreenBuffer(width, height);
+	for(auto & m_frame : m_frames)
+		m_frame = new DynamicScreenBuffer(width, height);
 }
 
 
@@ -185,10 +185,10 @@ void KingsDream::IncrementGenerator()
 		m_a = -4.45f;	///<Arbitrary start position.
 
 	//Skip bad ranges
-	for(auto iter = m_skipRanges.begin(); iter != m_skipRanges.end(); ++iter)
+	for(auto & m_skipRange : m_skipRanges)
 	{
-		if(m_a > iter->first && m_a < iter->second)
-			m_a += iter->second - iter->first;
+		if(m_a > m_skipRange.first && m_a < m_skipRange.second)
+			m_a += m_skipRange.second - m_skipRange.first;
 	}
 }
 

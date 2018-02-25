@@ -79,7 +79,7 @@ protected:
 	{
 	public:
 
-		virtual void EntryPoint(void* param)
+		void EntryPoint(void* param) override
 		{
 			MachineRunner* instance = (MachineRunner*)param;
 			if(instance == nullptr)
@@ -88,7 +88,7 @@ protected:
 			instance->RunnerThread();
 		}
 
-		virtual void StopRequested() { /* Use MachineRunner::Shutdown() instead */ }
+		void StopRequested() override { /* Use MachineRunner::Shutdown() instead */ }
 	};
 
 	Thread_Runner m_runnerThread;

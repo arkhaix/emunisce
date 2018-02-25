@@ -35,7 +35,7 @@ public:
 	// FileSerializer
 
 	FileSerializer();
-	~FileSerializer();
+	~FileSerializer() override;
 
 	virtual void SetFile(const char* filename);
 	virtual void CloseFile();
@@ -43,12 +43,12 @@ public:
 
 	// ISerializer
 
-	virtual void SetArchive(Archive* archive);
+	void SetArchive(Archive* archive) override;
 
-	virtual void Save(unsigned char* data, unsigned int bytes);
-	virtual void Restore(unsigned char* buffer, unsigned int bytes);
+	void Save(unsigned char* data, unsigned int bytes) override;
+	void Restore(unsigned char* buffer, unsigned int bytes) override;
 
-	virtual void Close();
+	void Close() override;
 
 
 protected:

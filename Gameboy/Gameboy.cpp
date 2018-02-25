@@ -326,8 +326,8 @@ Gameboy::Gameboy(Memory* memory, EmulatedMachine::Type machineType)
 	m_input = new Input();
 	m_sound = new Sound();
 
-	for(int i=0;i<16;i++)
-		m_romTitle[i] = 0;
+	for(char& c : m_romTitle)
+		c = 0;
 
 	m_frameCount = 0;
 

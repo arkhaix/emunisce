@@ -30,6 +30,6 @@ IEmulatedMachine* MachineFactory::CreateMachine(const char* romFilename, Emulate
 void MachineFactory::ReleaseMachine(IEmulatedMachine* machine)
 {
 	Gameboy* gameboy = dynamic_cast<Gameboy*>(machine);
-	if(gameboy != 0)
+	if(gameboy != nullptr)
 		Gameboy::Release(gameboy);
 }

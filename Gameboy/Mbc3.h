@@ -32,7 +32,7 @@ public:
 
 	Mbc3();
 
-	virtual void Write8(u16 address, u8 value);
+	void Write8(u16 address, u8 value) override;
 
 protected:
 

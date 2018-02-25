@@ -32,7 +32,7 @@ public:
 	// MemorySerializer
 
 	MemorySerializer();
-	virtual ~MemorySerializer();
+	~MemorySerializer() override;
 
 	virtual unsigned char* GetBuffer();
 	virtual unsigned int GetBufferSize();
@@ -43,12 +43,12 @@ public:
 
 	// ISerializer
 
-	virtual void SetArchive(Archive* archive);
+	void SetArchive(Archive* archive) override;
 
-	virtual void Save(unsigned char* data, unsigned int bytes);
-	virtual void Restore(unsigned char* buffer, unsigned int bytes);
+	void Save(unsigned char* data, unsigned int bytes) override;
+	void Restore(unsigned char* buffer, unsigned int bytes) override;
 
-	virtual void Close();
+	void Close() override;
 
 
 protected:

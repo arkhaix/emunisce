@@ -435,7 +435,7 @@ public:
 			glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, _PixelBufferObject);
 
 			//Map the buffer so we can modify it
-			glBufferDataARB(GL_PIXEL_UNPACK_BUFFER_ARB, displayDataSize, 0, GL_STREAM_DRAW_ARB);
+			glBufferDataARB(GL_PIXEL_UNPACK_BUFFER_ARB, displayDataSize, nullptr, GL_STREAM_DRAW_ARB);
 			GLubyte* mappedData = (GLubyte*)glMapBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, GL_WRITE_ONLY_ARB);
 
 			//Update the buffer

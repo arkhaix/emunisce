@@ -41,7 +41,7 @@ public:
 	// Rewinder
 
 	Rewinder();
-	virtual ~Rewinder();
+	~Rewinder() override;
 
 	virtual void StartRewinding();
 	virtual void StopRewinding();
@@ -59,28 +59,28 @@ public:
 
 	// MachineFeature
 
-	virtual void SetApplication(BaseApplication* application);
+	void SetApplication(BaseApplication* application) override;
 
-	virtual void SetComponentMachine(IEmulatedMachine* componentMachine);	///<Overridden because this component wraps its own InputRecording (m_recorder)
-	virtual void SetEmulatedMachine(IEmulatedMachine* emulatedMachine);	///<Overridden because this component wraps its own InputRecording (m_recorder)
+	void SetComponentMachine(IEmulatedMachine* componentMachine) override;	///<Overridden because this component wraps its own InputRecording (m_recorder)
+	void SetEmulatedMachine(IEmulatedMachine* emulatedMachine) override;	///<Overridden because this component wraps its own InputRecording (m_recorder)
 
 
 	// IEmulatedMachine
 
-	virtual unsigned int GetFrameCount();
-	virtual void RunToNextFrame();
+	unsigned int GetFrameCount() override;
+	void RunToNextFrame() override;
 
 
 	// IEmulatedDisplay
 
-	virtual ScreenBuffer* GetStableScreenBuffer();
-	virtual int GetScreenBufferCount();
+	ScreenBuffer* GetStableScreenBuffer() override;
+	int GetScreenBufferCount() override;
 
 
 	// IEmulatedSound
 
-	virtual AudioBuffer GetStableAudioBuffer();
-	virtual int GetAudioBufferCount();
+	AudioBuffer GetStableAudioBuffer() override;
+	int GetAudioBufferCount() override;
 
 
 protected:
@@ -171,13 +171,13 @@ protected:
 
 		//IEmulatedInput
 
-		virtual unsigned int NumButtons();
-		virtual const char* GetButtonName(unsigned int index);
+		unsigned int NumButtons() override;
+		const char* GetButtonName(unsigned int index) override;
 
-		virtual void ButtonDown(unsigned int index);
-		virtual void ButtonUp(unsigned int index);
+		void ButtonDown(unsigned int index) override;
+		void ButtonUp(unsigned int index) override;
 
-		virtual bool IsButtonDown(unsigned int index);
+		bool IsButtonDown(unsigned int index) override;
 
 
 	private:

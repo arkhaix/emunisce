@@ -26,6 +26,37 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
+
+namespace EmulatedMachine
+{
+	typedef int Type;
+
+	enum
+	{
+		NoMachine,  /* Was 'None', but that conflicts with something somewhere according to gcc */
+		AutoSelect,
+
+		Gameboy,
+		GameboyColor,
+
+		NumEmulatedMachines
+	};
+
+#ifdef EmulatedMachine_ToString
+	static const char* ToString[] =
+	{
+		"None",
+		"AutoSelect",
+
+		"Gameboy",
+		"GameboyColor",
+
+		"NumEmulatedMachines"
+	};
+#endif
+}
+
+
 class Archive;
 
 struct ApplicationEvent

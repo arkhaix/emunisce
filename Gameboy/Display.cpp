@@ -195,8 +195,8 @@ void Display::Serialize(Archive& archive)
 	SerializeItem(archive, m_nextPixelToRenderX);
 	SerializeItem(archive, m_ticksSpentThisScanline);
 
-	for(int i=0;i<160;i++)
-		SerializeItem(archive, m_spriteHasPriority[i]);
+	for(bool& priority : m_spriteHasPriority)
+		SerializeItem(archive, priority);
 
 
 	// Screens  (these use a ton of space, but the first frame is inaccurate without them)
@@ -870,8 +870,8 @@ void Display::RenderWindowPixel(int screenX, int screenY)
 void Display::RenderSprites(int screenY)
 {
 	//Default to no priority
-	for(int i=0;i<160;i++)
-		m_spriteHasPriority[i] = false;
+	for(bool& priority : m_spriteHasPriority)
+		priority = false;
 
 	//Sprites can be 8x8 or 8x16
 	int spriteWidth = 8;

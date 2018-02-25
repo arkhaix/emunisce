@@ -40,7 +40,7 @@ public:
 	// InputRecording
 
 	InputRecording();
-	~InputRecording();
+	~InputRecording() override;
 	
 	void SerializeHistory(Archive& archive);
 	void SerializeMovie(Archive& archive);
@@ -57,12 +57,12 @@ public:
 
 	// MachineFeature
 
-	virtual void RunToNextFrame();
+	void RunToNextFrame() override;
 
-	virtual void ButtonDown(unsigned int index);
-	virtual void ButtonUp(unsigned int index);
+	void ButtonDown(unsigned int index) override;
+	void ButtonUp(unsigned int index) override;
 
-	virtual bool IsButtonDown(unsigned int index);
+	bool IsButtonDown(unsigned int index) override;
 
 private:
 

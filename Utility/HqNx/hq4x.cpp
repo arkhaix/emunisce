@@ -229,7 +229,7 @@ inline bool Diff(unsigned int w1, unsigned int w2)
 		( abs((YUV1 & Vmask) - (YUV2 & Vmask)) > trV ) );
 }
 
-static void InitLUTs(void);
+static void InitLUTs();
 
 void hq4x_32( unsigned char * pIn, unsigned char * pOut, int Xres, int Yres, int BpL )
 {
@@ -5299,7 +5299,7 @@ void hq4x_32( unsigned char * pIn, unsigned char * pOut, int Xres, int Yres, int
 	}
 }
 
-static void InitLUTs(void)
+static void InitLUTs()
 {
 	int i, j, k, r, g, b, Y, u, v;
 

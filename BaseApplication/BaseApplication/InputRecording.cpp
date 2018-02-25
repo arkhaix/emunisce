@@ -87,10 +87,9 @@ void InputRecording::SerializeHistory(Archive& archive)
 	}
 	else //archive.GetArchiveMode() == ArchiveMode::Saving
 	{
-		for(auto iter = m_inputHistory.begin(); iter != m_inputHistory.end(); ++iter)
+		for(auto& inputEvent : m_inputHistory)
 		{
-			InputEvent& inputEvent = *iter;
-			inputEvent.Serialize(archive);
+				inputEvent.Serialize(archive);
 		}
 	}
 }

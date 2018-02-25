@@ -46,9 +46,9 @@ public:
 
 	// IEmulatedDisplay
 
-	virtual ScreenResolution GetScreenResolution();
-	virtual ScreenBuffer* GetStableScreenBuffer();
-	virtual int GetScreenBufferCount();	///<Returns the id of the current screen buffer.  Not guaranteed to be unique or sequential, so use != when polling for changes.
+	ScreenResolution GetScreenResolution() override;
+	ScreenBuffer* GetStableScreenBuffer() override;
+	int GetScreenBufferCount() override;	///<Returns the id of the current screen buffer.  Not guaranteed to be unique or sequential, so use != when polling for changes.
 
 
 	// Display

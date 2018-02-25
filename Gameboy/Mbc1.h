@@ -31,17 +31,17 @@ class Mbc1 : public Memory
 public:
 
 	Mbc1();
-	~Mbc1();
+	~Mbc1() override;
 
-	virtual void Run(int ticks);
+	void Run(int ticks) override;
 
-	virtual void Serialize(Archive& archive);
+	void Serialize(Archive& archive) override;
 
-	virtual void Write8(u16 address, u8 value);
+	void Write8(u16 address, u8 value) override;
 
 protected:
 
-	virtual bool LoadFile(const char* filename);
+	bool LoadFile(const char* filename) override;
 
 	void SwitchROM();
 	void SwitchRAM();

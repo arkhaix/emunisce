@@ -70,29 +70,29 @@ public:
 		Pixels[y*TWidth+x] = value;
 	}
 
-	virtual int GetWidth()
+	int GetWidth() override
 	{
 		return TWidth;
 	}
 
-	virtual int GetHeight()
+	int GetHeight() override
 	{
 		return THeight;
 	}
 
-	virtual DisplayPixel* GetPixels()
+	DisplayPixel* GetPixels() override
 	{
 		return &Pixels[0];
 	}
 
-	virtual void Clear(DisplayPixel clearColor)
+	void Clear(DisplayPixel clearColor) override
 	{
 		int numPixels = THeight * TWidth;
 		for(int i=0;i<numPixels;i++)
 			Pixels[i] = clearColor;
 	}
 
-	virtual ScreenBuffer* Clone()
+	ScreenBuffer* Clone() override
 	{
 		TScreenBuffer<TWidth, THeight>* result = new TScreenBuffer<TWidth, THeight>();
 		memcpy(&result->Pixels[0], &Pixels[0], TWidth * THeight * sizeof(DisplayPixel));
@@ -109,15 +109,15 @@ public:
 	int Height;
 
 	DynamicScreenBuffer(int width, int height);
-	~DynamicScreenBuffer();
+	~DynamicScreenBuffer() override;
 
-	virtual int GetWidth();
-	virtual int GetHeight();
+	int GetWidth() override;
+	int GetHeight() override;
 
-	virtual DisplayPixel* GetPixels();
+	DisplayPixel* GetPixels() override;
 
-	virtual void Clear(DisplayPixel clearColor);
-	virtual ScreenBuffer* Clone();
+	void Clear(DisplayPixel clearColor) override;
+	ScreenBuffer* Clone() override;
 };
 
 }	//namespace Emunisce

@@ -57,7 +57,7 @@ public:
 	// Gui
 
 	Gui();
-	virtual ~Gui();
+	~Gui() override;
 
 	void EnableBackgroundAnimation();
 	void DisableBackgroundAnimation();
@@ -67,7 +67,7 @@ public:
 
 	// IEmulatedDisplay
 
-	virtual ScreenBuffer* GetStableScreenBuffer();
+	ScreenBuffer* GetStableScreenBuffer() override;
 
 
 protected:
@@ -100,31 +100,31 @@ protected:
 
 		// IExecutableFeature
 
-		virtual unsigned int GetFrameCount();
-		virtual unsigned int GetTickCount();
-		virtual unsigned int GetTicksPerSecond();
-		virtual unsigned int GetTicksUntilNextFrame();
+		unsigned int GetFrameCount() override;
+		unsigned int GetTickCount() override;
+		unsigned int GetTicksPerSecond() override;
+		unsigned int GetTicksUntilNextFrame() override;
 
-		virtual void Step();
-		virtual void RunToNextFrame();
+		void Step() override;
+		void RunToNextFrame() override;
 
 
 		// IEmulatedDisplay
 
-		virtual ScreenResolution GetScreenResolution();
-		virtual ScreenBuffer* GetStableScreenBuffer();
-		virtual int GetScreenBufferCount();
+		ScreenResolution GetScreenResolution() override;
+		ScreenBuffer* GetStableScreenBuffer() override;
+		int GetScreenBufferCount() override;
 
 
 		// IEmulatedInput
 
-		virtual unsigned int NumButtons();
-		virtual const char* GetButtonName(unsigned int index);
+		unsigned int NumButtons() override;
+		const char* GetButtonName(unsigned int index) override;
 
-		virtual void ButtonDown(unsigned int index);
-		virtual void ButtonUp(unsigned int index);
+		void ButtonDown(unsigned int index) override;
+		void ButtonUp(unsigned int index) override;
 
-		virtual bool IsButtonDown(unsigned int index);
+		bool IsButtonDown(unsigned int index) override;
 
 
 	protected:
