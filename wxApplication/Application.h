@@ -34,6 +34,7 @@ namespace Emunisce
 {
 
 class WindowMain;
+class ConsoleWindow;
 
 class Application : public wxApp, public BaseApplication
 {
@@ -59,6 +60,8 @@ public:
 
 	virtual bool SelectFile(char** result, const char* fileMask);
 
+    virtual void ConsolePrint(const char* text);
+
 	virtual unsigned int GetRomDataSize(const char* title);
 
 
@@ -72,6 +75,14 @@ public:
 
 	virtual void KeyDown(int key);
 	virtual void KeyUp(int key);
+
+
+    // wxApplication
+
+    void ShowConsoleWindow();
+    void ShowGameWindow();
+
+    virtual bool ExecuteConsoleCommand(const char* command); ///< Move to public for use from ConsoleWindow
 
 
 protected:
@@ -120,6 +131,7 @@ protected:
 
     wxFrame* m_frame;
     WindowMain* m_windowMain;
+    ConsoleWindow* m_consoleWindow;
 };
 
 }   //namespace Emunisce

@@ -34,6 +34,9 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include <string.h>
 
 
+#define _stricmp strcasecmp
+
+
 inline int freopen_s(FILE** outFile, const char* path, const char* mode, FILE* stream)
 {
     //todo
