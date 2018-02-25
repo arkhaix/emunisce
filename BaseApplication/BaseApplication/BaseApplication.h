@@ -122,7 +122,7 @@ public:
 
 	bool SelectFile(char** result, const char* fileMask = 0) override = 0;
 
-    virtual void ConsolePrint(const char* text) = 0;
+    void ConsolePrint(const char* text) override = 0;
 
 
 	// IMachineToApplication
