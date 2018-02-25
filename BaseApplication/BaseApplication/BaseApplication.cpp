@@ -20,6 +20,10 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "BaseApplication.h"
 using namespace Emunisce;
 
+#include <string>
+#include <vector>
+using namespace std;
+
 #include "PlatformIncludes.h"
 
 #include "MachineIncludes.h"
@@ -427,4 +431,72 @@ void BaseApplication::LoadRomData(const char* title, unsigned char* buffer, unsi
 	archive->SerializeBuffer(buffer, bytes);
 
 	CloseRomData(archive);
+}
+
+
+void BaseApplication::AddConsoleCommandHandler(const char* command, ConsoleCommandHandler func)
+{
+    if(m_numConsoleCommands >= MaxConsoleCommands)
+        return;
+
+    if(func == nullptr)
+        return;
+    
+    strcpy_s(m_consoleCommands[m_numConsoleCommands].command, 16, command);
+    m_consoleCommands[m_numConsoleCommands].func = func;
+
+    m_numConsoleCommands++;
+}
+    
+unsigned int BaseApplication::NumConsoleCommands()
+{
+   return m_numConsoleCommands; 
+}
+
+const char* BaseApplication::GetConsoleCommand(unsigned int index)
+{
+    if(index >= m_numConsoleCommands)
+        return nullptr;
+    
+    return m_consoleCommands[index].command;
+}
+
+vector<string> SplitCommand(string command)
+{
+	vector<string> result;
+
+	char* input = const_cast<char*>(command.c_str());
+	const char* separators = " \t\n";
+	char* token = nullptr;
+	char* context = nullptr;
+
+	token = strtok_s(input, separators, &context);
+	while(token != nullptr)
+	{
+		result.push_back(string(token));
+		token = strtok_s(nullptr, separators, &context);
+	}
+
+	return result;
+}
+
+void BaseApplication::ExecuteConsoleCommand(const char* command)
+{
+    vector<string> splitCommand = SplitCommand(command);
+    if(splitCommand.size() < 1)
+        return;
+
+    const char* commandName = splitCommand[0].c_str();
+
+    for(unsigned int i = 0; i < m_numConsoleCommands; i++)
+    {
+        if(strcmp(commandName, m_consoleCommands[i].command) == 0)
+        {
+            const char* params = nullptr;
+            if(splitCommand.size() >= 2)
+                params = strstr(command, splitCommand[1].c_str());
+
+            ((*this).*m_consoleCommands[i].func)(commandName, params);
+        }
+    }
 }

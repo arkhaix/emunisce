@@ -148,6 +148,17 @@ protected:
 	virtual void CloseMacro(Archive* archive) = 0;
 
 
+    //Console
+
+    typedef void (BaseApplication::*ConsoleCommandHandler)(const char* command, const char* params);
+    virtual void AddConsoleCommandHandler(const char* command, ConsoleCommandHandler func);
+    
+    virtual unsigned int NumConsoleCommands();
+    virtual const char* GetConsoleCommand(unsigned int index);
+
+    virtual void ExecuteConsoleCommand(const char* command);
+
+
 	bool m_shutdownRequested;
 
 	//Emulated machine
@@ -164,6 +175,16 @@ protected:
 	MachineRunner* m_machineRunner;
 
 	char m_lastRomLoaded[1024];
+
+    //Console commands
+    struct ConsoleCommandInfo
+    {
+        char command[16];
+        ConsoleCommandHandler func;
+    };
+    static const unsigned int MaxConsoleCommands = 1024;
+    ConsoleCommandInfo m_consoleCommands[MaxConsoleCommands];
+    unsigned int m_numConsoleCommands;
 };
 
 }	//namespace Emunisce
