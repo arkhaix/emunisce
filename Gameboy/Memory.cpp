@@ -255,11 +255,11 @@ void Memory::Serialize(Archive& archive)
 	SerializeItem(archive, m_selectedCgbRamBank);
 	SerializeItem(archive, m_selectedCgbVramBank);
 
-	for(int i=0;i<8;i++)
-		SerializeBuffer(archive, &m_cgbRamBanks[i][0], 0x1000);
+	for(auto& cgbRamBank : m_cgbRamBanks)
+		SerializeBuffer(archive, &cgbRamBank[0], 0x1000);
 
-	for(int i=0;i<2;i++)
-		SerializeBuffer(archive, &m_cgbVramBanks[i][0], 0x2000);
+	for(auto& cgbVramBank : m_cgbVramBanks)
+		SerializeBuffer(archive, &cgbVramBank[0], 0x2000);
 
 
 	//Update Display caches on load

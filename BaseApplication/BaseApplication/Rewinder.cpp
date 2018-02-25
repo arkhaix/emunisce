@@ -318,9 +318,9 @@ Rewinder::~Rewinder()
 {
 	m_isRewinding = false;
 
-	for(unsigned int i=0;i<m_segments.size();i++)
+	for(auto& segment : m_segments)
 	{
-		delete m_segments[i];
+		delete segment;
 	}
 
 	m_segments.clear();
@@ -540,8 +540,8 @@ void Rewinder::RunToNextFrame()
 			recordingSegment = m_segments[ lastSegmentIndex ];
 
 			//Clear old caches
-			for(unsigned int i=0;i<m_segments.size();i++)
-				m_segments[i]->ClearCache();
+			for(auto& segment : m_segments)
+				segment->ClearCache();
 
 			//Delete earliest segments if we have too many
 			while(m_segments.size() >= m_maxSegments)

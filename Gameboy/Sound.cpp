@@ -46,9 +46,9 @@ Sound::Sound()
 
 	m_hasPower = true;
 
-	for(int outputChannel=0;outputChannel<2;outputChannel++)
+	for(auto& terminalOutput : m_terminalOutputs)
 		for(int generatorChannel=0;generatorChannel<4;generatorChannel++)
-			m_terminalOutputs[outputChannel][generatorChannel] = false;
+			terminalOutput[generatorChannel] = false;
 
 	for(int i=0;i<4;i++)
 		m_channelController[i] = new ChannelController(m_nr52, i);
@@ -71,8 +71,8 @@ Sound::~Sound()
 	delete m_sound3;
 	delete m_sound4;
 
-	for(int i=0;i<4;i++)
-		delete m_channelController[i];
+	for(auto& controller : m_channelController)
+		delete controller;
 }
 
 void Sound::Initialize()
@@ -252,15 +252,15 @@ void Sound::Serialize(Archive& archive)
 	//Sound master
 
 	SerializeItem(archive, m_hasPower);
-	for(int i=0;i<2;i++)
+	for(auto& terminalOutput : m_terminalOutputs)
 		for(int j=0;j<4;j++)
-			SerializeItem(archive, m_terminalOutputs[i][j]);
+			SerializeItem(archive, terminalOutput[j]);
 
 
 	//Sound generators
 
-	for(int i=0;i<4;i++)
-		m_soundGenerator[i]->Serialize(archive);
+	for(auto& generator : m_soundGenerator)
+		generator->Serialize(archive);
 
 
 	//Registers
