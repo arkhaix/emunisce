@@ -204,16 +204,31 @@ void ConsoleWindow::OnText(wxCommandEvent& event)
 void ConsoleWindow::OnTextEnter(wxCommandEvent& event)
 {
     *m_output << wxT("> ");
+
+    // Use green for the user's commands
     m_output->SetDefaultStyle(wxTextAttr(*wxGREEN, *wxBLACK));
+
+    // Save this position in the output for later recoloring if necessary (on invalid commands)
+    wxTextPos userCommandPosition = m_output->GetLastPosition();
+    size_t commandLength = m_input->GetValue().length();
+
+    // Print the user's command
     *m_output << m_input->GetValue() << wxT("\n");
+
+    // Use the default grey-on-black for the resulting output from the command
     m_output->SetDefaultStyle(wxTextAttr(*wxLIGHT_GREY, *wxBLACK));
 
+    // Execute
     bool result = m_application->ExecuteConsoleCommand(m_input->GetValue().ToAscii());
+
+    // Re-color the command text and print an error message on invalid commands
     if(result == false)
     {
+        m_output->SetStyle(userCommandPosition, userCommandPosition + commandLength, wxTextAttr(*wxRED));
         ConsolePrint("Invalid command\n");
     }
 
+    // Clear the input box
     m_input->SetValue(wxT(""));
     event.Skip(true);
 }
