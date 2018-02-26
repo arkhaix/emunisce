@@ -60,7 +60,7 @@ EmunisceApplication::EmunisceApplication()
 
 	m_debugger->Initialize(this);
 
-	m_renderer->Initialize(this, m_window->GetHandle());
+	m_renderer->Initialize(m_window->GetHandle());
 	m_sound->Initialize(this);
 
 	MapDefaultKeys();
@@ -236,6 +236,10 @@ bool EmunisceApplication::SelectFile(char** result, const char* fileMask)
 	}
 
 	return false;
+}
+
+void EmunisceApplication::ConsolePrint(const char* /*text*/)
+{
 }
 
 unsigned int EmunisceApplication::GetRomDataSize(const char* title)

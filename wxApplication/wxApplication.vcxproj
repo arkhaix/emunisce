@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -21,25 +21,34 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{03651BEF-6317-48D6-A248-6AC00A18CD11}</ProjectGuid>
     <RootNamespace>wxApplication</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -62,13 +71,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;$(SolutionDir)../Import/wxWidgets/Export/$(ProcessorArchitecture)/include;$(SolutionDir)../Import/wxWidgets/Export/$(ProcessorArchitecture)/include/msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;WINVER=0x0400;__WXMSW__;wxUSE_GUI=1;_CRT_SECURE_NO_DEPRECATE ;_CRT_NONSTDC_NO_DEPRECATE </PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;C:\wxWidgets-3.0.3\include\msvc;C:\wxWidgets-3.0.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;WINVER=0x0400;__WXMSW__;wxUSE_GUI=1;UNICODE=1;_UNICODE=1;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)../Import/wxWidgets/Export/$(ProcessorArchitecture)/lib/vc_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;wxbase28d.lib;wxmsw28d_core.lib;wxmsw28d_gl.lib;comctl32.lib;rpcrt4.lib;winmm.lib;advapi32.lib;wsock32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\wxWidgets-3.0.3\lib\vc_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;wxbase30ud.lib;wxmsw30ud_core.lib;wxmsw30ud_gl.lib;comctl32.lib;rpcrt4.lib;winmm.lib;advapi32.lib;wsock32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -76,13 +85,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;$(SolutionDir)../Import/wxWidgets/Export/$(ProcessorArchitecture)/include;$(SolutionDir)../Import/wxWidgets/Export/$(ProcessorArchitecture)/include/msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;WINVER=0x0400;__WXMSW__;wxUSE_GUI=1;_CRT_SECURE_NO_DEPRECATE ;_CRT_NONSTDC_NO_DEPRECATE </PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;C:\wxWidgets-3.0.3\include\msvc;C:\wxWidgets-3.0.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;WINVER=0x0400;__WXMSW__;wxUSE_GUI=1;UNICODE=1;_UNICODE=1;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)../Import/wxWidgets/Export/$(ProcessorArchitecture)/lib/vc_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;wxbase28d.lib;wxmsw28d_core.lib;wxmsw28d_gl.lib;comctl32.lib;rpcrt4.lib;winmm.lib;advapi32.lib;wsock32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\wxWidgets-3.0.3\lib\vc_x64_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;wxbase30ud.lib;wxmsw30ud_core.lib;wxmsw30ud_gl.lib;comctl32.lib;rpcrt4.lib;winmm.lib;advapi32.lib;wsock32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -92,15 +101,15 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;$(SolutionDir)../Import/wxWidgets/Export/$(ProcessorArchitecture)/include;$(SolutionDir)../Import/wxWidgets/Export/$(ProcessorArchitecture)/include/msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;WINVER=0x0400;__WXMSW__;wxUSE_GUI=1;_CRT_SECURE_NO_DEPRECATE ;_CRT_NONSTDC_NO_DEPRECATE </PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;C:\wxWidgets-3.0.3\include\msvc;C:\wxWidgets-3.0.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;WINVER=0x0400;__WXMSW__;wxUSE_GUI=1;UNICODE=1;_UNICODE=1;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)../Import/wxWidgets/Export/$(ProcessorArchitecture)/lib/vc_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;wxbase28.lib;wxmsw28_core.lib;wxmsw28_gl.lib;comctl32.lib;rpcrt4.lib;winmm.lib;advapi32.lib;wsock32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\wxWidgets-3.0.3\lib\vc_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;wxbase30u.lib;wxmsw30u_core.lib;wxmsw30u_gl.lib;comctl32.lib;rpcrt4.lib;winmm.lib;advapi32.lib;wsock32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -110,24 +119,26 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;$(SolutionDir)../Import/wxWidgets/Export/$(ProcessorArchitecture)/include;$(SolutionDir)../Import/wxWidgets/Export/$(ProcessorArchitecture)/include/msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;WINVER=0x0400;__WXMSW__;wxUSE_GUI=1;_CRT_SECURE_NO_DEPRECATE ;_CRT_NONSTDC_NO_DEPRECATE </PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;C:\wxWidgets-3.0.3\include\msvc;C:\wxWidgets-3.0.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;WINVER=0x0400;__WXMSW__;wxUSE_GUI=1;UNICODE=1;_UNICODE=1;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)../Import/wxWidgets/Export/$(ProcessorArchitecture)/lib/vc_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;wxbase28.lib;wxmsw28_core.lib;wxmsw28_gl.lib;comctl32.lib;rpcrt4.lib;winmm.lib;advapi32.lib;wsock32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\wxWidgets-3.0.3\lib\vc_x64_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;wxbase30u.lib;wxmsw30u_core.lib;wxmsw30u_gl.lib;comctl32.lib;rpcrt4.lib;winmm.lib;advapi32.lib;wsock32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="ConsoleWindow.cpp" />
     <ClCompile Include="WindowMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="ConsoleWindow.h" />
     <ClInclude Include="WindowMain.h" />
   </ItemGroup>
   <ItemGroup>

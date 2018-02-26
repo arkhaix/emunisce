@@ -74,6 +74,8 @@ public:
 
 	virtual bool SelectFile(char** result, const char* fileMask);
 
+	void ConsolePrint(const char* text) override;
+
 	virtual unsigned int GetRomDataSize(const char* title);
 
 
