@@ -61,6 +61,9 @@ private:
     wxFrame* m_frame;
     wxTextCtrl*	m_output;
     wxTextCtrl*	m_input;
+
+    wxBoxSizer* m_inputSizer;
+    wxBoxSizer* m_frameSizer;
 };
 
 }   //namespace Emunisce

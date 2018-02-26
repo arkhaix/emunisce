@@ -78,6 +78,8 @@ public:
         : wxFrame(parent, wxID_ANY, title, position, size)
     {
         m_consoleWindow = consoleWindow;
+
+        Connect(wxEVT_CLOSE_WINDOW, wxCloseEventHandler(ConsoleFrame::OnClose));
     }
 
     void OnClose(wxCloseEvent& event)
@@ -98,29 +100,52 @@ ConsoleWindow::ConsoleWindow(Application* application, wxFrame* mainFrame)
 
 ConsoleWindow::~ConsoleWindow()
 {
+    //wx child windows and controls get cleaned up automatically,
+    //so there's no need to delete them here
 }
 
 void ConsoleWindow::Initialize(Application* application, wxFrame* mainFrame)
 {
+    static const int frameHeight = 240;
+    static const int inputHeight = 20;
+
     m_application = application;
     m_mainFrame = mainFrame;
 
     wxString title(wxT("Emunisce Console"));
-    wxSize consoleSize(400, 200);
+
+    int frameMinWidth = frameHeight;
+    int frameDefaultWidth = frameHeight * 2;
+    wxSize consoleSize(frameMinWidth, frameHeight);
+
     wxPoint consolePos = mainFrame->GetPosition();
     consolePos.x += mainFrame->GetSize().GetWidth();
 
     m_frame = new ConsoleFrame(this, mainFrame, title, consolePos, consoleSize);
 
-    m_output =  new ConsoleTextCtrl(this, m_frame, wxID_ANY, wxT(""), wxPoint(0,0), wxSize(400,180),
+    m_output =  new ConsoleTextCtrl(this, m_frame, wxID_ANY, wxT(""), wxPoint(0, 0), wxSize(frameMinWidth, frameHeight - inputHeight),
         wxTE_READONLY | wxTE_MULTILINE | wxTE_RICH | wxTE_BESTWRAP | wxTE_AUTO_SCROLL);
     m_output->SetBackgroundColour(*wxBLACK);
     m_output->SetDefaultStyle(wxTextAttr(*wxLIGHT_GREY, *wxBLACK));
 
-    m_input =  new ConsoleTextCtrl(this, m_frame, wxID_ANY, wxT(""), wxPoint(0,180), wxSize(400,20),
+    int inputY = m_frame->GetClientSize().GetHeight() - inputHeight;
+    m_input =  new ConsoleTextCtrl(this, m_frame, wxID_ANY, wxT(""), wxPoint(0, inputY), wxSize(frameMinWidth, inputHeight),
         wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB);
     m_input->SetBackgroundColour(*wxBLACK);
     m_input->SetDefaultStyle(wxTextAttr(*wxLIGHT_GREY, *wxBLACK));
+
+    m_inputSizer = new wxBoxSizer(wxVERTICAL);
+    m_inputSizer->Add(m_input, 0, wxEXPAND | wxALIGN_BOTTOM);
+
+    m_frameSizer = new wxBoxSizer(wxVERTICAL);
+    m_frameSizer->Add(m_output, 1, wxEXPAND | wxALIGN_TOP);
+    m_frameSizer->Add(m_inputSizer, 0, wxEXPAND | wxALIGN_BOTTOM);
+
+    m_frame->SetSizerAndFit(m_frameSizer);
+
+    wxSize frameSize = m_frame->GetSize();
+    frameSize.SetWidth(frameDefaultWidth);
+    m_frame->SetSize(frameSize);
 
     m_frame->Show();
 }
@@ -202,12 +227,11 @@ void ConsoleWindow::OnSetFocus(wxFocusEvent& event)
 
 void ConsoleWindow::OnFrameClosed(wxCloseEvent& event)
 {
-    delete m_output;
-    m_output = nullptr;
-
-    delete m_input;
-    m_input = nullptr;
-
-    delete m_frame;
+    //wx child windows and controls get deleted automatically,
+    //so we don't need call delete on these.
     m_frame = nullptr;
+    m_input = nullptr;
+    m_output = nullptr;
+    m_inputSizer = nullptr;
+    m_frameSizer = nullptr;
 }
