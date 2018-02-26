@@ -203,7 +203,10 @@ void ConsoleWindow::OnText(wxCommandEvent& event)
 
 void ConsoleWindow::OnTextEnter(wxCommandEvent& event)
 {
-    *m_output << wxT("> ") << m_input->GetValue() << wxT("\n");
+    *m_output << wxT("> ");
+    m_output->SetDefaultStyle(wxTextAttr(*wxGREEN, *wxBLACK));
+    *m_output << m_input->GetValue() << wxT("\n");
+    m_output->SetDefaultStyle(wxTextAttr(*wxLIGHT_GREY, *wxBLACK));
 
     bool result = m_application->ExecuteConsoleCommand(m_input->GetValue().ToAscii());
     if(result == false)
