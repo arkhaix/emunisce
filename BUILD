@@ -42,6 +42,19 @@ cc_binary(
     ],
 )
 
+cc_binary(
+    name = "emunisce_windows_win32",
+    visibility = ["//visibility:public"],
+
+    deps = [
+        "//WindowsApplication:application_lib",
+    ],
+
+    linkopts = [
+        "-SUBSYSTEM:WINDOWS"
+    ],
+)
+
 # Platform-specific repository selection
 cc_library(
     name = "gl",
@@ -52,7 +65,7 @@ cc_library(
             "@gl_linux//:gl"
         ],
         "//:windows": [
-            "@gl_windows//:gl"
+            "@win32//:gl"
         ],
     })
 )

@@ -12,14 +12,36 @@ cc_library(
 )
 
 new_local_repository(
-    name = "gl_windows",
+    name = "win32",
     path = "C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64",
 
     build_file_content = """
 cc_library(
+    name = "win32",
+    visibility = ["//visibility:public"],
+    srcs = [
+        "comdlg32.lib",
+        "kernel32.lib",
+        "gdi32.lib",
+        "shell32.lib",
+        "shlwapi.lib",
+        "user32.lib",
+    ],
+)
+cc_library(
     name = "gl",
     visibility = ["//visibility:public"],
     srcs = ["OpenGL32.lib"],
+)
+cc_library(
+    name = "gdiplus",
+    visibility = ["//visibility:public"],
+    srcs = ["gdiplus.lib"],
+)
+cc_library(
+    name = "winmm",
+    visibility = ["//visibility:public"],
+    srcs = ["winmm.lib"],
 )
     """
 )
