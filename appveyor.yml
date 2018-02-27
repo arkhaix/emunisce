@@ -7,7 +7,7 @@ branches:
 
 install:
   - ps: (new-object net.webclient).DownloadFile('https://storage.googleapis.com/arkhaix-emunisce/wxWidgets-3.0.3-binariesonly.zip', 'C:\wxwidgets.zip')
-  - ps: Expand-Archive "C:\wxwidgets.zip" -DestinationPath "C:\wxWidgets-3.0.3z" -Force
+  - ps: Expand-Archive "C:\wxwidgets.zip" -DestinationPath "C:\wxWidgets-3.0.3" -Force
 #  - cinst bazel
 
 configuration:
