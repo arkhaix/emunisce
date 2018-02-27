@@ -22,6 +22,7 @@
 
 # Bazel
 **bazel-*
+!bazel_vs/*
 
 # clang-tidy
 compile_commands.json
