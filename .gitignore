@@ -15,6 +15,15 @@
 **.tlog
 **.iobj
 **.ipdb
+**.lib
+**.pdb
+**.exe
+**.obj
+**.user
+**.log
+**.ilk
+**.cache
+**.suo
 
 # Make
 .depend
@@ -26,3 +35,6 @@
 
 # clang-tidy
 compile_commands.json
+
+# vim
+**~
