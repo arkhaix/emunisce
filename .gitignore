@@ -15,6 +15,15 @@
 **.tlog
 **.iobj
 **.ipdb
+**.lib
+**.pdb
+**.exe
+**.obj
+**.user
+**.log
+**.ilk
+**.cache
+**.suo
 
 # Make
 .depend
@@ -22,6 +31,10 @@
 
 # Bazel
 **bazel-*
+!bazel_vs/*
 
 # clang-tidy
 compile_commands.json
+
+# vim
+**~
