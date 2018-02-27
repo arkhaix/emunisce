@@ -6,7 +6,8 @@ branches:
   - /dev-.*/
 
 cache:
-  - C:\wxwidgets.zip
+  - C:/wxwidgets.zip
+  - C:/users/appveyor/appdata/local/temp/1/_bazel_appveyor/eadgg8q1/execroot
 
 install:
   - ps: if (-Not (Test-Path C:\wxwidgets.zip)) {
