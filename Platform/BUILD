@@ -4,6 +4,14 @@ cc_library(
 
     hdrs = glob(["*.h"]),
 
-    deps = ["//LinuxPlatform:linux_platform"],
+    deps = select({
+        "//:linux": [
+            "//LinuxPlatform:linux_platform"
+        ],
+        "//:windows": [
+            "//WindowsPlatform:windows_platform"
+        ],
+    }),
+
     includes = ["."],
 )

@@ -455,7 +455,7 @@ void ConsoleDebugger::ListBreakpoints()
 {
 	printf("%s\n", __FUNCTION__);
 
-	printf("\nThere are %d breakpoint addresses:\n", m_breakpoints.size());
+	printf("\nThere are %zu breakpoint addresses:\n", m_breakpoints.size());
 	printf("\n");
 
 	for(auto iter = m_breakpoints.begin(); iter != m_breakpoints.end(); ++iter)
@@ -473,7 +473,7 @@ void ConsoleDebugger::ClearBreakpoints()
 	m_breakpoints.clear();
 	m_breakpointsEnabled = false;
 
-	printf("\nCleared %d breakpoints\n", numBreakpoints);
+	printf("\nCleared %zu breakpoints\n", numBreakpoints);
 	Sleep(1000);
 }
 
