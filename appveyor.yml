@@ -6,13 +6,15 @@ branches:
   - /dev-.*/
 
 install:
-  - cinst bazel
+  - ps: (new-object net.webclient).DownloadFile('https://storage.googleapis.com/arkhaix-emunisce/wxWidgets-3.0.3-binariesonly.zip', 'C:\wxwidgets.zip')
+  - ps: Expand-Archive "C:\wxwidgets.zip" -DestinationPath "C:\wxWidgets-3.0.3z" -Force
+#  - cinst bazel
 
 configuration:
-- Win32 Debug
+#- Win32 Debug
 #- Win32 Release
 - wx Debug
-#- wx Release
+- wx Release
 #- Bazel Win32 Debug
 #- Bazel Win32 Release
 #- Bazel wx Debug
