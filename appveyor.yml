@@ -5,8 +5,17 @@ branches:
   - master
   - /dev-.*/
 
+cache:
+  - C:\wxwidgets.zip
+
 install:
-  - ps: (new-object net.webclient).DownloadFile('https://storage.googleapis.com/arkhaix-emunisce/wxWidgets-3.0.3-binariesonly.zip', 'C:\wxwidgets.zip')
+  - ps: if (-Not (Test-Path C:\wxwidgets.zip)) {
+  - ps:   write "Downloading wxwidgets.zip"
+  - ps:   (new-object net.webclient).DownloadFile('https://storage.googleapis.com/arkhaix-emunisce/wxWidgets-3.0.3-binariesonly.zip', 'C:\wxwidgets.zip')
+  - ps: }
+  - ps: else {
+  - ps:   write "Using cached wxwidgets.zip"
+  - ps: }
   - ps: Expand-Archive "C:\wxwidgets.zip" -DestinationPath "C:\wxWidgets-3.0.3" -Force
   - cinst bazel
 
