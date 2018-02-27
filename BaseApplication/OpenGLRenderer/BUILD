@@ -9,7 +9,7 @@ cc_library(
         "//Platform:platform",
         "//Machine:machine",
 
-        "@gl//:gl",
+        "//:gl",
     ],
     includes = ["."],
 )

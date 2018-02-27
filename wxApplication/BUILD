@@ -10,28 +10,27 @@ cc_library(
         "//Machine:machine",
         "//BaseApplication:base_application",
 
-        "@wx//:wx",
-        # "@wx_gtk//:wx_gtk",
-
-        # "@wx_gtk_libs//:wx_gtk_libs",
+        "//:wx",
     ],
 
-    copts = [
-        # from wx-config --cppflags
-        #"-I/usr/lib/x86_64-linux-gnu/wx/include/gtk2-unicode-release-2.8",
-        #"-I/usr/include/wx-2.8",
-        #"-D_FILE_OFFSET_BITS=64",
-        #"-D_LARGE_FILES",
-        #"-D__WXGTK__",
+    copts = select({
+        "//:linux": [
+            # from wx-config --cppflags
+            "-D_FILE_OFFSET_BITS=64",
+            "-D_LARGE_FILES",
+            "-D__WXGTK__",
+        ],
 
-        "-D__WXMSW__",
-        "-DwxUSE_GUI=1",
-        "-DUNICODE",
-        "-D_UNICODE",
-        "-DWIN32",
-        "-DWINDOWS",
-        "-DWINVER=0x0400",
-        "-D_CRT_SECURE_NO_DEPRECATE",
-        "-D_CRT_NONSTDC_NO_DEPRECATE",
-    ],
+        "//:windows": [
+            "-D__WXMSW__",
+            "-DwxUSE_GUI=1",
+            "-DUNICODE",
+            "-D_UNICODE",
+            "-DWIN32",
+            "-DWINDOWS",
+            "-DWINVER=0x0400",
+            "-D_CRT_SECURE_NO_DEPRECATE",
+            "-D_CRT_NONSTDC_NO_DEPRECATE",
+        ],
+    }),
 )
