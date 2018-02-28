@@ -6,11 +6,11 @@ branches:
   - /dev-.*/
 
 cache:
-  - C:/wxwidgets.zip
-  - C:/users/appveyor/appdata/local/temp/1/_bazel_appveyor/eadgg8q1/execroot
+  - C:\wxwidgets.zip
+  - C:\users\appveyor\appdata\local\temp\1\_bazel_appveyor\eadgg8q1\execroot
 
 install:
-  - ps: if (-Not (Test-Path C:\wxwidgets.zip)) {(new-object net.webclient).DownloadFile('https://storage.googleapis.com/arkhaix-emunisce/wxWidgets-3.0.3-binariesonly.zip', 'C:\wxwidgets.zip')} else { write "Using cached wxwidgets.zip" }
+  - ps: if (-Not (Test-Path C:\wxwidgets.zip)) {write "Downloading wxWidgets.zip..." && (new-object net.webclient).DownloadFile('https://storage.googleapis.com/arkhaix-emunisce/wxWidgets-3.0.3-binariesonly.zip', 'C:\wxwidgets.zip')} else { write "Using cached wxwidgets.zip" }
   - ps: Expand-Archive "C:\wxwidgets.zip" -DestinationPath "C:\wxWidgets-3.0.3" -Force
   - cinst bazel
 
