@@ -24,10 +24,13 @@ using namespace Emunisce;
 
 #ifdef EMUNISCE_PLATFORM_WINDOWS
 #include "windows.h"
+#include "glext.h"
 #endif
 
+#ifdef EMUNISCE_PLATFORM_LINUX
+#include "GL/glew.h"
+#endif
 #include "GL/gl.h"
-#include "glext.h"
 
 #include "PlatformIncludes.h"
 
@@ -118,19 +121,6 @@ public:
 
 	typedef void (APIENTRY *TwglSwapIntervalEXT)(int mode);
 	TwglSwapIntervalEXT wglSwapIntervalEXT;
-#endif
-
-	OpenGLScreenBuffer* _ScreenBuffer;
-	int _LastFrameRendered;
-	int _LastFrameDrawn;
-
-	GLuint _ScreenTexture;
-
-	int _ClientWidth;
-	int _ClientHeight;
-
-
-	bool _PboSupported;
 
 	typedef void (APIENTRY *TglGenBuffersARB)(GLsizei n, GLuint* buffers);
 	typedef void (APIENTRY *TglBindBufferARB)(GLenum target, GLuint id);
@@ -145,7 +135,18 @@ public:
 	TglDeleteBuffersARB glDeleteBuffersARB;
 	TglMapBufferARB glMapBufferARB;
 	TglUnmapBufferARB glUnmapBufferARB;
+#endif
 
+	OpenGLScreenBuffer* _ScreenBuffer;
+	int _LastFrameRendered;
+	int _LastFrameDrawn;
+
+	GLuint _ScreenTexture;
+
+	int _ClientWidth;
+	int _ClientHeight;
+
+	bool _PboSupported;
 	GLuint _PixelBufferObject;
 
 
@@ -165,6 +166,13 @@ public:
 		_PreservedRenderContext = nullptr;
 
 		wglSwapIntervalEXT = nullptr;
+
+		glGenBuffersARB = nullptr;
+		glBindBufferARB = nullptr;
+		glBufferDataARB = nullptr;
+		glDeleteBuffersARB = nullptr;
+		glMapBufferARB = nullptr;
+		glUnmapBufferARB = nullptr;
 #endif
 
 		_ScreenBuffer = nullptr;
@@ -177,12 +185,6 @@ public:
 		_ClientHeight = 1;
 
 		_PboSupported = false;
-		glGenBuffersARB = nullptr;
-		glBindBufferARB = nullptr;
-		glBufferDataARB = nullptr;
-		glDeleteBuffersARB = nullptr;
-		glMapBufferARB = nullptr;
-		glUnmapBufferARB = nullptr;
 		_PixelBufferObject = 0;
 	}
 
@@ -281,6 +283,8 @@ public:
 			PreserveExistingContext();
 			wglMakeCurrent(_DeviceContext, _RenderContext);
 		}
+#elif EMUNISCE_PLATFORM_LINUX
+        glewInit();
 #endif
 
 		glShadeModel(GL_FLAT);
@@ -294,7 +298,11 @@ public:
 			wglSwapIntervalEXT = (TwglSwapIntervalEXT)wglGetProcAddress("wglSwapIntervalEXT");
 			SetVsync(true);
 		}
+#elif EMUNISCE_PLATFORM_LINUX
+        // wtf glew
+#endif
 
+#ifdef EMUNISCE_PLATFORM_WINDOWS
 		//Enable PBO method if supported
 		if(IsExtensionSupported("GL_ARB_pixel_buffer_object") == true)
 		{
@@ -314,6 +322,9 @@ public:
 
 		if(_WindowHandle != nullptr)
 			RestorePreservedContext();
+#elif EMUNISCE_PLATFORM_LINUX
+        if(GLEW_ARB_pixel_buffer_object)
+            _PboSupported = true;
 #endif
 	}
 
@@ -551,6 +562,14 @@ public:
 #ifdef EMUNISCE_PLATFORM_WINDOWS
 		if(_DeviceContext != nullptr && _RenderContext != nullptr)
 			wglMakeCurrent(_DeviceContext, _RenderContext);
+#endif
+#ifdef EMUNISCE_PLATFORM_LINUX
+        static bool glInitialized = false;
+        if(glInitialized == false)
+        {
+            InitializeOpenGL();
+            glInitialized = true;
+        }
 #endif
 
 		UpdateTexture();
