@@ -6,7 +6,7 @@ new_local_repository(
 cc_library(
     name = "gl",
     visibility = ["//visibility:public"],
-    srcs = ["libGL.so"],
+    srcs = ["libGL.so","libGLEW.so"],
 )
     """
 )
