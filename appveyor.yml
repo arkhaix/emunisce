@@ -15,13 +15,13 @@ install:
   - cinst bazel
 
 configuration:
-- Win32 Debug
+#- Win32 Debug
 - Win32 Release
-- wx Debug
-- wx Release
-- Bazel Win32 Debug
-- Bazel Win32 Release
-- Bazel wx Debug
+#- wx Debug
+#- wx Release
+#- Bazel Win32 Debug
+#- Bazel Win32 Release
+#- Bazel wx Debug
 - Bazel wx Release
 
 platform: x64
