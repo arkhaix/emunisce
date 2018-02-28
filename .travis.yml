@@ -15,7 +15,7 @@ script:
   - |
     bazel \
       --output_base=$HOME/.cache/bazel \
-      //:emunisce_linux \
+      build //:emunisce_linux \
 
 before_install:
   - sudo apt-get -qq update
