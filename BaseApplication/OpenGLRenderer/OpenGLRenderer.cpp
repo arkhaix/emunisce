@@ -20,11 +20,11 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "OpenGLRenderer.h"
 using namespace Emunisce;
 
+#include "PlatformDefines.h"
+
 #ifdef EMUNISCE_PLATFORM_WINDOWS
 #include "windows.h"
 #endif
-
-#include "PlatformDefines.h"
 
 #ifdef EMUNISCE_PLATFORM_LINUX
 #include "GL/glew.h"
