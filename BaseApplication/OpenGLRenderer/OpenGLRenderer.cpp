@@ -22,15 +22,15 @@ using namespace Emunisce;
 
 #include "PlatformDefines.h"
 
-#ifdef EMUNISCE_PLATFORM_WINDOWS
-#include "windows.h"
-#include "glext.h"
-#endif
-
 #ifdef EMUNISCE_PLATFORM_LINUX
 #include "GL/glew.h"
 #endif
 #include "GL/gl.h"
+
+#ifdef EMUNISCE_PLATFORM_WINDOWS
+#include "windows.h"
+#include "glext.h"
+#endif
 
 #include "PlatformIncludes.h"
 
