@@ -229,8 +229,11 @@ void ConsoleWindow::OnTextEnter(wxCommandEvent& event)
     }
 
     // Clear the input box
-    m_input->SetValue(wxT(""));
-    event.Skip(true);
+    if(m_input != nullptr)  ///< Can be null because of the 'quit' command
+    {
+        m_input->SetValue(wxT(""));
+        event.Skip(true);
+    }
 }
 
 void ConsoleWindow::OnSetFocus(wxFocusEvent& event)
