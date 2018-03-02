@@ -268,10 +268,18 @@ void Memory::Serialize(Archive& archive)
 		//The Display doesn't save its vram and oam caches since they're already saved by Memory
 		// so this is here to restore those caches
 
-		for(int bank=0;bank<2;bank++)
+		if (m_machineType == EmulatedMachine::Gameboy)
 		{
-			for(int address = 0x8000; address < 0xa000; address++)
-				m_display->WriteVram(bank, address, m_cgbVramBanks[bank][address - 0x8000]);
+			for (int address = 0x8000; address < 0xa000; address++)
+				m_display->WriteVram(0, address, m_memoryData[address]);
+		}
+		else if (m_machineType == EmulatedMachine::GameboyColor)
+		{
+			for (int bank = 0; bank < 2; bank++)
+			{
+				for (int address = 0x8000; address < 0xa000; address++)
+					m_display->WriteVram(bank, address, m_cgbVramBanks[bank][address - 0x8000]);
+			}
 		}
 		
 		for(int address = 0xfe00; address < 0xfea0; address++)
