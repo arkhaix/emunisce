@@ -520,7 +520,7 @@ bool BaseApplication::ExecuteConsoleCommand(const char* command)
             if(splitCommand.size() >= 2)
                 params = strstr(command, splitCommand[1].c_str());
 
-            ((*this).*m_consoleCommands[i].func)(commandName, params);
+            ((*this).*m_consoleCommands[i].func)(params);
 
             return true;
         }
@@ -532,7 +532,7 @@ bool BaseApplication::ExecuteConsoleCommand(const char* command)
 
 // Built-in console commands
 
-void BaseApplication::CommandHelp(const char* /*command*/, const char* /*params*/)
+void BaseApplication::CommandHelp(const char* /*params*/)
 {
     char buffer[1024];
 
@@ -545,13 +545,13 @@ void BaseApplication::CommandHelp(const char* /*command*/, const char* /*params*
     ConsolePrint("\n");
 }
 
-void BaseApplication::CommandQuit(const char* /*command*/, const char* /*params*/)
+void BaseApplication::CommandQuit(const char* /*params*/)
 {
     ConsolePrint("Shutting down...\n");
     RequestShutdown();
 }
 
-void BaseApplication::CommandLoad(const char* /*command*/, const char* /*params*/)
+void BaseApplication::CommandLoad(const char* /*params*/)
 {
     char* fileSelected = nullptr;
 
@@ -573,18 +573,18 @@ void BaseApplication::CommandLoad(const char* /*command*/, const char* /*params*
     }
 }
 
-void BaseApplication::CommandPause(const char* /*command*/, const char* /*params*/)
+void BaseApplication::CommandPause(const char* /*params*/)
 {
     Pause();    
     ConsolePrint("Emulation paused\n");
 }
-void BaseApplication::CommandRun(const char* /*command*/, const char* /*params*/)
+void BaseApplication::CommandRun(const char* /*params*/)
 {
    Run(); 
    ConsolePrint("Emulation resumed\n");
 }
 
-void BaseApplication::CommandSaveState(const char* /*command*/, const char* params)
+void BaseApplication::CommandSaveState(const char* params)
 {
     const char* stateName = "default";
     if(params != nullptr && strlen(params) == 0)
@@ -595,7 +595,7 @@ void BaseApplication::CommandSaveState(const char* /*command*/, const char* para
     ConsolePrint("Saved state "); ConsolePrint(stateName); ConsolePrint("\n");
 }
 
-void BaseApplication::CommandLoadState(const char* /*command*/, const char* params)
+void BaseApplication::CommandLoadState(const char* params)
 {
     const char* stateName = "default";
     if(params != nullptr && strlen(params) == 0)
@@ -606,7 +606,7 @@ void BaseApplication::CommandLoadState(const char* /*command*/, const char* para
     ConsolePrint("Loaded state "); ConsolePrint(stateName); ConsolePrint("\n");
 }
 
-void BaseApplication::CommandSpeed(const char* /*command*/, const char* params)
+void BaseApplication::CommandSpeed(const char* params)
 {
     double speed = 1.0;
 
@@ -620,12 +620,12 @@ void BaseApplication::CommandSpeed(const char* /*command*/, const char* params)
     ConsolePrint(buffer);
 }
 
-void BaseApplication::CommandMute(const char* /*command*/, const char* /*params*/)
+void BaseApplication::CommandMute(const char* /*params*/)
 {
     ConsolePrint("Unsupported\n");
 }
 
-void BaseApplication::CommandDisplayFilter(const char* /*command*/, const char* params)
+void BaseApplication::CommandDisplayFilter(const char* params)
 {
 	if(params == nullptr || strlen(params) == 0)
 		params = "none";
@@ -659,21 +659,21 @@ void BaseApplication::CommandDisplayFilter(const char* /*command*/, const char* 
     ConsolePrint("Set display filter to "); ConsolePrint(filterNames[filter]); ConsolePrint("\n");
 }
 
-void BaseApplication::CommandVsync(const char* /*command*/, const char* params)
+void BaseApplication::CommandVsync(const char* params)
 {
 	if(params == nullptr || strlen(params) == 0 || _stricmp(params, "0") == 0 || _stricmp(params, "off") == 0)
     {
 		SetVsync(false);
-        ConsolePrint("Disabled vsync\n");
+        ConsolePrint("Vsync disabled\n");
     }
     else
     {
         SetVsync(true);
-        ConsolePrint("Enabled vsync\n");
+        ConsolePrint("Vsync enabled\n");
     }
 }
 
-void BaseApplication::CommandBackground(const char* /*command*/, const char* params)
+void BaseApplication::CommandBackground(const char* params)
 {
 	if(params == nullptr || strlen(params) == 0 || _stricmp(params, "0") == 0 || _stricmp(params, "off") == 0)
     {

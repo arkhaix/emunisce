@@ -51,6 +51,8 @@ public:
 
 	void Run();
 
+	void Print(const char* text);
+
 private:
 
 	void Help();

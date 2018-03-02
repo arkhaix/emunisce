@@ -135,6 +135,17 @@ public:
 	void LoadRomData(const char* name, unsigned char* buffer, unsigned int bytes) override;
 
 
+    // Console command framework
+
+    typedef void (BaseApplication::*ConsoleCommandHandler)(const char* params);
+    virtual void AddConsoleCommand(const char* command, ConsoleCommandHandler func, const char* helpText);
+    
+    virtual unsigned int NumConsoleCommands();
+    virtual const char* GetConsoleCommand(unsigned int index);
+
+    virtual bool ExecuteConsoleCommand(const char* command); ///< Returns true if the command was successfully executed. False otherwise.
+
+
 protected:
 
 	virtual Archive* OpenRomData(const char* name, bool saving) = 0;
@@ -150,31 +161,21 @@ protected:
 	virtual void CloseMacro(Archive* archive) = 0;
 
 
-    // Console command framework
-
-    typedef void (BaseApplication::*ConsoleCommandHandler)(const char* command, const char* params);
-    virtual void AddConsoleCommand(const char* command, ConsoleCommandHandler func, const char* helpText);
-    
-    virtual unsigned int NumConsoleCommands();
-    virtual const char* GetConsoleCommand(unsigned int index);
-
-    virtual bool ExecuteConsoleCommand(const char* command); ///< Returns true if the command was successfully executed. False otherwise.
-
 
     // Built-in console commands
 
-    virtual void CommandHelp(const char* command, const char* params);
-    virtual void CommandQuit(const char* command, const char* params);
-    virtual void CommandLoad(const char* command, const char* params);
-    virtual void CommandPause(const char* command, const char* params);
-    virtual void CommandRun(const char* command, const char* params);
-    virtual void CommandSaveState(const char* command, const char* params);
-    virtual void CommandLoadState(const char* command, const char* params);
-    virtual void CommandSpeed(const char* command, const char* params);
-    virtual void CommandMute(const char* command, const char* params);
-    virtual void CommandDisplayFilter(const char* command, const char* params);
-    virtual void CommandVsync(const char* command, const char* params);
-    virtual void CommandBackground(const char* command, const char* params);
+    virtual void CommandHelp(const char* params);
+    virtual void CommandQuit(const char* params);
+    virtual void CommandLoad(const char* params);
+    virtual void CommandPause(const char* params);
+    virtual void CommandRun(const char* params);
+    virtual void CommandSaveState(const char* params);
+    virtual void CommandLoadState(const char* params);
+    virtual void CommandSpeed(const char* params);
+    virtual void CommandMute(const char* params);
+    virtual void CommandDisplayFilter(const char* params);
+    virtual void CommandVsync(const char* params);
+    virtual void CommandBackground(const char* params);
 
 
 	bool m_shutdownRequested;
