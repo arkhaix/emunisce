@@ -105,6 +105,11 @@ void ConsoleDebugger::Run()
 	}
 }
 
+void ConsoleDebugger::Print(const char* text)
+{
+	printf("%s", text);
+}
+
 
 void ConsoleDebugger::Help()
 {
@@ -164,6 +169,10 @@ void ConsoleDebugger::FetchCommand()
 	string line = "";
 	printf("\n> ");
 	getline(cin, line);
+
+	bool baseResult = m_phoenix->ExecuteConsoleCommand(line.c_str());
+	if (baseResult == true)
+		return;
 
 	vector<string> args = SplitCommand(line);
 	if(args.empty())

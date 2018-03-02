@@ -238,8 +238,9 @@ bool EmunisceApplication::SelectFile(char** result, const char* fileMask)
 	return false;
 }
 
-void EmunisceApplication::ConsolePrint(const char* /*text*/)
+void EmunisceApplication::ConsolePrint(const char* text)
 {
+	m_debugger->Print(text);
 }
 
 unsigned int EmunisceApplication::GetRomDataSize(const char* title)
