@@ -5,6 +5,8 @@ using namespace Emunisce;
 #include <vector>
 using namespace std;
 
+#include <cstring> // strlen
+
 namespace Emunisce
 {
 
