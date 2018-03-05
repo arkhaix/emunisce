@@ -40,6 +40,8 @@ class InputRecording;
 class InputManager;
 class MachineRunner;
 
+class CommandTrie;
+
 
 class BaseApplication : public IUserInterface, public IMachineToApplication
 {
@@ -205,6 +207,7 @@ protected:
     static const unsigned int MaxConsoleCommands = 1024;
     ConsoleCommandInfo m_consoleCommands[MaxConsoleCommands];
     unsigned int m_numConsoleCommands;
+	CommandTrie* m_commandTrie;
 };
 
 }	//namespace Emunisce

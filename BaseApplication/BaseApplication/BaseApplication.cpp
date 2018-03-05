@@ -43,6 +43,8 @@ using namespace std;
 #include "InputManager.h"
 #include "MachineRunner.h"
 
+#include "CommandTrie.h"
+
 
 // BaseApplication
 
@@ -82,7 +84,7 @@ BaseApplication::BaseApplication()
 
 
     // Console commands
-
+	m_commandTrie = new CommandTrie();
     m_numConsoleCommands = 0;
     AddConsoleCommand("help", &BaseApplication::CommandHelp, "Displays this help text");
     AddConsoleCommand("quit", &BaseApplication::CommandQuit, "Exits the application");
@@ -470,6 +472,8 @@ void BaseApplication::AddConsoleCommand(const char* command, ConsoleCommandHandl
     m_consoleCommands[m_numConsoleCommands].func = func;
 
     m_numConsoleCommands++;
+
+	m_commandTrie->Add(command);
 }
     
 unsigned int BaseApplication::NumConsoleCommands()
@@ -511,10 +515,38 @@ bool BaseApplication::ExecuteConsoleCommand(const char* command)
         return false;
 
     const char* commandName = splitCommand[0].c_str();
+    string lowercaseCommandName = commandName;
+    transform(lowercaseCommandName.begin(), lowercaseCommandName.end(), lowercaseCommandName.begin(), ::tolower);
 
+	// Resolve to a full command name via the prefix tree
+	CommandTrie* node = m_commandTrie->GetNode(lowercaseCommandName.c_str());
+	if (node == nullptr)
+		return false;
+
+	if (node->NumLeaves() > 1 && node->IsLeaf() == false)
+	{
+		char buffer[1024];
+		sprintf_s(buffer, 1024, "Command '%s' resolved to %d possibilities:\n", lowercaseCommandName.c_str(), node->NumLeaves());
+		ConsolePrint(buffer);
+		for (unsigned int i = 0; i < node->NumLeaves(); i++)
+		{
+			CommandTrie* leaf = node->GetLeaf(i);
+			ConsolePrint(" "); ConsolePrint(leaf->GetValue());
+		}
+		ConsolePrint("\n");
+
+		return false;
+	}
+
+	if (node->NumLeaves() == 0)
+		return false;
+
+	string resolvedCommandName = node->GetLeaf(0)->GetValue();
+
+	// Search for the full command using the resolved name
     for(unsigned int i = 0; i < m_numConsoleCommands; i++)
     {
-        if(strcmp(commandName, m_consoleCommands[i].command) == 0)
+        if(strcmp(resolvedCommandName.c_str(), m_consoleCommands[i].command) == 0)
         {
             const char* params = nullptr;
             if(splitCommand.size() >= 2)

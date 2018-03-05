@@ -582,6 +582,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BaseApplication.h" />
+    <ClInclude Include="CommandTrie.h" />
     <ClInclude Include="Gui.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="InputRecording.h" />
@@ -593,6 +594,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseApplication.cpp" />
+    <ClCompile Include="CommandTrie.cpp" />
     <ClCompile Include="Gui.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="InputRecording.cpp" />
