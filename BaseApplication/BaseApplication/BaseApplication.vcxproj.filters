@@ -50,6 +50,9 @@
     <ClInclude Include="InputManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CommandTrie.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseApplication.cpp">
@@ -74,6 +77,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InputManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandTrie.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

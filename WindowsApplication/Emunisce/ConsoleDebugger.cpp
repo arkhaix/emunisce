@@ -170,9 +170,16 @@ void ConsoleDebugger::FetchCommand()
 	printf("\n> ");
 	getline(cin, line);
 
-	bool baseResult = m_phoenix->ExecuteConsoleCommand(line.c_str());
-	if (baseResult == true)
-		return;
+	if (m_phoenix->ExecuteConsoleCommand(line.c_str()) == false)
+		printf("Unrecognized command.  Use 'help' for a list of valid commands.\n");
+
+	// The remaining code is here only for reference while it gets migrated to BaseApplication
+
+#if true
+
+	return;
+
+#else
 
 	vector<string> args = SplitCommand(line);
 	if(args.empty())
@@ -317,6 +324,7 @@ void ConsoleDebugger::FetchCommand()
 	{
 		printf("Unrecognized command.  Use 'help' for a list of valid commands.\n");
 	}
+#endif
 }
 
 vector<string> ConsoleDebugger::SplitCommand(string command)
