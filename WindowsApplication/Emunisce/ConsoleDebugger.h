@@ -61,6 +61,7 @@ private:
 
 	void UpdateDisplay();
 	void FetchCommand();
+	string FetchLine();
 
 	vector<string> SplitCommand(string command);
 

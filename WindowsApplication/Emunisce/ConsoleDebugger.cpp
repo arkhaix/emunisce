@@ -26,7 +26,10 @@ using namespace Emunisce;
 #include "windows.h"
 
 //STL
+#include <algorithm>
 #include <iostream>
+#include <string>
+#include <vector>
 using namespace std;
 
 //CRT
@@ -113,19 +116,7 @@ void ConsoleDebugger::Print(const char* text)
 
 void ConsoleDebugger::Help()
 {
-	printf("Useful commands:\n");
-	printf("help - displays this list\n");
-	printf("load - opens the rom file selection dialog\n");
-	printf("pause - pauses the game\n");
-	printf("run - un-pauses the game\n");
-	printf("savestate name - saves the current state to a file called 'name.ess'\n");
-	printf("loadstate name - loads state from the file 'name.ess'\n");
-	printf("speed multiplier - sets the emulation speed. 1=normal, 0.5=half, 2=double, etc\n");
-	printf("mute - toggles mute on or off\n");
-	printf("displayfilter 1-4 - sets the display filter. 1=normal, 2=hq2x, 3=hq3x, 4=hq4x\n");
-	printf("vsync on/off - toggles vsync on or off\n");
-	printf("background on/off - toggles the background animation on or off\n");
-	printf("\n");
+	m_phoenix->ExecuteConsoleCommand("help");
 }
 
 void ConsoleDebugger::SetupConsole()
@@ -168,10 +159,48 @@ void ConsoleDebugger::FetchCommand()
 {
 	string line = "";
 	printf("\n> ");
-	getline(cin, line);
 
-	if (m_phoenix->ExecuteConsoleCommand(line.c_str()) == false)
+	// Save the cursor position so we can modify the color later
+	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+	GetConsoleScreenBufferInfo(hStdOut, &consoleInfo);
+	COORD inputCursorPos = consoleInfo.dwCursorPosition;
+
+	//getline(cin, line);
+	line = FetchLine();
+
+	vector<string> splitLine = SplitCommand(line);
+	string commandText = "";
+	if (!splitLine.empty())
+	{
+		commandText = splitLine[0];
+	}
+
+	bool result = m_phoenix->ExecuteConsoleCommand(line.c_str());
+	GetConsoleScreenBufferInfo(hStdOut, &consoleInfo);
+	COORD newCursorPos = consoleInfo.dwCursorPosition;
+	WORD textAttributes = consoleInfo.wAttributes;
+
+	if(result == true)
+	{
+		SetConsoleCursorPosition(hStdOut, inputCursorPos);
+		SetConsoleTextAttribute(hStdOut, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
+		WriteConsole(hStdOut, commandText.c_str(), (DWORD)commandText.length(), NULL, NULL);
+	}
+	else
+	{
 		printf("Unrecognized command.  Use 'help' for a list of valid commands.\n");
+		GetConsoleScreenBufferInfo(hStdOut, &consoleInfo);
+		newCursorPos = consoleInfo.dwCursorPosition;
+
+		SetConsoleCursorPosition(hStdOut, inputCursorPos);
+		SetConsoleTextAttribute(hStdOut, FOREGROUND_INTENSITY | FOREGROUND_RED);
+		WriteConsole(hStdOut, commandText.c_str(), (DWORD)commandText.length(), NULL, NULL);
+	}
+
+	SetConsoleCursorPosition(hStdOut, newCursorPos);
+	SetConsoleTextAttribute(hStdOut, textAttributes);
+
 
 	// The remaining code is here only for reference while it gets migrated to BaseApplication
 
@@ -325,6 +354,130 @@ void ConsoleDebugger::FetchCommand()
 		printf("Unrecognized command.  Use 'help' for a list of valid commands.\n");
 	}
 #endif
+}
+
+string ConsoleDebugger::FetchLine()
+{
+	string result = "";
+
+	HANDLE hStdIn = GetStdHandle(STD_INPUT_HANDLE);
+	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+	GetConsoleScreenBufferInfo(hStdOut, &consoleInfo);
+	COORD cursorStartPos = consoleInfo.dwCursorPosition;
+
+	static const DWORD bufferSize = 128;
+	INPUT_RECORD buffer[bufferSize];
+	DWORD numEventsRead = 0;
+
+	bool autoCompleteMode = false;
+	vector<string> autoCompleteOptions;
+	unsigned int autoCompleteIndex = 0;
+
+	bool keepReading = true;
+	while (keepReading == true)
+	{
+		ReadConsoleInput(hStdIn, &buffer[0], bufferSize, &numEventsRead);
+
+		for (DWORD i = 0; i < numEventsRead; i++)
+		{
+			INPUT_RECORD record = buffer[i];
+			if (record.EventType != KEY_EVENT)
+				continue;
+
+			if (record.Event.KeyEvent.bKeyDown == FALSE)
+				continue;
+
+			WORD keyCode = record.Event.KeyEvent.wVirtualKeyCode;
+			char c = record.Event.KeyEvent.uChar.AsciiChar;
+
+			if (keyCode == VK_TAB)
+			{
+				// Begin auto-complete
+				if (autoCompleteMode == false)
+				{
+					autoCompleteOptions.clear();
+
+					// Store the list of possible commands
+					unsigned int numCommands = m_phoenix->NumPossibleCommands(result.c_str());
+					for (unsigned int j = 0; j < numCommands; j++)
+					{
+						const char* command = m_phoenix->GetPossibleCommand(result.c_str(), j);
+						if (command != nullptr && strlen(command) > 0)
+						{
+							autoCompleteOptions.push_back(command);
+						}
+					}
+					sort(autoCompleteOptions.begin(), autoCompleteOptions.end());
+
+					// Select the first option if there are valid possibilities
+					if (!autoCompleteOptions.empty())
+					{
+						autoCompleteMode = true;
+						autoCompleteIndex = 0;
+
+						result = autoCompleteOptions[autoCompleteIndex];
+						SetConsoleCursorPosition(hStdOut, cursorStartPos);
+						printf(result.c_str());
+					}
+				}
+
+				// Cycle to the next auto-complete option
+				else
+				{
+					// Clear the existing text first
+					size_t numCharsToClear = result.length();
+					SetConsoleCursorPosition(hStdOut, cursorStartPos);
+					for (size_t j = 0; j < numCharsToClear; j++)
+						printf(" ");
+
+					// Select the next option
+					autoCompleteIndex++;
+					if (autoCompleteIndex >= autoCompleteOptions.size())
+						autoCompleteIndex = 0;
+
+					result = autoCompleteOptions[autoCompleteIndex];
+					SetConsoleCursorPosition(hStdOut, cursorStartPos);
+					printf(result.c_str());
+				}
+			}
+			else if (keyCode == VK_RETURN)
+			{
+				printf("\n");
+				keepReading = false;
+				autoCompleteMode = false;
+			}
+			else if (keyCode == VK_BACK)
+			{
+				if (!result.empty())
+				{
+					result = result.substr(0, result.length()-1);
+					printf("%c", c);
+					printf(" ");
+					printf("%c", c);
+					autoCompleteMode = false;
+				}
+			}
+			else if (keyCode == VK_SPACE)
+			{
+				if (!result.empty())
+				{
+					result += c;
+					printf("%c", c);
+					autoCompleteMode = false;
+				}
+			}
+			else
+			{
+				result += c;
+				printf("%c", c);
+				autoCompleteMode = false;
+			}
+		}
+	}
+
+	return result;
 }
 
 vector<string> ConsoleDebugger::SplitCommand(string command)
