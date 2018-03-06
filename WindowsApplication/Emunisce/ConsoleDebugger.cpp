@@ -158,12 +158,14 @@ void ConsoleDebugger::FetchCommand()
 	printf("\n> ");
 
 	// Save the cursor position so we can modify the color later
-	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-	GetConsoleScreenBufferInfo(handle, &consoleInfo);
+	GetConsoleScreenBufferInfo(hStdOut, &consoleInfo);
 	COORD inputCursorPos = consoleInfo.dwCursorPosition;
 
-	getline(cin, line);
+	//getline(cin, line);
+	line = FetchLine();
+
 	vector<string> splitLine = SplitCommand(line);
 	string commandText = "";
 	if (!splitLine.empty())
@@ -172,29 +174,29 @@ void ConsoleDebugger::FetchCommand()
 	}
 
 	bool result = m_phoenix->ExecuteConsoleCommand(line.c_str());
-	GetConsoleScreenBufferInfo(handle, &consoleInfo);
+	GetConsoleScreenBufferInfo(hStdOut, &consoleInfo);
 	COORD newCursorPos = consoleInfo.dwCursorPosition;
 	WORD textAttributes = consoleInfo.wAttributes;
 
 	if(result == true)
 	{
-		SetConsoleCursorPosition(handle, inputCursorPos);
-		SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
-		WriteConsole(handle, commandText.c_str(), (DWORD)commandText.length(), NULL, NULL);
+		SetConsoleCursorPosition(hStdOut, inputCursorPos);
+		SetConsoleTextAttribute(hStdOut, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
+		WriteConsole(hStdOut, commandText.c_str(), (DWORD)commandText.length(), NULL, NULL);
 	}
 	else
 	{
 		printf("Unrecognized command.  Use 'help' for a list of valid commands.\n");
-		GetConsoleScreenBufferInfo(handle, &consoleInfo);
+		GetConsoleScreenBufferInfo(hStdOut, &consoleInfo);
 		newCursorPos = consoleInfo.dwCursorPosition;
 
-		SetConsoleCursorPosition(handle, inputCursorPos);
-		SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_RED);
-		WriteConsole(handle, commandText.c_str(), (DWORD)commandText.length(), NULL, NULL);
+		SetConsoleCursorPosition(hStdOut, inputCursorPos);
+		SetConsoleTextAttribute(hStdOut, FOREGROUND_INTENSITY | FOREGROUND_RED);
+		WriteConsole(hStdOut, commandText.c_str(), (DWORD)commandText.length(), NULL, NULL);
 	}
 
-	SetConsoleCursorPosition(handle, newCursorPos);
-	SetConsoleTextAttribute(handle, textAttributes);
+	SetConsoleCursorPosition(hStdOut, newCursorPos);
+	SetConsoleTextAttribute(hStdOut, textAttributes);
 
 
 	// The remaining code is here only for reference while it gets migrated to BaseApplication
@@ -349,6 +351,71 @@ void ConsoleDebugger::FetchCommand()
 		printf("Unrecognized command.  Use 'help' for a list of valid commands.\n");
 	}
 #endif
+}
+
+string ConsoleDebugger::FetchLine()
+{
+	string result = "";
+
+	HANDLE hStdIn = GetStdHandle(STD_INPUT_HANDLE);
+
+	static const DWORD bufferSize = 128;
+	INPUT_RECORD buffer[bufferSize];
+	DWORD numEventsRead = 0;
+
+	bool keepReading = true;
+	while (keepReading == true)
+	{
+		ReadConsoleInput(hStdIn, &buffer[0], bufferSize, &numEventsRead);
+
+		for (DWORD i = 0; i < numEventsRead; i++)
+		{
+			INPUT_RECORD record = buffer[i];
+			if (record.EventType != KEY_EVENT)
+				continue;
+
+			if (record.Event.KeyEvent.bKeyDown == FALSE)
+				continue;
+
+			WORD keyCode = record.Event.KeyEvent.wVirtualKeyCode;
+			char c = record.Event.KeyEvent.uChar.AsciiChar;
+
+			if (keyCode == VK_TAB)
+			{
+				MessageBox(NULL, "tab", "tab", MB_OK);
+			}
+			else if (keyCode == VK_RETURN)
+			{
+				printf("\n");
+				keepReading = false;
+			}
+			else if (keyCode == VK_BACK)
+			{
+				if (!result.empty())
+				{
+					result = result.substr(0, result.length()-1);
+					printf("%c", c);
+					printf(" ");
+					printf("%c", c);
+				}
+			}
+			else if (keyCode == VK_SPACE)
+			{
+				if (!result.empty())
+				{
+					result += c;
+					printf("%c", c);
+				}
+			}
+			else
+			{
+				result += c;
+				printf("%c", c);
+			}
+		}
+	}
+
+	return result;
 }
 
 vector<string> ConsoleDebugger::SplitCommand(string command)
