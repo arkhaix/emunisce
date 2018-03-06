@@ -561,6 +561,33 @@ bool BaseApplication::ExecuteConsoleCommand(const char* command)
     return false;
 }
 
+unsigned int BaseApplication::NumPossibleCommands(const char* prefix)
+{
+	CommandTrie* node = m_commandTrie->GetNode(prefix);
+
+	if (node == nullptr)
+		return 0;
+
+	return node->NumLeaves();
+}
+
+const char* BaseApplication::GetPossibleCommand(const char* prefix, unsigned int index)
+{
+	CommandTrie* node = m_commandTrie->GetNode(prefix);
+
+	if (node == nullptr)
+		return 0;
+
+	if (index >= node->NumLeaves())
+		return nullptr;
+
+	CommandTrie* leaf = node->GetLeaf(index);
+	if (leaf == nullptr)
+		return nullptr;
+
+	return leaf->GetValue();
+}
+
 
 // Built-in console commands
 

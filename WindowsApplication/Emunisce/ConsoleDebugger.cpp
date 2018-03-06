@@ -26,7 +26,10 @@ using namespace Emunisce;
 #include "windows.h"
 
 //STL
+#include <algorithm>
 #include <iostream>
+#include <string>
+#include <vector>
 using namespace std;
 
 //CRT
@@ -358,10 +361,19 @@ string ConsoleDebugger::FetchLine()
 	string result = "";
 
 	HANDLE hStdIn = GetStdHandle(STD_INPUT_HANDLE);
+	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+	GetConsoleScreenBufferInfo(hStdOut, &consoleInfo);
+	COORD cursorStartPos = consoleInfo.dwCursorPosition;
 
 	static const DWORD bufferSize = 128;
 	INPUT_RECORD buffer[bufferSize];
 	DWORD numEventsRead = 0;
+
+	bool autoCompleteMode = false;
+	vector<string> autoCompleteOptions;
+	unsigned int autoCompleteIndex = 0;
 
 	bool keepReading = true;
 	while (keepReading == true)
@@ -382,12 +394,59 @@ string ConsoleDebugger::FetchLine()
 
 			if (keyCode == VK_TAB)
 			{
-				MessageBox(NULL, "tab", "tab", MB_OK);
+				// Begin auto-complete
+				if (autoCompleteMode == false)
+				{
+					autoCompleteOptions.clear();
+
+					// Store the list of possible commands
+					unsigned int numCommands = m_phoenix->NumPossibleCommands(result.c_str());
+					for (unsigned int j = 0; j < numCommands; j++)
+					{
+						const char* command = m_phoenix->GetPossibleCommand(result.c_str(), j);
+						if (command != nullptr && strlen(command) > 0)
+						{
+							autoCompleteOptions.push_back(command);
+						}
+					}
+					sort(autoCompleteOptions.begin(), autoCompleteOptions.end());
+
+					// Select the first option if there are valid possibilities
+					if (!autoCompleteOptions.empty())
+					{
+						autoCompleteMode = true;
+						autoCompleteIndex = 0;
+
+						result = autoCompleteOptions[autoCompleteIndex];
+						SetConsoleCursorPosition(hStdOut, cursorStartPos);
+						printf(result.c_str());
+					}
+				}
+
+				// Cycle to the next auto-complete option
+				else
+				{
+					// Clear the existing text first
+					size_t numCharsToClear = result.length();
+					SetConsoleCursorPosition(hStdOut, cursorStartPos);
+					for (size_t j = 0; j < numCharsToClear; j++)
+						printf(" ");
+
+					// Select the next option
+					autoCompleteIndex++;
+					if (autoCompleteIndex >= autoCompleteOptions.size())
+						autoCompleteIndex = 0;
+
+					result = autoCompleteOptions[autoCompleteIndex];
+					SetConsoleCursorPosition(hStdOut, cursorStartPos);
+					printf(result.c_str());
+				}
 			}
 			else if (keyCode == VK_RETURN)
 			{
 				printf("\n");
 				keepReading = false;
+				autoCompleteMode = false;
 			}
 			else if (keyCode == VK_BACK)
 			{
@@ -397,6 +456,7 @@ string ConsoleDebugger::FetchLine()
 					printf("%c", c);
 					printf(" ");
 					printf("%c", c);
+					autoCompleteMode = false;
 				}
 			}
 			else if (keyCode == VK_SPACE)
@@ -405,12 +465,14 @@ string ConsoleDebugger::FetchLine()
 				{
 					result += c;
 					printf("%c", c);
+					autoCompleteMode = false;
 				}
 			}
 			else
 			{
 				result += c;
 				printf("%c", c);
+				autoCompleteMode = false;
 			}
 		}
 	}

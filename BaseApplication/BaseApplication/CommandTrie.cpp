@@ -110,8 +110,8 @@ CommandTrie* CommandTrie::GetLeaf(unsigned int index)
 
 CommandTrie* CommandTrie::GetNode(const char* prefix, unsigned int position)
 {
-	if (prefix == nullptr)
-		return nullptr;
+	if (prefix == nullptr || strlen(prefix) == 0)
+		return this;
 
 	if (position >= strlen(prefix) && m_private->parent != nullptr)
 		return this;

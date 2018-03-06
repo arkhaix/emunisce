@@ -147,6 +147,9 @@ public:
 
     virtual bool ExecuteConsoleCommand(const char* command); ///< Returns true if the command was successfully executed. False otherwise.
 
+	virtual unsigned int NumPossibleCommands(const char* prefix);
+	virtual const char* GetPossibleCommand(const char* prefix, unsigned int index);
+
 
 protected:
 
