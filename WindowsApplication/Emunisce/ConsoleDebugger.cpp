@@ -113,19 +113,7 @@ void ConsoleDebugger::Print(const char* text)
 
 void ConsoleDebugger::Help()
 {
-	printf("Useful commands:\n");
-	printf("help - displays this list\n");
-	printf("load - opens the rom file selection dialog\n");
-	printf("pause - pauses the game\n");
-	printf("run - un-pauses the game\n");
-	printf("savestate name - saves the current state to a file called 'name.ess'\n");
-	printf("loadstate name - loads state from the file 'name.ess'\n");
-	printf("speed multiplier - sets the emulation speed. 1=normal, 0.5=half, 2=double, etc\n");
-	printf("mute - toggles mute on or off\n");
-	printf("displayfilter 1-4 - sets the display filter. 1=normal, 2=hq2x, 3=hq3x, 4=hq4x\n");
-	printf("vsync on/off - toggles vsync on or off\n");
-	printf("background on/off - toggles the background animation on or off\n");
-	printf("\n");
+	m_phoenix->ExecuteConsoleCommand("help");
 }
 
 void ConsoleDebugger::SetupConsole()
@@ -168,10 +156,46 @@ void ConsoleDebugger::FetchCommand()
 {
 	string line = "";
 	printf("\n> ");
-	getline(cin, line);
 
-	if (m_phoenix->ExecuteConsoleCommand(line.c_str()) == false)
+	// Save the cursor position so we can modify the color later
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+	GetConsoleScreenBufferInfo(handle, &consoleInfo);
+	COORD inputCursorPos = consoleInfo.dwCursorPosition;
+
+	getline(cin, line);
+	vector<string> splitLine = SplitCommand(line);
+	string commandText = "";
+	if (!splitLine.empty())
+	{
+		commandText = splitLine[0];
+	}
+
+	bool result = m_phoenix->ExecuteConsoleCommand(line.c_str());
+	GetConsoleScreenBufferInfo(handle, &consoleInfo);
+	COORD newCursorPos = consoleInfo.dwCursorPosition;
+	WORD textAttributes = consoleInfo.wAttributes;
+
+	if(result == true)
+	{
+		SetConsoleCursorPosition(handle, inputCursorPos);
+		SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
+		WriteConsole(handle, commandText.c_str(), (DWORD)commandText.length(), NULL, NULL);
+	}
+	else
+	{
 		printf("Unrecognized command.  Use 'help' for a list of valid commands.\n");
+		GetConsoleScreenBufferInfo(handle, &consoleInfo);
+		newCursorPos = consoleInfo.dwCursorPosition;
+
+		SetConsoleCursorPosition(handle, inputCursorPos);
+		SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | FOREGROUND_RED);
+		WriteConsole(handle, commandText.c_str(), (DWORD)commandText.length(), NULL, NULL);
+	}
+
+	SetConsoleCursorPosition(handle, newCursorPos);
+	SetConsoleTextAttribute(handle, textAttributes);
+
 
 	// The remaining code is here only for reference while it gets migrated to BaseApplication
 
