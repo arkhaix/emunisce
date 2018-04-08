@@ -38,3 +38,6 @@ compile_commands.json
 
 # vim
 **~
+
+# electron
+node_modules
