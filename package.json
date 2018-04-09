@@ -1,7 +1,7 @@
 {
   "name": "emunisce",
   "version": "0.1.0",
-  "main": "main.js",
+  "main": "ElectronApplication/main.js",
   "scripts": {
     "start": "electron ."
   },
