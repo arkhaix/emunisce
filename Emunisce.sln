@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.852
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Machine Layer", "Machine Layer", "{DA5A19BC-BB41-4B1F-80B3-94E45B07EF34}"
 EndProject
@@ -46,6 +46,11 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bazel-win32", "bazel_vs\bazel-win32.vcxproj", "{32FDCB25-1CBD-4ADE-A0DE-2B7ED1ACFF7F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bazel-wx", "bazel_vs\bazel-wx.vcxproj", "{77908F28-9071-48C0-B528-F20A3E086E4D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C660B3B1-EDB5-4664-BF2F-2773067E74BB}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -440,5 +445,8 @@ Global
 		{4913CBB4-2D7D-4D39-B3C2-1440EBFF3953} = {BB1BC8A6-CC11-4E1C-8E83-A105B5AB538C}
 		{32FDCB25-1CBD-4ADE-A0DE-2B7ED1ACFF7F} = {91EFE501-ADA9-439A-8DCF-43E71B95CBA5}
 		{77908F28-9071-48C0-B528-F20A3E086E4D} = {91EFE501-ADA9-439A-8DCF-43E71B95CBA5}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E4FB488F-E741-4208-A33A-D465F1B5AB76}
 	EndGlobalSection
 EndGlobal

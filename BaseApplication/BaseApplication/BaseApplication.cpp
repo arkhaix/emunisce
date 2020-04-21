@@ -465,8 +465,8 @@ void BaseApplication::AddConsoleCommand(const char* command, ConsoleCommandHandl
         return;
 
     string lowercaseCommand = command;
-    transform(lowercaseCommand.begin(), lowercaseCommand.end(), lowercaseCommand.begin(), ::tolower);
-    
+	transform(lowercaseCommand.begin(), lowercaseCommand.end(), lowercaseCommand.begin(), [](unsigned char c)->char{return (char) ::tolower(c);});
+
     strcpy_s(m_consoleCommands[m_numConsoleCommands].command, 16, lowercaseCommand.c_str());
     strcpy_s(m_consoleCommands[m_numConsoleCommands].helpText, 256, helpText);
     m_consoleCommands[m_numConsoleCommands].func = func;
@@ -475,17 +475,17 @@ void BaseApplication::AddConsoleCommand(const char* command, ConsoleCommandHandl
 
 	m_commandTrie->Add(command);
 }
-    
+
 unsigned int BaseApplication::NumConsoleCommands()
 {
-   return m_numConsoleCommands; 
+   return m_numConsoleCommands;
 }
 
 const char* BaseApplication::GetConsoleCommand(unsigned int index)
 {
     if(index >= m_numConsoleCommands)
         return nullptr;
-    
+
     return m_consoleCommands[index].command;
 }
 
@@ -516,7 +516,7 @@ bool BaseApplication::ExecuteConsoleCommand(const char* command)
 
     const char* commandName = splitCommand[0].c_str();
     string lowercaseCommandName = commandName;
-    transform(lowercaseCommandName.begin(), lowercaseCommandName.end(), lowercaseCommandName.begin(), ::tolower);
+	transform(lowercaseCommandName.begin(), lowercaseCommandName.end(), lowercaseCommandName.begin(), [](unsigned char c)->char{return (char) ::tolower(c);});
 
 	// Resolve to a full command name via the prefix tree
 	CommandTrie* node = m_commandTrie->GetNode(lowercaseCommandName.c_str());
@@ -634,12 +634,12 @@ void BaseApplication::CommandLoad(const char* /*params*/)
 
 void BaseApplication::CommandPause(const char* /*params*/)
 {
-    Pause();    
+    Pause();
     ConsolePrint("Emulation paused\n");
 }
 void BaseApplication::CommandRun(const char* /*params*/)
 {
-   Run(); 
+   Run();
    ConsolePrint("Emulation resumed\n");
 }
 
