@@ -1,14 +1,28 @@
 # Platform detection
 config_setting(
     name = "linux",
-    values = {"cpu": "k8"},
+    constraint_values = [
+        "@platforms//os:linux",
+    ],
     visibility = ["//visibility:public"],
 )
 
 config_setting(
     name = "windows",
-    values = {"cpu": "x64_windows"},
+    constraint_values = [
+        "@platforms//os:windows",
+    ],
     visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "distro_arch",
+    values = {"define": "distro=arch"},
+)
+
+config_setting(
+    name = "distro_debian",
+    values = {"define": "distro=debian"},
 )
 
 # Binaries
@@ -61,8 +75,11 @@ cc_library(
     visibility = ["//visibility:public"],
 
     deps = select({
+        "//:distro_arch": [
+            "@gl_arch//:gl"
+        ],
         "//:linux": [
-            "@gl_linux//:gl"
+            "@gl_debian//:gl"
         ],
         "//:windows": [
             "@win32//:gl"
@@ -75,10 +92,17 @@ cc_library(
     visibility = ["//visibility:public"],
 
     deps = select({
-        "//:linux": [
+        "//:distro_arch": [
+            "@wx_setup_arch//:wx_setup",
             "@wx_linux//:wx",
-            "@wx_linux_gtk//:wx_gtk",
-            "@wx_linux_gtk_libs//:wx_gtk_libs",
+            "@wx_arch_gtk//:wx_gtk",
+            "@wx_arch_gtk_libs//:wx_gtk_libs",
+        ],
+        "//:linux": [
+            "@wx_setup_debian//:wx_setup",
+            "@wx_linux//:wx",
+            "@wx_debian_gtk//:wx_gtk",
+            "@wx_debian_gtk_libs//:wx_gtk_libs",
         ],
         "//:windows": [
             "@wx_windows//:wx"
