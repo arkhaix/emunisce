@@ -15,7 +15,7 @@ script:
 
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get -y install libwxgtk3.0-dev libglew-dev
+  - sudo apt-get -y install libwxgtk3.0-gtk3-dev libglew-dev
   - |
     sysctl kernel.unprivileged_userns_clone=1
     OS=linux

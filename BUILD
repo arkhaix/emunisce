@@ -99,6 +99,7 @@ cc_library(
             "@wx_arch_gtk_libs//:wx_gtk_libs",
         ],
         "//:linux": [
+            "@wx_setup_debian//:wx_setup",
             "@wx_linux//:wx",
             "@wx_debian_gtk//:wx_gtk",
             "@wx_debian_gtk_libs//:wx_gtk_libs",
