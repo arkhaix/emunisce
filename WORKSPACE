@@ -105,7 +105,8 @@ cc_library(
     """
 )
 
-new_http_archive(
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+http_archive(
     name = "wx_windows",
     url = "https://storage.googleapis.com/arkhaix-emunisce/wxWidgets-3.0.3-binariesonly.zip",
     build_file_content = """
