@@ -27,6 +27,7 @@ using namespace Emunisce;
 
 Thread::Thread()
 {
+    m_isRunning = false;
 }
 
 Thread::~Thread()
