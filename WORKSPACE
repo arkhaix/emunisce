@@ -1,14 +1,23 @@
-new_local_repository(
-    name = "gl_linux",
-    path = "/usr/lib/x86_64-linux-gnu/",
-
-    build_file_content = """
+GL_BUILD = """
 cc_library(
     name = "gl",
     visibility = ["//visibility:public"],
     srcs = ["libGL.so","libGLEW.so"],
 )
     """
+
+new_local_repository(
+    name = "gl_debian",
+    path = "/usr/lib/x86_64-linux-gnu/",
+
+    build_file_content = GL_BUILD,
+)
+
+new_local_repository(
+    name = "gl_arch",
+    path = "/usr/lib/",
+
+    build_file_content = GL_BUILD,
 )
 
 new_local_repository(
@@ -65,11 +74,27 @@ cc_library(
     """
 )
 
-new_local_repository(
-    name = "wx_linux_gtk",
-    path = "/usr/lib/x86_64-linux-gnu/wx/include/gtk2-unicode-3.0",
+WX_SETUP_BUILD = """
+cc_library(
+    name = "wx_setup",
+    visibility = ["//visibility:public"],
+    hdrs = glob([
+        "wx/*.h",
+        "wx/**/*.h",
+    ]),
 
-    build_file_content = """
+    includes = ["."],
+)
+"""
+
+new_local_repository(
+    name = "wx_setup_arch",
+    path = "/usr/lib/wx/include/gtk2-unicode-3.0",
+
+    build_file_content = WX_SETUP_BUILD,
+)
+
+GTK_BUILD = """
 cc_library(
     name = "wx_gtk",
     visibility = ["//visibility:public"],
@@ -80,13 +105,23 @@ cc_library(
 
     includes = ["."],
 )
-    """
+"""
+
+new_local_repository(
+    name = "wx_debian_gtk",
+    path = "/usr/lib/x86_64-linux-gnu/",
+
+    build_file_content = GTK_BUILD,
 )
 
 new_local_repository(
-    name = "wx_linux_gtk_libs",
-    path = "/usr/lib/x86_64-linux-gnu",
-    build_file_content = """
+    name = "wx_arch_gtk",
+    path = "/usr/lib/",
+
+    build_file_content = GTK_BUILD,
+)
+
+GTK_LIBS_BUILD = """
 cc_library(
     name = "wx_gtk_libs",
     visibility = ["//visibility:public"],
@@ -102,7 +137,18 @@ cc_library(
         "libwx_baseu-3.0.so",
     ],
 )
-    """
+"""
+
+new_local_repository(
+    name = "wx_debian_gtk_libs",
+    path = "/usr/lib/x86_64-linux-gnu/",
+    build_file_content = GTK_LIBS_BUILD,
+)
+
+new_local_repository(
+    name = "wx_arch_gtk_libs",
+    path = "/usr/lib/",
+    build_file_content = GTK_LIBS_BUILD,
 )
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
