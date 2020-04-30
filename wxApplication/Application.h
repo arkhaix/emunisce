@@ -26,7 +26,6 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "OpenGLRenderer/OpenGLRenderer.h"
 
 #include <string>
-using namespace std;
 
 
 namespace Emunisce
@@ -106,12 +105,12 @@ protected:
     Archive* OpenFileArchive(const char* filename, bool saving);
 	void ReleaseArchive(Archive* archive);
 
-	string GetDataFolder();
+	std::string GetDataFolder();
 
-	string GetSaveStateFile(const char* name);
-	string GetRomDataFile(const char* name);
-	string GetMovieFile(const char* name);
-	string GetMacroFile(const char* name);
+	std::string GetSaveStateFile(const char* name);
+	std::string GetRomDataFile(const char* name);
+	std::string GetMovieFile(const char* name);
+	std::string GetMacroFile(const char* name);
 
 
 	// Input

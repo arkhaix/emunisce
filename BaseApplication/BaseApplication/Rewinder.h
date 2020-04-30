@@ -26,7 +26,6 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <list>
 #include <vector>
-using namespace std;
 
 
 namespace Emunisce
@@ -152,11 +151,11 @@ protected:
 	};
 
 	static const unsigned int m_maxSegments = 60;	///<Keep 60 seconds of rewind history
-	vector<Segment*> m_segments;
+	std::vector<Segment*> m_segments;
 	unsigned int m_playingSegment;
 
-	list<CachedFrame> m_frameHistory;
-	list<CachedFrame>::iterator m_playbackFrame;
+	std::list<CachedFrame> m_frameHistory;
+	std::list<CachedFrame>::iterator m_playbackFrame;
 	static const unsigned int m_maxFrameHistorySize = Segment::FramesPerSegment;
 	Mutex m_frameHistoryLock;
 

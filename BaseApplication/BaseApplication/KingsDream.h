@@ -29,7 +29,6 @@ I don't know if he was the original creator.  No license was specified.
 
 #include <algorithm>
 #include <list>
-using namespace std;
 
 namespace Emunisce
 {
@@ -96,7 +95,7 @@ private:
 	float m_x, m_y;
 	float m_a, m_b, m_c, m_d;
 
-	list< pair<float, float> > m_skipRanges;
+	std::list< std::pair<float, float> > m_skipRanges;
 };
 
 }	//namespace Emunsice

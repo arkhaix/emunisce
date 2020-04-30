@@ -23,7 +23,6 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <map>
 #include <string>
-using namespace std;
 
 
 namespace Emunisce
@@ -60,9 +59,9 @@ private:
 	IEmulatedMachine* m_machine;
 	IEmulatedInput* m_input;
 
-	multimap<string, int> m_nameKeyMap;
-	map<int, unsigned int> m_keyMap;		///<Built from _NameKeyMap
-	map<int, bool> m_keyStates;
+	std::multimap<std::string, int> m_nameKeyMap;
+	std::map<int, unsigned int> m_keyMap;		///<Built from _NameKeyMap
+	std::map<int, bool> m_keyStates;
 };
 
 }	//namespace Emunisce

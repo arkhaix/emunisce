@@ -24,7 +24,6 @@ using namespace Emunisce;
 #include <cstring>
 #include <fstream>
 #include <memory.h>
-using namespace std;
 
 #include "Serialization/SerializationIncludes.h"
 
@@ -149,7 +148,7 @@ bool Mbc1::LoadFile(const char* filename)
 {
 	//Open the file
 
-	ifstream ifile(filename, ios::in | ios::binary);
+	std::ifstream ifile(filename, std::ios::in | std::ios::binary);
 
 	if(ifile.fail() || ifile.eof() || !ifile.good())
 		return false;

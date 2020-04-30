@@ -30,7 +30,6 @@ using namespace Emunisce;
 #include <iostream>
 #include <string>
 #include <vector>
-using namespace std;
 
 //CRT
 #include <conio.h>
@@ -157,7 +156,7 @@ void ConsoleDebugger::UpdateDisplay()
 
 void ConsoleDebugger::FetchCommand()
 {
-	string line = "";
+	std::string line = "";
 	printf("\n> ");
 
 	// Save the cursor position so we can modify the color later
@@ -169,8 +168,8 @@ void ConsoleDebugger::FetchCommand()
 	//getline(cin, line);
 	line = FetchLine();
 
-	vector<string> splitLine = SplitCommand(line);
-	string commandText = "";
+	std::vector<std::string> splitLine = SplitCommand(line);
+	std::string commandText = "";
 	if (!splitLine.empty())
 	{
 		commandText = splitLine[0];
@@ -210,7 +209,7 @@ void ConsoleDebugger::FetchCommand()
 
 #else
 
-	vector<string> args = SplitCommand(line);
+	std::vector<std::string> args = SplitCommand(line);
 	if(args.empty())
 		return;
 
@@ -356,9 +355,9 @@ void ConsoleDebugger::FetchCommand()
 #endif
 }
 
-string ConsoleDebugger::FetchLine()
+std::string ConsoleDebugger::FetchLine()
 {
-	string result = "";
+	std::string result = "";
 
 	HANDLE hStdIn = GetStdHandle(STD_INPUT_HANDLE);
 	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -372,7 +371,7 @@ string ConsoleDebugger::FetchLine()
 	DWORD numEventsRead = 0;
 
 	bool autoCompleteMode = false;
-	vector<string> autoCompleteOptions;
+	std::vector<std::string> autoCompleteOptions;
 	unsigned int autoCompleteIndex = 0;
 
 	bool keepReading = true;
@@ -480,9 +479,9 @@ string ConsoleDebugger::FetchLine()
 	return result;
 }
 
-vector<string> ConsoleDebugger::SplitCommand(string command)
+std::vector<std::string> ConsoleDebugger::SplitCommand(std::string command)
 {
-	vector<string> result;
+	std::vector<std::string> result;
 
 	char* input = const_cast<char*>(command.c_str());
 	const char* separators = " \t\n";
@@ -492,7 +491,7 @@ vector<string> ConsoleDebugger::SplitCommand(string command)
 	token = strtok_s(input, separators, &context);
 	while(token != nullptr)
 	{
-		result.push_back(string(token));
+		result.push_back(std::string(token));
 		token = strtok_s(nullptr, separators, &context);
 	}
 

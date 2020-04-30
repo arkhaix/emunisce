@@ -25,7 +25,6 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include <set>
 #include <string>
 #include <vector>
-using namespace std;
 
 #include "MachineIncludes.h"
 
@@ -61,9 +60,9 @@ private:
 
 	void UpdateDisplay();
 	void FetchCommand();
-	string FetchLine();
+	std::string FetchLine();
 
-	vector<string> SplitCommand(string command);
+	std::vector<std::string> SplitCommand(std::string command);
 
 
 	//Commands
@@ -123,11 +122,11 @@ private:
 	IEmulatedDisplay* m_display;
 	IEmulatedMemory* m_memory;
 
-	string m_lastFileLoaded;
+	std::string m_lastFileLoaded;
 	int m_frameTicksRemaining;
 
 	bool m_breakpointsEnabled;
-	set<u16> m_breakpoints;
+	std::set<u16> m_breakpoints;
 
 	bool m_muteSound;
 

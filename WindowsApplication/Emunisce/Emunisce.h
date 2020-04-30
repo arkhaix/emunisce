@@ -31,7 +31,6 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "../WindowsPlatform/Window.h"
 
 #include <string>
-using namespace std;
 
 
 namespace Emunisce
@@ -117,23 +116,23 @@ private:
 
 	// Persistence
 
-	string GetDataFolder();
+	std::string GetDataFolder();
 
-	string GetBaseSaveStateFolder();
-	string GetCurrentSaveStateFolder();
-	string GetCurrentSaveStateFile(const char* id);
+	std::string GetBaseSaveStateFolder();
+	std::string GetCurrentSaveStateFolder();
+	std::string GetCurrentSaveStateFile(const char* id);
 
-	string GetBaseRomDataFolder();
-	string GetCurrentRomDataFolder();
-	string GetCurrentRomDataFile(const char* name);
+	std::string GetBaseRomDataFolder();
+	std::string GetCurrentRomDataFolder();
+	std::string GetCurrentRomDataFile(const char* name);
 
-	string GetBaseMovieFolder();
-	string GetCurrentMovieFolder();
-	string GetCurrentMovieFile(const char* name);
+	std::string GetBaseMovieFolder();
+	std::string GetCurrentMovieFolder();
+	std::string GetCurrentMovieFile(const char* name);
 
-	string GetBaseMacroFolder();
-	string GetCurrentMacroFolder();
-	string GetCurrentMacroFile(const char* name);
+	std::string GetBaseMacroFolder();
+	std::string GetCurrentMacroFolder();
+	std::string GetCurrentMacroFile(const char* name);
 
 
 	// Input

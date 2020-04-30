@@ -149,8 +149,8 @@ void Rewinder::Segment::CacheFrame()
 		//Reverse the audio
 		for(unsigned int i=0;i<frame.Audio.NumSamples/2;i++)
 		{
-			swap(frame.Audio.Samples[0][i], frame.Audio.Samples[0][ frame.Audio.NumSamples-i-1 ]);
-			swap(frame.Audio.Samples[1][i], frame.Audio.Samples[1][ frame.Audio.NumSamples-i-1 ]);
+			std::swap(frame.Audio.Samples[0][i], frame.Audio.Samples[0][ frame.Audio.NumSamples-i-1 ]);
+			std::swap(frame.Audio.Samples[1][i], frame.Audio.Samples[1][ frame.Audio.NumSamples-i-1 ]);
 		}
 
 		m_numFramesCached++;

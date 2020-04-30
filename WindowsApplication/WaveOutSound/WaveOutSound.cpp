@@ -29,7 +29,6 @@ using namespace Emunisce;
 
 #include <iostream>
 #include <queue>
-using namespace std;
 
 
 namespace Emunisce
@@ -61,8 +60,8 @@ public:
 
 	HANDLE _PlaybackThreadHandle;
 
-	queue<AudioBuffer> _PendingBufferQueue;
-	queue<bool> _PendingBufferIsOverflow;
+	std::queue<AudioBuffer> _PendingBufferQueue;
+	std::queue<bool> _PendingBufferIsOverflow;
 	CRITICAL_SECTION _PendingBufferQueueLock;
 	HANDLE _MonitorThreadHandle;
 

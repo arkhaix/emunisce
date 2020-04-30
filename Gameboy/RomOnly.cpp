@@ -23,12 +23,11 @@ using namespace Emunisce;
 #include <cstdlib>
 
 #include <fstream>
-using namespace std;
 
 
 bool RomOnly::LoadFile(const char* filename)
 {
-	ifstream ifile(filename, ios::in | ios::binary);
+	std::ifstream ifile(filename, std::ios::in | std::ios::binary);
 
 	if(ifile.fail() || ifile.eof() || !ifile.good())
 		return false;

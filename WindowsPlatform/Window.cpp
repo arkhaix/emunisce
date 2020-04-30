@@ -24,7 +24,7 @@ using namespace Emunisce;
 #include <cstdio>
 
 
-map<HWND, Window*> Window::m_hwndInstanceMap;
+std::map<HWND, Window*> Window::m_hwndInstanceMap;
 Mutex Window::m_hwndInstanceMapLock;
 
 

@@ -25,7 +25,6 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include <list>
 #include <map>
 #include <set>
-using namespace std;
 
 #include "Window.h"
 #include "Mutex.h"
@@ -90,7 +89,7 @@ namespace Emunisce
 	private:
 
 		static LRESULT CALLBACK StaticWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-		static map<HWND, Window*> m_hwndInstanceMap;
+		static std::map<HWND, Window*> m_hwndInstanceMap;
 		static Mutex m_hwndInstanceMapLock;
 
 		LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -103,7 +102,7 @@ namespace Emunisce
 		WindowSize m_size;
 		WindowPosition m_position;
 
-		list<IWindowMessageListener*> m_listeners;
+		std::list<IWindowMessageListener*> m_listeners;
 		Mutex m_listenersLock;
 	};
 

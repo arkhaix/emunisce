@@ -25,7 +25,6 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include <map>
 #include <queue>
 #include <vector>
-using namespace std;
 
 
 namespace Emunisce
@@ -41,7 +40,7 @@ public:
 
 	InputRecording();
 	~InputRecording() override;
-	
+
 	void SerializeHistory(Archive& archive);
 	void SerializeMovie(Archive& archive);
 
@@ -87,13 +86,13 @@ private:
 
 	static const unsigned int m_defaultEventIdOffset = 0x01000000;	///<Each application component that uses events will have a unique offset.  They're allocated sequentially in the high byte.
 	unsigned int m_eventIdOffset;
-	vector<InputEvent> m_inputHistory;
+	std::vector<InputEvent> m_inputHistory;
 	unsigned char* m_startState;
 	unsigned int m_startStateSize;
 
-	map<unsigned int, bool> m_isButtonDown;
+	std::map<unsigned int, bool> m_isButtonDown;
 
-	queue<InputEvent> m_pendingEvents;
+	std::queue<InputEvent> m_pendingEvents;
 };
 
 }	//namespace Emunisce
