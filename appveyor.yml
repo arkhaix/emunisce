@@ -24,7 +24,7 @@ configuration:
 #- Bazel Win32 Debug
 #- Bazel Win32 Release
 #- Bazel wx Debug
-- Bazel wx Release
+#- Bazel wx Release
 
 platform: x64
 
