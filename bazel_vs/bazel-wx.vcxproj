@@ -69,7 +69,6 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{77908F28-9071-48C0-B528-F20A3E086E4D}</ProjectGuid>
     <RootNamespace>bazel-wx</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
     <ProjectName>bazel-wx</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
