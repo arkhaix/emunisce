@@ -548,6 +548,7 @@ void Rewinder::RunToNextFrame()
 			{
 				delete m_segments[0];
 				m_segments.erase(m_segments.begin());
+				lastSegmentIndex = (unsigned int)m_segments.size()-1;
 			}
 		}
 

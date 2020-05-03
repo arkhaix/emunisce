@@ -22,6 +22,9 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "PlatformIncludes.h"
 
+#include <condition_variable>
+#include <mutex>
+
 
 namespace Emunisce
 {
@@ -100,7 +103,9 @@ protected:
 	bool m_shutdownRequested;
 	bool m_waitRequested;
 	bool m_waiting;
-	Event m_waitEvent;
+	std::mutex m_waitMutex;
+	std::condition_variable m_waitCondition;
+	bool m_waitSignalled;
 
 	StepMode::Type m_stepMode;
 

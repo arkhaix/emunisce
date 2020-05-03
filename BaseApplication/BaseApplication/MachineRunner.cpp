@@ -24,13 +24,13 @@ using namespace Emunisce;
 
 
 MachineRunner::MachineRunner()
-: m_waitEvent(true)
 {
 	m_machine = nullptr;
 
 	m_shutdownRequested = false;
 	m_waitRequested = true;
 	m_waiting = false;
+	m_waitSignalled = false;
 
 	m_emulationSpeed = 1.f;
 
@@ -57,7 +57,9 @@ void MachineRunner::Shutdown()
 		m_shutdownRequested = true;
 
 		m_waitRequested = false;
-		m_waitEvent.Set();
+		std::lock_guard<std::mutex> lock(m_waitMutex);
+		m_waitSignalled = true;
+		m_waitCondition.notify_all();
 
 		m_runnerThread.Join(1000);
 	}
@@ -90,7 +92,9 @@ void MachineRunner::Run()
 	m_stepMode = StepMode::Frame;
 
 	m_waitRequested = false;
-	m_waitEvent.Set();
+	std::lock_guard<std::mutex> lock(m_waitMutex);
+	m_waitSignalled = true;
+	m_waitCondition.notify_all();
 }
 
 void MachineRunner::Pause()
@@ -118,7 +122,9 @@ void MachineRunner::StepInstruction()
 	m_stepMode = StepMode::Instruction;
 
 	m_waitRequested = true;
-	m_waitEvent.Set();
+	std::lock_guard<std::mutex> lock(m_waitMutex);
+	m_waitSignalled = true;
+	m_waitCondition.notify_all();
 }
 
 void MachineRunner::StepFrame()
@@ -128,7 +134,9 @@ void MachineRunner::StepFrame()
 	m_stepMode = StepMode::Frame;
 
 	m_waitRequested = true;
-	m_waitEvent.Set();
+	std::lock_guard<std::mutex> lock(m_waitMutex);
+	m_waitSignalled = true;
+	m_waitCondition.notify_all();
 }
 
 
@@ -140,7 +148,11 @@ int MachineRunner::RunnerThread()
 		if(m_waitRequested == true)
 		{
 			m_waiting = true;
-			m_waitEvent.Wait();
+			{
+				std::unique_lock<std::mutex> lock(m_waitMutex);
+				m_waitCondition.wait(lock);
+				m_waitSignalled = false;
+			}
 			ResetSynchronizationState();
 			m_waiting = false;
 		}
