@@ -189,13 +189,13 @@ void MachineRunner::Synchronize()
 	//Note: This function assumes it's being called 60 times per second (defined by CountsPerFrame).
 	//		It will synchronize itself to that rate.
 
-    m_syncState.CurrentRealTime = Time::Now();
-	m_syncState.CurrentMachineTime.AddMilliseconds(m_syncState.MillisecondsPerFrame * (1.f / m_emulationSpeed));
+    m_syncState.CurrentRealTime = clock::now();
+	m_syncState.CurrentMachineTime += std::chrono::milliseconds((long long)(m_syncState.MillisecondsPerFrame * (1.f / m_emulationSpeed)));
 
-	m_syncState.ElapsedRealTime.SetTotalMilliseconds(m_syncState.CurrentRealTime.GetTotalMilliseconds() - m_syncState.RunStartTime.GetTotalMilliseconds());
-	m_syncState.ElapsedMachineTime.SetTotalMilliseconds(m_syncState.CurrentMachineTime.GetTotalMilliseconds() - m_syncState.RunStartTime.GetTotalMilliseconds());
+	m_syncState.ElapsedRealTime = m_syncState.CurrentRealTime - m_syncState.RunStartTime;
+	m_syncState.ElapsedMachineTime = m_syncState.CurrentMachineTime - m_syncState.RunStartTime;
 
-    float millisecondsAhead = m_syncState.ElapsedMachineTime.GetTotalMilliseconds() - m_syncState.ElapsedRealTime.GetTotalMilliseconds();
+    auto millisecondsAhead = std::chrono::duration_cast<std::chrono::milliseconds>(m_syncState.ElapsedMachineTime - m_syncState.ElapsedRealTime).count();
 
     if(millisecondsAhead <= 0)
 	{
@@ -211,7 +211,7 @@ void MachineRunner::Synchronize()
 	//Using a high value (greater than ~50 or so) may result in noticeable jitter.
 	if(millisecondsAhead >= 5)
 	{
-	    Thread::Sleep((unsigned int)(millisecondsAhead+0.5f));
+	    Thread::Sleep((unsigned int)millisecondsAhead);
 	}
 
 	return;
@@ -219,13 +219,14 @@ void MachineRunner::Synchronize()
 
 void MachineRunner::ResetSynchronizationState()
 {
-    Time now = Time::Now();
+	auto now = clock::now();
 
     m_syncState.RunStartTime = now;
 
     m_syncState.CurrentRealTime = now;
     m_syncState.CurrentMachineTime = now;
 
-    m_syncState.ElapsedRealTime.Zero();
-    m_syncState.ElapsedMachineTime.Zero();
+    m_syncState.ElapsedRealTime.zero();
+    m_syncState.ElapsedMachineTime.zero();
 }
+

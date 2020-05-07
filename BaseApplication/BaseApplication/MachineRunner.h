@@ -22,6 +22,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "PlatformIncludes.h"
 
+#include <chrono>
 #include <condition_variable>
 #include <mutex>
 
@@ -111,17 +112,18 @@ protected:
 
 	float m_emulationSpeed;
 
+	typedef std::chrono::steady_clock clock;
 	struct SynchronizationInfo
 	{
 		float MillisecondsPerFrame;
 
-		Time RunStartTime;
+		clock::time_point RunStartTime;
 
-		Time CurrentRealTime;
-		Time CurrentMachineTime;
+		clock::time_point CurrentRealTime;
+		clock::time_point CurrentMachineTime;
 
-		Time ElapsedRealTime;
-		Time ElapsedMachineTime;
+		clock::duration ElapsedRealTime;
+		clock::duration ElapsedMachineTime;
 	};
 
 	SynchronizationInfo m_syncState;
