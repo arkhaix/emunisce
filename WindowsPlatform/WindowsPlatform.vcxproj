@@ -69,7 +69,6 @@
   <ItemGroup>
     <ClCompile Include="Mutex.cpp" />
     <ClCompile Include="Thread.cpp" />
-    <ClCompile Include="Timing.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -79,7 +78,6 @@
     <ClInclude Include="PlatformTypes.h" />
     <ClInclude Include="SecureCrt.h" />
     <ClInclude Include="Thread.h" />
-    <ClInclude Include="Timing.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
