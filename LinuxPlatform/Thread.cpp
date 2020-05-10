@@ -20,10 +20,10 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "Thread.h"
 using namespace Emunisce;
 
-#include "Timing.h"
-
 #include <unistd.h>
 
+#include <chrono>
+#include <thread>
 
 Thread::Thread()
 {
@@ -116,17 +116,6 @@ void Thread::StaticCleanup(void* param)
 
 void Thread::Sleep(unsigned int milliseconds)
 {
-    Time startTime = Time::Now();
-
-    float elapsedMilliseconds = 0.f;
-
-    do
-    {
-        usleep(1000);
-        pthread_yield();
-
-        elapsedMilliseconds = Time::Now().GetTotalMilliseconds() - startTime.GetTotalMilliseconds();
-
-    }   while((unsigned int)elapsedMilliseconds < milliseconds);
+    std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
 }
 

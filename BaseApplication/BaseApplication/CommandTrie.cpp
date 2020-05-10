@@ -1,6 +1,7 @@
 #include "CommandTrie.h"
 using namespace Emunisce;
 
+#include <cstring> //strlen
 #include <string>
 #include <vector>
 
