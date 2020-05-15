@@ -37,25 +37,6 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #define _stricmp strcasecmp
 
 
-inline int freopen_s(FILE** outFile, const char* path, const char* mode, FILE* stream)
-{
-    //todo
-
-    FILE* result = freopen(path, mode, stream);
-
-    if(outFile != nullptr)
-        *outFile = result;
-
-    return 0;
-}
-
-inline int strcat_s(char* destination, unsigned int sizeBytes, const char* source)
-{
-    //todo
-    strcat(destination, source);
-    return 0;
-}
-
 inline int strcpy_s(char* destination, unsigned int sizeBytes, const char* source)
 {
     if(destination == nullptr)

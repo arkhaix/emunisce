@@ -156,9 +156,8 @@ bool Mbc1::LoadFile(const char* filename)
 
 	//Save the filename
 
-	strcpy_s(m_romFilename, 1024, filename);
-	strcpy_s(m_sramFilename, 1024, filename);
-	strcat_s(m_sramFilename, 1024, ".sram");
+	m_romFilename = filename;
+	m_sramFilename = filename + ".sram";
 
 
 	//Load all the banks
