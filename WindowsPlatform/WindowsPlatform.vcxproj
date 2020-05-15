@@ -67,7 +67,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Thread.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -75,7 +74,6 @@
     <ClInclude Include="PlatformIncludes.h" />
     <ClInclude Include="PlatformTypes.h" />
     <ClInclude Include="SecureCrt.h" />
-    <ClInclude Include="Thread.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -14,9 +14,6 @@
     <ClCompile Include="Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Thread.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PlatformTypes.h">
@@ -32,9 +29,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PlatformDefines.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Thread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

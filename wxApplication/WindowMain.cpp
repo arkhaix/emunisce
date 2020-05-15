@@ -103,7 +103,7 @@ void WindowMain::OnEraseBackground(wxEraseEvent& event)
 void WindowMain::OnIdle(wxIdleEvent &event)
 {
     Refresh();
-	Thread::Sleep(1);
+	std::this_thread::yield();
 }
 
 

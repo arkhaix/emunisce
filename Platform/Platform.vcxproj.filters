@@ -20,9 +20,6 @@
     <ClInclude Include="SecureCrt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Thread.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PlatformIncludes.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -45,23 +45,27 @@ MachineRunner::MachineRunner()
 
 void MachineRunner::Initialize()
 {
-	m_runnerThread.Start((void*)this);
+	m_runnerThread = std::thread([this] {
+		this->RunnerThread();
+	});
 }
 
 void MachineRunner::Shutdown()
 {
-	if(m_runnerThread.IsRunning())
+	if(m_runnerThread.joinable())
 	{
 		Pause();
 
 		m_shutdownRequested = true;
 
 		m_waitRequested = false;
-		std::lock_guard<std::mutex> lock(m_waitMutex);
-		m_waitSignalled = true;
-		m_waitCondition.notify_all();
+		{
+			std::lock_guard<std::mutex> lock(m_waitMutex);
+			m_waitSignalled = true;
+			m_waitCondition.notify_all();
+		}
 
-		m_runnerThread.Join(1000);
+		m_runnerThread.join();
 	}
 }
 
@@ -99,13 +103,14 @@ void MachineRunner::Run()
 
 void MachineRunner::Pause()
 {
-	if(m_runnerThread.IsCallingThread())
+	if (std::this_thread::get_id() == m_runnerThread.get_id()) {
 		return;
+	}
 
 	while(m_waiting == false)
 	{
 		m_waitRequested = true;
-		Thread::Sleep(1);
+		std::this_thread::yield();
 	}
 }
 
@@ -150,7 +155,10 @@ int MachineRunner::RunnerThread()
 			m_waiting = true;
 			{
 				std::unique_lock<std::mutex> lock(m_waitMutex);
-				m_waitCondition.wait(lock);
+				while (m_waitSignalled == false)
+				{
+					m_waitCondition.wait(lock);
+				}
 				m_waitSignalled = false;
 			}
 			ResetSynchronizationState();
@@ -162,7 +170,7 @@ int MachineRunner::RunnerThread()
 
 		if(m_machine == nullptr)
 		{
-		    Thread::Sleep(250);
+			std::this_thread::sleep_for(std::chrono::milliseconds(250));
 			continue;
 		}
 
@@ -211,7 +219,7 @@ void MachineRunner::Synchronize()
 	//Using a high value (greater than ~50 or so) may result in noticeable jitter.
 	if(millisecondsAhead >= 5)
 	{
-	    Thread::Sleep((unsigned int)millisecondsAhead);
+	    std::this_thread::sleep_for(std::chrono::milliseconds(millisecondsAhead));
 	}
 
 	return;

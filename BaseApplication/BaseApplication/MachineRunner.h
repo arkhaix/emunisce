@@ -25,6 +25,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include <chrono>
 #include <condition_variable>
 #include <mutex>
+#include <thread>
 
 
 namespace Emunisce
@@ -79,23 +80,7 @@ protected:
 
 	IEmulatedMachine* m_machine;
 
-	class Thread_Runner : public Thread
-	{
-	public:
-
-		void EntryPoint(void* param) override
-		{
-			MachineRunner* instance = (MachineRunner*)param;
-			if(instance == nullptr)
-				return;
-
-			instance->RunnerThread();
-		}
-
-		void StopRequested() override { /* Use MachineRunner::Shutdown() instead */ }
-	};
-
-	Thread_Runner m_runnerThread;
+	std::thread m_runnerThread;
 	int RunnerThread();
 
 	void Synchronize();
