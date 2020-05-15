@@ -25,7 +25,7 @@ using namespace Emunisce;
 
 
 std::map<HWND, Window*> Window::m_hwndInstanceMap;
-Mutex Window::m_hwndInstanceMapLock;
+std::mutex Window::m_hwndInstanceMapLock;
 
 
 Window::Window()
@@ -84,9 +84,10 @@ void Window::Create(int width, int height, const char* title, const char* classN
 
 	if(m_windowHandle != nullptr)
 	{
-		m_hwndInstanceMapLock.Acquire();
-		m_hwndInstanceMap[m_windowHandle] = this;
-		m_hwndInstanceMapLock.Release();
+		{
+			std::lock_guard<std::mutex> instanceMapLock(m_hwndInstanceMapLock);
+			m_hwndInstanceMap[m_windowHandle] = this;
+		}
 
 		RECT windowRect;
 		GetWindowRect(m_windowHandle, &windowRect);
@@ -105,11 +106,12 @@ void Window::Destroy()
 	CloseWindow(m_windowHandle);
 	DestroyWindow(m_windowHandle);
 
-	m_hwndInstanceMapLock.Acquire();
-	auto iter = m_hwndInstanceMap.find(m_windowHandle);
-	if(iter != m_hwndInstanceMap.end())
-		m_hwndInstanceMap.erase(iter);
-	m_hwndInstanceMapLock.Release();
+	{
+		std::lock_guard<std::mutex> instanceMapLock(m_hwndInstanceMapLock);
+		auto iter = m_hwndInstanceMap.find(m_windowHandle);
+		if (iter != m_hwndInstanceMap.end())
+			m_hwndInstanceMap.erase(iter);
+	}
 
 	m_windowHandle = nullptr;
 	m_needsDestroy = false;
@@ -135,7 +137,7 @@ void* Window::GetHandle()
 
 void Window::SubscribeListener(IWindowMessageListener* listener)
 {
-	ScopedMutex scopedMutex(m_listenersLock);
+	std::lock_guard<std::recursive_mutex> scopedLock(m_listenersLock);
 
 	auto iter = find(m_listeners.begin(), m_listeners.end(), listener);
 	if(iter == m_listeners.end())
@@ -144,7 +146,7 @@ void Window::SubscribeListener(IWindowMessageListener* listener)
 
 void Window::UnsubscribeListener(IWindowMessageListener* listener)
 {
-	ScopedMutex scopedMutex(m_listenersLock);
+	std::lock_guard<std::recursive_mutex> scopedLock(m_listenersLock);
 
 	auto iter = find(m_listeners.begin(), m_listeners.end(), listener);
 	if(iter == m_listeners.end())
@@ -163,7 +165,7 @@ void Window::PumpMessages()
 	{
 		if(msg.message == WM_QUIT)
 		{
-			ScopedMutex scopedMutex(m_listenersLock);
+			std::lock_guard<std::recursive_mutex> scopedLock(m_listenersLock);
 			for(auto iter = m_listeners.begin(); iter != m_listeners.end(); ++iter)
 				(*iter)->Closed();
 
@@ -228,7 +230,7 @@ LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 
 	case WM_PAINT:
 		{
-			ScopedMutex scopedMutex(m_listenersLock);
+			std::lock_guard<std::recursive_mutex> scopedLock(m_listenersLock);
 			for(auto iter = m_listeners.begin(); iter != m_listeners.end(); ++iter)
 				(*iter)->Draw();
 
@@ -242,7 +244,7 @@ LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 
 	case WM_KEYDOWN:
 		{
-			ScopedMutex scopedMutex(m_listenersLock);
+			std::lock_guard<std::recursive_mutex> scopedLock(m_listenersLock);
 			for(auto iter = m_listeners.begin(); iter != m_listeners.end(); ++iter)
 				(*iter)->KeyDown((int)wParam);
 			return 0;
@@ -250,7 +252,7 @@ LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 
 	case WM_KEYUP:
 		{
-			ScopedMutex scopedMutex(m_listenersLock);
+			std::lock_guard<std::recursive_mutex> scopedLock(m_listenersLock);
 			for(auto iter = m_listeners.begin(); iter != m_listeners.end(); ++iter)
 				(*iter)->KeyUp((int)wParam);
 			return 0;
@@ -258,7 +260,7 @@ LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 
 	case WM_SIZE:
 		{
-			ScopedMutex scopedMutex(m_listenersLock);
+			std::lock_guard<std::recursive_mutex> scopedLock(m_listenersLock);
 
 			RECT clientRect;
 			GetClientRect(m_windowHandle, &clientRect);

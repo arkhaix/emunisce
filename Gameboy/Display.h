@@ -20,6 +20,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+#include <mutex>
+
 #include "PlatformIncludes.h"
 
 #include "MachineIncludes.h"
@@ -133,7 +135,7 @@ private:
 
 	GameboyScreenBuffer m_screenBufferCopy;
 	int m_screenBufferCopyId;
-	Mutex m_screenBufferLock;
+	std::mutex m_screenBufferLock;
 
 	DisplayPixel m_displayPalette[4];	///<Maps 2-bit pixel values to DisplayPixel values
 

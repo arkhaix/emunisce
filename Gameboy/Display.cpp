@@ -86,10 +86,11 @@ ScreenBuffer* Display::GetStableScreenBuffer()
 	if(m_screenBufferCopyId == m_screenBufferCount)
 		return &m_screenBufferCopy;
 
-	m_screenBufferLock.Acquire();
+	{
+		std::lock_guard<std::mutex> scopedLock(m_screenBufferLock);
 		m_screenBufferCopy = *m_stableScreenBuffer;
 		m_screenBufferCopyId = m_screenBufferCount;
-	m_screenBufferLock.Release();
+	}
 
 	return &m_screenBufferCopy;
 }
@@ -119,7 +120,7 @@ void Display::SetMachine(Gameboy* machine)
 	m_memory->SetRegisterLocation(0x49, &m_spritePalette1, true);
 	m_memory->SetRegisterLocation(0x4a, &m_windowY, true);
 	m_memory->SetRegisterLocation(0x4b, &m_windowX, true);
-	
+
 	m_memory->SetRegisterLocation(0x68, &m_cgbBackgroundPaletteIndex, false);
 	m_memory->SetRegisterLocation(0x69, &m_cgbBackgroundPaletteData, false);
 	m_memory->SetRegisterLocation(0x6a, &m_cgbSpritePaletteIndex, false);
@@ -259,7 +260,7 @@ void Display::Serialize(Archive& archive)
 
 void Display::WriteVram(int bank, u16 address, u8 value)
 {
-	//This shouldn't be here since Memory handles the actual write, but it has to 
+	//This shouldn't be here since Memory handles the actual write, but it has to
 	// be here for now because UpdateTileData assumes the value has already been written.
 	u8* vram = m_memory->GetVram(bank);
 	vram[address - 0x8000] = value;
@@ -466,7 +467,7 @@ void Display::SetCgbSpritePaletteData(u8 value)
 	{
 		m_cgbSpritePaletteIndex++;
 		m_cgbSpritePaletteIndex &= ~(0x40);	///<clears bit 6 (which is unusable) so we don't overflow
-		
+
 		SetCgbSpritePaletteTarget(m_cgbSpritePaletteIndex); ///<Update m_cgbSpritePaletteData
 	}
 }
@@ -596,13 +597,14 @@ void Display::Run_VBlank(int ticks)
 	if(m_stateTicksRemaining <= ticks)
 	{
 		//Swap buffers
-		m_screenBufferLock.Acquire();
+		{
+			std::lock_guard<std::mutex> scopedLock(m_screenBufferLock);
 			GameboyScreenBuffer* temp = m_stableScreenBuffer;
 			m_stableScreenBuffer = m_activeScreenBuffer;
 			m_activeScreenBuffer = temp;
 
 			m_screenBufferCount++;
-		m_screenBufferLock.Release();
+		}
 
 		//Clear caches
 		for(int y=0;y<144;y++)

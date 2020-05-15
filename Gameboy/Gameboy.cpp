@@ -49,7 +49,7 @@ void Gameboy::SetApplicationInterface(IMachineToApplication* applicationInterfac
 
 void Gameboy::AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount)
 {
-	ScopedMutex scopedLock(m_applicationEventsLock);
+	std::lock_guard<std::mutex> scopedLock(m_applicationEventsLock);
 
 	if(relativeFrameCount == true)
 	{
@@ -69,7 +69,7 @@ void Gameboy::AddApplicationEvent(ApplicationEvent& applicationEvent, bool relat
 
 void Gameboy::RemoveApplicationEvent(unsigned int eventId)
 {
-	ScopedMutex scopedLock(m_applicationEventsLock);
+	std::lock_guard<std::mutex> scopedLock(m_applicationEventsLock);
 
 	for(auto iter = m_applicationEvents.begin(); iter != m_applicationEvents.end(); ++iter)
 	{
@@ -257,10 +257,10 @@ void Gameboy::RunDuringInstruction(unsigned int ticks)
 {
 	if(m_executingInstruction == false)
 		return;
-	
+
 	if(m_applicationEventsPending == true)
 	{
-		ScopedMutex scopedLock(m_applicationEventsLock);
+		std::lock_guard<std::mutex> scopedLock(m_applicationEventsLock);
 
 		if(m_applicationEvents.empty() == false && m_nextApplicationEvent != m_applicationEvents.end())
 		{
@@ -382,7 +382,7 @@ void Gameboy::InternalStep()
 {
 	if(m_applicationEventsPending == true)
 	{
-		ScopedMutex scopedLock(m_applicationEventsLock);
+		std::lock_guard<std::mutex> scopedLock(m_applicationEventsLock);
 
 		if(m_applicationEvents.empty() == false && m_nextApplicationEvent != m_applicationEvents.end())
 		{

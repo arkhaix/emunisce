@@ -24,6 +24,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "PlatformIncludes.h"
 
+#include <mutex>
 #include <list>
 #include <vector>
 
@@ -157,7 +158,7 @@ protected:
 	std::list<CachedFrame> m_frameHistory;
 	std::list<CachedFrame>::iterator m_playbackFrame;
 	static const unsigned int m_maxFrameHistorySize = Segment::FramesPerSegment;
-	Mutex m_frameHistoryLock;
+	std::mutex m_frameHistoryLock;
 
 
 	class InputHandler : public IEmulatedInput

@@ -405,7 +405,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Mutex.h" />
     <ClInclude Include="PlatformDefines.h" />
     <ClInclude Include="PlatformIncludes.h" />
     <ClInclude Include="PlatformTypes.h" />

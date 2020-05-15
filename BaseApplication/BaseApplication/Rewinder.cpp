@@ -340,7 +340,7 @@ void Rewinder::StartRewinding()
 	m_application->GetMachineRunner()->Pause();
 
 	{
-		ScopedMutex scopedLock(m_frameHistoryLock);
+		std::lock_guard<std::mutex> scopedLock(m_frameHistoryLock);
 
 		m_playingSegment = (unsigned int)m_segments.size()-1;
 
@@ -374,7 +374,7 @@ void Rewinder::StopRewinding()
 	Segment* visibleSegment = nullptr;
 
 	{
-		ScopedMutex scopedLock(m_frameHistoryLock);
+		std::lock_guard<std::mutex> scopedLock(m_frameHistoryLock);
 
 		visibleSegmentIndex = m_playingSegment+1;
 		visibleSegment = nullptr;
@@ -410,7 +410,7 @@ void Rewinder::StopRewinding()
 
 
 	{
-		ScopedMutex scopedLock(m_frameHistoryLock);
+		std::lock_guard<std::mutex> scopedLock(m_frameHistoryLock);
 
 		//Delete all the segments newer than the visible one.  The old future is gone.
 
@@ -506,7 +506,7 @@ void Rewinder::SetEmulatedMachine(IEmulatedMachine* emulatedMachine)
 
 unsigned int Rewinder::GetFrameCount()
 {
-	ScopedMutex copedLock(m_frameHistoryLock);
+	std::lock_guard<std::mutex> scopedLock(m_frameHistoryLock);
 
 	if(m_isRewinding == false || m_frameHistory.empty())
 	{
@@ -520,7 +520,7 @@ unsigned int Rewinder::GetFrameCount()
 
 void Rewinder::RunToNextFrame()
 {
-	ScopedMutex scopedLock(m_frameHistoryLock);
+	std::lock_guard<std::mutex> scopedLock(m_frameHistoryLock);
 
 	if(m_isRewinding == false || m_frameHistory.empty())
 	{
@@ -621,7 +621,7 @@ void Rewinder::RunToNextFrame()
 
 ScreenBuffer* Rewinder::GetStableScreenBuffer()
 {
-	ScopedMutex scopedLock(m_frameHistoryLock);
+	std::lock_guard<std::mutex> scopedLock(m_frameHistoryLock);
 
 	if(m_isRewinding == false || m_frameHistory.empty() || m_playbackFrame == m_frameHistory.end())
 	{
@@ -637,7 +637,7 @@ ScreenBuffer* Rewinder::GetStableScreenBuffer()
 
 int Rewinder::GetScreenBufferCount()
 {
-	ScopedMutex scopedLock(m_frameHistoryLock);
+	std::lock_guard<std::mutex> scopedLock(m_frameHistoryLock);
 
 	if(m_isRewinding == false || m_frameHistory.empty() || m_playbackFrame == m_frameHistory.end())
 	{
@@ -656,7 +656,7 @@ int Rewinder::GetScreenBufferCount()
 
 AudioBuffer Rewinder::GetStableAudioBuffer()
 {
-	ScopedMutex scopedLock(m_frameHistoryLock);
+	std::lock_guard<std::mutex> scopedLock(m_frameHistoryLock);
 
 	if(m_isRewinding == false || m_frameHistory.empty() || m_playbackFrame == m_frameHistory.end())
 	{
@@ -672,7 +672,7 @@ AudioBuffer Rewinder::GetStableAudioBuffer()
 
 int Rewinder::GetAudioBufferCount()
 {
-	ScopedMutex scopedLock(m_frameHistoryLock);
+	std::lock_guard<std::mutex> scopedLock(m_frameHistoryLock);
 
 	if(m_isRewinding == false || m_frameHistory.empty() || m_playbackFrame == m_frameHistory.end())
 	{
