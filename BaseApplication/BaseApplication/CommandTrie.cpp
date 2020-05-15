@@ -1,11 +1,10 @@
 #include "CommandTrie.h"
 using namespace Emunisce;
 
+#include <cstring> //strlen
 #include <string>
 #include <vector>
-using namespace std;
 
-#include <cstring> // strlen
 
 namespace Emunisce
 {
@@ -22,10 +21,10 @@ public:
 
 	CommandTrie* parent;
 
-	string value;
+	std::string value;
 	CommandTrie* children[26]; //a-z
 
-	vector<CommandTrie*> leaves;
+	std::vector<CommandTrie*> leaves;
 };
 
 } // namespace Emunisce

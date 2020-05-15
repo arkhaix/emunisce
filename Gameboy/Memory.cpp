@@ -25,7 +25,6 @@ using namespace Emunisce;
 #include <ctime>
 #include <fstream>
 #include <memory.h>
-using namespace std;
 
 //Project
 #include "RomOnly.h"
@@ -146,7 +145,7 @@ void Memory::Initialize()
 	SetRegisterLocation(0x55, &m_cgbDmaLength, false);
 	m_inHBlank = false;
 	m_hblankDoneThisLine = false;
-	
+
 	m_selectedCgbRamBank = 1;
 	m_selectedCgbVramBank = 0;
 
@@ -281,7 +280,7 @@ void Memory::Serialize(Archive& archive)
 					m_display->WriteVram(bank, address, m_cgbVramBanks[bank][address - 0x8000]);
 			}
 		}
-		
+
 		for(int address = 0xfe00; address < 0xfea0; address++)
 			m_display->WriteOam(address, m_memoryData[address]);
 	}
@@ -572,8 +571,8 @@ void Memory::CgbDmaTrigger(u8 value)
 Memory* Memory::CreateFromFile(const char* filename)
 {
 	//Read the gb cart header out of the file
-	ifstream ifile(filename, ios::in | ios::binary);
-	
+	std::ifstream ifile(filename, std::ios::in | std::ios::binary);
+
 	if(ifile.fail() || ifile.eof() || !ifile.good())
 		return nullptr;
 
@@ -581,7 +580,7 @@ Memory* Memory::CreateFromFile(const char* filename)
 	ifile.read((char*)&header[0], 0x150);
 	ifile.close();
 
-	
+
 	//Instantiate the appropriate MBC class from the header info
 	Memory* memoryController = nullptr;
 	u8 cartType = header[0x147];
@@ -630,13 +629,13 @@ void Memory::LoadBootRom(const char* filename)
 {
 	m_bootRomEnabled = false;
 
-	ifstream bootRom;
-	bootRom.open(filename, ios::in | ios::binary);
+	std::ifstream bootRom;
+	bootRom.open(filename, std::ios::in | std::ios::binary);
 
 	if(bootRom.eof() || bootRom.fail() || !bootRom.good())
 	{
 		//Use default boot rom
-		u8 defaultBootRom[] = 
+		u8 defaultBootRom[] =
 		{
 			//Save AF (cgb/dmg identification)
 			0xf5,				//PUSH AF
@@ -699,7 +698,7 @@ void Memory::WriteRegister(u16 address, u8 value)
 	case 0xff21: m_sound->SetNR42(value); break;
 	case 0xff22: m_sound->SetNR43(value); break;
 	case 0xff23: m_sound->SetNR44(value); break;
-	
+
 	case 0xff24: m_sound->SetNR50(value); break;
 	case 0xff25: m_sound->SetNR51(value); break;
 	case 0xff26: m_sound->SetNR52(value); break;

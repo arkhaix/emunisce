@@ -67,15 +67,15 @@ KingsDream::KingsDream()
 	m_pointsThisColor = 0;
 
 	//Skip ranges
-	m_skipRanges.push_back( make_pair(-4.05f, -4.00f) );	///<Jarring blank section
-	m_skipRanges.push_back( make_pair(-3.73f, -3.67f) );	///<Jarring blank section
-	m_skipRanges.push_back( make_pair(-3.16f, -3.05f) );	///<Blank section
-	m_skipRanges.push_back( make_pair(-2.64f, -2.52f) );	///<Blank section
-	m_skipRanges.push_back( make_pair(-1.88f, -1.72f) );	///<Blinky section
-	m_skipRanges.push_back( make_pair(-0.72f, 0.f) );	///<Bad place.  This range murders the cpu.  Probably throws bad values into sin().
-	m_skipRanges.push_back( make_pair(0.f, 1.72f) );	///<Boring section
-	//m_skipRanges.push_back( make_pair(0.7f, 1.28f) );	///<Blank section	///<Above "boring section" encompasses this
-	m_skipRanges.push_back( make_pair(2.65f, 3.15f) );	///<Blank section
+	m_skipRanges.push_back( std::make_pair(-4.05f, -4.00f) );	///<Jarring blank section
+	m_skipRanges.push_back( std::make_pair(-3.73f, -3.67f) );	///<Jarring blank section
+	m_skipRanges.push_back( std::make_pair(-3.16f, -3.05f) );	///<Blank section
+	m_skipRanges.push_back( std::make_pair(-2.64f, -2.52f) );	///<Blank section
+	m_skipRanges.push_back( std::make_pair(-1.88f, -1.72f) );	///<Blinky section
+	m_skipRanges.push_back( std::make_pair(-0.72f, 0.f) );	///<Bad place.  This range murders the cpu.  Probably throws bad values into sin().
+	m_skipRanges.push_back( std::make_pair(0.f, 1.72f) );	///<Boring section
+	//m_skipRanges.push_back( std::make_pair(0.7f, 1.28f) );	///<Blank section	///<Above "boring section" encompasses this
+	m_skipRanges.push_back( std::make_pair(2.65f, 3.15f) );	///<Blank section
 }
 
 

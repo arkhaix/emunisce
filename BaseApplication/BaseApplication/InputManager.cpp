@@ -77,7 +77,7 @@ void InputManager::KeyUp(int key)
 
 void InputManager::MapKey(const char* name, int keyCode)
 {
-    m_nameKeyMap.insert( make_pair(name, keyCode) );
+    m_nameKeyMap.insert( std::make_pair(name, keyCode) );
     GenerateKeymap();
 }
 
@@ -91,7 +91,7 @@ void InputManager::GenerateKeymap()
 
     for(unsigned int i=0;i<m_input->NumButtons();i++)
     {
-        string buttonName = m_input->GetButtonName(i);
+        std::string buttonName = m_input->GetButtonName(i);
         auto mappedKeys = m_nameKeyMap.equal_range(buttonName);
         for(auto iter = mappedKeys.first; iter != mappedKeys.second; iter++)
         {

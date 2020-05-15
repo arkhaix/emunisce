@@ -405,14 +405,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Event.h" />
-    <ClInclude Include="Mutex.h" />
     <ClInclude Include="PlatformDefines.h" />
     <ClInclude Include="PlatformIncludes.h" />
     <ClInclude Include="PlatformTypes.h" />
     <ClInclude Include="SecureCrt.h" />
-    <ClInclude Include="Thread.h" />
-    <ClInclude Include="Timing.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

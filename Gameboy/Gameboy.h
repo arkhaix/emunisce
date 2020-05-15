@@ -27,7 +27,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <algorithm>
 #include <list>
-using namespace std;
+#include <mutex>
 
 
 namespace Emunisce
@@ -132,9 +132,9 @@ protected:
 
 	bool m_doubleSpeed;
 
-	list<ApplicationEvent> m_applicationEvents;
-	list<ApplicationEvent>::iterator m_nextApplicationEvent;
-	Mutex m_applicationEventsLock;
+	std::list<ApplicationEvent> m_applicationEvents;
+	std::list<ApplicationEvent>::iterator m_nextApplicationEvent;
+	std::mutex m_applicationEventsLock;
 	bool m_applicationEventsPending;
 };
 

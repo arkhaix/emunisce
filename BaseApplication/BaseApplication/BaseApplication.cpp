@@ -23,7 +23,6 @@ using namespace Emunisce;
 #include <algorithm>
 #include <string>
 #include <vector>
-using namespace std;
 
 #include <cstdlib>
 
@@ -464,7 +463,7 @@ void BaseApplication::AddConsoleCommand(const char* command, ConsoleCommandHandl
     if(func == nullptr)
         return;
 
-    string lowercaseCommand = command;
+    std::string lowercaseCommand = command;
 	transform(lowercaseCommand.begin(), lowercaseCommand.end(), lowercaseCommand.begin(), [](unsigned char c)->char{return (char) ::tolower(c);});
 
     strcpy_s(m_consoleCommands[m_numConsoleCommands].command, 16, lowercaseCommand.c_str());
@@ -489,9 +488,9 @@ const char* BaseApplication::GetConsoleCommand(unsigned int index)
     return m_consoleCommands[index].command;
 }
 
-vector<string> SplitCommand(string command)
+std::vector<std::string> SplitCommand(std::string command)
 {
-	vector<string> result;
+	std::vector<std::string> result;
 
 	char* input = const_cast<char*>(command.c_str());
 	const char* separators = " \t\n";
@@ -501,7 +500,7 @@ vector<string> SplitCommand(string command)
 	token = strtok_s(input, separators, &context);
 	while(token != nullptr)
 	{
-		result.push_back(string(token));
+		result.push_back(std::string(token));
 		token = strtok_s(nullptr, separators, &context);
 	}
 
@@ -510,12 +509,12 @@ vector<string> SplitCommand(string command)
 
 bool BaseApplication::ExecuteConsoleCommand(const char* command)
 {
-    vector<string> splitCommand = SplitCommand(command);
+    std::vector<std::string> splitCommand = SplitCommand(command);
     if(splitCommand.size() < 1)
         return false;
 
     const char* commandName = splitCommand[0].c_str();
-    string lowercaseCommandName = commandName;
+    std::string lowercaseCommandName = commandName;
 	transform(lowercaseCommandName.begin(), lowercaseCommandName.end(), lowercaseCommandName.begin(), [](unsigned char c)->char{return (char) ::tolower(c);});
 
 	// Resolve to a full command name via the prefix tree
@@ -541,7 +540,7 @@ bool BaseApplication::ExecuteConsoleCommand(const char* command)
 	if (node->NumLeaves() == 0)
 		return false;
 
-	string resolvedCommandName = node->GetLeaf(0)->GetValue();
+	std::string resolvedCommandName = node->GetLeaf(0)->GetValue();
 
 	// Search for the full command using the resolved name
     for(unsigned int i = 0; i < m_numConsoleCommands; i++)

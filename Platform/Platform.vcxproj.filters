@@ -14,23 +14,13 @@
     <ClInclude Include="PlatformTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mutex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PlatformIncludes.h" />
     <ClInclude Include="PlatformDefines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SecureCrt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Thread.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Event.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Timing.h">
+    <ClInclude Include="PlatformIncludes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

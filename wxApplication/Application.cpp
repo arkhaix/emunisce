@@ -311,18 +311,18 @@ void Application::ReleaseArchive(Archive* archive)
 }
 
 
-string Application::GetDataFolder()
+std::string Application::GetDataFolder()
 {
 #ifdef EMUNISCE_PLATFORM_WINDOWS
     //todo
-    return string(".");
+    return std::string(".");
 
 #elif EMUNISCE_PLATFORM_LINUX
-    string result = getenv("HOME");
+    std::string result = getenv("HOME");
     if(result.length() == 0)
         result = ".";
 
-    result += string("/.Emunisce");
+    result += std::string("/.Emunisce");
 
     mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
@@ -332,96 +332,96 @@ string Application::GetDataFolder()
 }
 
 
-string Application::GetSaveStateFile(const char* name)
+std::string Application::GetSaveStateFile(const char* name)
 {
 #ifdef EMUNISCE_PLATFORM_WINDOWS
     //todo
-    return GetDataFolder() + string("/") + string(name) + string(".ess");
+    return GetDataFolder() + std::string("/") + std::string(name) + std::string(".ess");
 
 #elif EMUNISCE_PLATFORM_LINUX
-    string result = GetDataFolder();
+    std::string result = GetDataFolder();
 
-    result += string("/SaveStates");
+    result += std::string("/SaveStates");
     mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-    result += string("/") + string(EmulatedMachine::ToString[ m_machine->GetType() ]);
+    result += std::string("/") + std::string(EmulatedMachine::ToString[ m_machine->GetType() ]);
     mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-    result += string("/") + string(m_machine->GetRomTitle());
+    result += std::string("/") + std::string(m_machine->GetRomTitle());
     mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-    result += string("/") + string(name) + string(".ess");
+    result += std::string("/") + std::string(name) + std::string(".ess");
 
     return result;
 #endif
 }
 
-string Application::GetRomDataFile(const char* name)
+std::string Application::GetRomDataFile(const char* name)
 {
 #ifdef EMUNISCE_PLATFORM_WINDOWS
     //todo
-    return GetDataFolder() + string("/") + string(name) + string(".erd");
+    return GetDataFolder() + std::string("/") + std::string(name) + std::string(".erd");
 
 #elif EMUNISCE_PLATFORM_LINUX
-    string result = GetDataFolder();
+    std::string result = GetDataFolder();
 
-    result += string("/RomData");
+    result += std::string("/RomData");
     mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-    result += string("/") + string(EmulatedMachine::ToString[ m_machine->GetType() ]);
+    result += std::string("/") + std::string(EmulatedMachine::ToString[ m_machine->GetType() ]);
     mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-    result += string("/") + string(m_machine->GetRomTitle());
+    result += std::string("/") + std::string(m_machine->GetRomTitle());
     mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-    result += string("/") + string(name) + string(".erd");
+    result += std::string("/") + std::string(name) + std::string(".erd");
 
     return result;
 #endif
 }
 
-string Application::GetMovieFile(const char* name)
+std::string Application::GetMovieFile(const char* name)
 {
 #ifdef EMUNISCE_PLATFORM_WINDOWS
     //todo
-    return GetDataFolder() + string("/") + string(name) + string(".eim");
+    return GetDataFolder() + std::string("/") + std::string(name) + std::string(".eim");
 
 #elif EMUNISCE_PLATFORM_LINUX
-    string result = GetDataFolder();
+    std::string result = GetDataFolder();
 
-    result += string("/Movies");
+    result += std::string("/Movies");
     mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-    result += string("/") + string(EmulatedMachine::ToString[ m_machine->GetType() ]);
+    result += std::string("/") + std::string(EmulatedMachine::ToString[ m_machine->GetType() ]);
     mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-    result += string("/") + string(m_machine->GetRomTitle());
+    result += std::string("/") + std::string(m_machine->GetRomTitle());
     mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-    result += string("/") + string(name) + string(".eim");
+    result += std::string("/") + std::string(name) + std::string(".eim");
 
     return result;
 #endif
 }
 
-string Application::GetMacroFile(const char* name)
+std::string Application::GetMacroFile(const char* name)
 {
 #ifdef EMUNISCE_PLATFORM_WINDOWS
     //todo
-    return GetDataFolder() + string("/") + string(name) + string(".eir");
+    return GetDataFolder() + std::string("/") + std::string(name) + std::string(".eir");
 
 #elif EMUNISCE_PLATFORM_LINUX
-    string result = GetDataFolder();
+    std::string result = GetDataFolder();
 
-    result += string("/Macros");
+    result += std::string("/Macros");
     mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-    result += string("/") + string(EmulatedMachine::ToString[ m_machine->GetType() ]);
+    result += std::string("/") + std::string(EmulatedMachine::ToString[ m_machine->GetType() ]);
     mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
     //no rom title folder for macros.  they're global to the machine.
 
-    result += string("/") + string(name) + string(".eir");
+    result += std::string("/") + std::string(name) + std::string(".eir");
 
     return result;
 #endif

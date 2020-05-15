@@ -22,6 +22,11 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "PlatformIncludes.h"
 
+#include <chrono>
+#include <condition_variable>
+#include <mutex>
+#include <thread>
+
 
 namespace Emunisce
 {
@@ -75,23 +80,7 @@ protected:
 
 	IEmulatedMachine* m_machine;
 
-	class Thread_Runner : public Thread
-	{
-	public:
-
-		void EntryPoint(void* param) override
-		{
-			MachineRunner* instance = (MachineRunner*)param;
-			if(instance == nullptr)
-				return;
-
-			instance->RunnerThread();
-		}
-
-		void StopRequested() override { /* Use MachineRunner::Shutdown() instead */ }
-	};
-
-	Thread_Runner m_runnerThread;
+	std::thread m_runnerThread;
 	int RunnerThread();
 
 	void Synchronize();
@@ -100,23 +89,26 @@ protected:
 	bool m_shutdownRequested;
 	bool m_waitRequested;
 	bool m_waiting;
-	Event m_waitEvent;
+	std::mutex m_waitMutex;
+	std::condition_variable m_waitCondition;
+	bool m_waitSignalled;
 
 	StepMode::Type m_stepMode;
 
 	float m_emulationSpeed;
 
+	typedef std::chrono::steady_clock clock;
 	struct SynchronizationInfo
 	{
 		float MillisecondsPerFrame;
 
-		Time RunStartTime;
+		clock::time_point RunStartTime;
 
-		Time CurrentRealTime;
-		Time CurrentMachineTime;
+		clock::time_point CurrentRealTime;
+		clock::time_point CurrentMachineTime;
 
-		Time ElapsedRealTime;
-		Time ElapsedMachineTime;
+		clock::duration ElapsedRealTime;
+		clock::duration ElapsedMachineTime;
 	};
 
 	SynchronizationInfo m_syncState;

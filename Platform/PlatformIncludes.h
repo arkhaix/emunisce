@@ -26,9 +26,3 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "SecureCrt.h"
 
-#include "Event.h"
-#include "Mutex.h"
-#include "Thread.h"
-
-#include "Timing.h"
-

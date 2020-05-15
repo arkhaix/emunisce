@@ -24,13 +24,13 @@ using namespace Emunisce;
 
 
 MachineRunner::MachineRunner()
-: m_waitEvent(true)
 {
 	m_machine = nullptr;
 
 	m_shutdownRequested = false;
 	m_waitRequested = true;
 	m_waiting = false;
+	m_waitSignalled = false;
 
 	m_emulationSpeed = 1.f;
 
@@ -45,21 +45,27 @@ MachineRunner::MachineRunner()
 
 void MachineRunner::Initialize()
 {
-	m_runnerThread.Start((void*)this);
+	m_runnerThread = std::thread([this] {
+		this->RunnerThread();
+	});
 }
 
 void MachineRunner::Shutdown()
 {
-	if(m_runnerThread.IsRunning())
+	if(m_runnerThread.joinable())
 	{
 		Pause();
 
 		m_shutdownRequested = true;
 
 		m_waitRequested = false;
-		m_waitEvent.Set();
+		{
+			std::lock_guard<std::mutex> lock(m_waitMutex);
+			m_waitSignalled = true;
+			m_waitCondition.notify_all();
+		}
 
-		m_runnerThread.Join(1000);
+		m_runnerThread.join();
 	}
 }
 
@@ -90,18 +96,21 @@ void MachineRunner::Run()
 	m_stepMode = StepMode::Frame;
 
 	m_waitRequested = false;
-	m_waitEvent.Set();
+	std::lock_guard<std::mutex> lock(m_waitMutex);
+	m_waitSignalled = true;
+	m_waitCondition.notify_all();
 }
 
 void MachineRunner::Pause()
 {
-	if(m_runnerThread.IsCallingThread())
+	if (std::this_thread::get_id() == m_runnerThread.get_id()) {
 		return;
+	}
 
 	while(m_waiting == false)
 	{
 		m_waitRequested = true;
-		Thread::Sleep(1);
+		std::this_thread::yield();
 	}
 }
 
@@ -118,7 +127,9 @@ void MachineRunner::StepInstruction()
 	m_stepMode = StepMode::Instruction;
 
 	m_waitRequested = true;
-	m_waitEvent.Set();
+	std::lock_guard<std::mutex> lock(m_waitMutex);
+	m_waitSignalled = true;
+	m_waitCondition.notify_all();
 }
 
 void MachineRunner::StepFrame()
@@ -128,7 +139,9 @@ void MachineRunner::StepFrame()
 	m_stepMode = StepMode::Frame;
 
 	m_waitRequested = true;
-	m_waitEvent.Set();
+	std::lock_guard<std::mutex> lock(m_waitMutex);
+	m_waitSignalled = true;
+	m_waitCondition.notify_all();
 }
 
 
@@ -140,7 +153,14 @@ int MachineRunner::RunnerThread()
 		if(m_waitRequested == true)
 		{
 			m_waiting = true;
-			m_waitEvent.Wait();
+			{
+				std::unique_lock<std::mutex> lock(m_waitMutex);
+				while (m_waitSignalled == false)
+				{
+					m_waitCondition.wait(lock);
+				}
+				m_waitSignalled = false;
+			}
 			ResetSynchronizationState();
 			m_waiting = false;
 		}
@@ -150,7 +170,7 @@ int MachineRunner::RunnerThread()
 
 		if(m_machine == nullptr)
 		{
-		    Thread::Sleep(250);
+			std::this_thread::sleep_for(std::chrono::milliseconds(250));
 			continue;
 		}
 
@@ -177,13 +197,13 @@ void MachineRunner::Synchronize()
 	//Note: This function assumes it's being called 60 times per second (defined by CountsPerFrame).
 	//		It will synchronize itself to that rate.
 
-    m_syncState.CurrentRealTime = Time::Now();
-	m_syncState.CurrentMachineTime.AddMilliseconds(m_syncState.MillisecondsPerFrame * (1.f / m_emulationSpeed));
+    m_syncState.CurrentRealTime = clock::now();
+	m_syncState.CurrentMachineTime += std::chrono::milliseconds((long long)(m_syncState.MillisecondsPerFrame * (1.f / m_emulationSpeed)));
 
-	m_syncState.ElapsedRealTime.SetTotalMilliseconds(m_syncState.CurrentRealTime.GetTotalMilliseconds() - m_syncState.RunStartTime.GetTotalMilliseconds());
-	m_syncState.ElapsedMachineTime.SetTotalMilliseconds(m_syncState.CurrentMachineTime.GetTotalMilliseconds() - m_syncState.RunStartTime.GetTotalMilliseconds());
+	m_syncState.ElapsedRealTime = m_syncState.CurrentRealTime - m_syncState.RunStartTime;
+	m_syncState.ElapsedMachineTime = m_syncState.CurrentMachineTime - m_syncState.RunStartTime;
 
-    float millisecondsAhead = m_syncState.ElapsedMachineTime.GetTotalMilliseconds() - m_syncState.ElapsedRealTime.GetTotalMilliseconds();
+    auto millisecondsAhead = std::chrono::duration_cast<std::chrono::milliseconds>(m_syncState.ElapsedMachineTime - m_syncState.ElapsedRealTime).count();
 
     if(millisecondsAhead <= 0)
 	{
@@ -199,7 +219,7 @@ void MachineRunner::Synchronize()
 	//Using a high value (greater than ~50 or so) may result in noticeable jitter.
 	if(millisecondsAhead >= 5)
 	{
-	    Thread::Sleep((unsigned int)(millisecondsAhead+0.5f));
+	    std::this_thread::sleep_for(std::chrono::milliseconds(millisecondsAhead));
 	}
 
 	return;
@@ -207,13 +227,14 @@ void MachineRunner::Synchronize()
 
 void MachineRunner::ResetSynchronizationState()
 {
-    Time now = Time::Now();
+	auto now = clock::now();
 
     m_syncState.RunStartTime = now;
 
     m_syncState.CurrentRealTime = now;
     m_syncState.CurrentMachineTime = now;
 
-    m_syncState.ElapsedRealTime.Zero();
-    m_syncState.ElapsedMachineTime.Zero();
+    m_syncState.ElapsedRealTime.zero();
+    m_syncState.ElapsedMachineTime.zero();
 }
+
