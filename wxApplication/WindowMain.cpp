@@ -20,6 +20,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "WindowMain.h"
 using namespace Emunisce;
 
+#include <thread>
+
 // Emunisce stuff
 
 #include "PlatformIncludes.h"
