@@ -508,17 +508,10 @@ std::string EmunisceApplication::GetCurrentSaveStateFolder()
 
 std::string EmunisceApplication::GetCurrentSaveStateFile(const char* id)
 {
-	char file[MAX_PATH] = {0};
-
 	std::string path = GetCurrentSaveStateFolder();
-	strcpy_s(file, MAX_PATH, path.c_str());
+	path += std::string("\\") + std::string(id) + std::string(".ess");
 
-	char idStr[MAX_PATH];
-	sprintf_s(idStr, MAX_PATH, "%s.ess", id);
-
-	PathAppend(file, idStr);
-
-	return std::string(file);
+	return path;
 }
 
 

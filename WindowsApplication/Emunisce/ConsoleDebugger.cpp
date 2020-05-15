@@ -122,9 +122,10 @@ void ConsoleDebugger::SetupConsole()
 {
 	AllocConsole();
 
-	freopen("CONOUT$", "w", stdout);
-	freopen("CONOUT$", "w", stderr);
-	freopen("CONIN$", "r", stdin);
+	FILE* ignored;
+	freopen_s(&ignored, "CONOUT$", "w", stdout);
+	freopen_s(&ignored, "CONOUT$", "w", stderr);
+	freopen_s(&ignored, "CONIN$", "r", stdin);
 }
 
 void ConsoleDebugger::UpdateDisplay()

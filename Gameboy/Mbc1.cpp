@@ -157,7 +157,7 @@ bool Mbc1::LoadFile(const char* filename)
 	//Save the filename
 
 	m_romFilename = filename;
-	m_sramFilename = filename + ".sram";
+	m_sramFilename = filename + std::string(".sram");
 
 
 	//Load all the banks

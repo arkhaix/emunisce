@@ -21,6 +21,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 using namespace Emunisce;
 
 #include <algorithm>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -524,9 +525,10 @@ bool BaseApplication::ExecuteConsoleCommand(const char* command)
 
 	if (node->NumLeaves() > 1 && node->IsLeaf() == false)
 	{
-		char buffer[1024];
-		sprintf_s(buffer, 1024, "Command '%s' resolved to %d possibilities:\n", lowercaseCommandName.c_str(), node->NumLeaves());
-		ConsolePrint(buffer);
+		std::stringstream ss;
+		ss << "Command '" << lowercaseCommandName << "' resolved to " << node->NumLeaves() << " possibilities:" << std::endl;
+
+		ConsolePrint(ss.str().c_str());
 		for (unsigned int i = 0; i < node->NumLeaves(); i++)
 		{
 			CommandTrie* leaf = node->GetLeaf(i);
@@ -592,12 +594,10 @@ const char* BaseApplication::GetPossibleCommand(const char* prefix, unsigned int
 
 void BaseApplication::CommandHelp(const char* /*params*/)
 {
-    char buffer[1024];
-
     for(unsigned int i = 0; i < m_numConsoleCommands; i++)
     {
-        sprintf_s(buffer, 1024, "%s - %s\n", m_consoleCommands[i].command, m_consoleCommands[i].helpText);
-        ConsolePrint(buffer);
+		std::string command = m_consoleCommands[i].command + std::string(" - ") + m_consoleCommands[i].helpText;
+        ConsolePrint(command.c_str());
     }
 
     ConsolePrint("\n");
@@ -673,9 +673,9 @@ void BaseApplication::CommandSpeed(const char* params)
 
     SetEmulationSpeed((float)speed);
 
-    char buffer[1024];
-    sprintf_s(buffer, 1024, "Set emulation speed to %f\n", (float)speed);
-    ConsolePrint(buffer);
+	std::stringstream ss;
+	ss << "Set emulation speed to " << speed << std::endl;
+    ConsolePrint(ss.str().c_str());
 }
 
 void BaseApplication::CommandMute(const char* /*params*/)

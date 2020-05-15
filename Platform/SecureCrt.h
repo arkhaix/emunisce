@@ -60,9 +60,6 @@ inline int strcpy_s(char* destination, unsigned int sizeBytes, const char* sourc
     return 0;
 }
 
-//todo
-#define sprintf_s(buffer, bufferSize, formatString, ...) sprintf(buffer, formatString, __VA_ARGS__)
-
 inline char* strtok_s(char* token, const char* delimiters, char** context)
 {
     //todo
