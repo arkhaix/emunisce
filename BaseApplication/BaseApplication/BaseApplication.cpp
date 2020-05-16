@@ -547,6 +547,7 @@ void BaseApplication::CommandHelp(const char* /*params*/) {
 	for (unsigned int i = 0; i < m_numConsoleCommands; i++) {
 		std::string command = m_consoleCommands[i].command + std::string(" - ") + m_consoleCommands[i].helpText;
 		ConsolePrint(command.c_str());
+		ConsolePrint("\n");
 	}
 
 	ConsolePrint("\n");
