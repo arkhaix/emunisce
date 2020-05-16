@@ -21,13 +21,14 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 using namespace Emunisce;
 
 #include <algorithm>
+#include <regex>
+#include <sstream>
 #include <string>
 #include <vector>
 
 #include <cstdlib>
 
 #include "PlatformIncludes.h"
-#include "SecureCrt.h"
 
 #include "MachineIncludes.h"
 
@@ -228,7 +229,7 @@ bool BaseApplication::LoadRom(const char* filename)
 		MachineFactory::ReleaseMachine(oldMachine);
 
 	//Remember the file used so we can reset later if necessary
-	strcpy_s(m_lastRomLoaded, 1024, filename);
+	m_lastRomLoaded = filename;
 
 	if(selectedFilename != nullptr)
 		free((void*)selectedFilename);
@@ -238,7 +239,7 @@ bool BaseApplication::LoadRom(const char* filename)
 
 void BaseApplication::Reset()
 {
-	LoadRom(m_lastRomLoaded);
+	LoadRom(m_lastRomLoaded.c_str());
 }
 
 
@@ -466,8 +467,8 @@ void BaseApplication::AddConsoleCommand(const char* command, ConsoleCommandHandl
     std::string lowercaseCommand = command;
 	transform(lowercaseCommand.begin(), lowercaseCommand.end(), lowercaseCommand.begin(), [](unsigned char c)->char{return (char) ::tolower(c);});
 
-    strcpy_s(m_consoleCommands[m_numConsoleCommands].command, 16, lowercaseCommand.c_str());
-    strcpy_s(m_consoleCommands[m_numConsoleCommands].helpText, 256, helpText);
+    m_consoleCommands[m_numConsoleCommands].command = lowercaseCommand;
+    m_consoleCommands[m_numConsoleCommands].helpText = helpText;
     m_consoleCommands[m_numConsoleCommands].func = func;
 
     m_numConsoleCommands++;
@@ -485,24 +486,14 @@ const char* BaseApplication::GetConsoleCommand(unsigned int index)
     if(index >= m_numConsoleCommands)
         return nullptr;
 
-    return m_consoleCommands[index].command;
+    return m_consoleCommands[index].command.c_str();
 }
 
 std::vector<std::string> SplitCommand(std::string command)
 {
-	std::vector<std::string> result;
-
-	char* input = const_cast<char*>(command.c_str());
-	const char* separators = " \t\n";
-	char* token = nullptr;
-	char* context = nullptr;
-
-	token = strtok_s(input, separators, &context);
-	while(token != nullptr)
-	{
-		result.push_back(std::string(token));
-		token = strtok_s(nullptr, separators, &context);
-	}
+	std::regex regex("[ \t\n]");
+	std::vector<std::string> result(
+		std::sregex_token_iterator(command.begin(), command.end(), regex, -1), std::sregex_token_iterator());
 
 	return result;
 }
@@ -516,6 +507,7 @@ bool BaseApplication::ExecuteConsoleCommand(const char* command)
     const char* commandName = splitCommand[0].c_str();
     std::string lowercaseCommandName = commandName;
 	transform(lowercaseCommandName.begin(), lowercaseCommandName.end(), lowercaseCommandName.begin(), [](unsigned char c)->char{return (char) ::tolower(c);});
+	ConsolePrint(lowercaseCommandName.c_str()); ConsolePrint("\n");
 
 	// Resolve to a full command name via the prefix tree
 	CommandTrie* node = m_commandTrie->GetNode(lowercaseCommandName.c_str());
@@ -524,9 +516,10 @@ bool BaseApplication::ExecuteConsoleCommand(const char* command)
 
 	if (node->NumLeaves() > 1 && node->IsLeaf() == false)
 	{
-		char buffer[1024];
-		sprintf_s(buffer, 1024, "Command '%s' resolved to %d possibilities:\n", lowercaseCommandName.c_str(), node->NumLeaves());
-		ConsolePrint(buffer);
+		std::stringstream ss;
+		ss << "Command '" << lowercaseCommandName << "' resolved to " << node->NumLeaves() << " possibilities:" << std::endl;
+
+		ConsolePrint(ss.str().c_str());
 		for (unsigned int i = 0; i < node->NumLeaves(); i++)
 		{
 			CommandTrie* leaf = node->GetLeaf(i);
@@ -545,7 +538,7 @@ bool BaseApplication::ExecuteConsoleCommand(const char* command)
 	// Search for the full command using the resolved name
     for(unsigned int i = 0; i < m_numConsoleCommands; i++)
     {
-        if(strcmp(resolvedCommandName.c_str(), m_consoleCommands[i].command) == 0)
+		if(resolvedCommandName == m_consoleCommands[i].command)
         {
             const char* params = nullptr;
             if(splitCommand.size() >= 2)
@@ -592,12 +585,10 @@ const char* BaseApplication::GetPossibleCommand(const char* prefix, unsigned int
 
 void BaseApplication::CommandHelp(const char* /*params*/)
 {
-    char buffer[1024];
-
     for(unsigned int i = 0; i < m_numConsoleCommands; i++)
     {
-        sprintf_s(buffer, 1024, "%s - %s\n", m_consoleCommands[i].command, m_consoleCommands[i].helpText);
-        ConsolePrint(buffer);
+		std::string command = m_consoleCommands[i].command + std::string(" - ") + m_consoleCommands[i].helpText;
+        ConsolePrint(command.c_str());
     }
 
     ConsolePrint("\n");
@@ -645,7 +636,7 @@ void BaseApplication::CommandRun(const char* /*params*/)
 void BaseApplication::CommandSaveState(const char* params)
 {
     const char* stateName = "default";
-    if(params != nullptr && strlen(params) == 0)
+    if(params != nullptr && strlen(params) != 0)
         stateName = params;
 
     SaveState(stateName);
@@ -656,7 +647,7 @@ void BaseApplication::CommandSaveState(const char* params)
 void BaseApplication::CommandLoadState(const char* params)
 {
     const char* stateName = "default";
-    if(params != nullptr && strlen(params) == 0)
+    if(params != nullptr && strlen(params) != 0)
         stateName = params;
 
     LoadState(stateName);
@@ -673,9 +664,9 @@ void BaseApplication::CommandSpeed(const char* params)
 
     SetEmulationSpeed((float)speed);
 
-    char buffer[1024];
-    sprintf_s(buffer, 1024, "Set emulation speed to %f\n", (float)speed);
-    ConsolePrint(buffer);
+	std::stringstream ss;
+	ss << "Set emulation speed to " << speed << std::endl;
+    ConsolePrint(ss.str().c_str());
 }
 
 void BaseApplication::CommandMute(const char* /*params*/)
@@ -683,27 +674,25 @@ void BaseApplication::CommandMute(const char* /*params*/)
     ConsolePrint("Unsupported\n");
 }
 
-void BaseApplication::CommandDisplayFilter(const char* params)
+void BaseApplication::CommandDisplayFilter(const char* in_params)
 {
-	if(params == nullptr || strlen(params) == 0)
+	std::string params(in_params);
+
+	if(params.empty())
 		params = "none";
 
 	DisplayFilter::Type filter = DisplayFilter::NoFilter;
 
-	if( _stricmp(params, "none") == 0 || _stricmp(params, "0") == 0 ||
-		_stricmp(params, "1") == 0 )
+	if(params == "none" || params == "0" || params == "1")
 		filter = DisplayFilter::NoFilter;
 
-	else if( _stricmp(params, "hq2x") == 0 || _stricmp(params, "2x") == 0 ||
-		_stricmp(params, "2") == 0 )
+	else if(params == "hq2x" || params == "2x" || params == "2")
 		filter = DisplayFilter::Hq2x;
 
-	else if( _stricmp(params, "hq3x") == 0 || _stricmp(params, "3x") == 0 ||
-		_stricmp(params, "3") == 0 )
+	else if(params == "hq3x" || params == "3x" || params == "3")
 		filter = DisplayFilter::Hq3x;
 
-	else if( _stricmp(params, "hq4x") == 0 || _stricmp(params, "4x") == 0 ||
-		_stricmp(params, "4") == 0 )
+	else if(params == "hq4x" || params == "4x" || params == "4")
 		filter = DisplayFilter::Hq4x;
 
 	SetDisplayFilter(filter);
@@ -717,30 +706,32 @@ void BaseApplication::CommandDisplayFilter(const char* params)
     ConsolePrint("Set display filter to "); ConsolePrint(filterNames[filter]); ConsolePrint("\n");
 }
 
-void BaseApplication::CommandVsync(const char* params)
+void BaseApplication::CommandVsync(const char* in_params)
 {
-	if(params == nullptr || strlen(params) == 0 || _stricmp(params, "0") == 0 || _stricmp(params, "off") == 0)
-    {
+	std::string params(in_params);
+	if(params.empty() || params == "0" || params == "off")
+	{
 		SetVsync(false);
-        ConsolePrint("Vsync disabled\n");
-    }
-    else
-    {
-        SetVsync(true);
-        ConsolePrint("Vsync enabled\n");
-    }
+		ConsolePrint("Vsync disabled\n");
+	}
+	else
+	{
+		SetVsync(true);
+		ConsolePrint("Vsync enabled\n");
+	}
 }
 
-void BaseApplication::CommandBackground(const char* params)
+void BaseApplication::CommandBackground(const char* in_params)
 {
-	if(params == nullptr || strlen(params) == 0 || _stricmp(params, "0") == 0 || _stricmp(params, "off") == 0)
-    {
+	std::string params(in_params);
+	if(params.empty() || params == "0" || params == "off")
+	{
 		DisableBackgroundAnimation();
-        ConsolePrint("Disabled background animation\n");
-    }
-    else
-    {
-        EnableBackgroundAnimation();
-        ConsolePrint("Enabled background animation\n");
-    }
+		ConsolePrint("Disabled background animation\n");
+	}
+	else
+	{
+		EnableBackgroundAnimation();
+		ConsolePrint("Enabled background animation\n");
+	}
 }

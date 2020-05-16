@@ -17,9 +17,6 @@
     <ClInclude Include="PlatformDefines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SecureCrt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PlatformIncludes.h">
       <Filter>Header Files</Filter>
     </ClInclude>

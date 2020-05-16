@@ -20,6 +20,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MBC1_H
 #define MBC1_H
 
+#include <string>
+
 #include "Memory.h"
 
 
@@ -51,8 +53,8 @@ protected:
 
 	void PersistRAM();
 
-	char m_romFilename[1024];
-	char m_sramFilename[1024];
+	std::string m_romFilename;
+	std::string m_sramFilename;
 
 	bool m_sramLoaded;
 
