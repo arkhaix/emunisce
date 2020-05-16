@@ -29,7 +29,6 @@ using namespace Emunisce;
 #include <cstdlib>
 
 #include "PlatformIncludes.h"
-#include "SecureCrt.h"
 
 #include "MachineIncludes.h"
 
@@ -230,7 +229,7 @@ bool BaseApplication::LoadRom(const char* filename)
 		MachineFactory::ReleaseMachine(oldMachine);
 
 	//Remember the file used so we can reset later if necessary
-	strcpy_s(m_lastRomLoaded, 1024, filename);
+	m_lastRomLoaded = filename;
 
 	if(selectedFilename != nullptr)
 		free((void*)selectedFilename);
@@ -240,7 +239,7 @@ bool BaseApplication::LoadRom(const char* filename)
 
 void BaseApplication::Reset()
 {
-	LoadRom(m_lastRomLoaded);
+	LoadRom(m_lastRomLoaded.c_str());
 }
 
 
@@ -468,8 +467,8 @@ void BaseApplication::AddConsoleCommand(const char* command, ConsoleCommandHandl
     std::string lowercaseCommand = command;
 	transform(lowercaseCommand.begin(), lowercaseCommand.end(), lowercaseCommand.begin(), [](unsigned char c)->char{return (char) ::tolower(c);});
 
-    strcpy_s(m_consoleCommands[m_numConsoleCommands].command, 16, lowercaseCommand.c_str());
-    strcpy_s(m_consoleCommands[m_numConsoleCommands].helpText, 256, helpText);
+    m_consoleCommands[m_numConsoleCommands].command = lowercaseCommand;
+    m_consoleCommands[m_numConsoleCommands].helpText = helpText;
     m_consoleCommands[m_numConsoleCommands].func = func;
 
     m_numConsoleCommands++;
@@ -487,7 +486,7 @@ const char* BaseApplication::GetConsoleCommand(unsigned int index)
     if(index >= m_numConsoleCommands)
         return nullptr;
 
-    return m_consoleCommands[index].command;
+    return m_consoleCommands[index].command.c_str();
 }
 
 std::vector<std::string> SplitCommand(std::string command)
@@ -539,7 +538,7 @@ bool BaseApplication::ExecuteConsoleCommand(const char* command)
 	// Search for the full command using the resolved name
     for(unsigned int i = 0; i < m_numConsoleCommands; i++)
     {
-        if(strcmp(resolvedCommandName.c_str(), m_consoleCommands[i].command) == 0)
+		if(resolvedCommandName == m_consoleCommands[i].command)
         {
             const char* params = nullptr;
             if(splitCommand.size() >= 2)

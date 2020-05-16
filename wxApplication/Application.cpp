@@ -149,7 +149,7 @@ bool Application::SelectFile(char** result, const char* fileMask)
     int bufferSize = openFileDialog.GetPath().Length()+1;
 
     *result = (char*)malloc(bufferSize);
-    strcpy_s(*result, bufferSize, openFileDialog.GetPath().ToAscii());
+    strcpy(*result, openFileDialog.GetPath().ToAscii());
 
     return true;
 }

@@ -24,6 +24,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "IMachineToApplication.h"
 
+#include <string>
+
 
 namespace Emunisce
 {
@@ -141,7 +143,7 @@ public:
 
     typedef void (BaseApplication::*ConsoleCommandHandler)(const char* params);
     virtual void AddConsoleCommand(const char* command, ConsoleCommandHandler func, const char* helpText);
-    
+
     virtual unsigned int NumConsoleCommands();
     virtual const char* GetConsoleCommand(unsigned int index);
 
@@ -198,13 +200,13 @@ protected:
 	InputManager* m_inputManager;
 	MachineRunner* m_machineRunner;
 
-	char m_lastRomLoaded[1024];
+	std::string m_lastRomLoaded;
 
     //Console commands
     struct ConsoleCommandInfo
     {
-        char command[16];
-        char helpText[256];
+        std::string command;
+        std::string helpText;
         ConsoleCommandHandler func;
     };
     static const unsigned int MaxConsoleCommands = 1024;

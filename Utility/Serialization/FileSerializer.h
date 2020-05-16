@@ -23,6 +23,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "ISerializer.h"
 
 #include <fstream>
+#include <string>
 
 
 namespace Emunisce
@@ -58,7 +59,7 @@ protected:
 	std::fstream* m_fileStream;
 
 	int m_archiveMode;
-	char m_filename[1024];
+	std::string m_filename;
 };
 
 }	//namespace Emunisce

@@ -22,9 +22,6 @@
     <ClInclude Include="Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SecureCrt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PlatformDefines.h">
       <Filter>Header Files</Filter>
     </ClInclude>

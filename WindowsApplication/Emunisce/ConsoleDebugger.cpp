@@ -40,7 +40,6 @@ using namespace Emunisce;
 
 //Platform
 #include "PlatformIncludes.h"
-#include "SecureCrt.h"
 
 //Machine
 #include "MachineIncludes.h"

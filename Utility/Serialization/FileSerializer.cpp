@@ -24,14 +24,13 @@ using namespace Emunisce;
 
 #include <stdio.h>
 #include <string.h>
-#include "SecureCrt.h"
 
 
 FileSerializer::FileSerializer()
 {
+	m_filename = "";
 	m_fileStream = nullptr;
 
-	strcpy_s(m_filename, 1024, "");
 	m_archiveMode = -1;
 }
 
@@ -43,7 +42,7 @@ FileSerializer::~FileSerializer()
 
 void FileSerializer::SetFile(const char* filename)
 {
-	strcpy_s(m_filename, 1024, filename);
+	m_filename = filename;
 	OpenStream();
 }
 
@@ -98,7 +97,7 @@ void FileSerializer::OpenStream()
 	if(m_fileStream != nullptr)
 		return;
 
-	if(strlen(m_filename) == 0)
+	if(m_filename.length() == 0)
 		return;
 
 	if(m_archiveMode < 0 || m_archiveMode >= ArchiveMode::NumArchiveModes)
@@ -107,7 +106,7 @@ void FileSerializer::OpenStream()
 	if(m_archiveMode == ArchiveMode::Saving)
 	{
 		m_fileStream = new std::fstream();
-		m_fileStream->open(m_filename, std::ios::out | std::ios::binary);
+		m_fileStream->open(m_filename.c_str(), std::ios::out | std::ios::binary);
 
 		if(m_fileStream->fail())
 		{
@@ -118,7 +117,7 @@ void FileSerializer::OpenStream()
 	else if(m_archiveMode == ArchiveMode::Loading)
 	{
 		m_fileStream = new std::fstream();
-		m_fileStream->open(m_filename, std::ios::in | std::ios::binary);
+		m_fileStream->open(m_filename.c_str(), std::ios::in | std::ios::binary);
 
 		if(m_fileStream->fail())
 		{
