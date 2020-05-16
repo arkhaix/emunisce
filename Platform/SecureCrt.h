@@ -60,14 +60,6 @@ inline int strcpy_s(char* destination, unsigned int sizeBytes, const char* sourc
     return 0;
 }
 
-inline char* strtok_s(char* token, const char* delimiters, char** context)
-{
-    //todo
-
-    return strtok(token, delimiters);
-}
-
-
 #endif // EMUNISCE_COMPILER_MSVC
 
 #endif // SECURECRT_H

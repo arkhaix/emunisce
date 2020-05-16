@@ -21,6 +21,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 using namespace Emunisce;
 
 #include <algorithm>
+#include <regex>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -491,19 +492,9 @@ const char* BaseApplication::GetConsoleCommand(unsigned int index)
 
 std::vector<std::string> SplitCommand(std::string command)
 {
-	std::vector<std::string> result;
-
-	char* input = const_cast<char*>(command.c_str());
-	const char* separators = " \t\n";
-	char* token = nullptr;
-	char* context = nullptr;
-
-	token = strtok_s(input, separators, &context);
-	while(token != nullptr)
-	{
-		result.push_back(std::string(token));
-		token = strtok_s(nullptr, separators, &context);
-	}
+	std::regex regex("[ \t\n]");
+	std::vector<std::string> result(
+		std::sregex_token_iterator(command.begin(), command.end(), regex, -1), std::sregex_token_iterator());
 
 	return result;
 }
@@ -517,6 +508,7 @@ bool BaseApplication::ExecuteConsoleCommand(const char* command)
     const char* commandName = splitCommand[0].c_str();
     std::string lowercaseCommandName = commandName;
 	transform(lowercaseCommandName.begin(), lowercaseCommandName.end(), lowercaseCommandName.begin(), [](unsigned char c)->char{return (char) ::tolower(c);});
+	ConsolePrint(lowercaseCommandName.c_str()); ConsolePrint("\n");
 
 	// Resolve to a full command name via the prefix tree
 	CommandTrie* node = m_commandTrie->GetNode(lowercaseCommandName.c_str());
@@ -645,7 +637,7 @@ void BaseApplication::CommandRun(const char* /*params*/)
 void BaseApplication::CommandSaveState(const char* params)
 {
     const char* stateName = "default";
-    if(params != nullptr && strlen(params) == 0)
+    if(params != nullptr && strlen(params) != 0)
         stateName = params;
 
     SaveState(stateName);
@@ -656,7 +648,7 @@ void BaseApplication::CommandSaveState(const char* params)
 void BaseApplication::CommandLoadState(const char* params)
 {
     const char* stateName = "default";
-    if(params != nullptr && strlen(params) == 0)
+    if(params != nullptr && strlen(params) != 0)
         stateName = params;
 
     LoadState(stateName);

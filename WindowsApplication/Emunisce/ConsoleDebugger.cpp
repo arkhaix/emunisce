@@ -28,6 +28,7 @@ using namespace Emunisce;
 //STL
 #include <algorithm>
 #include <iostream>
+#include <regex>
 #include <string>
 #include <vector>
 
@@ -481,19 +482,9 @@ std::string ConsoleDebugger::FetchLine()
 
 std::vector<std::string> ConsoleDebugger::SplitCommand(std::string command)
 {
-	std::vector<std::string> result;
-
-	char* input = const_cast<char*>(command.c_str());
-	const char* separators = " \t\n";
-	char* token = nullptr;
-	char* context = nullptr;
-
-	token = strtok_s(input, separators, &context);
-	while(token != nullptr)
-	{
-		result.push_back(std::string(token));
-		token = strtok_s(nullptr, separators, &context);
-	}
+	std::regex regex("[ \t\n]");
+	std::vector<std::string> result(
+		std::sregex_token_iterator(command.begin(), command.end(), regex, -1), std::sregex_token_iterator());
 
 	return result;
 }
