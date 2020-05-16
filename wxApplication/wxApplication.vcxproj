@@ -513,9 +513,6 @@
     <ProjectReference Include="..\Utility\Serialization\Serialization.vcxproj">
       <Project>{7da30ea8-57a1-46f1-af7a-c9ddea094396}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\WindowsPlatform\WindowsPlatform.vcxproj">
-      <Project>{db6d23f7-7b73-4fae-8d91-bd8b045bf89c}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

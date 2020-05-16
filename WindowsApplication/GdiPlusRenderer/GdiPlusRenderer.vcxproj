@@ -232,7 +232,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -246,7 +246,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -260,7 +260,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -274,7 +274,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -288,7 +288,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -302,7 +302,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -316,7 +316,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -330,7 +330,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -346,7 +346,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -364,7 +364,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -382,7 +382,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -400,7 +400,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -418,7 +418,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -436,7 +436,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -454,7 +454,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -472,7 +472,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)Machine;$(SolutionDir)BaseApplication;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>

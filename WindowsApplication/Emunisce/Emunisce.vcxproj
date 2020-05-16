@@ -300,7 +300,7 @@
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -320,7 +320,7 @@
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -340,7 +340,7 @@
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -360,7 +360,7 @@
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -380,7 +380,7 @@
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -400,7 +400,7 @@
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -420,7 +420,7 @@
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -440,7 +440,7 @@
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
@@ -467,7 +467,7 @@
       </AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -483,7 +483,7 @@
       </AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -499,7 +499,7 @@
       </AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -515,7 +515,7 @@
       </AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -531,7 +531,7 @@
       </AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -547,7 +547,7 @@
       </AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -563,7 +563,7 @@
       </AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -579,7 +579,7 @@
       </AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Platform;$(SolutionDir)BaseApplication;$(SolutionDir)Machine;$(SolutionDir)Utility;$(SolutionDir)Win32Common</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -602,14 +602,14 @@
     <ProjectReference Include="..\..\Utility\Serialization\Serialization.vcxproj">
       <Project>{7da30ea8-57a1-46f1-af7a-c9ddea094396}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\WindowsPlatform\WindowsPlatform.vcxproj">
-      <Project>{db6d23f7-7b73-4fae-8d91-bd8b045bf89c}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\GdiPlusRenderer\GdiPlusRenderer.vcxproj">
       <Project>{ec091f82-1e1c-4b24-a41e-899cf6458295}</Project>
     </ProjectReference>
     <ProjectReference Include="..\WaveOutSound\WaveOutSound.vcxproj">
       <Project>{b47d9786-8300-4349-ab06-5fce239da5c5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Win32Common\Win32Common.vcxproj">
+      <Project>{179a002e-8f22-4252-987e-2653363daa7f}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

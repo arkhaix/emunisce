@@ -19,7 +19,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "windows.h"
 
-#include "../WindowsPlatform/Window.h"
+#include "../Win32Common/Window.h"
 
 #include "Emunisce.h"
 #include "ConsoleDebugger.h"

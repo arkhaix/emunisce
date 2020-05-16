@@ -12,6 +12,7 @@ cc_library(
 
         "@win32//:win32",
 
+        "//WindowsApplication/Win32Common:win32_common",
         "//WindowsApplication/GdiPlusRenderer:gdi_plus_renderer",
         "//WindowsApplication/WaveOutSound:wave_out_sound",
     ],
