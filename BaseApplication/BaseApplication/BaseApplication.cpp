@@ -674,27 +674,25 @@ void BaseApplication::CommandMute(const char* /*params*/)
     ConsolePrint("Unsupported\n");
 }
 
-void BaseApplication::CommandDisplayFilter(const char* params)
+void BaseApplication::CommandDisplayFilter(const char* in_params)
 {
-	if(params == nullptr || strlen(params) == 0)
+	std::string params(in_params);
+
+	if(params.empty())
 		params = "none";
 
 	DisplayFilter::Type filter = DisplayFilter::NoFilter;
 
-	if( _stricmp(params, "none") == 0 || _stricmp(params, "0") == 0 ||
-		_stricmp(params, "1") == 0 )
+	if(params == "none" || params == "0" || params == "1")
 		filter = DisplayFilter::NoFilter;
 
-	else if( _stricmp(params, "hq2x") == 0 || _stricmp(params, "2x") == 0 ||
-		_stricmp(params, "2") == 0 )
+	else if(params == "hq2x" || params == "2x" || params == "2")
 		filter = DisplayFilter::Hq2x;
 
-	else if( _stricmp(params, "hq3x") == 0 || _stricmp(params, "3x") == 0 ||
-		_stricmp(params, "3") == 0 )
+	else if(params == "hq3x" || params == "3x" || params == "3")
 		filter = DisplayFilter::Hq3x;
 
-	else if( _stricmp(params, "hq4x") == 0 || _stricmp(params, "4x") == 0 ||
-		_stricmp(params, "4") == 0 )
+	else if(params == "hq4x" || params == "4x" || params == "4")
 		filter = DisplayFilter::Hq4x;
 
 	SetDisplayFilter(filter);
@@ -708,30 +706,32 @@ void BaseApplication::CommandDisplayFilter(const char* params)
     ConsolePrint("Set display filter to "); ConsolePrint(filterNames[filter]); ConsolePrint("\n");
 }
 
-void BaseApplication::CommandVsync(const char* params)
+void BaseApplication::CommandVsync(const char* in_params)
 {
-	if(params == nullptr || strlen(params) == 0 || _stricmp(params, "0") == 0 || _stricmp(params, "off") == 0)
-    {
+	std::string params(in_params);
+	if(params.empty() || params == "0" || params == "off")
+	{
 		SetVsync(false);
-        ConsolePrint("Vsync disabled\n");
-    }
-    else
-    {
-        SetVsync(true);
-        ConsolePrint("Vsync enabled\n");
-    }
+		ConsolePrint("Vsync disabled\n");
+	}
+	else
+	{
+		SetVsync(true);
+		ConsolePrint("Vsync enabled\n");
+	}
 }
 
-void BaseApplication::CommandBackground(const char* params)
+void BaseApplication::CommandBackground(const char* in_params)
 {
-	if(params == nullptr || strlen(params) == 0 || _stricmp(params, "0") == 0 || _stricmp(params, "off") == 0)
-    {
+	std::string params(in_params);
+	if(params.empty() || params == "0" || params == "off")
+	{
 		DisableBackgroundAnimation();
-        ConsolePrint("Disabled background animation\n");
-    }
-    else
-    {
-        EnableBackgroundAnimation();
-        ConsolePrint("Enabled background animation\n");
-    }
+		ConsolePrint("Disabled background animation\n");
+	}
+	else
+	{
+		EnableBackgroundAnimation();
+		ConsolePrint("Enabled background animation\n");
+	}
 }
