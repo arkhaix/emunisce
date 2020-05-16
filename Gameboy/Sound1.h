@@ -21,94 +21,79 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #define SOUND1_H
 
 #include "PlatformTypes.h"
-
-#include "Sound.h"	///<for SquareSynthesisMethod
+#include "Sound.h"  ///<for SquareSynthesisMethod
 #include "SoundGenerator.h"
 
+namespace Emunisce {
 
-namespace Emunisce
-{
+class Gameboy;
+class DutyUnit;
 
-	class Gameboy;
-	class DutyUnit;
+class Sound1 : public SoundGenerator {
+   public:
+	Sound1();
+	virtual ~Sound1();
 
+	// Sound component
 
-	class Sound1 : public SoundGenerator
-	{
-	public:
+	void Initialize(ChannelController* channelController) override;
+	void SetMachine(Gameboy* machine) override;
 
-		Sound1();
-		virtual ~Sound1();
+	void Serialize(Archive& archive) override;
 
+	void SetSynthesisMethod(SquareSynthesisMethod::Type method);
 
-		//Sound component
+	// Sound generation
 
-		void Initialize(ChannelController* channelController) override;
-		void SetMachine(Gameboy* machine) override;
+	void PowerOff() override;
+	void PowerOn() override;
 
-		void Serialize(Archive& archive) override;
+	void Run(int ticks) override;
 
-		void SetSynthesisMethod(SquareSynthesisMethod::Type method);
+	void TickEnvelope();
+	virtual void TickSweep();
 
+	float GetSample() override;
 
-		//Sound generation
+	// Registers
 
-		void PowerOff() override;
-		void PowerOn() override;
+	void SetNR10(u8 value);
+	void SetNR11(u8 value);
+	void SetNR12(u8 value);
+	void SetNR13(u8 value);
+	void SetNR14(u8 value);
 
-		void Run(int ticks) override;
+   private:
+	// Sound generation
 
-		void TickEnvelope();
-		virtual void TickSweep();
+	DutyUnit* m_dutyUnit;
 
-		float GetSample() override;
+	int m_frequency;  ///< 11-bit frequency
 
+	void Trigger() override;
+	void TriggerSweep();
+	void WriteSweepRegister(u8 value);
 
-		//Registers
+	int CalculateFrequency();
 
-		void SetNR10(u8 value);
-		void SetNR11(u8 value);
-		void SetNR12(u8 value);
-		void SetNR13(u8 value);
-		void SetNR14(u8 value);
+	int m_frequencyShadow;
 
+	bool m_sweepEnabled;
+	int m_sweepShift;
+	bool m_sweepIncreasing;
+	int m_sweepTimerValue;
+	int m_sweepTimerPeriod;
+	bool m_hasPerformedDecreasingCalculation;
 
-	private:
+	// Registers
 
+	u8 m_nr10;  ///< ff10
+	u8 m_nr11;  ///< ff11
+	u8 m_nr12;  ///< ff12
+	u8 m_nr13;  ///< ff13
+	u8 m_nr14;  ///< ff14
+};
 
-		//Sound generation
-
-		DutyUnit* m_dutyUnit;
-
-		int m_frequency;	///<11-bit frequency
-
-
-		void Trigger() override;
-		void TriggerSweep();
-		void WriteSweepRegister(u8 value);
-
-		int CalculateFrequency();
-
-		int m_frequencyShadow;
-
-		bool m_sweepEnabled;
-		int m_sweepShift;
-		bool m_sweepIncreasing;
-		int m_sweepTimerValue;
-		int m_sweepTimerPeriod;
-		bool m_hasPerformedDecreasingCalculation;
-
-
-
-		//Registers
-
-		u8 m_nr10;	///<ff10
-		u8 m_nr11;	///<ff11
-		u8 m_nr12;	///<ff12
-		u8 m_nr13;	///<ff13
-		u8 m_nr14;	///<ff14
-	};
-
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

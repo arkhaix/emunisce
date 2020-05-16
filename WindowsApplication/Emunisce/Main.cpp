@@ -17,32 +17,28 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "windows.h"
-
-#include "../Win32Common/Window.h"
-
-#include "Emunisce.h"
-#include "ConsoleDebugger.h"
 #include "../GdiPlusRenderer/GdiPlusRenderer.h"
+#include "../Win32Common/Window.h"
+#include "ConsoleDebugger.h"
+#include "Emunisce.h"
+#include "windows.h"
 using namespace Emunisce;
 
 EmunisceApplication* g_phoenix = nullptr;
 
-DWORD WINAPI ConsoleThread(LPVOID /*param*/)
-{
+DWORD WINAPI ConsoleThread(LPVOID /*param*/) {
 	ConsoleDebugger* debugger = g_phoenix->GetDebugger();
 	debugger->Run();
 
 	return 0;
 }
 
-INT WINAPI WinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/, LPSTR /*lpCmdLine*/, INT /*iCmdShow*/)
-{
+INT WINAPI WinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/, LPSTR /*lpCmdLine*/, INT /*iCmdShow*/) {
 	g_phoenix = new EmunisceApplication();
 
 	HANDLE emulationThreadHandle = CreateThread(nullptr, 0, ConsoleThread, nullptr, 0, nullptr);
 
-	g_phoenix->RunWindow();	///<Blocks until shutdown is requested
+	g_phoenix->RunWindow();  ///< Blocks until shutdown is requested
 
 	WaitForSingleObject(emulationThreadHandle, 1000);
 
@@ -50,4 +46,3 @@ INT WINAPI WinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/, LPSTR /
 
 	return 0;
 }
-

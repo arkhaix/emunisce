@@ -20,70 +20,58 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "ScreenBuffer.h"
 using namespace Emunisce;
 
+#include <stdlib.h>  ///<malloc, free
+
 #include "Serialization/SerializationIncludes.h"
-
-#include <stdlib.h>	///<malloc, free
-
 
 // ScreenBuffer
 
-ScreenBuffer::~ScreenBuffer()
-{
-}
+ScreenBuffer::~ScreenBuffer() {}
 
-void ScreenBuffer::Serialize(Archive& archive)
-{
+void ScreenBuffer::Serialize(Archive& archive) {
 	int width = GetWidth();
 	int height = GetHeight();
 	DisplayPixel* pixels = GetPixels();
 
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++) {
-			SerializeItem(archive, pixels[y*width + x]);
+			SerializeItem(archive, pixels[y * width + x]);
 		}
 	}
 }
 
-
 // DynamicScreenBuffer
 
-DynamicScreenBuffer::DynamicScreenBuffer(int width, int height)
-{
+DynamicScreenBuffer::DynamicScreenBuffer(int width, int height) {
 	Width = width;
 	Height = height;
 	Pixels = (DisplayPixel*)malloc(width * height * sizeof(DisplayPixel));
 }
 
-DynamicScreenBuffer::~DynamicScreenBuffer()
-{
+DynamicScreenBuffer::~DynamicScreenBuffer() {
 	free(Pixels);
 }
 
-int DynamicScreenBuffer::GetWidth()
-{
+int DynamicScreenBuffer::GetWidth() {
 	return Width;
 }
 
-int DynamicScreenBuffer::GetHeight()
-{
+int DynamicScreenBuffer::GetHeight() {
 	return Height;
 }
 
-DisplayPixel* DynamicScreenBuffer::GetPixels()
-{
+DisplayPixel* DynamicScreenBuffer::GetPixels() {
 	return Pixels;
 }
 
-void DynamicScreenBuffer::Clear(DisplayPixel clearColor)
-{
+void DynamicScreenBuffer::Clear(DisplayPixel clearColor) {
 	int numPixels = Width * Height;
 	for (int i = 0; i < numPixels; i++) {
 		Pixels[i] = clearColor;
 	}
 }
 
-ScreenBuffer* DynamicScreenBuffer::Clone()
-{
+ScreenBuffer* DynamicScreenBuffer::Clone() {
 	DynamicScreenBuffer* result = new DynamicScreenBuffer(Width, Height);
 	memcpy(&result->Pixels[0], &Pixels[0], Width * Height * sizeof(DisplayPixel));
 	return result;

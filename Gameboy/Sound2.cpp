@@ -20,17 +20,13 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "Sound2.h"
 using namespace Emunisce;
 
-#include "GameboyIncludes.h"
-
-#include "Serialization/SerializationIncludes.h"
-
 #include "DutyUnit.h"
 #include "EnvelopeUnit.h"
+#include "GameboyIncludes.h"
 #include "LengthUnit.h"
+#include "Serialization/SerializationIncludes.h"
 
-
-Sound2::Sound2()
-{
+Sound2::Sound2() {
 	m_machine = nullptr;
 
 	m_dutyUnit = new DutyUnit();
@@ -41,28 +37,24 @@ Sound2::Sound2()
 	m_frequency = 0;
 }
 
-Sound2::~Sound2()
-{
+Sound2::~Sound2() {
 	delete m_envelopeUnit;
 	delete m_dutyUnit;
 }
 
+// Sound component
 
-//Sound component
-
-void Sound2::Initialize(ChannelController* channelController)
-{
+void Sound2::Initialize(ChannelController* channelController) {
 	SoundGenerator::Initialize(channelController);
 
-	m_nr20 = 0xff;	///<inaccessible
+	m_nr20 = 0xff;  ///< inaccessible
 	SetNR21(0x3f);
 	SetNR22(0x00);
 	SetNR23(0xff);
 	SetNR24(0xbf);
 }
 
-void Sound2::SetMachine(Gameboy* machine)
-{
+void Sound2::SetMachine(Gameboy* machine) {
 	SoundGenerator::SetMachine(machine);
 
 	Memory* memory = machine->GetGbMemory();
@@ -74,17 +66,15 @@ void Sound2::SetMachine(Gameboy* machine)
 	memory->SetRegisterLocation(0x19, &m_nr24, false);
 }
 
-void Sound2::Serialize(Archive& archive)
-{
+void Sound2::Serialize(Archive& archive) {
 	SoundGenerator::Serialize(archive);
 
-	//Sound generation
+	// Sound generation
 
 	m_dutyUnit->Serialize(archive);
 	SerializeItem(archive, m_frequency);
 
-
-	//Registers
+	// Registers
 
 	SerializeItem(archive, m_nr20);
 	SerializeItem(archive, m_nr21);
@@ -93,16 +83,13 @@ void Sound2::Serialize(Archive& archive)
 	SerializeItem(archive, m_nr24);
 }
 
-void Sound2::SetSynthesisMethod(SquareSynthesisMethod::Type method)
-{
+void Sound2::SetSynthesisMethod(SquareSynthesisMethod::Type method) {
 	m_dutyUnit->SetSynthesisMethod(method);
 }
 
+// Sound generation
 
-//Sound generation
-
-void Sound2::PowerOff()
-{
+void Sound2::PowerOff() {
 	SetNR21(0);
 	SetNR22(0);
 	SetNR23(0);
@@ -111,28 +98,21 @@ void Sound2::PowerOff()
 	SoundGenerator::PowerOff();
 }
 
-void Sound2::PowerOn()
-{
+void Sound2::PowerOn() {
 	SoundGenerator::PowerOn();
 }
 
-
-void Sound2::Run(int ticks)
-{
+void Sound2::Run(int ticks) {
 	SoundGenerator::Run(ticks);
 
 	m_dutyUnit->Run(ticks);
 }
 
-
-void Sound2::TickEnvelope()
-{
+void Sound2::TickEnvelope() {
 	m_envelopeUnit->Tick();
 }
 
-
-float Sound2::GetSample()
-{
+float Sound2::GetSample() {
 	float sample = m_dutyUnit->GetSample();
 
 	sample *= m_envelopeUnit->GetCurrentVolume();
@@ -140,16 +120,13 @@ float Sound2::GetSample()
 	return sample;
 }
 
+// Registers
 
-//Registers
+void Sound2::SetNR21(u8 value) {
+	// DMG allows writing this even when the power is off
+	// todo: CGB does not
 
-void Sound2::SetNR21(u8 value)
-{
-	//DMG allows writing this even when the power is off
-	//todo: CGB does not
-
-	if (m_hasPower == true)
-	{
+	if (m_hasPower == true) {
 		m_dutyUnit->WriteDutyRegister(value & 0xc0);
 		m_nr21 = value & 0xc0;
 	}
@@ -159,8 +136,7 @@ void Sound2::SetNR21(u8 value)
 	m_nr21 |= 0x3f;
 }
 
-void Sound2::SetNR22(u8 value)
-{
+void Sound2::SetNR22(u8 value) {
 	if (m_hasPower == false) {
 		return;
 	}
@@ -170,8 +146,7 @@ void Sound2::SetNR22(u8 value)
 	m_nr22 = value;
 }
 
-void Sound2::SetNR23(u8 value)
-{
+void Sound2::SetNR23(u8 value) {
 	if (m_hasPower == false) {
 		return;
 	}
@@ -183,8 +158,7 @@ void Sound2::SetNR23(u8 value)
 	m_nr23 = 0xff;
 }
 
-void Sound2::SetNR24(u8 value)
-{
+void Sound2::SetNR24(u8 value) {
 	if (m_hasPower == false) {
 		return;
 	}
@@ -199,9 +173,7 @@ void Sound2::SetNR24(u8 value)
 	m_nr24 |= 0xbf;
 }
 
-
-void Sound2::Trigger()
-{
+void Sound2::Trigger() {
 	SoundGenerator::Trigger();
 	m_dutyUnit->Trigger();
 	m_envelopeUnit->Trigger();

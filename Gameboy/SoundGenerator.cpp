@@ -20,42 +20,32 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "SoundGenerator.h"
 using namespace Emunisce;
 
-#include "GameboyIncludes.h"
-
-#include "Serialization/SerializationIncludes.h"
-
 #include "ChannelController.h"
 #include "EnvelopeUnit.h"
+#include "GameboyIncludes.h"
 #include "LengthUnit.h"
+#include "Serialization/SerializationIncludes.h"
 #include "Sound.h"
 
-
-SoundGenerator::SoundGenerator()
-{
+SoundGenerator::SoundGenerator() {
 	m_lengthUnit = new LengthUnit(this);
 	m_envelopeUnit = nullptr;
 	m_hasPower = true;
 }
 
-SoundGenerator::~SoundGenerator()
-{
+SoundGenerator::~SoundGenerator() {
 	delete m_lengthUnit;
 }
 
-
-void SoundGenerator::Initialize(ChannelController* channelController)
-{
+void SoundGenerator::Initialize(ChannelController* channelController) {
 	m_channelController = channelController;
 }
 
-void SoundGenerator::SetMachine(Gameboy* machine)
-{
+void SoundGenerator::SetMachine(Gameboy* machine) {
 	m_machine = machine;
 }
 
-
-void SoundGenerator::Serialize(Archive& archive)
-{
+void SoundGenerator::Serialize(Archive& archive) {
 	SerializeItem(archive, m_hasPower);
 	SerializeItem(archive, m_dacEnabled);
 
@@ -66,51 +56,36 @@ void SoundGenerator::Serialize(Archive& archive)
 	}
 }
 
-
-void SoundGenerator::PowerOff()
-{
+void SoundGenerator::PowerOff() {
 	m_hasPower = false;
 }
 
-void SoundGenerator::PowerOn()
-{
+void SoundGenerator::PowerOn() {
 	m_hasPower = true;
 }
 
+void SoundGenerator::Run(int ticks) {}
 
-void SoundGenerator::Run(int ticks)
-{
-}
-
-
-void SoundGenerator::TickLength()
-{
+void SoundGenerator::TickLength() {
 	m_lengthUnit->Tick();
 }
 
-
-float SoundGenerator::GetSample()
-{
+float SoundGenerator::GetSample() {
 	return 0.f;
 }
 
-
-void SoundGenerator::Trigger()
-{
-	if (m_dacEnabled == true)
-	{
+void SoundGenerator::Trigger() {
+	if (m_dacEnabled == true) {
 		m_channelController->EnableChannel();
 	}
 
 	m_lengthUnit->Trigger();
 }
 
-void SoundGenerator::WriteTriggerRegister(u8 value)
-{
+void SoundGenerator::WriteTriggerRegister(u8 value) {
 	if (value & 0x40) {
 		m_lengthUnit->Enable();
-	}
-	else {
+	} else {
 		m_lengthUnit->Disable();
 	}
 

@@ -22,68 +22,60 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "PlatformTypes.h"
 
+namespace Emunisce {
 
-namespace Emunisce
-{
+class Archive;
 
-	class Archive;
+class Gameboy;
+class ChannelController;
+class EnvelopeUnit;
+class LengthUnit;
 
-	class Gameboy;
-	class ChannelController;
-	class EnvelopeUnit;
-	class LengthUnit;
+class SoundGenerator {
+   public:
+	SoundGenerator();
+	~SoundGenerator();
 
+	virtual void Initialize(ChannelController* channelController);
+	virtual void SetMachine(Gameboy* machine);
 
-	class SoundGenerator
-	{
-	public:
+	virtual void Serialize(Archive& archive);
 
-		SoundGenerator();
-		~SoundGenerator();
+	virtual void PowerOff();
+	virtual void PowerOn();
 
-		virtual void Initialize(ChannelController* channelController);
-		virtual void SetMachine(Gameboy* machine);
+	virtual void Run(int ticks);
 
-		virtual void Serialize(Archive& archive);
+	virtual void TickLength();
 
-		virtual void PowerOff();
-		virtual void PowerOn();
+	virtual float GetSample();
 
-		virtual void Run(int ticks);
+   protected:
+	virtual void Trigger();
+	virtual void WriteTriggerRegister(u8 value);
 
-		virtual void TickLength();
+	Gameboy* m_machine;
+	bool m_hasPower;
+	bool m_dacEnabled;
+	ChannelController* m_channelController;
 
-		virtual float GetSample();
+	// Length counter
 
-	protected:
+	friend class LengthUnit;
+	LengthUnit* m_lengthUnit;
 
-		virtual void Trigger();
-		virtual void WriteTriggerRegister(u8 value);
+	// Sweep
 
-		Gameboy* m_machine;
-		bool m_hasPower;
-		bool m_dacEnabled;
-		ChannelController* m_channelController;
+	// Duty
 
+	// Envelope
 
-		//Length counter
+	friend class EnvelopeUnit;
+	EnvelopeUnit* m_envelopeUnit;
 
-		friend class LengthUnit;
-		LengthUnit* m_lengthUnit;
+	// Noise
+};
 
-
-		//Sweep
-
-		//Duty
-
-		//Envelope
-
-		friend class EnvelopeUnit;
-		EnvelopeUnit* m_envelopeUnit;
-
-		//Noise
-	};
-
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

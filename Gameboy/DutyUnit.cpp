@@ -22,22 +22,15 @@ using namespace Emunisce;
 
 #include "Serialization/SerializationIncludes.h"
 
-
-DutyUnit::DutyUnit()
-{
+DutyUnit::DutyUnit() {
 	m_timerPeriod = 0;
 	m_timerValue = 0;
 
 	m_dutyPosition = 0;
 	m_dutyMode = 0;
 
-	int dutyTable[4][8] =
-	{
-		{0,0,0,0,0,0,0,1},
-		{1,0,0,0,0,0,0,1},
-		{1,0,0,0,0,1,1,1},
-		{0,1,1,1,1,1,1,0}
-	};
+	int dutyTable[4][8] = {
+		{0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 1, 1, 1}, {0, 1, 1, 1, 1, 1, 1, 0}};
 
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 8; j++) {
@@ -52,9 +45,7 @@ DutyUnit::DutyUnit()
 	m_sumSinceLastSample = 0;
 }
 
-
-void DutyUnit::Serialize(Archive& archive)
-{
+void DutyUnit::Serialize(Archive& archive) {
 	SerializeItem(archive, m_timerPeriod);
 	SerializeItem(archive, m_timerValue);
 
@@ -69,18 +60,14 @@ void DutyUnit::Serialize(Archive& archive)
 	SerializeItem(archive, m_sumSinceLastSample);
 }
 
-
-void DutyUnit::Run(int ticks)
-{
+void DutyUnit::Run(int ticks) {
 	if (m_timerPeriod == 0) {
 		return;
 	}
 
-	if (m_synthesisMethod == SquareSynthesisMethod::Naive)
-	{
+	if (m_synthesisMethod == SquareSynthesisMethod::Naive) {
 		m_timerValue -= ticks;
-		while (m_timerValue <= 0)
-		{
+		while (m_timerValue <= 0) {
 			m_timerValue += m_timerPeriod;
 
 			m_dutyPosition++;
@@ -92,16 +79,14 @@ void DutyUnit::Run(int ticks)
 		return;
 	}
 
-	else if (m_synthesisMethod == SquareSynthesisMethod::LinearInterpolation)
-	{
+	else if (m_synthesisMethod == SquareSynthesisMethod::LinearInterpolation) {
 		if (m_hitNyquist == true) {
 			return;
 		}
 
 		m_ticksSinceLastSample += ticks;
 
-		if (m_timerValue > ticks)
-		{
+		if (m_timerValue > ticks) {
 			m_timerValue -= ticks;
 
 			int sampleValue = 1;
@@ -113,8 +98,7 @@ void DutyUnit::Run(int ticks)
 			return;
 		}
 
-		if (m_hasTransitioned == true)
-		{
+		if (m_hasTransitioned == true) {
 			m_hitNyquist = true;
 			return;
 		}
@@ -139,33 +123,26 @@ void DutyUnit::Run(int ticks)
 		return Run(ticks);
 	}
 
-	//else
+	// else
 
 	return;
 }
 
-void DutyUnit::Trigger()
-{
+void DutyUnit::Trigger() {
 	m_dutyPosition = 0;
 	m_timerValue = m_timerPeriod;
 }
 
-
-void DutyUnit::SetFrequency(int frequency)
-{
+void DutyUnit::SetFrequency(int frequency) {
 	m_timerPeriod = (2048 - frequency) * 4;
 }
 
-void DutyUnit::WriteDutyRegister(u8 value)
-{
+void DutyUnit::WriteDutyRegister(u8 value) {
 	m_dutyMode = (value & 0xc0) >> 6;
 }
 
-
-float DutyUnit::GetSample()
-{
-	if (m_synthesisMethod == SquareSynthesisMethod::Naive)
-	{
+float DutyUnit::GetSample() {
+	if (m_synthesisMethod == SquareSynthesisMethod::Naive) {
 		if (m_dutyTable[m_dutyMode][m_dutyPosition] == 0) {
 			return -1.f;
 		}
@@ -173,8 +150,7 @@ float DutyUnit::GetSample()
 		return 1.f;
 	}
 
-	else if (m_synthesisMethod == SquareSynthesisMethod::LinearInterpolation)
-	{
+	else if (m_synthesisMethod == SquareSynthesisMethod::LinearInterpolation) {
 		float result = 0.f;
 
 		if (m_ticksSinceLastSample > 0 && m_hitNyquist == false) {
@@ -189,14 +165,12 @@ float DutyUnit::GetSample()
 		return result;
 	}
 
-	//else
+	// else
 
 	return 0.f;
 }
 
-
-void DutyUnit::SetSynthesisMethod(SquareSynthesisMethod::Type method)
-{
+void DutyUnit::SetSynthesisMethod(SquareSynthesisMethod::Type method) {
 	m_synthesisMethod = method;
 
 	if (method < 0 || method >= SquareSynthesisMethod::NumSquareSynthesisMethods) {

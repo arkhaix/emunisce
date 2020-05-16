@@ -22,57 +22,50 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "PlatformTypes.h"
 
+namespace Emunisce {
 
-namespace Emunisce
-{
+class ISerializer;
 
-	class ISerializer;
+namespace ArchiveMode {
+typedef int Type;
 
-	namespace ArchiveMode
-	{
-		typedef int Type;
+enum {
+	Saving = 0,
+	Loading,
 
-		enum
-		{
-			Saving = 0,
-			Loading,
+	NumArchiveModes
+};
+}  // namespace ArchiveMode
 
-			NumArchiveModes
-		};
-	}
+class Archive {
+   public:
+	Archive(ISerializer* serializer, ArchiveMode::Type archiveMode);
+	void Close();
 
-	class Archive
-	{
-	public:
+	ISerializer* GetSerializer();
+	ArchiveMode::Type GetArchiveMode();
 
-		Archive(ISerializer* serializer, ArchiveMode::Type archiveMode);
-		void Close();
+	void SerializeBuffer(unsigned char* buffer, unsigned int bytes);
 
-		ISerializer* GetSerializer();
-		ArchiveMode::Type GetArchiveMode();
+	Archive& operator&(u8& data);
+	Archive& operator&(u16& data);
+	Archive& operator&(u32& data);
+	Archive& operator&(u64& data);
 
-		void SerializeBuffer(unsigned char* buffer, unsigned int bytes);
+	Archive& operator&(s8& data);
+	Archive& operator&(s16& data);
+	Archive& operator&(s32& data);
+	Archive& operator&(s64& data);
 
-		Archive& operator&(u8& data);
-		Archive& operator&(u16& data);
-		Archive& operator&(u32& data);
-		Archive& operator&(u64& data);
+	Archive& operator&(bool& data);
+	Archive& operator&(float& data);
+	Archive& operator&(double& data);
 
-		Archive& operator&(s8& data);
-		Archive& operator&(s16& data);
-		Archive& operator&(s32& data);
-		Archive& operator&(s64& data);
+   protected:
+	ISerializer* m_serializer;
+	ArchiveMode::Type m_archiveMode;
+};
 
-		Archive& operator&(bool& data);
-		Archive& operator&(float& data);
-		Archive& operator&(double& data);
-
-	protected:
-
-		ISerializer* m_serializer;
-		ArchiveMode::Type m_archiveMode;
-	};
-
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

@@ -22,13 +22,11 @@ using namespace Emunisce;
 
 #include "Gameboy.h"
 
-IEmulatedMachine* MachineFactory::CreateMachine(const char* romFilename, EmulatedMachine::Type machineType)
-{
+IEmulatedMachine* MachineFactory::CreateMachine(const char* romFilename, EmulatedMachine::Type machineType) {
 	return Gameboy::Create(romFilename, machineType);
 }
 
-void MachineFactory::ReleaseMachine(IEmulatedMachine* machine)
-{
+void MachineFactory::ReleaseMachine(IEmulatedMachine* machine) {
 	Gameboy* gameboy = dynamic_cast<Gameboy*>(machine);
 	if (gameboy != nullptr) {
 		Gameboy::Release(gameboy);

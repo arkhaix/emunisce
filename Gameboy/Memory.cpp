@@ -20,25 +20,24 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "Memory.h"
 using namespace Emunisce;
 
-//System
+// System
+#include <Memory.h>
+
 #include <cstring>
 #include <ctime>
 #include <fstream>
-#include <Memory.h>
 
-//Project
-#include "RomOnly.h"
+// Project
 #include "Mbc1.h"
 #include "Mbc3.h"
 #include "Mbc5.h"
+#include "RomOnly.h"
 
-//Solution
+// Solution
 #include "GameboyIncludes.h"
 #include "Serialization/SerializationIncludes.h"
 
-
-Memory::Memory()
-{
+Memory::Memory() {
 	srand((unsigned int)time(nullptr));
 
 	m_machine = nullptr;
@@ -52,8 +51,7 @@ Memory::Memory()
 	m_vramLocked = false;
 	m_waveRamLockMode = WaveRamLock::Normal;
 
-	for (int i = 0; i < 0x100; i++)
-	{
+	for (int i = 0; i < 0x100; i++) {
 		m_registerLocation[i] = nullptr;
 		m_callWriteRegister[i] = false;
 	}
@@ -61,86 +59,81 @@ Memory::Memory()
 	m_bootRomEnabled = false;
 }
 
-Memory::~Memory()
-{
-}
+Memory::~Memory() {}
 
-void Memory::SetMachine(Gameboy* machine)
-{
+void Memory::SetMachine(Gameboy* machine) {
 	m_machine = machine;
 	m_machineType = machine->GetType();
 
-	//Reset Machine-dependent values
-	for (int i = 0; i < 0x100; i++)
-	{
+	// Reset Machine-dependent values
+	for (int i = 0; i < 0x100; i++) {
 		m_registerLocation[i] = nullptr;
 		m_callWriteRegister[i] = false;
 	}
 
-	//Update component pointers
+	// Update component pointers
 	m_cpu = machine->GetGbCpu();
 	m_display = machine->GetGbDisplay();
 	m_input = machine->GetGbInput();
 	m_sound = machine->GetGbSound();
 
-	//Update register info
+	// Update register info
 
-	m_callWriteRegister[0x46] = true;	//Memory::SetDmaStartLocation
-	m_callWriteRegister[0x4f] = true;	//Memory::SetCgbVramBank
-	m_callWriteRegister[0x50] = true;	//Memory::DisableBootRom
-	m_callWriteRegister[0x70] = true;	//Memory::SetCgbRamBank
+	m_callWriteRegister[0x46] = true;  // Memory::SetDmaStartLocation
+	m_callWriteRegister[0x4f] = true;  // Memory::SetCgbVramBank
+	m_callWriteRegister[0x50] = true;  // Memory::DisableBootRom
+	m_callWriteRegister[0x70] = true;  // Memory::SetCgbRamBank
 
-	m_callWriteRegister[0x51] = true;	//Memory::SetCgbDmaSourceHigh
-	m_callWriteRegister[0x52] = true;	//Memory::SetCgbDmaSourceLow
-	m_callWriteRegister[0x53] = true;	//Memory::SetCgbDmaDestinationHigh
-	m_callWriteRegister[0x54] = true;	//Memory::SetCgbDmaDestinationLow
-	m_callWriteRegister[0x55] = true;	//Memory::CgbDmaTrigger
+	m_callWriteRegister[0x51] = true;  // Memory::SetCgbDmaSourceHigh
+	m_callWriteRegister[0x52] = true;  // Memory::SetCgbDmaSourceLow
+	m_callWriteRegister[0x53] = true;  // Memory::SetCgbDmaDestinationHigh
+	m_callWriteRegister[0x54] = true;  // Memory::SetCgbDmaDestinationLow
+	m_callWriteRegister[0x55] = true;  // Memory::CgbDmaTrigger
 
-	m_callWriteRegister[0x04] = true;	//CPU::SetTimerDivider
-	m_callWriteRegister[0x07] = true;	//CPU::SetTimerControl
-	m_callWriteRegister[0x4d] = true;	//CPU::SetCgbSpeedSwitch
+	m_callWriteRegister[0x04] = true;  // CPU::SetTimerDivider
+	m_callWriteRegister[0x07] = true;  // CPU::SetTimerControl
+	m_callWriteRegister[0x4d] = true;  // CPU::SetCgbSpeedSwitch
 
-	m_callWriteRegister[0x40] = true;	//Display::SetLcdControl
-	m_callWriteRegister[0x41] = true;	//Display::SetLcdStatus
-	m_callWriteRegister[0x44] = true;	//Display::SetCurrentScanline
-	m_callWriteRegister[0x45] = true;	//Display::SetScanlineCompare
+	m_callWriteRegister[0x40] = true;  // Display::SetLcdControl
+	m_callWriteRegister[0x41] = true;  // Display::SetLcdStatus
+	m_callWriteRegister[0x44] = true;  // Display::SetCurrentScanline
+	m_callWriteRegister[0x45] = true;  // Display::SetScanlineCompare
 
-	m_callWriteRegister[0x68] = true;	//Display::SetCgbBackgroundPaletteTarget
-	m_callWriteRegister[0x69] = true;	//Display::SetCgbBackgroundPaletteData
-	m_callWriteRegister[0x6a] = true;	//Display::SetCgbSpritePaletteTarget
-	m_callWriteRegister[0x6b] = true;	//Display::SetCgbSpritePaletteData
+	m_callWriteRegister[0x68] = true;  // Display::SetCgbBackgroundPaletteTarget
+	m_callWriteRegister[0x69] = true;  // Display::SetCgbBackgroundPaletteData
+	m_callWriteRegister[0x6a] = true;  // Display::SetCgbSpritePaletteTarget
+	m_callWriteRegister[0x6b] = true;  // Display::SetCgbSpritePaletteData
 
-	m_callWriteRegister[0x00] = true;	//Input::SetJoypadMode
+	m_callWriteRegister[0x00] = true;  // Input::SetJoypadMode
 
-	m_callWriteRegister[0x10] = true;	//Sound::SetNR10
-	m_callWriteRegister[0x11] = true;	//Sound::SetNR11
-	m_callWriteRegister[0x12] = true;	//Sound::SetNR12
-	m_callWriteRegister[0x13] = true;	//Sound::SetNR13
-	m_callWriteRegister[0x14] = true;	//Sound::SetNR14
+	m_callWriteRegister[0x10] = true;  // Sound::SetNR10
+	m_callWriteRegister[0x11] = true;  // Sound::SetNR11
+	m_callWriteRegister[0x12] = true;  // Sound::SetNR12
+	m_callWriteRegister[0x13] = true;  // Sound::SetNR13
+	m_callWriteRegister[0x14] = true;  // Sound::SetNR14
 
-	m_callWriteRegister[0x16] = true;	//Sound::SetNR21
-	m_callWriteRegister[0x17] = true;	//Sound::SetNR22
-	m_callWriteRegister[0x18] = true;	//Sound::SetNR23
-	m_callWriteRegister[0x19] = true;	//Sound::SetNR24
+	m_callWriteRegister[0x16] = true;  // Sound::SetNR21
+	m_callWriteRegister[0x17] = true;  // Sound::SetNR22
+	m_callWriteRegister[0x18] = true;  // Sound::SetNR23
+	m_callWriteRegister[0x19] = true;  // Sound::SetNR24
 
-	m_callWriteRegister[0x1a] = true;	//Sound::SetNR30
-	m_callWriteRegister[0x1b] = true;	//Sound::SetNR31
-	m_callWriteRegister[0x1c] = true;	//Sound::SetNR32
-	m_callWriteRegister[0x1d] = true;	//Sound::SetNR33
-	m_callWriteRegister[0x1e] = true;	//Sound::SetNR34
+	m_callWriteRegister[0x1a] = true;  // Sound::SetNR30
+	m_callWriteRegister[0x1b] = true;  // Sound::SetNR31
+	m_callWriteRegister[0x1c] = true;  // Sound::SetNR32
+	m_callWriteRegister[0x1d] = true;  // Sound::SetNR33
+	m_callWriteRegister[0x1e] = true;  // Sound::SetNR34
 
-	m_callWriteRegister[0x20] = true;	//Sound::SetNR41
-	m_callWriteRegister[0x21] = true;	//Sound::SetNR42
-	m_callWriteRegister[0x22] = true;	//Sound::SetNR43
-	m_callWriteRegister[0x23] = true;	//Sound::SetNR44
+	m_callWriteRegister[0x20] = true;  // Sound::SetNR41
+	m_callWriteRegister[0x21] = true;  // Sound::SetNR42
+	m_callWriteRegister[0x22] = true;  // Sound::SetNR43
+	m_callWriteRegister[0x23] = true;  // Sound::SetNR44
 
-	m_callWriteRegister[0x24] = true;	//Sound::SetNR50
-	m_callWriteRegister[0x25] = true;	//Sound::SetNR51
-	m_callWriteRegister[0x26] = true;	//Sound::SetNR52
+	m_callWriteRegister[0x24] = true;  // Sound::SetNR50
+	m_callWriteRegister[0x25] = true;  // Sound::SetNR51
+	m_callWriteRegister[0x26] = true;  // Sound::SetNR52
 }
 
-void Memory::Initialize()
-{
+void Memory::Initialize() {
 	m_dmaMode = DmaMode::None;
 	SetRegisterLocation(0x55, &m_cgbDmaLength, false);
 	m_inHBlank = false;
@@ -149,27 +142,25 @@ void Memory::Initialize()
 	m_selectedCgbRamBank = 1;
 	m_selectedCgbVramBank = 0;
 
-	//Randomize the active RAM
+	// Randomize the active RAM
 	for (int i = 0; i < 0x2000; i++) {
 		m_memoryData[0xa000 + i] = (u8)rand();
 	}
 
 	LoadBootRom("dmg_rom.bin");
 
-	//Tell the cpu to skip the bootrom if there isn't one loaded
+	// Tell the cpu to skip the bootrom if there isn't one loaded
 	if (m_bootRomEnabled == false && m_cpu) {
 		m_cpu->pc = 0x100;
 	}
 }
 
-void Memory::Run(int ticks)
-{
+void Memory::Run(int ticks) {
 	if ((m_cgbDmaLength & 0x80) == 0 || m_dmaMode == DmaMode::None) {
 		return;
 	}
 
-	if (m_dmaMode == DmaMode::General)
-	{
+	if (m_dmaMode == DmaMode::General) {
 		bool vramLocked = m_vramLocked;
 		m_vramLocked = false;
 
@@ -177,23 +168,20 @@ void Memory::Run(int ticks)
 		length += 1;
 		length *= 0x10;
 
-		for (int i = 0; i < length; i++)
-		{
+		for (int i = 0; i < length; i++) {
 			u8 value = Read8(m_cgbDmaSource + i);
 			Write8(0x8000 + m_cgbDmaDestination + i, value);
 		}
 
-		m_cgbDmaLength = 0;	///<DMA is done
+		m_cgbDmaLength = 0;  ///< DMA is done
 		m_dmaMode = DmaMode::None;
 
 		m_vramLocked = vramLocked;
 	}
 
-	if (m_dmaMode == DmaMode::HBlank && m_inHBlank == true && m_hblankDoneThisLine == false)
-	{
-		//Transfer 10h bytes
-		for (int i = 0; i < 0x10; i++)
-		{
+	if (m_dmaMode == DmaMode::HBlank && m_inHBlank == true && m_hblankDoneThisLine == false) {
+		// Transfer 10h bytes
+		for (int i = 0; i < 0x10; i++) {
 			u8 value = Read8(m_cgbDmaSource);
 			Write8(0x8000 + m_cgbDmaDestination, value);
 
@@ -201,14 +189,11 @@ void Memory::Run(int ticks)
 			m_cgbDmaDestination++;
 		}
 
-		//DMA done?
-		if ((m_cgbDmaLength & 0x7f) == 0)
-		{
-			m_cgbDmaLength = 0;	///<Clears 0x80: the DMA-is-active flag
+		// DMA done?
+		if ((m_cgbDmaLength & 0x7f) == 0) {
+			m_cgbDmaLength = 0;  ///< Clears 0x80: the DMA-is-active flag
 			m_dmaMode = DmaMode::None;
-		}
-		else
-		{
+		} else {
 			m_cgbDmaLength--;
 		}
 
@@ -216,32 +201,26 @@ void Memory::Run(int ticks)
 	}
 }
 
-void Memory::Serialize(Archive& archive)
-{
+void Memory::Serialize(Archive& archive) {
 	SerializeItem(archive, m_bootRomEnabled);
 
-
-	//Memory
+	// Memory
 
 	SerializeBuffer(archive, &m_memoryData[0x8000], (0x10000 - 0x8000));
 
+	// Registers are set up by the components and don't need to be serialized here
 
-	//Registers are set up by the components and don't need to be serialized here
-
-
-	//Display features
+	// Display features
 
 	SerializeItem(archive, m_vramLocked);
 	SerializeItem(archive, m_oamLocked);
 
-
-	//Sound features
+	// Sound features
 
 	SerializeItem(archive, m_waveRamLockMode);
 	SerializeItem(archive, m_waveRamReadValue);
 
-
-	//DMA state
+	// DMA state
 
 	SerializeItem(archive, m_cgbDmaSource);
 	SerializeItem(archive, m_cgbDmaDestination);
@@ -251,8 +230,7 @@ void Memory::Serialize(Archive& archive)
 	SerializeItem(archive, m_inHBlank);
 	SerializeItem(archive, m_hblankDoneThisLine);
 
-
-	//CGB banks
+	// CGB banks
 
 	SerializeItem(archive, m_selectedCgbRamBank);
 	SerializeItem(archive, m_selectedCgbVramBank);
@@ -265,23 +243,17 @@ void Memory::Serialize(Archive& archive)
 		SerializeBuffer(archive, &cgbVramBank[0], 0x2000);
 	}
 
-
-	//Update Display caches on load
-	if (archive.GetArchiveMode() == ArchiveMode::Loading)
-	{
-		//The Display doesn't save its vram and oam caches since they're already saved by Memory
+	// Update Display caches on load
+	if (archive.GetArchiveMode() == ArchiveMode::Loading) {
+		// The Display doesn't save its vram and oam caches since they're already saved by Memory
 		// so this is here to restore those caches
 
-		if (m_machineType == EmulatedMachine::Gameboy)
-		{
+		if (m_machineType == EmulatedMachine::Gameboy) {
 			for (int address = 0x8000; address < 0xa000; address++) {
 				m_display->WriteVram(0, address, m_memoryData[address]);
 			}
-		}
-		else if (m_machineType == EmulatedMachine::GameboyColor)
-		{
-			for (int bank = 0; bank < 2; bank++)
-			{
+		} else if (m_machineType == EmulatedMachine::GameboyColor) {
+			for (int bank = 0; bank < 2; bank++) {
 				for (int address = 0x8000; address < 0xa000; address++) {
 					m_display->WriteVram(bank, address, m_cgbVramBanks[bank][address - 0x8000]);
 				}
@@ -294,14 +266,12 @@ void Memory::Serialize(Archive& archive)
 	}
 }
 
-void Memory::SetRegisterLocation(u8 registerOffset, u8* pRegister, bool writeable)
-{
+void Memory::SetRegisterLocation(u8 registerOffset, u8* pRegister, bool writeable) {
 	m_registerLocation[registerOffset] = pRegister;
 	m_registerWriteable[registerOffset] = writeable;
 }
 
-u8* Memory::GetVram(int bank)
-{
+u8* Memory::GetVram(int bank) {
 	if (m_machineType != EmulatedMachine::GameboyColor) {
 		return &m_memoryData[0x8000];
 	}
@@ -310,73 +280,55 @@ u8* Memory::GetVram(int bank)
 		return &m_cgbVramBanks[m_selectedCgbVramBank][0];
 	}
 
-	bank = bank & 0x01;	///<The only valid banks are 0 and 1.
+	bank = bank & 0x01;  ///< The only valid banks are 0 and 1.
 
 	return &m_cgbVramBanks[bank][0];
 }
 
-u8* Memory::GetOam()
-{
+u8* Memory::GetOam() {
 	return &m_memoryData[0xfe00];
 }
 
-void Memory::BeginHBlank()
-{
+void Memory::BeginHBlank() {
 	m_hblankDoneThisLine = false;
 	m_inHBlank = true;
 }
 
-void Memory::EndHBlank()
-{
+void Memory::EndHBlank() {
 	m_inHBlank = false;
 }
 
-u8 Memory::Read8(u16 address)
-{
-	if (address >= 0xff00)
-	{
+u8 Memory::Read8(u16 address) {
+	if (address >= 0xff00) {
 		u8 offset = (u8)(address & 0x00ff);
 		u8* pRegister = m_registerLocation[offset];
 		if (pRegister != nullptr) {
 			return *pRegister;
 		}
 
-		if (address >= 0xff30 && address < 0xff40)
-		{
-			if (m_waveRamLockMode == WaveRamLock::NoAccess)
-			{
-				//printf("Read(%04X):NoAccess: %02X\n", address, 0xff);
+		if (address >= 0xff30 && address < 0xff40) {
+			if (m_waveRamLockMode == WaveRamLock::NoAccess) {
+				// printf("Read(%04X):NoAccess: %02X\n", address, 0xff);
 				return 0xff;
-			}
-			else if (m_waveRamLockMode == WaveRamLock::SingleValue)
-			{
-				//printf("Read(%04X):SingleValue: %02X\n", address, m_waveRamReadValue);
+			} else if (m_waveRamLockMode == WaveRamLock::SingleValue) {
+				// printf("Read(%04X):SingleValue: %02X\n", address, m_waveRamReadValue);
 				return m_waveRamReadValue;
-			}
-			else
-			{
-				//printf("Read(%04X):Normal: %02X\n", address, m_memoryData[address]);
+			} else {
+				// printf("Read(%04X):Normal: %02X\n", address, m_memoryData[address]);
 			}
 		}
-	}
-	else if (address >= 0x8000 && address < 0xa000 && m_vramLocked)
-	{
+	} else if (address >= 0x8000 && address < 0xa000 && m_vramLocked) {
 		return 0xff;
-	}
-	else if (address >= 0xfe00 && address < 0xfea0 && m_oamLocked)
-	{
+	} else if (address >= 0xfe00 && address < 0xfea0 && m_oamLocked) {
 		return 0xff;
-	}
-	else if (address < 0x0100 && m_bootRomEnabled == true)
-	{
+	} else if (address < 0x0100 && m_bootRomEnabled == true) {
 		return m_bootRom[address];
 	}
 
 	return m_memoryData[address];
 }
 
-u16 Memory::Read16(u16 address)
-{
+u16 Memory::Read16(u16 address) {
 	u8 low = Read8(address);
 	u8 high = Read8(address + 1);
 
@@ -384,30 +336,27 @@ u16 Memory::Read16(u16 address)
 	return result;
 }
 
-void Memory::Write8(u16 address, u8 value)
-{
-	//Read-only addresses
+void Memory::Write8(u16 address, u8 value) {
+	// Read-only addresses
 	if (address < 0x8000) {
 		return;
 	}
 
-	//Registers
-	if (address >= 0xff00)
-	{
+	// Registers
+	if (address >= 0xff00) {
 		u8 offset = (u8)(address & 0x00ff);
 
 		if (m_callWriteRegister[offset]) {
 			WriteRegister(address, value);
 		}
 
-		if (m_registerWriteable[offset] && m_registerLocation[offset] != nullptr)
-		{
+		if (m_registerWriteable[offset] && m_registerLocation[offset] != nullptr) {
 			*(m_registerLocation[offset]) = value;
 			return;
 		}
 	}
 
-	//Ignore writes to locked areas
+	// Ignore writes to locked areas
 	if (address >= 0x8000 && address < 0xa000 && m_vramLocked) {
 		return;
 	}
@@ -418,7 +367,7 @@ void Memory::Write8(u16 address, u8 value)
 		return;
 	}
 
-	//Send notifications when applicable
+	// Send notifications when applicable
 	if (address >= 0x8000 && address < 0xa000) {
 		m_display->WriteVram(m_selectedCgbVramBank, address, value);
 	}
@@ -431,9 +380,8 @@ void Memory::Write8(u16 address, u8 value)
 		Write8(address - 0x2000, value);
 	}
 
-	//CGB banks
-	if (m_machineType == EmulatedMachine::GameboyColor)
-	{
+	// CGB banks
+	if (m_machineType == EmulatedMachine::GameboyColor) {
 		if (address >= 0x8000 && address < 0xa000) {
 			m_cgbVramBanks[m_selectedCgbVramBank][address - 0x8000] = value;
 		}
@@ -443,12 +391,11 @@ void Memory::Write8(u16 address, u8 value)
 		}
 	}
 
-	//Write it
+	// Write it
 	m_memoryData[address] = value;
 }
 
-void Memory::Write16(u16 address, u16 value)
-{
+void Memory::Write16(u16 address, u16 value) {
 	u8 low = (u8)(value & 0x00ff);
 	Write8(address, low);
 
@@ -456,17 +403,15 @@ void Memory::Write16(u16 address, u16 value)
 	Write8(address + 1, high);
 }
 
-void Memory::SetDmaStartLocation(u8 value)
-{
+void Memory::SetDmaStartLocation(u8 value) {
 	u16 startAddress = value * 0x0100;
 
-	//Some games use DMA during modes 10 and 11, and expect it to work.
-	//I'm not sure what really goes on yet in the hardware, but for now I'm allowing DMA to bypass the OAM lock.
+	// Some games use DMA during modes 10 and 11, and expect it to work.
+	// I'm not sure what really goes on yet in the hardware, but for now I'm allowing DMA to bypass the OAM lock.
 	bool preserveOamLock = m_oamLocked;
 	m_oamLocked = false;
 
-	for (int i = 0; i < 0xa0; i++)
-	{
+	for (int i = 0; i < 0xa0; i++) {
 		u16 sourceAddress = startAddress + i;
 		u16 targetAddress = 0xfe00 + i;
 
@@ -477,13 +422,11 @@ void Memory::SetDmaStartLocation(u8 value)
 	m_oamLocked = preserveOamLock;
 }
 
-void Memory::DisableBootRom(u8 value)
-{
+void Memory::DisableBootRom(u8 value) {
 	m_bootRomEnabled = false;
 }
 
-void Memory::SetCgbRamBank(u8 value)
-{
+void Memory::SetCgbRamBank(u8 value) {
 	if (m_machineType != EmulatedMachine::GameboyColor) {
 		return;
 	}
@@ -497,8 +440,7 @@ void Memory::SetCgbRamBank(u8 value)
 	memcpy((void*)(&m_memoryData[0xf000]), (void*)(&m_cgbRamBanks[m_selectedCgbRamBank][0]), 0x0e00);
 }
 
-void Memory::SetCgbVramBank(u8 value)
-{
+void Memory::SetCgbVramBank(u8 value) {
 	if (m_machineType != EmulatedMachine::GameboyColor) {
 		return;
 	}
@@ -508,25 +450,20 @@ void Memory::SetCgbVramBank(u8 value)
 	memcpy((void*)(&m_memoryData[0x8000]), (void*)(&m_cgbVramBanks[m_selectedCgbVramBank][0]), 0x2000);
 }
 
-void Memory::SetVramLock(bool locked)
-{
+void Memory::SetVramLock(bool locked) {
 	m_vramLocked = locked;
 }
 
-void Memory::SetOamLock(bool locked)
-{
+void Memory::SetOamLock(bool locked) {
 	m_oamLocked = locked;
 }
 
-void Memory::SetWaveRamLock(WaveRamLock::Type lockType, u8 readValue)
-{
+void Memory::SetWaveRamLock(WaveRamLock::Type lockType, u8 readValue) {
 	m_waveRamLockMode = lockType;
 	m_waveRamReadValue = readValue;
 }
 
-
-void Memory::SetCgbDmaSourceHigh(u8 value)
-{
+void Memory::SetCgbDmaSourceHigh(u8 value) {
 	if (m_machineType != EmulatedMachine::GameboyColor) {
 		return;
 	}
@@ -535,113 +472,94 @@ void Memory::SetCgbDmaSourceHigh(u8 value)
 	m_cgbDmaSource |= (value << 8);
 }
 
-void Memory::SetCgbDmaSourceLow(u8 value)
-{
+void Memory::SetCgbDmaSourceLow(u8 value) {
 	if (m_machineType != EmulatedMachine::GameboyColor) {
 		return;
 	}
 
-	value &= 0xf0;	///<Lower 4 bits are ignored since it must be aligned on a 0x10 boundary.
+	value &= 0xf0;  ///< Lower 4 bits are ignored since it must be aligned on a 0x10 boundary.
 
 	m_cgbDmaSource &= 0xff00;
 	m_cgbDmaSource |= value;
 }
 
-void Memory::SetCgbDmaDestinationHigh(u8 value)
-{
+void Memory::SetCgbDmaDestinationHigh(u8 value) {
 	if (m_machineType != EmulatedMachine::GameboyColor) {
 		return;
 	}
 
-	value &= 0x1f;	///<Upper 3 bits are ignored since destination is always in vram.
+	value &= 0x1f;  ///< Upper 3 bits are ignored since destination is always in vram.
 
 	m_cgbDmaDestination &= 0x00ff;
 	m_cgbDmaDestination |= (value << 8);
 }
 
-void Memory::SetCgbDmaDestinationLow(u8 value)
-{
+void Memory::SetCgbDmaDestinationLow(u8 value) {
 	if (m_machineType != EmulatedMachine::GameboyColor) {
 		return;
 	}
 
-	value &= 0xf0;	///<Lower 4 bits are ignored since it must be aligned on a 0x10 boundary.
+	value &= 0xf0;  ///< Lower 4 bits are ignored since it must be aligned on a 0x10 boundary.
 
 	m_cgbDmaDestination &= 0xff00;
 	m_cgbDmaDestination |= value;
 }
 
-void Memory::CgbDmaTrigger(u8 value)
-{
+void Memory::CgbDmaTrigger(u8 value) {
 	if (m_machineType != EmulatedMachine::GameboyColor) {
 		return;
 	}
 
-	if (value & 0x80)
-	{
+	if (value & 0x80) {
 		m_dmaMode = DmaMode::HBlank;
-	}
-	else
-	{
-		//Writing 0 to bit 7 while HBlank DMA is active cancels that DMA
+	} else {
+		// Writing 0 to bit 7 while HBlank DMA is active cancels that DMA
 		if (m_dmaMode == DmaMode::HBlank) {
 			m_dmaMode = DmaMode::None;
 
-			//If HBlank DMA is not active, then writing 0 to bit 7 begins a general DMA
-		}
-		else {
+			// If HBlank DMA is not active, then writing 0 to bit 7 begins a general DMA
+		} else {
 			m_dmaMode = DmaMode::General;
 		}
 	}
 
 	m_cgbDmaLength = value;
-	m_cgbDmaLength |= 0x80;	///<DMA-is-active flag
+	m_cgbDmaLength |= 0x80;  ///< DMA-is-active flag
 }
 
-
-Memory* Memory::CreateFromFile(const char* filename)
-{
-	//Read the gb cart header out of the file
+Memory* Memory::CreateFromFile(const char* filename) {
+	// Read the gb cart header out of the file
 	std::ifstream ifile(filename, std::ios::in | std::ios::binary);
 
 	if (ifile.fail() || ifile.eof() || !ifile.good()) {
 		return nullptr;
 	}
 
-	u8 header[0x150] = { 0 };
+	u8 header[0x150] = {0};
 	ifile.read((char*)&header[0], 0x150);
 	ifile.close();
 
-
-	//Instantiate the appropriate MBC class from the header info
+	// Instantiate the appropriate MBC class from the header info
 	Memory* memoryController = nullptr;
 	u8 cartType = header[0x147];
 
-	if (cartType == 0 || cartType == 8 || cartType == 9)
-	{
+	if (cartType == 0 || cartType == 8 || cartType == 9) {
 		memoryController = new RomOnly();
 		printf("Memory controller: RomOnly\n");
-	}
-	else if (cartType >= 1 && cartType <= 3)
-	{
+	} else if (cartType >= 1 && cartType <= 3) {
 		memoryController = new Mbc1();
 		printf("Memory controller: MBC1\n");
-	}
-	else if (cartType >= 0x0f && cartType <= 0x13)
-	{
+	} else if (cartType >= 0x0f && cartType <= 0x13) {
 		memoryController = new Mbc3();
 		printf("Memory controller: MBC3\n");
-	}
-	else if (cartType >= 0x19 && cartType <= 0x1e)
-	{
+	} else if (cartType >= 0x19 && cartType <= 0x1e) {
 		memoryController = new Mbc5();
 		printf("Memory controller: MBC5\n");
 	}
 
 	if (memoryController != nullptr) {
 		printf("Cartridge type ok: %d (0x%02X)\n", cartType, cartType);
-	}
-	else {
+	} else {
 		printf("Unsupported cartridge type: %d (0x%02X)\n", cartType, cartType);
 	}
 
@@ -649,10 +567,8 @@ Memory* Memory::CreateFromFile(const char* filename)
 		return nullptr;
 	}
 
-
-	//Have the MBC class load the file
-	if (memoryController->LoadFile(filename) == false)
-	{
+	// Have the MBC class load the file
+	if (memoryController->LoadFile(filename) == false) {
 		delete memoryController;
 		return nullptr;
 	}
@@ -660,35 +576,33 @@ Memory* Memory::CreateFromFile(const char* filename)
 	return memoryController;
 }
 
-void Memory::LoadBootRom(const char* filename)
-{
+void Memory::LoadBootRom(const char* filename) {
 	m_bootRomEnabled = false;
 
 	std::ifstream bootRom;
 	bootRom.open(filename, std::ios::in | std::ios::binary);
 
-	if (bootRom.eof() || bootRom.fail() || !bootRom.good())
-	{
-		//Use default boot rom
-		u8 defaultBootRom[] =
-		{
-			//Save AF (cgb/dmg identification)
-			0xf5,				//PUSH AF
+	if (bootRom.eof() || bootRom.fail() || !bootRom.good()) {
+		// Use default boot rom
+		u8 defaultBootRom[] = {
+			// Save AF (cgb/dmg identification)
+			0xf5,  // PUSH AF
 
-			//Enable the lcd
-			0x3e, 0x91,			//LD A,$91
-			0xe0, 0x40,			//LD ($FF00+$40),A
+			// Enable the lcd
+			0x3e, 0x91,  // LD A,$91
+			0xe0, 0x40,  // LD ($FF00+$40),A
 
-			//Restore AF (cgb/dmg identification)
-			0xf1,				//POP AF
+			// Restore AF (cgb/dmg identification)
+			0xf1,  // POP AF
 
-			//Disable boot rom area
-			0xe0, 0x50,			//LD ($FF50), A
+			// Disable boot rom area
+			0xe0, 0x50,  // LD ($FF50), A
 		};
 
-		memset((void*)&m_bootRom[0], 0x00, 0x100);	///<Fill it with NOPs
+		memset((void*)&m_bootRom[0], 0x00, 0x100);  ///< Fill it with NOPs
 
-		//Copy the default boot rom to the end of the boot rom space (so that it finishes at 0x100 where the cart starts)
+		// Copy the default boot rom to the end of the boot rom space (so that it finishes at 0x100 where the cart
+		// starts)
 		int beginAddress = 0x100 - sizeof(defaultBootRom);
 		memcpy((void*)(&m_bootRom[beginAddress]), (void*)(&defaultBootRom[0]), sizeof(defaultBootRom));
 
@@ -696,71 +610,152 @@ void Memory::LoadBootRom(const char* filename)
 		return;
 	}
 
-	//Use the real boot rom
+	// Use the real boot rom
 	bootRom.read((char*)(&m_bootRom[0]), 0x100);
 	bootRom.close();
 
 	m_bootRomEnabled = true;
 }
 
-void Memory::WriteRegister(u16 address, u8 value)
-{
-	switch (address)
-	{
-	case 0xff00: m_input->SetJoypadMode(value); break;
+void Memory::WriteRegister(u16 address, u8 value) {
+	switch (address) {
+		case 0xff00:
+			m_input->SetJoypadMode(value);
+			break;
 
-	case 0xff04: m_cpu->SetTimerDivider(value); break;
-	case 0xff07: m_cpu->SetTimerControl(value); break;
+		case 0xff04:
+			m_cpu->SetTimerDivider(value);
+			break;
+		case 0xff07:
+			m_cpu->SetTimerControl(value);
+			break;
 
-	case 0xff10: m_sound->SetNR10(value); break;
-	case 0xff11: m_sound->SetNR11(value); break;
-	case 0xff12: m_sound->SetNR12(value); break;
-	case 0xff13: m_sound->SetNR13(value); break;
-	case 0xff14: m_sound->SetNR14(value); break;
+		case 0xff10:
+			m_sound->SetNR10(value);
+			break;
+		case 0xff11:
+			m_sound->SetNR11(value);
+			break;
+		case 0xff12:
+			m_sound->SetNR12(value);
+			break;
+		case 0xff13:
+			m_sound->SetNR13(value);
+			break;
+		case 0xff14:
+			m_sound->SetNR14(value);
+			break;
 
-	case 0xff16: m_sound->SetNR21(value); break;
-	case 0xff17: m_sound->SetNR22(value); break;
-	case 0xff18: m_sound->SetNR23(value); break;
-	case 0xff19: m_sound->SetNR24(value); break;
+		case 0xff16:
+			m_sound->SetNR21(value);
+			break;
+		case 0xff17:
+			m_sound->SetNR22(value);
+			break;
+		case 0xff18:
+			m_sound->SetNR23(value);
+			break;
+		case 0xff19:
+			m_sound->SetNR24(value);
+			break;
 
-	case 0xff1a: m_sound->SetNR30(value); break;
-	case 0xff1b: m_sound->SetNR31(value); break;
-	case 0xff1c: m_sound->SetNR32(value); break;
-	case 0xff1d: m_sound->SetNR33(value); break;
-	case 0xff1e: m_sound->SetNR34(value); break;
+		case 0xff1a:
+			m_sound->SetNR30(value);
+			break;
+		case 0xff1b:
+			m_sound->SetNR31(value);
+			break;
+		case 0xff1c:
+			m_sound->SetNR32(value);
+			break;
+		case 0xff1d:
+			m_sound->SetNR33(value);
+			break;
+		case 0xff1e:
+			m_sound->SetNR34(value);
+			break;
 
-	case 0xff20: m_sound->SetNR41(value); break;
-	case 0xff21: m_sound->SetNR42(value); break;
-	case 0xff22: m_sound->SetNR43(value); break;
-	case 0xff23: m_sound->SetNR44(value); break;
+		case 0xff20:
+			m_sound->SetNR41(value);
+			break;
+		case 0xff21:
+			m_sound->SetNR42(value);
+			break;
+		case 0xff22:
+			m_sound->SetNR43(value);
+			break;
+		case 0xff23:
+			m_sound->SetNR44(value);
+			break;
 
-	case 0xff24: m_sound->SetNR50(value); break;
-	case 0xff25: m_sound->SetNR51(value); break;
-	case 0xff26: m_sound->SetNR52(value); break;
+		case 0xff24:
+			m_sound->SetNR50(value);
+			break;
+		case 0xff25:
+			m_sound->SetNR51(value);
+			break;
+		case 0xff26:
+			m_sound->SetNR52(value);
+			break;
 
-	case 0xff40: m_display->SetLcdControl(value); break;
-	case 0xff41: m_display->SetLcdStatus(value); break;
-	case 0xff44: m_display->SetCurrentScanline(value); break;
-	case 0xff45: m_display->SetScanlineCompare(value); break;
+		case 0xff40:
+			m_display->SetLcdControl(value);
+			break;
+		case 0xff41:
+			m_display->SetLcdStatus(value);
+			break;
+		case 0xff44:
+			m_display->SetCurrentScanline(value);
+			break;
+		case 0xff45:
+			m_display->SetScanlineCompare(value);
+			break;
 
-	case 0xff46: SetDmaStartLocation(value); break;
+		case 0xff46:
+			SetDmaStartLocation(value);
+			break;
 
-	case 0xff4d: m_cpu->SetCgbSpeedSwitch(value); break;
+		case 0xff4d:
+			m_cpu->SetCgbSpeedSwitch(value);
+			break;
 
-	case 0xff4f: SetCgbVramBank(value); break;
-	case 0xff50: DisableBootRom(value); break;
-	case 0xff51: SetCgbDmaSourceHigh(value); break;
-	case 0xff52: SetCgbDmaSourceLow(value); break;
-	case 0xff53: SetCgbDmaDestinationHigh(value); break;
-	case 0xff54: SetCgbDmaDestinationLow(value); break;
-	case 0xff55: CgbDmaTrigger(value); break;
+		case 0xff4f:
+			SetCgbVramBank(value);
+			break;
+		case 0xff50:
+			DisableBootRom(value);
+			break;
+		case 0xff51:
+			SetCgbDmaSourceHigh(value);
+			break;
+		case 0xff52:
+			SetCgbDmaSourceLow(value);
+			break;
+		case 0xff53:
+			SetCgbDmaDestinationHigh(value);
+			break;
+		case 0xff54:
+			SetCgbDmaDestinationLow(value);
+			break;
+		case 0xff55:
+			CgbDmaTrigger(value);
+			break;
 
-	case 0xff68: m_display->SetCgbBackgroundPaletteTarget(value); break;
-	case 0xff69: m_display->SetCgbBackgroundPaletteData(value); break;
-	case 0xff6a: m_display->SetCgbSpritePaletteTarget(value); break;
-	case 0xff6b: m_display->SetCgbSpritePaletteData(value); break;
+		case 0xff68:
+			m_display->SetCgbBackgroundPaletteTarget(value);
+			break;
+		case 0xff69:
+			m_display->SetCgbBackgroundPaletteData(value);
+			break;
+		case 0xff6a:
+			m_display->SetCgbSpritePaletteTarget(value);
+			break;
+		case 0xff6b:
+			m_display->SetCgbSpritePaletteData(value);
+			break;
 
-	case 0xff70: SetCgbRamBank(value); break;
+		case 0xff70:
+			SetCgbRamBank(value);
+			break;
 	}
 }
-

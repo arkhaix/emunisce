@@ -20,53 +20,48 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONSOLEWINDOW_H
 #define CONSOLEWINDOW_H
 
-#include "wx/wx.h"
-#include "wx/textctrl.h"
-
 #include <string>
 
+#include "wx/textctrl.h"
+#include "wx/wx.h"
 
-namespace Emunisce
-{
+namespace Emunisce {
 
-	class Application;
+class Application;
 
-	class ConsoleWindow
-	{
-	public:
-		ConsoleWindow(Application* application, wxFrame* mainFrame);
-		virtual ~ConsoleWindow();
+class ConsoleWindow {
+   public:
+	ConsoleWindow(Application* application, wxFrame* mainFrame);
+	virtual ~ConsoleWindow();
 
-		void GiveFocus();
-		void Close();
+	void GiveFocus();
+	void Close();
 
-		void ConsolePrint(const char* text);
+	void ConsolePrint(const char* text);
 
-		// events
-		void OnKeyDown(wxKeyEvent& event);
-		void OnKeyUp(wxKeyEvent& event);
-		void OnText(wxCommandEvent& event);
-		void OnTextEnter(wxCommandEvent& event);
-		void OnSetFocus(wxFocusEvent& event);
+	// events
+	void OnKeyDown(wxKeyEvent& event);
+	void OnKeyUp(wxKeyEvent& event);
+	void OnText(wxCommandEvent& event);
+	void OnTextEnter(wxCommandEvent& event);
+	void OnSetFocus(wxFocusEvent& event);
 
-		void OnFrameClosed(wxCloseEvent& event);
+	void OnFrameClosed(wxCloseEvent& event);
 
-	private:
+   private:
+	void Initialize(Application* application, wxFrame* mainFrame);
 
-		void Initialize(Application* application, wxFrame* mainFrame);
+	Application* m_application;
+	wxFrame* m_mainFrame;
 
-		Application* m_application;
-		wxFrame* m_mainFrame;
+	wxFrame* m_frame;
+	wxTextCtrl* m_output;
+	wxTextCtrl* m_input;
 
-		wxFrame* m_frame;
-		wxTextCtrl*	m_output;
-		wxTextCtrl*	m_input;
+	wxBoxSizer* m_inputSizer;
+	wxBoxSizer* m_frameSizer;
+};
 
-		wxBoxSizer* m_inputSizer;
-		wxBoxSizer* m_frameSizer;
-	};
+}  // namespace Emunisce
 
-}   //namespace Emunisce
-
-#endif // CONSOLEWINDOW_H
-
+#endif  // CONSOLEWINDOW_H

@@ -22,17 +22,14 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "Gui.h"
 using namespace Emunisce;
 
-#include "KingsDream.h"
-
-#include "HqNx/HqNx.h"
-
 #include <Memory.h>
 
+#include "HqNx/HqNx.h"
+#include "KingsDream.h"
 
 // Gui
 
-Gui::Gui()
-{
+Gui::Gui() {
 	m_screenBufferCopy = nullptr;
 	m_filteredScreenBuffer = nullptr;
 	m_filteredScreenBufferId = -1;
@@ -44,8 +41,7 @@ Gui::Gui()
 	m_featureInput = m_guiFeature;
 }
 
-Gui::~Gui()
-{
+Gui::~Gui() {
 	m_featureExecution = nullptr;
 	m_featureDisplay = nullptr;
 	m_featureInput = nullptr;
@@ -56,9 +52,9 @@ Gui::~Gui()
 	}
 }
 
-ScreenBuffer* Gui::GetStableScreenBuffer()
-{
-	if (MachineFeature::GetScreenBufferCount() == m_filteredScreenBufferId && m_displayFilter == m_screenBufferCopyFilter) {
+ScreenBuffer* Gui::GetStableScreenBuffer() {
+	if (MachineFeature::GetScreenBufferCount() == m_filteredScreenBufferId &&
+		m_displayFilter == m_screenBufferCopyFilter) {
 		return m_filteredScreenBuffer;
 	}
 
@@ -77,7 +73,8 @@ ScreenBuffer* Gui::GetStableScreenBuffer()
 	int height = screenBuffer->GetHeight();
 
 	m_screenBufferCopy = new DynamicScreenBuffer(width, height);
-	memcpy((void*)m_screenBufferCopy->GetPixels(), (void*)screenBuffer->GetPixels(), width * height * sizeof(DisplayPixel));
+	memcpy((void*)m_screenBufferCopy->GetPixels(), (void*)screenBuffer->GetPixels(),
+		   width * height * sizeof(DisplayPixel));
 
 	if (needToDeleteFilteredBuffer == true) {
 		delete m_filteredScreenBuffer;
@@ -89,90 +86,75 @@ ScreenBuffer* Gui::GetStableScreenBuffer()
 
 	if (m_displayFilter == DisplayFilter::Hq2x) {
 		m_filteredScreenBuffer = HqNx::Hq2x(m_screenBufferCopy);
-	}
-	else if (m_displayFilter == DisplayFilter::Hq3x) {
+	} else if (m_displayFilter == DisplayFilter::Hq3x) {
 		m_filteredScreenBuffer = HqNx::Hq3x(m_screenBufferCopy);
-	}
-	else if (m_displayFilter == DisplayFilter::Hq4x) {
+	} else if (m_displayFilter == DisplayFilter::Hq4x) {
 		m_filteredScreenBuffer = HqNx::Hq4x(m_screenBufferCopy);
 	}
 
 	return m_filteredScreenBuffer;
 }
 
-void Gui::EnableBackgroundAnimation()
-{
+void Gui::EnableBackgroundAnimation() {
 	if (m_guiFeature != nullptr) {
 		m_guiFeature->EnableBackgroundAnimation();
 	}
 }
 
-void Gui::DisableBackgroundAnimation()
-{
+void Gui::DisableBackgroundAnimation() {
 	if (m_guiFeature != nullptr) {
 		m_guiFeature->DisableBackgroundAnimation();
 	}
 }
 
-void Gui::SetDisplayFilter(DisplayFilter::Type filter)
-{
+void Gui::SetDisplayFilter(DisplayFilter::Type filter) {
 	m_displayFilter = filter;
 }
 
-
-
 // GuiFeature
 
-Gui::GuiFeature::GuiFeature()
-{
+Gui::GuiFeature::GuiFeature() {
 	m_backgroundAnimation = new KingsDream();
 	m_backgroundEnabled = true;
 
 	m_backgroundAnimation->SetScreenResolution(m_screenBuffer.GetWidth(), m_screenBuffer.GetHeight());
 
 	m_ticksThisFrame = 0;
-	m_ticksPerFrame = m_backgroundAnimation->GetPointsPerFrame() / 2;	///<Only update the background at 30fps.  This is because it uses a bit of cpu.  Don't forget to update the brightness (or points per frame) if you change this.
+	m_ticksPerFrame = m_backgroundAnimation->GetPointsPerFrame() /
+					  2;  ///< Only update the background at 30fps.  This is because it uses a bit of cpu.  Don't forget
+						  ///< to update the brightness (or points per frame) if you change this.
 	m_frameCount = 0;
 }
 
-void Gui::GuiFeature::EnableBackgroundAnimation()
-{
+void Gui::GuiFeature::EnableBackgroundAnimation() {
 	m_backgroundEnabled = true;
 }
 
-void Gui::GuiFeature::DisableBackgroundAnimation()
-{
+void Gui::GuiFeature::DisableBackgroundAnimation() {
 	m_backgroundEnabled = false;
 }
 
-
 // IExecutableFeature
 
-unsigned int Gui::GuiFeature::GetFrameCount()
-{
+unsigned int Gui::GuiFeature::GetFrameCount() {
 	return m_frameCount;
 }
 
-unsigned int Gui::GuiFeature::GetTickCount()
-{
+unsigned int Gui::GuiFeature::GetTickCount() {
 	return m_ticksThisFrame;
 }
 
-unsigned int Gui::GuiFeature::GetTicksPerSecond()
-{
+unsigned int Gui::GuiFeature::GetTicksPerSecond() {
 	return m_ticksPerFrame * 60;
 }
 
-unsigned int Gui::GuiFeature::GetTicksUntilNextFrame()
-{
+unsigned int Gui::GuiFeature::GetTicksUntilNextFrame() {
 	return m_ticksPerFrame - m_ticksThisFrame;
 }
 
-void Gui::GuiFeature::Step()
-{
+void Gui::GuiFeature::Step() {
 	m_ticksThisFrame++;
-	if (m_ticksThisFrame >= m_ticksPerFrame)
-	{
+	if (m_ticksThisFrame >= m_ticksPerFrame) {
 		m_ticksThisFrame = 0;
 		m_frameCount++;
 	}
@@ -182,27 +164,23 @@ void Gui::GuiFeature::Step()
 	}
 }
 
-void Gui::GuiFeature::RunToNextFrame()
-{
+void Gui::GuiFeature::RunToNextFrame() {
 	int frameCount = m_frameCount;
 	while (m_frameCount == frameCount) {
 		Step();
 	}
 }
 
-
 // IEmulatedDisplay
 
-ScreenResolution Gui::GuiFeature::GetScreenResolution()
-{
+ScreenResolution Gui::GuiFeature::GetScreenResolution() {
 	ScreenResolution result;
 	result.width = m_screenBuffer.GetWidth();
 	result.height = m_screenBuffer.GetHeight();
 	return result;
 }
 
-ScreenBuffer* Gui::GuiFeature::GetStableScreenBuffer()
-{
+ScreenBuffer* Gui::GuiFeature::GetStableScreenBuffer() {
 	ScreenBuffer* result = &m_screenBuffer;
 	if (m_backgroundEnabled == true) {
 		result = m_backgroundAnimation->GetFrame();
@@ -211,23 +189,17 @@ ScreenBuffer* Gui::GuiFeature::GetStableScreenBuffer()
 	return result;
 }
 
-int Gui::GuiFeature::GetScreenBufferCount()
-{
+int Gui::GuiFeature::GetScreenBufferCount() {
 	return m_frameCount;
 }
 
-
-
-
 // IEmulatedInput
 
-unsigned int Gui::GuiFeature::NumButtons()
-{
+unsigned int Gui::GuiFeature::NumButtons() {
 	return GuiButtons::NumGuiButtons;
 }
 
-const char* Gui::GuiFeature::GetButtonName(unsigned int index)
-{
+const char* Gui::GuiFeature::GetButtonName(unsigned int index) {
 	if (index < GuiButtons::NumGuiButtons) {
 		return GuiButtons::ToString[index];
 	}
@@ -235,27 +207,23 @@ const char* Gui::GuiFeature::GetButtonName(unsigned int index)
 	return nullptr;
 }
 
-
-void Gui::GuiFeature::ButtonDown(unsigned int index)
-{
+void Gui::GuiFeature::ButtonDown(unsigned int index) {
 	if (index >= GuiButtons::NumGuiButtons) {
 		return;
 	}
 
-	//todo
+	// todo
 }
 
-void Gui::GuiFeature::ButtonUp(unsigned int index)
-{
+void Gui::GuiFeature::ButtonUp(unsigned int index) {
 	if (index >= GuiButtons::NumGuiButtons) {
 		return;
 	}
 
-	//todo
+	// todo
 }
 
-bool Gui::GuiFeature::IsButtonDown(unsigned int /*index*/)
-{
-	//todo
+bool Gui::GuiFeature::IsButtonDown(unsigned int /*index*/) {
+	// todo
 	return false;
 }

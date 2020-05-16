@@ -21,84 +21,69 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #define SOUND3_H
 
 #include "PlatformTypes.h"
-
 #include "SoundGenerator.h"
 
+namespace Emunisce {
 
+class Gameboy;
+class ChannelController;
 
-namespace Emunisce
-{
+class Sound3 : public SoundGenerator {
+   public:
+	Sound3();
+	virtual ~Sound3() = default;
 
-	class Gameboy;
-	class ChannelController;
+	// Sound component
 
+	void Initialize(ChannelController* channelController) override;
+	void SetMachine(Gameboy* machine) override;
 
-	class Sound3 : public SoundGenerator
-	{
-	public:
+	void Serialize(Archive& archive) override;
 
-		Sound3();
-		virtual ~Sound3() = default;
+	// Sound generation
 
+	void PowerOff() override;
+	void PowerOn() override;
 
-		//Sound component
+	void Run(int ticks) override;
+	float GetSample() override;
 
-		void Initialize(ChannelController* channelController) override;
-		void SetMachine(Gameboy* machine) override;
+	// Registers
 
-		void Serialize(Archive& archive) override;
+	void SetNR30(u8 value);
+	void SetNR31(u8 value);
+	void SetNR32(u8 value);
+	void SetNR33(u8 value);
+	void SetNR34(u8 value);
 
+   private:
+	void Trigger() override;
 
-		//Sound generation
+	// Sound generation
 
-		void PowerOff() override;
-		void PowerOn() override;
+	int m_frequency;
+	int m_outputLevelShift;
 
-		void Run(int ticks) override;
-		float GetSample() override;
+	int m_waveTimerPeriod;
+	int m_waveTimerValue;
 
+	int m_waveSamplePosition;
 
-		//Registers
+	u8 m_waveSampleValue;
 
-		void SetNR30(u8 value);
-		void SetNR31(u8 value);
-		void SetNR32(u8 value);
-		void SetNR33(u8 value);
-		void SetNR34(u8 value);
+	// Memory access
 
+	int m_sampleReadTimerValue;
 
-	private:
+	// Registers
 
-		void Trigger() override;
+	u8 m_nr30;  ///< ff1a
+	u8 m_nr31;  ///< ff1b
+	u8 m_nr32;  ///< ff1c
+	u8 m_nr33;  ///< ff1d
+	u8 m_nr34;  ///< ff1e
+};
 
-
-		//Sound generation
-
-		int m_frequency;
-		int m_outputLevelShift;
-
-		int m_waveTimerPeriod;
-		int m_waveTimerValue;
-
-		int m_waveSamplePosition;
-
-		u8 m_waveSampleValue;
-
-
-		//Memory access
-
-		int m_sampleReadTimerValue;
-
-
-		//Registers
-
-		u8 m_nr30;	///<ff1a
-		u8 m_nr31;	///<ff1b
-		u8 m_nr32;	///<ff1c
-		u8 m_nr33;	///<ff1d
-		u8 m_nr34;	///<ff1e
-	};
-
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

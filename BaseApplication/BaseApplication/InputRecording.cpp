@@ -22,15 +22,12 @@ using namespace Emunisce;
 
 #include "BaseApplication.h"
 #include "MachineRunner.h"
-
-#include "Serialization/SerializationIncludes.h"
 #include "Serialization/MemorySerializer.h"
-
+#include "Serialization/SerializationIncludes.h"
 
 // InputEvent
 
-void InputRecording::InputEvent::Serialize(Archive& archive)
-{
+void InputRecording::InputEvent::Serialize(Archive& archive) {
 	SerializeItem(archive, frameId);
 	SerializeItem(archive, tickId);
 
@@ -38,11 +35,9 @@ void InputRecording::InputEvent::Serialize(Archive& archive)
 	SerializeItem(archive, keyIndex);
 }
 
-
 // InputRecording
 
-InputRecording::InputRecording()
-{
+InputRecording::InputRecording() {
 	m_hasFocus = false;
 
 	m_recording = false;
@@ -59,47 +54,38 @@ InputRecording::InputRecording()
 	m_eventIdOffset = m_defaultEventIdOffset;
 }
 
-InputRecording::~InputRecording()
-{
+InputRecording::~InputRecording() {
 	if (m_startState != nullptr) {
 		delete m_startState;
 	}
 }
 
-
-void InputRecording::SerializeHistory(Archive& archive)
-{
+void InputRecording::SerializeHistory(Archive& archive) {
 	SerializeItem(archive, m_recordingStartFrame);
 
 	unsigned int numEvents = (unsigned int)m_inputHistory.size();
 	SerializeItem(archive, numEvents);
 
-	if (archive.GetArchiveMode() == ArchiveMode::Loading)
-	{
+	if (archive.GetArchiveMode() == ArchiveMode::Loading) {
 		m_inputHistory.clear();
 
-		for (unsigned int i = 0; i < numEvents; i++)
-		{
+		for (unsigned int i = 0; i < numEvents; i++) {
 			InputEvent inputEvent;
 			inputEvent.Serialize(archive);
 
 			m_inputHistory.push_back(inputEvent);
 		}
-	}
-	else //archive.GetArchiveMode() == ArchiveMode::Saving
+	} else  // archive.GetArchiveMode() == ArchiveMode::Saving
 	{
-		for (auto& inputEvent : m_inputHistory)
-		{
+		for (auto& inputEvent : m_inputHistory) {
 			inputEvent.Serialize(archive);
 		}
 	}
 }
 
-void InputRecording::SerializeMovie(Archive& archive)
-{
+void InputRecording::SerializeMovie(Archive& archive) {
 	SerializeItem(archive, m_startStateSize);
-	if (archive.GetArchiveMode() == ArchiveMode::Loading)
-	{
+	if (archive.GetArchiveMode() == ArchiveMode::Loading) {
 		if (m_startState) {
 			delete m_startState;
 		}
@@ -112,17 +98,13 @@ void InputRecording::SerializeMovie(Archive& archive)
 	SerializeHistory(archive);
 }
 
-
-void InputRecording::StartRecording()
-{
-	if (m_wrappedMachine != nullptr)
-	{
-		//Pause the machine
+void InputRecording::StartRecording() {
+	if (m_wrappedMachine != nullptr) {
+		// Pause the machine
 		bool wasPaused = m_application->GetMachineRunner()->IsPaused();
 		m_application->GetMachineRunner()->Pause();
 
-
-		//Record the initial machine state
+		// Record the initial machine state
 		m_inputHistory.clear();
 
 		m_recording = true;
@@ -138,25 +120,20 @@ void InputRecording::StartRecording()
 
 		serializer.TransferBuffer(&m_startState, &m_startStateSize);
 
-
-		//Resume the machine
+		// Resume the machine
 		if (wasPaused == false) {
 			m_application->GetMachineRunner()->Run();
 		}
 	}
 }
 
-void InputRecording::StopRecording()
-{
+void InputRecording::StopRecording() {
 	m_recording = false;
 }
 
-
-void InputRecording::StartPlayback(bool absoluteFrames, bool restoreState, bool loop)
-{
-	if (m_wrappedMachine != nullptr)
-	{
-		//Pause the machine
+void InputRecording::StartPlayback(bool absoluteFrames, bool restoreState, bool loop) {
+	if (m_wrappedMachine != nullptr) {
+		// Pause the machine
 		bool wasPaused = m_application->GetMachineRunner()->IsPaused();
 		m_application->GetMachineRunner()->Pause();
 
@@ -166,18 +143,16 @@ void InputRecording::StartPlayback(bool absoluteFrames, bool restoreState, bool 
 
 		m_playing = true;
 
-		//Restore the initial savestate
-		if (restoreState == true)
-		{
+		// Restore the initial savestate
+		if (restoreState == true) {
 			MemorySerializer serializer;
 			serializer.SetBuffer(m_startState, m_startStateSize);
 			Archive archive(&serializer, ArchiveMode::Loading);
 			m_wrappedMachine->LoadState(archive);
 		}
 
-		//Add all the recorded events
-		for (unsigned int i = 0; i < m_inputHistory.size(); i++)
-		{
+		// Add all the recorded events
+		for (unsigned int i = 0; i < m_inputHistory.size(); i++) {
 			Emunisce::ApplicationEvent inputEvent;
 			inputEvent.eventId = m_eventIdOffset + i;
 			inputEvent.frameCount = m_inputHistory[i].frameId;
@@ -190,29 +165,24 @@ void InputRecording::StartPlayback(bool absoluteFrames, bool restoreState, bool 
 			m_wrappedMachine->AddApplicationEvent(inputEvent, !absoluteFrames);
 		}
 
-		//Resume the machine
+		// Resume the machine
 		if (wasPaused == false) {
 			m_application->GetMachineRunner()->Run();
 		}
 	}
 }
 
-void InputRecording::StopPlayback()
-{
+void InputRecording::StopPlayback() {
 	m_playing = false;
 
-	if (m_wrappedMachine != nullptr)
-	{
-		for (unsigned int i = 0; i < m_inputHistory.size(); i++)
-		{
+	if (m_wrappedMachine != nullptr) {
+		for (unsigned int i = 0; i < m_inputHistory.size(); i++) {
 			m_wrappedMachine->RemoveApplicationEvent(m_eventIdOffset + i);
 		}
 	}
 }
 
-
-void InputRecording::ApplicationEvent(unsigned int eventId)
-{
+void InputRecording::ApplicationEvent(unsigned int eventId) {
 	if (m_wrappedInput == nullptr) {
 		return;
 	}
@@ -222,14 +192,11 @@ void InputRecording::ApplicationEvent(unsigned int eventId)
 	}
 
 	eventId -= m_eventIdOffset;
-	if (eventId < m_inputHistory.size())
-	{
+	if (eventId < m_inputHistory.size()) {
 		InputEvent& inputEvent = m_inputHistory[eventId];
-		if (inputEvent.keyDown == true)
-		{
+		if (inputEvent.keyDown == true) {
 			m_wrappedInput->ButtonDown(inputEvent.keyIndex);
-		}
-		else //inputEvent.keyDown == false (keyUp)
+		} else  // inputEvent.keyDown == false (keyUp)
 		{
 			m_wrappedInput->ButtonUp(inputEvent.keyIndex);
 		}
@@ -240,27 +207,20 @@ void InputRecording::ApplicationEvent(unsigned int eventId)
 	}
 }
 
-void InputRecording::SetEventIdOffset(unsigned int offset)
-{
+void InputRecording::SetEventIdOffset(unsigned int offset) {
 	m_eventIdOffset = offset;
 }
 
-
-
 // MachineFeature
 
-void InputRecording::RunToNextFrame()
-{
-	if (m_recording == true && m_wrappedMachine != nullptr)
-	{
-		while (m_pendingEvents.empty() == false)
-		{
+void InputRecording::RunToNextFrame() {
+	if (m_recording == true && m_wrappedMachine != nullptr) {
+		while (m_pendingEvents.empty() == false) {
 			InputEvent& inputEvent = m_pendingEvents.front();
 
 			if (inputEvent.keyDown == true) {
 				MachineFeature::ButtonDown(inputEvent.keyIndex);
-			}
-			else {
+			} else {
 				MachineFeature::ButtonUp(inputEvent.keyIndex);
 			}
 
@@ -276,8 +236,7 @@ void InputRecording::RunToNextFrame()
 	MachineFeature::RunToNextFrame();
 }
 
-void InputRecording::ButtonDown(unsigned int index)
-{
+void InputRecording::ButtonDown(unsigned int index) {
 	auto iter = m_isButtonDown.find(index);
 	if (iter != m_isButtonDown.end() && iter->second == true) {
 		return;
@@ -285,23 +244,19 @@ void InputRecording::ButtonDown(unsigned int index)
 
 	m_isButtonDown[index] = true;
 
-	if (m_recording == true && m_wrappedMachine != nullptr)
-	{
+	if (m_recording == true && m_wrappedMachine != nullptr) {
 		InputEvent inputEvent;
 
 		inputEvent.keyDown = true;
 		inputEvent.keyIndex = index;
 
 		m_pendingEvents.push(inputEvent);
-	}
-	else
-	{
+	} else {
 		MachineFeature::ButtonDown(index);
 	}
 }
 
-void InputRecording::ButtonUp(unsigned int index)
-{
+void InputRecording::ButtonUp(unsigned int index) {
 	auto iter = m_isButtonDown.find(index);
 	if (iter != m_isButtonDown.end() && iter->second == false) {
 		return;
@@ -309,23 +264,19 @@ void InputRecording::ButtonUp(unsigned int index)
 
 	m_isButtonDown[index] = false;
 
-	if (m_recording == true && m_wrappedMachine != nullptr)
-	{
+	if (m_recording == true && m_wrappedMachine != nullptr) {
 		InputEvent inputEvent;
 
 		inputEvent.keyDown = false;
 		inputEvent.keyIndex = index;
 
 		m_pendingEvents.push(inputEvent);
-	}
-	else
-	{
+	} else {
 		MachineFeature::ButtonUp(index);
 	}
 }
 
-bool InputRecording::IsButtonDown(unsigned int index)
-{
+bool InputRecording::IsButtonDown(unsigned int index) {
 	auto iter = m_isButtonDown.find(index);
 	if (iter == m_isButtonDown.end()) {
 		return false;

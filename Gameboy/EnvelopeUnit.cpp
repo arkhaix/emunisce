@@ -20,14 +20,11 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "EnvelopeUnit.h"
 using namespace Emunisce;
 
-#include "Serialization/SerializationIncludes.h"
-
 #include "ChannelController.h"
+#include "Serialization/SerializationIncludes.h"
 #include "SoundGenerator.h"
 
-
-EnvelopeUnit::EnvelopeUnit(SoundGenerator* soundGenerator)
-{
+EnvelopeUnit::EnvelopeUnit(SoundGenerator* soundGenerator) {
 	m_soundGenerator = soundGenerator;
 
 	m_enabled = false;
@@ -40,9 +37,7 @@ EnvelopeUnit::EnvelopeUnit(SoundGenerator* soundGenerator)
 	m_timerValue = 0;
 }
 
-
-void EnvelopeUnit::Serialize(Archive& archive)
-{
+void EnvelopeUnit::Serialize(Archive& archive) {
 	SerializeItem(archive, m_enabled);
 
 	SerializeItem(archive, m_volumeIncreasing);
@@ -53,9 +48,7 @@ void EnvelopeUnit::Serialize(Archive& archive)
 	SerializeItem(archive, m_timerPeriod);
 }
 
-
-void EnvelopeUnit::Tick()
-{
+void EnvelopeUnit::Tick() {
 	if (m_enabled == false) {
 		return;
 	}
@@ -65,14 +58,12 @@ void EnvelopeUnit::Tick()
 	}
 
 	m_timerValue--;
-	while (m_timerValue <= 0)
-	{
+	while (m_timerValue <= 0) {
 		m_timerValue += m_timerPeriod;
 
 		if (m_volumeIncreasing == true) {
 			m_currentVolume++;
-		}
-		else {
+		} else {
 			m_currentVolume--;
 		}
 
@@ -84,47 +75,38 @@ void EnvelopeUnit::Tick()
 	}
 }
 
-void EnvelopeUnit::Trigger()
-{
+void EnvelopeUnit::Trigger() {
 	m_timerValue = m_timerPeriod;
 	m_currentVolume = m_initialVolume;
 	m_enabled = true;
 }
 
-
-void EnvelopeUnit::WriteEnvelopeRegister(u8 value)
-{
+void EnvelopeUnit::WriteEnvelopeRegister(u8 value) {
 	m_timerPeriod = value & 0x07;
 
 	if (m_timerPeriod == 0) {
 		m_enabled = false;
-	}
-	else {
+	} else {
 		m_enabled = true;
 	}
 
 	if (value & 0x08) {
 		m_volumeIncreasing = true;
-	}
-	else {
+	} else {
 		m_volumeIncreasing = false;
 	}
 
 	m_initialVolume = (value & 0xf0) >> 4;
 
-	//Disable the DAC?
-	if (m_initialVolume == 0 && m_volumeIncreasing == false)
-	{
+	// Disable the DAC?
+	if (m_initialVolume == 0 && m_volumeIncreasing == false) {
 		m_soundGenerator->m_channelController->DisableChannel();
 		m_soundGenerator->m_dacEnabled = false;
-	}
-	else
-	{
+	} else {
 		m_soundGenerator->m_dacEnabled = true;
 	}
 }
 
-float EnvelopeUnit::GetCurrentVolume()
-{
+float EnvelopeUnit::GetCurrentVolume() {
 	return (float)m_currentVolume / 15.f;
 }

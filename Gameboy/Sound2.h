@@ -21,77 +21,63 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #define SOUND2_H
 
 #include "PlatformTypes.h"
-
-#include "Sound.h"	///<for SquareSynthesisMethod
+#include "Sound.h"  ///<for SquareSynthesisMethod
 #include "SoundGenerator.h"
 
+namespace Emunisce {
 
+class Gameboy;
+class DutyUnit;
 
-namespace Emunisce
-{
+class Sound2 : public SoundGenerator {
+   public:
+	Sound2();
+	virtual ~Sound2();
 
-	class Gameboy;
-	class DutyUnit;
+	// Sound component
 
+	void Initialize(ChannelController* channelController) override;
+	void SetMachine(Gameboy* machine) override;
 
-	class Sound2 : public SoundGenerator
-	{
-	public:
+	void Serialize(Archive& archive) override;
 
-		Sound2();
-		virtual ~Sound2();
+	void SetSynthesisMethod(SquareSynthesisMethod::Type method);
 
+	// Sound generation
 
-		//Sound component
+	void PowerOff() override;
+	void PowerOn() override;
 
-		void Initialize(ChannelController* channelController) override;
-		void SetMachine(Gameboy* machine) override;
+	void Run(int ticks) override;
 
-		void Serialize(Archive& archive) override;
+	void TickEnvelope();
 
-		void SetSynthesisMethod(SquareSynthesisMethod::Type method);
+	float GetSample() override;
 
+	// Registers
 
-		//Sound generation
+	void SetNR21(u8 value);
+	void SetNR22(u8 value);
+	void SetNR23(u8 value);
+	void SetNR24(u8 value);
 
-		void PowerOff() override;
-		void PowerOn() override;
+   private:
+	void Trigger() override;
 
-		void Run(int ticks) override;
+	// Sound generation
 
-		void TickEnvelope();
+	DutyUnit* m_dutyUnit;
+	int m_frequency;
 
-		float GetSample() override;
+	// Registers
 
+	u8 m_nr20;  ///< ff15
+	u8 m_nr21;  ///< ff16
+	u8 m_nr22;  ///< ff17
+	u8 m_nr23;  ///< ff18
+	u8 m_nr24;  ///< ff19
+};
 
-		//Registers
-
-		void SetNR21(u8 value);
-		void SetNR22(u8 value);
-		void SetNR23(u8 value);
-		void SetNR24(u8 value);
-
-
-	private:
-
-		void Trigger() override;
-
-
-		//Sound generation
-
-		DutyUnit* m_dutyUnit;
-		int m_frequency;
-
-
-		//Registers
-
-		u8 m_nr20;	///<ff15
-		u8 m_nr21;	///<ff16
-		u8 m_nr22;	///<ff17
-		u8 m_nr23;	///<ff18
-		u8 m_nr24;	///<ff19
-	};
-
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

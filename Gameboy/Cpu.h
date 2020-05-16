@@ -20,227 +20,218 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CPU_H
 #define CPU_H
 
+#include "GameboyTypes.h"
+#include "MachineIncludes.h"
 #include "PlatformTypes.h"
 
-#include "MachineIncludes.h"
-#include "GameboyTypes.h"
+namespace Emunisce {
 
-
-namespace Emunisce
-{
-
-	//Flag positions
+// Flag positions
 #define BIT_Z (7)
 #define BIT_N (6)
 #define BIT_H (5)
 #define BIT_C (4)
 
-//Set flag
+// Set flag
 #define SET_Z (f |= 0x80)
 #define SET_N (f |= 0x40)
 #define SET_H (f |= 0x20)
 #define SET_C (f |= 0x10)
 
-//Reset flag
+// Reset flag
 #define RES_Z (f &= ~0x80)
 #define RES_N (f &= ~0x40)
 #define RES_H (f &= ~0x20)
 #define RES_C (f &= ~0x10)
 
-//Return flag value if set, 0 otherwise
+// Return flag value if set, 0 otherwise
 #define VAL_Z ((u8)(f & 0x80))
 #define VAL_N ((u8)(f & 0x40))
 #define VAL_H ((u8)(f & 0x20))
 #define VAL_C ((u8)(f & 0x10))
 
-//Return 1 if flag is set, 0 otherwise
+// Return 1 if flag is set, 0 otherwise
 #define TST_Z ((u8)(VAL_Z >> BIT_Z))
 #define TST_N ((u8)(VAL_N >> BIT_N))
 #define TST_H ((u8)(VAL_H >> BIT_H))
 #define TST_C ((u8)(VAL_C >> BIT_C))
 
-//Invert flag
-#define INV_Z (f ^= (1<<BIT_Z))
-#define INV_N (f ^= (1<<BIT_N))
-#define INV_H (f ^= (1<<BIT_H))
-#define INV_C (f ^= (1<<BIT_C))
+// Invert flag
+#define INV_Z (f ^= (1 << BIT_Z))
+#define INV_N (f ^= (1 << BIT_N))
+#define INV_H (f ^= (1 << BIT_H))
+#define INV_C (f ^= (1 << BIT_C))
 
+class Cpu : public IEmulatedProcessor {
+   public:
+	u16 pc;
+	u16 sp;
 
-	class Cpu : public IEmulatedProcessor
-	{
-	public:
+	u16 af;
+	u16 bc;
+	u16 de;
+	u16 hl;
 
-		u16 pc;
-		u16 sp;
+	u8& a;
+	u8& f;
+	u8& b;
+	u8& c;
+	u8& d;
+	u8& e;
+	u8& h;
+	u8& l;
 
-		u16 af;
-		u16 bc;
-		u16 de;
-		u16 hl;
+	Cpu();
+	virtual ~Cpu() = default;
 
-		u8& a;
-		u8& f;
-		u8& b;
-		u8& c;
-		u8& d;
-		u8& e;
-		u8& h;
-		u8& l;
+	// Component
+	void SetMachine(Gameboy* machine);
+	void Initialize();
 
+	// External
+	int Step();
+	void RunTimer(int ticks);
 
-		Cpu();
-		virtual ~Cpu() = default;
+	bool IsStopped();
 
-		//Component
-		void SetMachine(Gameboy* machine);
-		void Initialize();
+	virtual void Serialize(Archive& archive);
 
-		//External
-		int Step();
-		void RunTimer(int ticks);
+	// Registers
+	void SetTimerDivider(u8 value);
+	void SetTimerControl(u8 value);
 
-		bool IsStopped();
+	void SetCgbSpeedSwitch(u8 value);
 
-		virtual void Serialize(Archive& archive);
+   private:
+	Gameboy* m_machine;
+	EmulatedMachine::Type m_machineType;
 
-		//Registers
-		void SetTimerDivider(u8 value);
-		void SetTimerControl(u8 value);
+	Memory* m_memory;
 
-		void SetCgbSpeedSwitch(u8 value);
+	bool m_masterInterruptsEnabled;  ///< Interrupt master enable flag (IME)
+	bool m_delayNextInterrupt;       ///< Interrupts are not enabled until one instruction after EI completes.
 
-	private:
+	bool m_halted;
+	bool m_stopped;
+	bool m_haltBug;
 
-		Gameboy* m_machine;
-		EmulatedMachine::Type m_machineType;
+	// Registers
+	u8 m_interruptsEnabled;  ///< 0xffff - Interrupt Enable.  Which interrupts are currently enabled.  Slaves to the IME
+							 ///< flag.
+	u8 m_interruptFlags;     ///< 0xff0f - Interrupt Flag.  Which interrupts are currently set.
 
-		Memory* m_memory;
+	u8 m_timerDivider;                 ///< 0xff04 - Timer Divider.
+	int m_ticksPerDividerIncrement;    ///< The timer divider increments once every 256 ticks.
+	int m_ticksUntilDividerIncrement;  ///< The timer divider increments once every 256 ticks.
 
-		bool m_masterInterruptsEnabled;	///<Interrupt master enable flag (IME)
-		bool m_delayNextInterrupt;	///<Interrupts are not enabled until one instruction after EI completes.
+	u8 m_timerModulo;  ///< 0xff06 - Timer Modulo.  This value gets loaded into the timer counter when it overflows.
 
-		bool m_halted;
-		bool m_stopped;
-		bool m_haltBug;
+	u8 m_timerCounter;  ///< 0xff05 - Timer Counter.
+	int m_ticksPerCounterIncrement;
+	int m_ticksUntilCounterIncrement;
 
-		//Registers
-		u8 m_interruptsEnabled;		///<0xffff - Interrupt Enable.  Which interrupts are currently enabled.  Slaves to the IME flag.
-		u8 m_interruptFlags;		///<0xff0f - Interrupt Flag.  Which interrupts are currently set.
+	u8 m_timerControl;  ///< 0xff07 - Timer Control.
+	bool m_timerEnabled;
 
-		u8 m_timerDivider;	///<0xff04 - Timer Divider.
-		int m_ticksPerDividerIncrement;	///<The timer divider increments once every 256 ticks.
-		int m_ticksUntilDividerIncrement;	///<The timer divider increments once every 256 ticks.
+	u8 m_cgbSpeedSwitch;  ///< 0xff4d - Speed switch and flag (Key1).
 
-		u8 m_timerModulo;	///<0xff06 - Timer Modulo.  This value gets loaded into the timer counter when it overflows.
+	u8 ReadNext8();
+	u16 ReadNext16();
 
-		u8 m_timerCounter;	///<0xff05 - Timer Counter.
-		int m_ticksPerCounterIncrement;
-		int m_ticksUntilCounterIncrement;
+	int ExecuteCB();
 
-		u8 m_timerControl;	///<0xff07 - Timer Control.
-		bool m_timerEnabled;
+	void ExecADC(u8* target, u8 value);
+	void ExecADC(u16* target, u16 value);
 
-		u8 m_cgbSpeedSwitch;	///<0xff4d - Speed switch and flag (Key1).
+	void ExecADD(u8* target, u8 value);
+	void ExecADD(u16* target, u16 value);
+	void ExecADD(u16* target, s8 value);
 
+	void ExecAND(u8 value);
 
-		u8 ReadNext8();
-		u16 ReadNext16();
+	void ExecBIT(u8 value, int n);
 
-		int	ExecuteCB();
+	void ExecCALL(u16 address);
 
-		void ExecADC(u8* target, u8 value);
-		void ExecADC(u16* target, u16 value);
+	void ExecCCF();
 
-		void ExecADD(u8* target, u8 value);
-		void ExecADD(u16* target, u16 value);
-		void ExecADD(u16* target, s8 value);
+	void ExecCP(u8 value);
 
-		void ExecAND(u8 value);
+	void ExecCPL();
 
-		void ExecBIT(u8 value, int n);
+	void ExecDAA();
 
-		void ExecCALL(u16 address);
+	void ExecDEC(u8* target);
+	void ExecDEC(u16* target);
 
-		void ExecCCF();
+	void ExecDI();
 
-		void ExecCP(u8 value);
+	void ExecEI();
 
-		void ExecCPL();
+	void ExecEX(u16* target1, u16* target2);
 
-		void ExecDAA();
+	void ExecHALT();
 
-		void ExecDEC(u8* target);
-		void ExecDEC(u16* target);
+	void ExecINC(u8* target);
+	void ExecINC(u16* target);
 
-		void ExecDI();
+	void ExecJP(u16 address);
 
-		void ExecEI();
+	void ExecJR(s8 value);
 
-		void ExecEX(u16* target1, u16* target2);
+	void ExecLD(u8* target, u8 value);
+	void ExecLD(u16* target, u16 value);
 
-		void ExecHALT();
+	void ExecNOP();
 
-		void ExecINC(u8* target);
-		void ExecINC(u16* target);
+	void ExecOR(u8* target);
+	void ExecOR(u8 value);
 
-		void ExecJP(u16 address);
+	void ExecPOP(u16* target);
 
-		void ExecJR(s8 value);
+	void ExecPUSH(u16* target);
 
-		void ExecLD(u8* target, u8 value);
-		void ExecLD(u16* target, u16 value);
+	void ExecRES(u8* target, int n);
 
-		void ExecNOP();
+	void ExecRET();
 
-		void ExecOR(u8* target);
-		void ExecOR(u8 value);
+	void ExecRL(u8* target);
 
-		void ExecPOP(u16* target);
+	void ExecRLA();
 
-		void ExecPUSH(u16* target);
+	void ExecRLC(u8* target);
 
-		void ExecRES(u8* target, int n);
+	void ExecRLCA();
 
-		void ExecRET();
+	void ExecRR(u8* target);
 
-		void ExecRL(u8* target);
+	void ExecRRA();
 
-		void ExecRLA();
+	void ExecRRC(u8* target);
 
-		void ExecRLC(u8* target);
+	void ExecRRCA();
 
-		void ExecRLCA();
+	void ExecRST(u16 address);
 
-		void ExecRR(u8* target);
+	void ExecSBC(u8 value);
 
-		void ExecRRA();
+	void ExecSCF();
 
-		void ExecRRC(u8* target);
+	void ExecSET(u8* target, int n);
 
-		void ExecRRCA();
+	void ExecSLA(u8* target);
 
-		void ExecRST(u16 address);
+	void ExecSRA(u8* target);
 
-		void ExecSBC(u8 value);
+	void ExecSRL(u8* target);
 
-		void ExecSCF();
+	void ExecSUB(u8 value);
 
-		void ExecSET(u8* target, int n);
+	void ExecSWAP(u8* target);
 
-		void ExecSLA(u8* target);
+	void ExecXOR(u8 value);
+};
 
-		void ExecSRA(u8* target);
-
-		void ExecSRL(u8* target);
-
-		void ExecSUB(u8 value);
-
-		void ExecSWAP(u8* target);
-
-		void ExecXOR(u8 value);
-	};
-
-}	//namespace Emunisce
-
+}  // namespace Emunisce
 
 #endif

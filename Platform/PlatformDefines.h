@@ -20,7 +20,6 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef PLATFORMDEFINES_H
 #define PLATFORMDEFINES_H
 
-
 // Compiler
 
 #if defined(_MSC_VER)
@@ -31,10 +30,9 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #else
 #define EMUNISCE_COMPILER_UNKNOWN 1
-#pragma message ("Unrecognized compiler")
+#pragma message("Unrecognized compiler")
 
 #endif
-
 
 // Platform
 
@@ -46,10 +44,9 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #else
 #define EMUNISCE_PLATFORM_UNKNOWN 1
-#pragma message ("Unrecognized platform")
+#pragma message("Unrecognized platform")
 
 #endif
-
 
 // Architecture
 
@@ -64,9 +61,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #else
 #define EMUNISCE_ARCHITECTURE_UNKNOWN 1
-#pragma message ("Unrecognized architecture")
+#pragma message("Unrecognized architecture")
 
 #endif
 
-
-#endif // PLATFORMDEFINES_H
+#endif  // PLATFORMDEFINES_H

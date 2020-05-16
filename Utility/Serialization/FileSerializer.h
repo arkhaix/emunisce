@@ -20,48 +20,41 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef FILESERIALIZER_H
 #define FILESERIALIZER_H
 
-#include "ISerializer.h"
-
 #include <fstream>
 #include <string>
 
+#include "ISerializer.h"
 
-namespace Emunisce
-{
+namespace Emunisce {
 
-	class FileSerializer : public ISerializer
-	{
-	public:
+class FileSerializer : public ISerializer {
+   public:
+	// FileSerializer
 
-		// FileSerializer
+	FileSerializer();
+	~FileSerializer() override;
 
-		FileSerializer();
-		~FileSerializer() override;
+	virtual void SetFile(const char* filename);
+	virtual void CloseFile();
 
-		virtual void SetFile(const char* filename);
-		virtual void CloseFile();
+	// ISerializer
 
+	void SetArchive(Archive* archive) override;
 
-		// ISerializer
+	void Save(unsigned char* data, unsigned int bytes) override;
+	void Restore(unsigned char* buffer, unsigned int bytes) override;
 
-		void SetArchive(Archive* archive) override;
+	void Close() override;
 
-		void Save(unsigned char* data, unsigned int bytes) override;
-		void Restore(unsigned char* buffer, unsigned int bytes) override;
+   protected:
+	void OpenStream();
 
-		void Close() override;
+	std::fstream* m_fileStream;
 
+	int m_archiveMode;
+	std::string m_filename;
+};
 
-	protected:
-
-		void OpenStream();
-
-		std::fstream* m_fileStream;
-
-		int m_archiveMode;
-		std::string m_filename;
-	};
-
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

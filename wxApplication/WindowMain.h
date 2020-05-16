@@ -20,51 +20,45 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef WindowMain_H
 #define WindowMain_H
 
-#include "wx/wx.h"
 #include "wx/glcanvas.h"
+#include "wx/wx.h"
 
-namespace Emunisce
-{
+namespace Emunisce {
 
-	class Application;
+class Application;
 
-	class WindowMain : public wxGLCanvas
-	{
-		//Emunsice stuff
+class WindowMain : public wxGLCanvas {
+	// Emunsice stuff
 
-	public:
+   public:
+	void SetApplication(Application* application);
 
-		void SetApplication(Application* application);
+   private:
+	Application* m_application;
 
-	private:
+	// wx stuff
 
-		Application* m_application;
+   private:
+	wxGLContext* m_context;
 
+   public:
+	WindowMain(wxFrame* parent, int* args);
+	virtual ~WindowMain();
 
-		//wx stuff
+	int getWidth();
+	int getHeight();
 
-	private:
+	// events
+	void OnKeyDown(wxKeyEvent& event);
+	void OnKeyUp(wxKeyEvent& event);
+	void OnResize(wxSizeEvent& event);
+	void OnPaint(wxPaintEvent& event);
+	void OnEraseBackground(wxEraseEvent& event);
+	void OnIdle(wxIdleEvent& event);
 
-		wxGLContext*	m_context;
+	DECLARE_EVENT_TABLE()
+};
 
-	public:
-		WindowMain(wxFrame* parent, int* args);
-		virtual ~WindowMain();
+}  // namespace Emunisce
 
-		int getWidth();
-		int getHeight();
-
-		// events
-		void OnKeyDown(wxKeyEvent& event);
-		void OnKeyUp(wxKeyEvent& event);
-		void OnResize(wxSizeEvent& event);
-		void OnPaint(wxPaintEvent& event);
-		void OnEraseBackground(wxEraseEvent& event);
-		void OnIdle(wxIdleEvent& event);
-
-		DECLARE_EVENT_TABLE()
-	};
-
-}   //namespace Emunisce
-
-#endif // WindowMain_H
+#endif  // WindowMain_H

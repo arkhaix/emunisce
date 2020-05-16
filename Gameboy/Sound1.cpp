@@ -20,18 +20,14 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "Sound1.h"
 using namespace Emunisce;
 
-#include "GameboyIncludes.h"
-
-#include "Serialization/SerializationIncludes.h"
-
 #include "ChannelController.h"
 #include "DutyUnit.h"
 #include "EnvelopeUnit.h"
+#include "GameboyIncludes.h"
 #include "LengthUnit.h"
+#include "Serialization/SerializationIncludes.h"
 
-
-Sound1::Sound1()
-{
+Sound1::Sound1() {
 	m_machine = nullptr;
 
 	m_dutyUnit = new DutyUnit();
@@ -40,17 +36,14 @@ Sound1::Sound1()
 	m_lengthUnit->SetMaxValue(64);
 }
 
-Sound1::~Sound1()
-{
+Sound1::~Sound1() {
 	delete m_envelopeUnit;
 	delete m_dutyUnit;
 }
 
+// Sound component
 
-//Sound component
-
-void Sound1::Initialize(ChannelController* channelController)
-{
+void Sound1::Initialize(ChannelController* channelController) {
 	SoundGenerator::Initialize(channelController);
 
 	m_frequency = 0;
@@ -64,8 +57,7 @@ void Sound1::Initialize(ChannelController* channelController)
 	SetNR14(0xbf);
 }
 
-void Sound1::SetMachine(Gameboy* machine)
-{
+void Sound1::SetMachine(Gameboy* machine) {
 	SoundGenerator::SetMachine(machine);
 
 	Memory* memory = machine->GetGbMemory();
@@ -77,8 +69,7 @@ void Sound1::SetMachine(Gameboy* machine)
 	memory->SetRegisterLocation(0x14, &m_nr14, false);
 }
 
-void Sound1::Serialize(Archive& archive)
-{
+void Sound1::Serialize(Archive& archive) {
 	SoundGenerator::Serialize(archive);
 
 	m_dutyUnit->Serialize(archive);
@@ -94,8 +85,7 @@ void Sound1::Serialize(Archive& archive)
 	SerializeItem(archive, m_sweepTimerPeriod);
 	SerializeItem(archive, m_hasPerformedDecreasingCalculation);
 
-
-	//Registers
+	// Registers
 
 	SerializeItem(archive, m_nr10);
 	SerializeItem(archive, m_nr11);
@@ -104,15 +94,12 @@ void Sound1::Serialize(Archive& archive)
 	SerializeItem(archive, m_nr14);
 }
 
-void Sound1::SetSynthesisMethod(SquareSynthesisMethod::Type method)
-{
+void Sound1::SetSynthesisMethod(SquareSynthesisMethod::Type method) {
 	m_dutyUnit->SetSynthesisMethod(method);
 }
 
-
-//Sound generation
-void Sound1::PowerOff()
-{
+// Sound generation
+void Sound1::PowerOff() {
 	SetNR10(0);
 	SetNR11(0);
 	SetNR12(0);
@@ -122,28 +109,22 @@ void Sound1::PowerOff()
 	SoundGenerator::PowerOff();
 }
 
-void Sound1::PowerOn()
-{
+void Sound1::PowerOn() {
 	SoundGenerator::PowerOn();
 }
 
-
-void Sound1::Run(int ticks)
-{
+void Sound1::Run(int ticks) {
 	SoundGenerator::Run(ticks);
 
 	m_dutyUnit->SetFrequency(m_frequency);
 	m_dutyUnit->Run(ticks);
 }
 
-
-void Sound1::TickEnvelope()
-{
+void Sound1::TickEnvelope() {
 	m_envelopeUnit->Tick();
 }
 
-void Sound1::TickSweep()
-{
+void Sound1::TickSweep() {
 	if (m_sweepEnabled == false) {
 		return;
 	}
@@ -155,8 +136,7 @@ void Sound1::TickSweep()
 
 	if (m_sweepTimerPeriod == 0) {
 		m_sweepTimerValue += 8;
-	}
-	else {
+	} else {
 		m_sweepTimerValue += m_sweepTimerPeriod;
 	}
 
@@ -165,8 +145,7 @@ void Sound1::TickSweep()
 	}
 
 	int newFrequency = CalculateFrequency();
-	if (newFrequency > 2047)
-	{
+	if (newFrequency > 2047) {
 		m_channelController->DisableChannel();
 		return;
 	}
@@ -187,16 +166,13 @@ void Sound1::TickSweep()
 	m_frequencyShadow = newFrequency;
 
 	newFrequency = CalculateFrequency();
-	if (newFrequency > 2047)
-	{
+	if (newFrequency > 2047) {
 		m_channelController->DisableChannel();
 		return;
 	}
 }
 
-
-float Sound1::GetSample()
-{
+float Sound1::GetSample() {
 	float sample = m_dutyUnit->GetSample();
 
 	sample *= m_envelopeUnit->GetCurrentVolume();
@@ -204,11 +180,9 @@ float Sound1::GetSample()
 	return sample;
 }
 
+// Registers
 
-//Registers
-
-void Sound1::SetNR10(u8 value)
-{
+void Sound1::SetNR10(u8 value) {
 	if (m_hasPower == false) {
 		return;
 	}
@@ -219,13 +193,11 @@ void Sound1::SetNR10(u8 value)
 	m_nr10 |= 0x80;
 }
 
-void Sound1::SetNR11(u8 value)
-{
-	//DMG allows writing length even when the power is off
-	//todo: CGB does not
+void Sound1::SetNR11(u8 value) {
+	// DMG allows writing length even when the power is off
+	// todo: CGB does not
 
-	if (m_hasPower == true)
-	{
+	if (m_hasPower == true) {
 		m_dutyUnit->WriteDutyRegister(value & 0xc0);
 		m_nr11 = value & 0xc0;
 	}
@@ -235,8 +207,7 @@ void Sound1::SetNR11(u8 value)
 	m_nr11 |= 0x3f;
 }
 
-void Sound1::SetNR12(u8 value)
-{
+void Sound1::SetNR12(u8 value) {
 	if (m_hasPower == false) {
 		return;
 	}
@@ -246,8 +217,7 @@ void Sound1::SetNR12(u8 value)
 	m_nr12 = value;
 }
 
-void Sound1::SetNR13(u8 value)
-{
+void Sound1::SetNR13(u8 value) {
 	if (m_hasPower == false) {
 		return;
 	}
@@ -258,8 +228,7 @@ void Sound1::SetNR13(u8 value)
 	m_nr13 = 0xff;
 }
 
-void Sound1::SetNR14(u8 value)
-{
+void Sound1::SetNR14(u8 value) {
 	if (m_hasPower == false) {
 		return;
 	}
@@ -273,17 +242,14 @@ void Sound1::SetNR14(u8 value)
 	m_nr14 |= 0xbf;
 }
 
-
-void Sound1::Trigger()
-{
+void Sound1::Trigger() {
 	SoundGenerator::Trigger();
 	m_dutyUnit->Trigger();
 	m_envelopeUnit->Trigger();
 	TriggerSweep();
 }
 
-void Sound1::TriggerSweep()
-{
+void Sound1::TriggerSweep() {
 	m_hasPerformedDecreasingCalculation = false;
 
 	m_frequencyShadow = m_frequency;
@@ -295,16 +261,13 @@ void Sound1::TriggerSweep()
 
 	if (m_sweepTimerPeriod == 0 && m_sweepShift == 0) {
 		m_sweepEnabled = false;
-	}
-	else {
+	} else {
 		m_sweepEnabled = true;
 	}
 
-	if (m_sweepShift > 0)
-	{
+	if (m_sweepShift > 0) {
 		int newFrequency = CalculateFrequency();
-		if (newFrequency > 2047)
-		{
+		if (newFrequency > 2047) {
 			m_channelController->DisableChannel();
 		}
 
@@ -314,19 +277,15 @@ void Sound1::TriggerSweep()
 	}
 }
 
-void Sound1::WriteSweepRegister(u8 value)
-{
+void Sound1::WriteSweepRegister(u8 value) {
 	m_sweepShift = value & 0x07;
 
 	if (value & 0x08) {
 		m_sweepIncreasing = false;
-	}
-	else
-	{
+	} else {
 		m_sweepIncreasing = true;
 
-		if (m_hasPerformedDecreasingCalculation)
-		{
+		if (m_hasPerformedDecreasingCalculation) {
 			m_channelController->DisableChannel();
 		}
 	}
@@ -334,16 +293,14 @@ void Sound1::WriteSweepRegister(u8 value)
 	m_sweepTimerPeriod = (value & 0x70) >> 4;
 }
 
-int Sound1::CalculateFrequency()
-{
+int Sound1::CalculateFrequency() {
 	int delta = m_frequencyShadow >> m_sweepShift;
 
 	int result = m_frequencyShadow;
 
 	if (m_sweepIncreasing == true) {
 		result += delta;
-	}
-	else {
+	} else {
 		result -= delta;
 	}
 

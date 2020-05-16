@@ -22,34 +22,32 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "Application.h"
 using namespace Emunisce;
 
-//wx
-#include "wx/sizer.h"
-#include "wx/textctrl.h"
+// wx
 #include "ConsoleWindow.h"
 #include "WindowMain.h"
+#include "wx/sizer.h"
+#include "wx/textctrl.h"
 
-//Platform
+// Platform
 #include "PlatformIncludes.h"
 
 #ifdef EMUNISCE_PLATFORM_LINUX
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #endif
 
-//Machine
+// Machine
 #include "MachineIncludes.h"
 
-//BaseApplication
+// BaseApplication
 #include "BaseApplication/InputManager.h"
 #include "BaseApplication/MachineFeature.h"
 
-//Serialization
-#include "Serialization/SerializationIncludes.h"
+// Serialization
 #include "Serialization/FileSerializer.h"
+#include "Serialization/SerializationIncludes.h"
 
-
-Application::Application()
-{
+Application::Application() {
 	m_renderer = new OpenGLRenderer();
 
 	m_consoleWindow = nullptr;
@@ -57,44 +55,31 @@ Application::Application()
 	MapDefaultKeys();
 }
 
-Application::~Application()
-{
-}
-
-
+Application::~Application() {}
 
 // BaseApplication overrides
 
-void Application::NotifyMachineChanged(IEmulatedMachine* newMachine)
-{
+void Application::NotifyMachineChanged(IEmulatedMachine* newMachine) {
 	BaseApplication::NotifyMachineChanged(newMachine);
 }
 
-void Application::RequestShutdown()
-{
+void Application::RequestShutdown() {
 	BaseApplication::RequestShutdown();
 	m_consoleWindow->Close();
 	m_windowMain->Close();
 	m_frame->Close();
 }
 
-
-
 // BaseApplication interface
 
-void Application::SetVsync(bool enabled)
-{
+void Application::SetVsync(bool enabled) {
 	if (m_renderer != nullptr)
 		m_renderer->SetVsync(enabled);
 }
 
+void Application::DisplayStatusMessage(const char* message) {}
 
-void Application::DisplayStatusMessage(const char* message)
-{
-}
-
-void Application::DisplayImportantMessage(MessageType::Type messageType, const char* message)
-{
+void Application::DisplayImportantMessage(MessageType::Type messageType, const char* message) {
 	long iconType = wxICON_INFORMATION;
 
 	if (messageType == MessageType::Information)
@@ -107,8 +92,8 @@ void Application::DisplayImportantMessage(MessageType::Type messageType, const c
 	wxMessageBox(wxString::FromAscii(message), _("Emunisce"), iconType | wxOK);
 }
 
-PromptResult::Type Application::DisplayPrompt(PromptType::Type promptType, const char* title, const char* message, void** extraResult)
-{
+PromptResult::Type Application::DisplayPrompt(PromptType::Type promptType, const char* title, const char* message,
+											  void** extraResult) {
 	long wxPromptType = wxOK;
 	if (promptType == PromptType::OkCancel)
 		wxPromptType = wxOK | wxCANCEL;
@@ -132,16 +117,15 @@ PromptResult::Type Application::DisplayPrompt(PromptType::Type promptType, const
 	return result;
 }
 
-
-bool Application::SelectFile(char** result, const char* fileMask)
-{
+bool Application::SelectFile(char** result, const char* fileMask) {
 	if (result == nullptr)
 		return false;
 
 	if (fileMask == nullptr)
 		fileMask = "*.*|*.*";
 
-	wxFileDialog openFileDialog(nullptr, _("Open File"), _(""), _(""), wxString::FromAscii(fileMask), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+	wxFileDialog openFileDialog(nullptr, _("Open File"), _(""), _(""), wxString::FromAscii(fileMask),
+								wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
 	if (openFileDialog.ShowModal() == wxID_CANCEL)
 		return false;
@@ -154,42 +138,29 @@ bool Application::SelectFile(char** result, const char* fileMask)
 	return true;
 }
 
-void Application::ConsolePrint(const char* text)
-{
+void Application::ConsolePrint(const char* text) {
 	m_consoleWindow->ConsolePrint(text);
 }
 
-
-unsigned int Application::GetRomDataSize(const char* title)
-{
+unsigned int Application::GetRomDataSize(const char* title) {
 	return 0;
 }
 
-
-
 // IWindowMessageListener
 
-void Application::Closed()
-{
-}
+void Application::Closed() {}
 
-
-void Application::Draw()
-{
+void Application::Draw() {
 	if (m_renderer != nullptr)
 		m_renderer->Draw();
 }
 
-
-void Application::Resize(int newWidth, int newHeight)
-{
+void Application::Resize(int newWidth, int newHeight) {
 	if (m_renderer != nullptr)
 		m_renderer->Resize(newWidth, newHeight);
 }
 
-
-void Application::KeyDown(int key)
-{
+void Application::KeyDown(int key) {
 	char* fileSelected = nullptr;
 
 	if (key >= 'a' && key <= 'z')
@@ -204,12 +175,10 @@ void Application::KeyDown(int key)
 	else if (key == '`')
 		ShowConsoleWindow();
 
-	else if (key == 'O')
-	{
+	else if (key == 'O') {
 		SelectFile(&fileSelected, nullptr);
 
-		if (fileSelected != nullptr)
-		{
+		if (fileSelected != nullptr) {
 			bool result = LoadRom(fileSelected);
 			if (result == false)
 				DisplayImportantMessage(MessageType::Error, "Failed to load the specified file.");
@@ -218,72 +187,55 @@ void Application::KeyDown(int key)
 		}
 	}
 
-	else
-	{
+	else {
 		m_inputManager->KeyDown(key);
 	}
 }
 
-void Application::KeyUp(int key)
-{
+void Application::KeyUp(int key) {
 	if (key >= 'a' && key <= 'z')
 		key = 'A' + (key - 'a');
 
 	m_inputManager->KeyUp(key);
 }
 
-
 // BaseApplication interface
 
-Archive* Application::OpenRomData(const char* name, bool saving)
-{
+Archive* Application::OpenRomData(const char* name, bool saving) {
 	return OpenFileArchive(GetRomDataFile(name).c_str(), saving);
 }
 
-void Application::CloseRomData(Archive* archive)
-{
+void Application::CloseRomData(Archive* archive) {
 	ReleaseArchive(archive);
 }
 
-
-Archive* Application::OpenSavestate(const char* name, bool saving)
-{
+Archive* Application::OpenSavestate(const char* name, bool saving) {
 	return OpenFileArchive(GetSaveStateFile(name).c_str(), saving);
 }
 
-void Application::CloseSavestate(Archive* archive)
-{
+void Application::CloseSavestate(Archive* archive) {
 	ReleaseArchive(archive);
 }
 
-
-Archive* Application::OpenMovie(const char* name, bool saving)
-{
+Archive* Application::OpenMovie(const char* name, bool saving) {
 	return OpenFileArchive(GetMovieFile(name).c_str(), saving);
 }
 
-void Application::CloseMovie(Archive* archive)
-{
+void Application::CloseMovie(Archive* archive) {
 	ReleaseArchive(archive);
 }
 
-
-Archive* Application::OpenMacro(const char* name, bool saving)
-{
+Archive* Application::OpenMacro(const char* name, bool saving) {
 	return OpenFileArchive(GetMacroFile(name).c_str(), saving);
 }
 
-void Application::CloseMacro(Archive* archive)
-{
+void Application::CloseMacro(Archive* archive) {
 	ReleaseArchive(archive);
 }
 
-
-
 //  Persistence
 
-Archive* Application::OpenFileArchive(const char* filename, bool saving)
-{
+Archive* Application::OpenFileArchive(const char* filename, bool saving) {
 	FileSerializer* serializer = new FileSerializer();
 	serializer->SetFile(filename);
 
@@ -297,8 +249,7 @@ Archive* Application::OpenFileArchive(const char* filename, bool saving)
 	return archive;
 }
 
-void Application::ReleaseArchive(Archive* archive)
-{
+void Application::ReleaseArchive(Archive* archive) {
 	if (archive == nullptr)
 		return;
 
@@ -310,11 +261,9 @@ void Application::ReleaseArchive(Archive* archive)
 	delete serializer;
 }
 
-
-std::string Application::GetDataFolder()
-{
+std::string Application::GetDataFolder() {
 #ifdef EMUNISCE_PLATFORM_WINDOWS
-	//todo
+	// todo
 	return std::string(".");
 
 #elif EMUNISCE_PLATFORM_LINUX
@@ -331,11 +280,9 @@ std::string Application::GetDataFolder()
 #endif
 }
 
-
-std::string Application::GetSaveStateFile(const char* name)
-{
+std::string Application::GetSaveStateFile(const char* name) {
 #ifdef EMUNISCE_PLATFORM_WINDOWS
-	//todo
+	// todo
 	return GetDataFolder() + std::string("/") + std::string(name) + std::string(".ess");
 
 #elif EMUNISCE_PLATFORM_LINUX
@@ -356,10 +303,9 @@ std::string Application::GetSaveStateFile(const char* name)
 #endif
 }
 
-std::string Application::GetRomDataFile(const char* name)
-{
+std::string Application::GetRomDataFile(const char* name) {
 #ifdef EMUNISCE_PLATFORM_WINDOWS
-	//todo
+	// todo
 	return GetDataFolder() + std::string("/") + std::string(name) + std::string(".erd");
 
 #elif EMUNISCE_PLATFORM_LINUX
@@ -380,10 +326,9 @@ std::string Application::GetRomDataFile(const char* name)
 #endif
 }
 
-std::string Application::GetMovieFile(const char* name)
-{
+std::string Application::GetMovieFile(const char* name) {
 #ifdef EMUNISCE_PLATFORM_WINDOWS
-	//todo
+	// todo
 	return GetDataFolder() + std::string("/") + std::string(name) + std::string(".eim");
 
 #elif EMUNISCE_PLATFORM_LINUX
@@ -404,10 +349,9 @@ std::string Application::GetMovieFile(const char* name)
 #endif
 }
 
-std::string Application::GetMacroFile(const char* name)
-{
+std::string Application::GetMacroFile(const char* name) {
 #ifdef EMUNISCE_PLATFORM_WINDOWS
-	//todo
+	// todo
 	return GetDataFolder() + std::string("/") + std::string(name) + std::string(".eir");
 
 #elif EMUNISCE_PLATFORM_LINUX
@@ -419,7 +363,7 @@ std::string Application::GetMacroFile(const char* name)
 	result += std::string("/") + std::string(EmulatedMachine::ToString[m_machine->GetType()]);
 	mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-	//no rom title folder for macros.  they're global to the machine.
+	// no rom title folder for macros.  they're global to the machine.
 
 	result += std::string("/") + std::string(name) + std::string(".eir");
 
@@ -427,12 +371,9 @@ std::string Application::GetMacroFile(const char* name)
 #endif
 }
 
-
-
 // Input
 
-void Application::MapDefaultKeys()
-{
+void Application::MapDefaultKeys() {
 	m_inputManager->MapKey("Up", WXK_UP);
 	m_inputManager->MapKey("Down", WXK_DOWN);
 	m_inputManager->MapKey("Left", WXK_LEFT);
@@ -458,19 +399,16 @@ void Application::MapDefaultKeys()
 	m_inputManager->MapKey("Rewind", WXK_TAB);
 }
 
-
-
 // wxApp
 
 IMPLEMENT_APP(Application)
 
-bool Application::OnInit()
-{
+bool Application::OnInit() {
 	// Set up the main window and renderer frame
 
-	m_frame = new wxFrame((wxFrame *)nullptr, -1, wxT("Emunisce"), wxPoint(50, 50), wxSize(320, 240));
+	m_frame = new wxFrame((wxFrame*)nullptr, -1, wxT("Emunisce"), wxPoint(50, 50), wxSize(320, 240));
 
-	int args[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0 };
+	int args[] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0};
 
 	m_windowMain = new WindowMain(m_frame, args);
 	m_windowMain->SetApplication(this);
@@ -492,13 +430,11 @@ bool Application::OnInit()
 	ConsolePrint("Type 'help' to see a list of commands\n");
 	ConsolePrint("\n");
 
-
 	// Initialize the renderer and hand off to the machine
 
 	m_renderer->Initialize(nullptr);
 
-	if (m_machine != nullptr)
-	{
+	if (m_machine != nullptr) {
 		BaseApplication::NotifyMachineChanged(m_machine);
 		m_renderer->SetMachine(m_machine);
 	}
@@ -508,20 +444,17 @@ bool Application::OnInit()
 	return true;
 }
 
-void Application::ShowConsoleWindow()
-{
+void Application::ShowConsoleWindow() {
 	m_consoleWindow->GiveFocus();
 }
 
-void Application::ShowGameWindow()
-{
+void Application::ShowGameWindow() {
 	m_frame->Show();
 	m_frame->Raise();
 
 	m_windowMain->SetFocus();
 }
 
-bool Application::ExecuteConsoleCommand(const char* command)
-{
+bool Application::ExecuteConsoleCommand(const char* command) {
 	return BaseApplication::ExecuteConsoleCommand(command);
 }

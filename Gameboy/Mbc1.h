@@ -24,59 +24,55 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "Memory.h"
 
+namespace Emunisce {
 
-namespace Emunisce
-{
+class Mbc1 : public Memory {
+   public:
+	Mbc1();
+	~Mbc1() override;
 
-	class Mbc1 : public Memory
-	{
-	public:
+	void Run(int ticks) override;
 
-		Mbc1();
-		~Mbc1() override;
+	void Serialize(Archive& archive) override;
 
-		void Run(int ticks) override;
+	void Write8(u16 address, u8 value) override;
 
-		void Serialize(Archive& archive) override;
+   protected:
+	bool LoadFile(const char* filename) override;
 
-		void Write8(u16 address, u8 value) override;
+	void SwitchROM();
+	void SwitchRAM();
 
-	protected:
+	void SaveRAM();
+	void LoadRAM();
 
-		bool LoadFile(const char* filename) override;
+	void PersistRAM();
 
-		void SwitchROM();
-		void SwitchRAM();
+	std::string m_romFilename;
+	std::string m_sramFilename;
 
-		void SaveRAM();
-		void LoadRAM();
+	bool m_sramLoaded;
 
-		void PersistRAM();
+	int m_numRomBanks;
+	static const unsigned int m_maxRomBanks = 0x200;
+	u8 m_romBanks[m_maxRomBanks][0x4000];
 
-		std::string m_romFilename;
-		std::string m_sramFilename;
+	int m_numRamBanks;
+	u8 m_ramBanks[0x10][0x2000];
 
-		bool m_sramLoaded;
+	u8 m_pendingSramWrite[0x10][0x2000];
+	unsigned int m_pendingSramGeneration;    ///< Incremented each time SaveRAM is called.
+	unsigned int m_lastPersistedGeneration;  ///< The generation we last persisted.
+	unsigned int m_lastPersistedFrameCount;  ///< The frame count the last time we persisted the sram data.
 
-		int m_numRomBanks;
-		static const unsigned int m_maxRomBanks = 0x200;
-		u8 m_romBanks[m_maxRomBanks][0x4000];
+	int m_selectedRomBank;
+	int m_selectedRamBank;
+	int m_modeSelect;  ///< 0 = ROM banking, 1 = RAM banking
 
-		int m_numRamBanks;
-		u8 m_ramBanks[0x10][0x2000];
+	bool m_fiveBitBankCheck;  ///< Always true for MBC1.  Disables loading into banks 0x20, 0x40, and 0x60 during
+							  ///< LoadFile.
+};
 
-		u8 m_pendingSramWrite[0x10][0x2000];
-		unsigned int m_pendingSramGeneration;	///<Incremented each time SaveRAM is called.
-		unsigned int m_lastPersistedGeneration;	///<The generation we last persisted.
-		unsigned int m_lastPersistedFrameCount;	///<The frame count the last time we persisted the sram data.
-
-		int m_selectedRomBank;
-		int m_selectedRamBank;
-		int m_modeSelect;	///<0 = ROM banking, 1 = RAM banking
-
-		bool m_fiveBitBankCheck;	///<Always true for MBC1.  Disables loading into banks 0x20, 0x40, and 0x60 during LoadFile.
-	};
-
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

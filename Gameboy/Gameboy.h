@@ -20,124 +20,118 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef GAMEBOY_H
 #define GAMEBOY_H
 
-#include "PlatformIncludes.h"
-
-#include "MachineIncludes.h"
-#include "GameboyTypes.h"
-
 #include <algorithm>
 #include <list>
 #include <mutex>
 
+#include "GameboyTypes.h"
+#include "MachineIncludes.h"
+#include "PlatformIncludes.h"
 
-namespace Emunisce
-{
+namespace Emunisce {
 
-	class Gameboy : public IEmulatedMachine
-	{
-	public:
+class Gameboy : public IEmulatedMachine {
+   public:
+	// IEmulatedMachine
 
-		// IEmulatedMachine
+	// Machine type
+	EmulatedMachine::Type GetType() override;
+	const char* GetRomTitle() override;
 
-		//Machine type
-		EmulatedMachine::Type GetType() override;
-		const char* GetRomTitle() override;
+	// Application interface
+	void SetApplicationInterface(IMachineToApplication* applicationInterface) override;
+	void AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount) override;
+	void RemoveApplicationEvent(unsigned int eventId) override;
 
-		//Application interface
-		void SetApplicationInterface(IMachineToApplication* applicationInterface) override;
-		void AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount) override;
-		void RemoveApplicationEvent(unsigned int eventId) override;
+	// Component access
+	IEmulatedDisplay* GetDisplay() override;
+	IEmulatedInput* GetInput() override;
+	IEmulatedMemory* GetMemory() override;
+	IEmulatedProcessor* GetProcessor() override;
+	IEmulatedSound* GetSound() override;
 
-		//Component access
-		IEmulatedDisplay* GetDisplay() override;
-		IEmulatedInput* GetInput() override;
-		IEmulatedMemory* GetMemory() override;
-		IEmulatedProcessor* GetProcessor() override;
-		IEmulatedSound* GetSound() override;
+	// Machine info
+	unsigned int GetFrameCount() override;
+	unsigned int GetTickCount() override;
+	unsigned int GetTicksPerSecond() override;
+	unsigned int GetTicksUntilNextFrame() override;
 
-		//Machine info
-		unsigned int GetFrameCount() override;
-		unsigned int GetTickCount() override;
-		unsigned int GetTicksPerSecond() override;
-		unsigned int GetTicksUntilNextFrame() override;
+	// Execution
+	void Step() override;
+	void RunToNextFrame() override;
+	virtual void Run();
+	virtual void Stop();
 
-		//Execution
-		void Step() override;
-		void RunToNextFrame() override;
-		virtual void Run();
-		virtual void Stop();
+	// Persistence
+	void SaveState(Archive& archive) override;
+	void LoadState(Archive& archive) override;
 
-		//Persistence
-		void SaveState(Archive& archive) override;
-		void LoadState(Archive& archive) override;
+	// Debugging
+	void EnableBreakpoint(int address) override;
+	void DisableBreakpoint(int address) override;
 
-		//Debugging
-		void EnableBreakpoint(int address) override;
-		void DisableBreakpoint(int address) override;
+	// Gameboy
 
+	// Creation
+	static Gameboy* Create(const char* filename, EmulatedMachine::Type machineType);
+	static void Release(Gameboy* machine);
 
-		// Gameboy
+	// Application interface
+	IMachineToApplication* GetApplicationInterface();
 
-		//Creation
-		static Gameboy* Create(const char* filename, EmulatedMachine::Type machineType);
-		static void Release(Gameboy* machine);
+	// Gameboy Components (non-virtual functions, direct concrete types)
+	Cpu* GetGbCpu();
+	Memory* GetGbMemory();
+	Display* GetGbDisplay();
+	Input* GetGbInput();
+	Sound* GetGbSound();
 
-		//Application interface
-		IMachineToApplication* GetApplicationInterface();
+	// Execution
+	void RunDuringInstruction(
+		unsigned int ticks);  ///< Should only be called by the CPU.  Won't do anything if called externally.
 
-		//Gameboy Components (non-virtual functions, direct concrete types)
-		Cpu* GetGbCpu();
-		Memory* GetGbMemory();
-		Display* GetGbDisplay();
-		Input* GetGbInput();
-		Sound* GetGbSound();
+	// Double-speed mode (CGB only)
+	bool IsDoubleSpeed();
+	void SetDoubleSpeed(bool doubleSpeed);
 
-		//Execution
-		void RunDuringInstruction(unsigned int ticks);	///<Should only be called by the CPU.  Won't do anything if called externally.
+   protected:
+	Gameboy(Memory* memory, EmulatedMachine::Type machineType);
+	virtual ~Gameboy();
+	void Initialize();
 
-		//Double-speed mode (CGB only)
-		bool IsDoubleSpeed();
-		void SetDoubleSpeed(bool doubleSpeed);
+	void InternalStep();  ///< Non-virtual Step.
 
-	protected:
+	virtual void Serialize(Archive& archive);
 
-		Gameboy(Memory* memory, EmulatedMachine::Type machineType);
-		virtual ~Gameboy();
-		void Initialize();
+	EmulatedMachine::Type m_machineType;
 
-		void InternalStep();	///<Non-virtual Step.
+	IMachineToApplication* m_applicationInterface;
 
-		virtual void Serialize(Archive& archive);
+	Cpu* m_cpu;
+	Memory* m_memory;
+	Display* m_display;
+	Input* m_input;
+	Sound* m_sound;
 
-		EmulatedMachine::Type m_machineType;
+	char m_romTitle[16];
 
-		IMachineToApplication* m_applicationInterface;
+	unsigned int m_frameCount;
 
-		Cpu* m_cpu;
-		Memory* m_memory;
-		Display* m_display;
-		Input* m_input;
-		Sound* m_sound;
+	unsigned int m_ticksPerSecond;
+	unsigned int m_ticksPerFrame;
+	int m_frameTicksRemaining;
 
-		char m_romTitle[16];
+	bool m_executingInstruction;
+	unsigned int m_subInstructionTicksSpent;  ///< Tracks how many ticks were used during instruction execution
 
-		unsigned int m_frameCount;
+	bool m_doubleSpeed;
 
-		unsigned int m_ticksPerSecond;
-		unsigned int m_ticksPerFrame;
-		int m_frameTicksRemaining;
+	std::list<ApplicationEvent> m_applicationEvents;
+	std::list<ApplicationEvent>::iterator m_nextApplicationEvent;
+	std::mutex m_applicationEventsLock;
+	bool m_applicationEventsPending;
+};
 
-		bool m_executingInstruction;
-		unsigned int m_subInstructionTicksSpent;	///<Tracks how many ticks were used during instruction execution
-
-		bool m_doubleSpeed;
-
-		std::list<ApplicationEvent> m_applicationEvents;
-		std::list<ApplicationEvent>::iterator m_nextApplicationEvent;
-		std::mutex m_applicationEventsLock;
-		bool m_applicationEventsPending;
-	};
-
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

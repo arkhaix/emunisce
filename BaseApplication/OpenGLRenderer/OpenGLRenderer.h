@@ -20,40 +20,33 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENGLRENDERER_H
 #define OPENGLRENDERER_H
 
+namespace Emunisce {
 
-namespace Emunisce
-{
+class IEmulatedMachine;
 
-	class IEmulatedMachine;
+class OpenGLRenderer {
+   public:
+	OpenGLRenderer();
+	~OpenGLRenderer();
 
-	class OpenGLRenderer
-	{
-	public:
+	void Initialize(void* windowHandle);
+	void Shutdown();
 
-		OpenGLRenderer();
-		~OpenGLRenderer();
+	void SetMachine(IEmulatedMachine* machine);
 
-		void Initialize(void* windowHandle);
-		void Shutdown();
+	int GetLastFrameRendered();
 
-		void SetMachine(IEmulatedMachine* machine);
+	void SetVsync(bool enabled);
 
-		int GetLastFrameRendered();
+	// Window events
 
-		void SetVsync(bool enabled);
+	void Draw();
+	void Resize(int newWidth, int newHeight);
 
+   private:
+	class OpenGLRenderer_Private* m_private;
+};
 
-		//Window events
-
-		void Draw();
-		void Resize(int newWidth, int newHeight);
-
-
-	private:
-
-		class OpenGLRenderer_Private* m_private;
-	};
-
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

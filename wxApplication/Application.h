@@ -20,118 +20,104 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include "wx/wx.h"
+#include <string>
 
 #include "BaseApplication/BaseApplication.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
+#include "wx/wx.h"
 
-#include <string>
+namespace Emunisce {
 
+class WindowMain;
+class ConsoleWindow;
 
-namespace Emunisce
-{
+class Application : public wxApp, public BaseApplication {
+   public:
+	Application();
+	~Application();
 
-	class WindowMain;
-	class ConsoleWindow;
+	// BaseApplication overrides
 
-	class Application : public wxApp, public BaseApplication
-	{
-	public:
+	virtual void NotifyMachineChanged(IEmulatedMachine* newMachine);
+	virtual void RequestShutdown();
 
-		Application();
-		~Application();
+	// BaseApplication interface
 
+	virtual void SetVsync(bool enabled);
 
-		// BaseApplication overrides
+	virtual void DisplayStatusMessage(const char* message);
+	virtual void DisplayImportantMessage(MessageType::Type messageType, const char* message);
+	virtual PromptResult::Type DisplayPrompt(PromptType::Type promptType, const char* title, const char* message,
+											 void** extraResult);
 
-		virtual void NotifyMachineChanged(IEmulatedMachine* newMachine);
-		virtual void RequestShutdown();
+	virtual bool SelectFile(char** result, const char* fileMask);
 
+	virtual void ConsolePrint(const char* text);
 
-		// BaseApplication interface
+	virtual unsigned int GetRomDataSize(const char* title);
 
-		virtual void SetVsync(bool enabled);
+	// IWindowMessageListener
 
-		virtual void DisplayStatusMessage(const char* message);
-		virtual void DisplayImportantMessage(MessageType::Type messageType, const char* message);
-		virtual PromptResult::Type DisplayPrompt(PromptType::Type promptType, const char* title, const char* message, void** extraResult);
+	virtual void Closed();
 
-		virtual bool SelectFile(char** result, const char* fileMask);
+	virtual void Draw();
 
-		virtual void ConsolePrint(const char* text);
+	virtual void Resize(int newWidth, int newHeight);
 
-		virtual unsigned int GetRomDataSize(const char* title);
+	virtual void KeyDown(int key);
+	virtual void KeyUp(int key);
 
+	// wxApplication
 
-		// IWindowMessageListener
+	void ShowConsoleWindow();
+	void ShowGameWindow();
 
-		virtual void Closed();
+	virtual bool ExecuteConsoleCommand(const char* command);  ///< Move to public for use from ConsoleWindow
 
-		virtual void Draw();
+   protected:
+	// BaseApplication interface
 
-		virtual void Resize(int newWidth, int newHeight);
+	virtual Archive* OpenRomData(const char* name, bool saving);
+	virtual void CloseRomData(Archive* archive);
 
-		virtual void KeyDown(int key);
-		virtual void KeyUp(int key);
+	virtual Archive* OpenSavestate(const char* name, bool saving);
+	virtual void CloseSavestate(Archive* archive);
 
+	virtual Archive* OpenMovie(const char* name, bool saving);
+	virtual void CloseMovie(Archive* archive);
 
-		// wxApplication
+	virtual Archive* OpenMacro(const char* name, bool saving);
+	virtual void CloseMacro(Archive* archive);
 
-		void ShowConsoleWindow();
-		void ShowGameWindow();
+	// Persistence
 
-		virtual bool ExecuteConsoleCommand(const char* command); ///< Move to public for use from ConsoleWindow
+	Archive* OpenFileArchive(const char* filename, bool saving);
+	void ReleaseArchive(Archive* archive);
 
+	std::string GetDataFolder();
 
-	protected:
+	std::string GetSaveStateFile(const char* name);
+	std::string GetRomDataFile(const char* name);
+	std::string GetMovieFile(const char* name);
+	std::string GetMacroFile(const char* name);
 
-		// BaseApplication interface
+	// Input
 
-		virtual Archive* OpenRomData(const char* name, bool saving);
-		virtual void CloseRomData(Archive* archive);
+	void MapDefaultKeys();
 
-		virtual Archive* OpenSavestate(const char* name, bool saving);
-		virtual void CloseSavestate(Archive* archive);
+	// Application properties
 
-		virtual Archive* OpenMovie(const char* name, bool saving);
-		virtual void CloseMovie(Archive* archive);
+	OpenGLRenderer* m_renderer;
 
-		virtual Archive* OpenMacro(const char* name, bool saving);
-		virtual void CloseMacro(Archive* archive);
+	// wxApp
 
+	virtual bool OnInit();
 
-		// Persistence
+	wxFrame* m_frame;
+	WindowMain* m_windowMain;
+	ConsoleWindow* m_consoleWindow;
+};
 
-		Archive* OpenFileArchive(const char* filename, bool saving);
-		void ReleaseArchive(Archive* archive);
+}  // namespace Emunisce
 
-		std::string GetDataFolder();
-
-		std::string GetSaveStateFile(const char* name);
-		std::string GetRomDataFile(const char* name);
-		std::string GetMovieFile(const char* name);
-		std::string GetMacroFile(const char* name);
-
-
-		// Input
-
-		void MapDefaultKeys();
-
-
-		// Application properties
-
-		OpenGLRenderer* m_renderer;
-
-
-		// wxApp
-
-		virtual bool OnInit();
-
-		wxFrame* m_frame;
-		WindowMain* m_windowMain;
-		ConsoleWindow* m_consoleWindow;
-	};
-
-}   //namespace Emunisce
-
-#endif // APPLICATION_H
+#endif  // APPLICATION_H

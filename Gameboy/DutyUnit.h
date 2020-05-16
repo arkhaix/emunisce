@@ -20,47 +20,42 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef DUTYUNIT_H
 #define DUTYUNIT_H
 
-#include "Sound.h"	///<for SquareSynthesisMethod
+#include "Sound.h"  ///<for SquareSynthesisMethod
 
+namespace Emunisce {
 
-namespace Emunisce
-{
+class DutyUnit {
+   public:
+	DutyUnit();
 
-	class DutyUnit
-	{
-	public:
+	void Serialize(Archive& archive);
 
-		DutyUnit();
+	void Run(int ticks);
+	void Trigger();
 
-		void Serialize(Archive& archive);
+	void SetFrequency(int frequency);
+	void WriteDutyRegister(u8 value);
 
-		void Run(int ticks);
-		void Trigger();
+	float GetSample();
 
-		void SetFrequency(int frequency);
-		void WriteDutyRegister(u8 value);
+	void SetSynthesisMethod(SquareSynthesisMethod::Type method);
 
-		float GetSample();
+   private:
+	int m_timerPeriod;
+	int m_timerValue;
 
-		void SetSynthesisMethod(SquareSynthesisMethod::Type method);
+	int m_dutyPosition;
+	int m_dutyMode;
+	int m_dutyTable[4][8];
 
-	private:
+	SquareSynthesisMethod::Type m_synthesisMethod;
 
-		int m_timerPeriod;
-		int m_timerValue;
+	bool m_hasTransitioned;
+	bool m_hitNyquist;
+	int m_ticksSinceLastSample;
+	int m_sumSinceLastSample;
+};
 
-		int m_dutyPosition;
-		int m_dutyMode;
-		int m_dutyTable[4][8];
-
-		SquareSynthesisMethod::Type m_synthesisMethod;
-
-		bool m_hasTransitioned;
-		bool m_hitNyquist;
-		int m_ticksSinceLastSample;
-		int m_sumSinceLastSample;
-	};
-
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

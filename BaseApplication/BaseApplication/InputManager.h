@@ -20,53 +20,46 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef INPUTMANAGER_H
 #define INPUTMANAGER_H
 
-
 #include <map>
 #include <string>
 
+namespace Emunisce {
 
-namespace Emunisce
-{
+class BaseApplication;
 
-	class BaseApplication;
+class IEmulatedInput;
+class IEmulatedMachine;
 
-	class IEmulatedInput;
-	class IEmulatedMachine;
+class InputManager {
+   public:
+	InputManager();
 
-	class InputManager
-	{
-	public:
+	void Initialize(BaseApplication* application);
 
-		InputManager();
+	void SetMachine(IEmulatedMachine* machine);
 
-		void Initialize(BaseApplication* application);
+	void KeyDown(int key);
+	void KeyUp(int key);
 
-		void SetMachine(IEmulatedMachine* machine);
+	void MapKey(
+		const char* name,
+		int keyCode);  ///< name is the string provided by IEmulatedInput::GetButtonName.  keyCode is the value that
+					   ///< will be passed into KeyDown/KeyUp.  todo: separate providers with identical keycodes.
+					   // todo: UnmapKey
 
-		void KeyDown(int key);
-		void KeyUp(int key);
+   private:
+	void GenerateKeymap();
 
-		void MapKey(const char* name, int keyCode); ///<name is the string provided by IEmulatedInput::GetButtonName.  keyCode is the value that will be passed into KeyDown/KeyUp.  todo: separate providers with identical keycodes.
-		//todo: UnmapKey
+	BaseApplication* m_application;
 
+	IEmulatedMachine* m_machine;
+	IEmulatedInput* m_input;
 
-	private:
+	std::multimap<std::string, int> m_nameKeyMap;
+	std::map<int, unsigned int> m_keyMap;  ///< Built from _NameKeyMap
+	std::map<int, bool> m_keyStates;
+};
 
-		void GenerateKeymap();
-
-		BaseApplication* m_application;
-
-		IEmulatedMachine* m_machine;
-		IEmulatedInput* m_input;
-
-		std::multimap<std::string, int> m_nameKeyMap;
-		std::map<int, unsigned int> m_keyMap;		///<Built from _NameKeyMap
-		std::map<int, bool> m_keyStates;
-	};
-
-}	//namespace Emunisce
-
-
-
+}  // namespace Emunisce
 
 #endif

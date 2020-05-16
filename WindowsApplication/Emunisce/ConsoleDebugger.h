@@ -20,123 +20,113 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONSOLEDEBUGGER_H
 #define CONSOLEDEBUGGER_H
 
-#include "windows.h"
-
 #include <set>
 #include <string>
 #include <vector>
 
+#include "BaseApplication/IUserInterface.h"  ///<For DisplayFilter
 #include "MachineIncludes.h"
+#include "windows.h"
 
-#include "BaseApplication/IUserInterface.h"	///<For DisplayFilter
+namespace Emunisce {
 
+class EmunisceApplication;
 
-namespace Emunisce
-{
+class ConsoleDebugger {
+   public:
+	ConsoleDebugger();
 
-	class EmunisceApplication;
+	void Initialize(EmunisceApplication* phoenix);
+	void Shutdown();
 
+	void SetMachine(IEmulatedMachine* machine);
 
-	class ConsoleDebugger
-	{
-	public:
+	void Run();
 
-		ConsoleDebugger();
+	void Print(const char* text);
 
-		void Initialize(EmunisceApplication* phoenix);
-		void Shutdown();
+   private:
+	void Help();
 
-		void SetMachine(IEmulatedMachine* machine);
+	void SetupConsole();
 
-		void Run();
+	void UpdateDisplay();
+	void FetchCommand();
+	std::string FetchLine();
 
-		void Print(const char* text);
+	std::vector<std::string> SplitCommand(std::string command);
 
-	private:
+	// Commands
 
-		void Help();
+	void LoadROM(const char* filename);
+	void Reset();
 
-		void SetupConsole();
+	void StepInto();
+	void StepOver();
+	void RunMachine();
+	void RunMachineTo(int address);
 
-		void UpdateDisplay();
-		void FetchCommand();
-		std::string FetchLine();
+	void Pause();
 
-		std::vector<std::string> SplitCommand(std::string command);
+	void Speed(float multiplier);
 
+	void SaveState(const char* id);
+	void LoadState(const char* id);
 
-		//Commands
+	void ToggleBreakpoint(int address);
+	void ListBreakpoints();
+	void ClearBreakpoints();
 
-		void LoadROM(const char* filename);
-		void Reset();
+	void PrintMemory(int address, int length);
 
-		void StepInto();
-		void StepOver();
-		void RunMachine();
-		void RunMachineTo(int address);
+	void ToggleMute();
+	void SetSquareSynthesisMethod(const char* strMethod);
 
-		void Pause();
+	void SetBackgroundAnimation(const char* state);
 
-		void Speed(float multiplier);
+	void SetDisplayFilter(const char* strFilter);
+	void SetVsync(const char* strMode);
 
-		void SaveState(const char* id);
-		void LoadState(const char* id);
+	void ToggleRecording();
 
-		void ToggleBreakpoint(int address);
-		void ListBreakpoints();
-		void ClearBreakpoints();
+	void TogglePlayMovie();
+	void TogglePlayMacro(const char* loop);
 
-		void PrintMemory(int address, int length);
+	void SaveMovie(const char* id);
+	void LoadMovie(const char* id);
 
-		void ToggleMute();
-		void SetSquareSynthesisMethod(const char* strMethod);
+	void SaveMacro(const char* id);
+	void LoadMacro(const char* id);
 
-		void SetBackgroundAnimation(const char* state);
+	void PrintButtons();
 
-		void SetDisplayFilter(const char* strFilter);
-		void SetVsync(const char* strMode);
+	void PrintMachineType();
 
-		void ToggleRecording();
+	// Properties
 
-		void TogglePlayMovie();
-		void TogglePlayMacro(const char* loop);
+	EmunisceApplication* m_phoenix;
+	IUserInterface* m_userInterface;
 
-		void SaveMovie(const char* id);
-		void LoadMovie(const char* id);
+	IEmulatedMachine* m_machine;
+	IEmulatedProcessor* m_cpu;
+	IEmulatedDisplay* m_display;
+	IEmulatedMemory* m_memory;
 
-		void SaveMacro(const char* id);
-		void LoadMacro(const char* id);
+	std::string m_lastFileLoaded;
+	int m_frameTicksRemaining;
 
-		void PrintButtons();
+	bool m_breakpointsEnabled;
+	std::set<u16> m_breakpoints;
 
-		void PrintMachineType();
+	bool m_muteSound;
 
+	SquareSynthesisMethod::Type m_squareSynthesisMethod;
+	DisplayFilter::Type m_displayFilter;
 
-		//Properties
+	bool m_recordingInput;
+	bool m_playingInput;
+};
 
-		EmunisceApplication* m_phoenix;
-		IUserInterface* m_userInterface;
-
-		IEmulatedMachine* m_machine;
-		IEmulatedProcessor* m_cpu;
-		IEmulatedDisplay* m_display;
-		IEmulatedMemory* m_memory;
-
-		std::string m_lastFileLoaded;
-		int m_frameTicksRemaining;
-
-		bool m_breakpointsEnabled;
-		std::set<u16> m_breakpoints;
-
-		bool m_muteSound;
-
-		SquareSynthesisMethod::Type m_squareSynthesisMethod;
-		DisplayFilter::Type m_displayFilter;
-
-		bool m_recordingInput;
-		bool m_playingInput;
-	};
-
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

@@ -20,33 +20,26 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "InputManager.h"
 using namespace Emunisce;
 
+#include "BaseApplication.h"
+#include "MachineIncludes.h"
 #include "PlatformIncludes.h"
 
-#include "MachineIncludes.h"
-
-#include "BaseApplication.h"
-
-
-InputManager::InputManager()
-{
+InputManager::InputManager() {
 	m_machine = nullptr;
 	m_input = nullptr;
 }
 
-void InputManager::Initialize(BaseApplication* application)
-{
+void InputManager::Initialize(BaseApplication* application) {
 	m_application = application;
 }
 
-void InputManager::SetMachine(IEmulatedMachine* machine)
-{
+void InputManager::SetMachine(IEmulatedMachine* machine) {
 	m_machine = machine;
 	m_input = machine->GetInput();
 	GenerateKeymap();
 }
 
-void InputManager::KeyDown(int key)
-{
+void InputManager::KeyDown(int key) {
 	auto keyIter = m_keyMap.find(key);
 	if (keyIter == m_keyMap.end()) {
 		return;
@@ -62,8 +55,7 @@ void InputManager::KeyDown(int key)
 	m_input->ButtonDown(keyIter->second);
 }
 
-void InputManager::KeyUp(int key)
-{
+void InputManager::KeyUp(int key) {
 	auto keyIter = m_keyMap.find(key);
 	if (keyIter == m_keyMap.end()) {
 		return;
@@ -79,14 +71,12 @@ void InputManager::KeyUp(int key)
 	m_input->ButtonUp(keyIter->second);
 }
 
-void InputManager::MapKey(const char* name, int keyCode)
-{
+void InputManager::MapKey(const char* name, int keyCode) {
 	m_nameKeyMap.insert(std::make_pair(name, keyCode));
 	GenerateKeymap();
 }
 
-void InputManager::GenerateKeymap()
-{
+void InputManager::GenerateKeymap() {
 	if (m_input == nullptr) {
 		return;
 	}
@@ -94,12 +84,10 @@ void InputManager::GenerateKeymap()
 	m_keyMap.clear();
 	m_keyStates.clear();
 
-	for (unsigned int i = 0; i < m_input->NumButtons(); i++)
-	{
+	for (unsigned int i = 0; i < m_input->NumButtons(); i++) {
 		std::string buttonName = m_input->GetButtonName(i);
 		auto mappedKeys = m_nameKeyMap.equal_range(buttonName);
-		for (auto iter = mappedKeys.first; iter != mappedKeys.second; iter++)
-		{
+		for (auto iter = mappedKeys.first; iter != mappedKeys.second; iter++) {
 			m_keyMap[iter->second] = i;
 		}
 	}

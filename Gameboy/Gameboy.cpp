@@ -20,45 +20,36 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "Gameboy.h"
 using namespace Emunisce;
 
-//Gameboy
+// Gameboy
 #include "GameboyIncludes.h"
 
-//Serialization
+// Serialization
 #include "Serialization/SerializationIncludes.h"
-
 
 // IEmulatedMachine
 
-//Machine type
-EmulatedMachine::Type Gameboy::GetType()
-{
+// Machine type
+EmulatedMachine::Type Gameboy::GetType() {
 	return m_machineType;
 }
 
-const char* Gameboy::GetRomTitle()
-{
+const char* Gameboy::GetRomTitle() {
 	return m_romTitle;
 }
 
-
-//Application interface
-void Gameboy::SetApplicationInterface(IMachineToApplication* applicationInterface)
-{
+// Application interface
+void Gameboy::SetApplicationInterface(IMachineToApplication* applicationInterface) {
 	m_applicationInterface = applicationInterface;
 }
 
-void Gameboy::AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount)
-{
+void Gameboy::AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount) {
 	std::lock_guard<std::mutex> scopedLock(m_applicationEventsLock);
 
-	if (relativeFrameCount == true)
-	{
+	if (relativeFrameCount == true) {
 		ApplicationEvent eventCopy = applicationEvent;
 		eventCopy.frameCount += m_frameCount;
 		m_applicationEvents.push_back(eventCopy);
-	}
-	else
-	{
+	} else {
 		m_applicationEvents.push_back(applicationEvent);
 	}
 
@@ -67,14 +58,11 @@ void Gameboy::AddApplicationEvent(ApplicationEvent& applicationEvent, bool relat
 	m_applicationEventsPending = true;
 }
 
-void Gameboy::RemoveApplicationEvent(unsigned int eventId)
-{
+void Gameboy::RemoveApplicationEvent(unsigned int eventId) {
 	std::lock_guard<std::mutex> scopedLock(m_applicationEventsLock);
 
-	for (auto iter = m_applicationEvents.begin(); iter != m_applicationEvents.end(); ++iter)
-	{
-		if (iter->eventId == eventId)
-		{
+	for (auto iter = m_applicationEvents.begin(); iter != m_applicationEvents.end(); ++iter) {
+		if (iter->eventId == eventId) {
 			m_applicationEvents.erase(iter);
 			break;
 		}
@@ -87,120 +75,89 @@ void Gameboy::RemoveApplicationEvent(unsigned int eventId)
 	}
 }
 
-
-//Component access
-IEmulatedDisplay* Gameboy::GetDisplay()
-{
+// Component access
+IEmulatedDisplay* Gameboy::GetDisplay() {
 	return m_display;
 }
 
-IEmulatedInput* Gameboy::GetInput()
-{
+IEmulatedInput* Gameboy::GetInput() {
 	return m_input;
 }
 
-IEmulatedMemory* Gameboy::GetMemory()
-{
+IEmulatedMemory* Gameboy::GetMemory() {
 	return m_memory;
 }
 
-IEmulatedProcessor* Gameboy::GetProcessor()
-{
+IEmulatedProcessor* Gameboy::GetProcessor() {
 	return m_cpu;
 }
 
-IEmulatedSound* Gameboy::GetSound()
-{
+IEmulatedSound* Gameboy::GetSound() {
 	return m_sound;
 }
 
-
-//Machine info
-unsigned int Gameboy::GetFrameCount()
-{
+// Machine info
+unsigned int Gameboy::GetFrameCount() {
 	return m_frameCount;
 }
 
-unsigned int Gameboy::GetTickCount()
-{
+unsigned int Gameboy::GetTickCount() {
 	return m_ticksPerFrame - m_frameTicksRemaining;
 }
 
-unsigned int Gameboy::GetTicksPerSecond()
-{
+unsigned int Gameboy::GetTicksPerSecond() {
 	return m_ticksPerSecond;
 }
 
-unsigned int Gameboy::GetTicksUntilNextFrame()
-{
+unsigned int Gameboy::GetTicksUntilNextFrame() {
 	return m_frameTicksRemaining;
 }
 
-
-//Execution
-void Gameboy::Step()
-{
+// Execution
+void Gameboy::Step() {
 	InternalStep();
 }
 
-void Gameboy::RunToNextFrame()
-{
+void Gameboy::RunToNextFrame() {
 	unsigned int currentFrame = m_frameCount;
 	while (m_frameCount == currentFrame) {
 		InternalStep();
 	}
 }
 
-void Gameboy::Run()
-{
-}
+void Gameboy::Run() {}
 
-void Gameboy::Stop()
-{
-}
+void Gameboy::Stop() {}
 
-
-//Persistence
-void Gameboy::SaveState(Archive& ar)
-{
+// Persistence
+void Gameboy::SaveState(Archive& ar) {
 	Serialize(ar);
 }
 
-void Gameboy::LoadState(Archive& ar)
-{
+void Gameboy::LoadState(Archive& ar) {
 	Serialize(ar);
 }
 
+// Debugging
+void Gameboy::EnableBreakpoint(int address) {}
 
-//Debugging
-void Gameboy::EnableBreakpoint(int address)
-{
-}
-
-void Gameboy::DisableBreakpoint(int address)
-{
-}
-
-
+void Gameboy::DisableBreakpoint(int address) {}
 
 // Gameboy
 
-//Creation
-Gameboy* Gameboy::Create(const char* filename, EmulatedMachine::Type machineType)
-{
+// Creation
+Gameboy* Gameboy::Create(const char* filename, EmulatedMachine::Type machineType) {
 	Memory* memory = Memory::CreateFromFile(filename);
 	if (memory == nullptr) {
 		return nullptr;
 	}
 
-	if (machineType == EmulatedMachine::AutoSelect)
-	{
+	if (machineType == EmulatedMachine::AutoSelect) {
 		u8 cgbValue = memory->Read8(0x0143);
 
 		if (cgbValue & 0x80) {
 			machineType = EmulatedMachine::GameboyColor;
-		}
-		else {
+		} else {
 			machineType = EmulatedMachine::Gameboy;
 		}
 	}
@@ -213,71 +170,56 @@ Gameboy* Gameboy::Create(const char* filename, EmulatedMachine::Type machineType
 
 	result->Initialize();
 
-
 	return result;
 }
 
-void Gameboy::Release(Gameboy* machine)
-{
+void Gameboy::Release(Gameboy* machine) {
 	if (machine != nullptr) {
 		delete machine;
 	}
 }
 
-
-//Application interface
-IMachineToApplication* Gameboy::GetApplicationInterface()
-{
+// Application interface
+IMachineToApplication* Gameboy::GetApplicationInterface() {
 	return m_applicationInterface;
 }
 
-
-//Gameboy Components (non-functions, direct concrete types)
-Cpu* Gameboy::GetGbCpu()
-{
+// Gameboy Components (non-functions, direct concrete types)
+Cpu* Gameboy::GetGbCpu() {
 	return m_cpu;
 }
 
-Memory* Gameboy::GetGbMemory()
-{
+Memory* Gameboy::GetGbMemory() {
 	return m_memory;
 }
 
-Display* Gameboy::GetGbDisplay()
-{
+Display* Gameboy::GetGbDisplay() {
 	return m_display;
 }
 
-Input* Gameboy::GetGbInput()
-{
+Input* Gameboy::GetGbInput() {
 	return m_input;
 }
 
-Sound* Gameboy::GetGbSound()
-{
+Sound* Gameboy::GetGbSound() {
 	return m_sound;
 }
 
-
-//Execution
-void Gameboy::RunDuringInstruction(unsigned int ticks)
-{
+// Execution
+void Gameboy::RunDuringInstruction(unsigned int ticks) {
 	if (m_executingInstruction == false) {
 		return;
 	}
 
-	if (m_applicationEventsPending == true)
-	{
+	if (m_applicationEventsPending == true) {
 		std::lock_guard<std::mutex> scopedLock(m_applicationEventsLock);
 
-		if (m_applicationEvents.empty() == false && m_nextApplicationEvent != m_applicationEvents.end())
-		{
+		if (m_applicationEvents.empty() == false && m_nextApplicationEvent != m_applicationEvents.end()) {
 			ApplicationEvent currentTime;
 			currentTime.frameCount = m_frameCount;
 			currentTime.tickCount = (m_ticksPerFrame - m_frameTicksRemaining) + ticks;
 
-			if ((*m_nextApplicationEvent) < currentTime)
-			{
+			if ((*m_nextApplicationEvent) < currentTime) {
 				m_applicationInterface->HandleApplicationEvent(m_nextApplicationEvent->eventId);
 				m_applicationEvents.erase(m_nextApplicationEvent);
 				m_nextApplicationEvent = min_element(m_applicationEvents.begin(), m_applicationEvents.end());
@@ -291,10 +233,9 @@ void Gameboy::RunDuringInstruction(unsigned int ticks)
 
 	m_cpu->RunTimer(ticks);
 
-	int slowTicks = ticks;	///<ticks to run for components that don't do double-speed
-	if (m_doubleSpeed == true)
-	{
-		//This naive integer divide is safe because all instruction times are even multiples of two
+	int slowTicks = ticks;  ///< ticks to run for components that don't do double-speed
+	if (m_doubleSpeed == true) {
+		// This naive integer divide is safe because all instruction times are even multiples of two
 		// and so are all the sub-instruction tick calls, so ticks and ticksThisStep will always be even
 		// prior to this divide.
 		slowTicks /= 2;
@@ -308,24 +249,21 @@ void Gameboy::RunDuringInstruction(unsigned int ticks)
 
 	m_sound->Run(slowTicks);
 
-	m_subInstructionTicksSpent += ticks;	///<Not slowTicks.  This is the number of double-speed ticks used because it's later subtracted from the instruction time in InternalStep.
+	m_subInstructionTicksSpent += ticks;  ///< Not slowTicks.  This is the number of double-speed ticks used because
+										  ///< it's later subtracted from the instruction time in InternalStep.
 }
 
-bool Gameboy::IsDoubleSpeed()
-{
+bool Gameboy::IsDoubleSpeed() {
 	return m_doubleSpeed;
 }
 
-void Gameboy::SetDoubleSpeed(bool doubleSpeed)
-{
+void Gameboy::SetDoubleSpeed(bool doubleSpeed) {
 	m_doubleSpeed = doubleSpeed;
 }
 
+// protected:
 
-//protected:
-
-Gameboy::Gameboy(Memory* memory, EmulatedMachine::Type machineType)
-{
+Gameboy::Gameboy(Memory* memory, EmulatedMachine::Type machineType) {
 	m_machineType = machineType;
 
 	m_applicationInterface = nullptr;
@@ -355,8 +293,7 @@ Gameboy::Gameboy(Memory* memory, EmulatedMachine::Type machineType)
 	m_applicationEventsPending = false;
 }
 
-Gameboy::~Gameboy()
-{
+Gameboy::~Gameboy() {
 	delete m_sound;
 	delete m_input;
 	delete m_display;
@@ -364,8 +301,7 @@ Gameboy::~Gameboy()
 	delete m_memory;
 }
 
-void Gameboy::Initialize()
-{
+void Gameboy::Initialize() {
 	m_memory->SetMachine(this);
 	m_cpu->SetMachine(this);
 	m_display->SetMachine(this);
@@ -378,33 +314,27 @@ void Gameboy::Initialize()
 	m_input->Initialize();
 	m_sound->Initialize();
 
-	//Get the rom title
-	for (int i = 0; i < 11; i++)
-	{
+	// Get the rom title
+	for (int i = 0; i < 11; i++) {
 		char ch = m_memory->Read8(0x0134 + i);
 		if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9') || (ch == ' ')) {
 			m_romTitle[i] = ch;
-		}
-		else {
+		} else {
 			m_romTitle[i] = 0;
 		}
 	}
 }
 
-void Gameboy::InternalStep()
-{
-	if (m_applicationEventsPending == true)
-	{
+void Gameboy::InternalStep() {
+	if (m_applicationEventsPending == true) {
 		std::lock_guard<std::mutex> scopedLock(m_applicationEventsLock);
 
-		if (m_applicationEvents.empty() == false && m_nextApplicationEvent != m_applicationEvents.end())
-		{
+		if (m_applicationEvents.empty() == false && m_nextApplicationEvent != m_applicationEvents.end()) {
 			ApplicationEvent currentTime;
 			currentTime.frameCount = m_frameCount;
 			currentTime.tickCount = m_ticksPerFrame - m_frameTicksRemaining;
 
-			if ((*m_nextApplicationEvent) < currentTime)
-			{
+			if ((*m_nextApplicationEvent) < currentTime) {
 				m_applicationInterface->HandleApplicationEvent(m_nextApplicationEvent->eventId);
 				m_applicationEvents.erase(m_nextApplicationEvent);
 				m_nextApplicationEvent = min_element(m_applicationEvents.begin(), m_applicationEvents.end());
@@ -422,27 +352,24 @@ void Gameboy::InternalStep()
 
 	unsigned int ticksThisStep = ticks;
 
-	//If the instruction spent more ticks than its total time (should never happen)
+	// If the instruction spent more ticks than its total time (should never happen)
 	// then roll over the spent ticks to the next instruction
-	if (ticks < m_subInstructionTicksSpent)
-	{
+	if (ticks < m_subInstructionTicksSpent) {
 		m_subInstructionTicksSpent -= ticks;
 		ticks = 0;
 	}
 
-	//Otherwise (normal case), just subtract the spent ticks from the total instruction time
-	else
-	{
+	// Otherwise (normal case), just subtract the spent ticks from the total instruction time
+	else {
 		ticks -= m_subInstructionTicksSpent;
 		m_subInstructionTicksSpent = 0;
 	}
 
 	m_cpu->RunTimer(ticks);
 
-	int slowTicks = ticks;	///<Number of ticks to run for components that don't do double-speed.
-	if (m_doubleSpeed == true)
-	{
-		//This naive integer divide is safe because all instruction times are even multiples of two
+	int slowTicks = ticks;  ///< Number of ticks to run for components that don't do double-speed.
+	if (m_doubleSpeed == true) {
+		// This naive integer divide is safe because all instruction times are even multiples of two
 		// and so are all the sub-instruction tick calls, so ticks and ticksThisStep will always be even
 		// prior to this divide.
 		slowTicks /= 2;
@@ -457,17 +384,14 @@ void Gameboy::InternalStep()
 
 	m_sound->Run(slowTicks);
 
-	m_frameTicksRemaining -= ticksThisStep;	///<This is halved during double-speed.
-	if (m_frameTicksRemaining <= 0)
-	{
+	m_frameTicksRemaining -= ticksThisStep;  ///< This is halved during double-speed.
+	if (m_frameTicksRemaining <= 0) {
 		m_frameCount++;
 		m_frameTicksRemaining += m_ticksPerFrame;
 	}
 }
 
-
-void Gameboy::Serialize(Archive& archive)
-{
+void Gameboy::Serialize(Archive& archive) {
 	SerializeItem(archive, m_frameCount);
 
 	SerializeItem(archive, m_ticksPerSecond);

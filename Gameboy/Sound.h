@@ -20,142 +20,123 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef SOUND_H
 #define SOUND_H
 
+#include "GameboyTypes.h"
+#include "MachineIncludes.h"
 #include "PlatformTypes.h"
 
-#include "MachineIncludes.h"
-#include "GameboyTypes.h"
+namespace Emunisce {
 
+class SoundGenerator;
+class Sound1;
+class Sound2;
+class Sound3;
+class Sound4;
 
-namespace Emunisce
-{
+class ChannelController;
 
-	class SoundGenerator;
-	class Sound1;
-	class Sound2;
-	class Sound3;
-	class Sound4;
+class Sound : public IEmulatedSound {
+   public:
+	Sound();
+	virtual ~Sound();
 
-	class ChannelController;
+	// IEmulatedSound
 
+	AudioBuffer GetStableAudioBuffer() override;
+	int GetAudioBufferCount() override;
 
+	void SetSquareSynthesisMethod(SquareSynthesisMethod::Type method) override;
 
-	class Sound : public IEmulatedSound
-	{
-	public:
+	// Sound
 
-		Sound();
-		virtual ~Sound();
+	// Component
+	void SetMachine(Gameboy* machine);
+	void Initialize();
 
+	void Run(int ticks);
 
-		// IEmulatedSound
+	virtual void Serialize(Archive& archive);
 
-		AudioBuffer GetStableAudioBuffer() override;
-		int GetAudioBufferCount() override;
+	// Internal (for the sound generators)
+	int GetFrameSequencerPosition();
 
-		void SetSquareSynthesisMethod(SquareSynthesisMethod::Type method) override;
+	// Registers
 
+	void SetNR10(u8 value);
+	void SetNR11(u8 value);
+	void SetNR12(u8 value);
+	void SetNR13(u8 value);
+	void SetNR14(u8 value);
 
-		// Sound
+	void SetNR21(u8 value);
+	void SetNR22(u8 value);
+	void SetNR23(u8 value);
+	void SetNR24(u8 value);
 
-		//Component
-		void SetMachine(Gameboy* machine);
-		void Initialize();
+	void SetNR30(u8 value);
+	void SetNR31(u8 value);
+	void SetNR32(u8 value);
+	void SetNR33(u8 value);
+	void SetNR34(u8 value);
 
-		void Run(int ticks);
+	void SetNR41(u8 value);
+	void SetNR42(u8 value);
+	void SetNR43(u8 value);
+	void SetNR44(u8 value);
 
-		virtual void Serialize(Archive& archive);
+	void SetNR50(u8 value);
+	void SetNR51(u8 value);
+	void SetNR52(u8 value);
 
-		//Internal (for the sound generators)
-		int GetFrameSequencerPosition();
+   private:
+	void MixSamples(float inSamples[4], float (&outSamples)[2]);
 
-		//Registers
+	// Component
 
-		void SetNR10(u8 value);
-		void SetNR11(u8 value);
-		void SetNR12(u8 value);
-		void SetNR13(u8 value);
-		void SetNR14(u8 value);
+	Gameboy* m_machine;
+	Memory* m_memory;
 
-		void SetNR21(u8 value);
-		void SetNR22(u8 value);
-		void SetNR23(u8 value);
-		void SetNR24(u8 value);
+	// Audio
 
-		void SetNR30(u8 value);
-		void SetNR31(u8 value);
-		void SetNR32(u8 value);
-		void SetNR33(u8 value);
-		void SetNR34(u8 value);
+	AudioBuffer m_audioBuffer[2];
+	AudioBuffer* m_activeAudioBuffer;
+	AudioBuffer* m_stableAudioBuffer;
+	int m_audioBufferCount;
 
-		void SetNR41(u8 value);
-		void SetNR42(u8 value);
-		void SetNR43(u8 value);
-		void SetNR44(u8 value);
+	float m_ticksPerSample;
+	float m_ticksUntilNextSample;
 
-		void SetNR50(u8 value);
-		void SetNR51(u8 value);
-		void SetNR52(u8 value);
+	unsigned int m_nextSampleIndex;
 
-	private:
+	// Frame sequencer
 
+	int m_frameSequencerTimer;  ///< Ticks remaining until the timer clocks.
+	int m_frameSequencerPeriod;
+	int m_frameSequencerPosition;  ///< Controls the tick rates for the components (length/envelope/sweep)
 
-		void MixSamples(float inSamples[4], float(&outSamples)[2]);
+	// Sound master
 
+	bool m_hasPower;
+	bool m_terminalOutputs[2][4];  ///< 2 output channels (stereo left/right), 4 component channels (Sound1,2,3,4)
 
-		//Component
+	// Sound generators
 
-		Gameboy* m_machine;
-		Memory* m_memory;
+	Sound1* m_sound1;
+	Sound2* m_sound2;
+	Sound3* m_sound3;
+	Sound4* m_sound4;
 
+	SoundGenerator* m_soundGenerator[4];  ///< Convenience alias for iterating over m_sound1-4
+	ChannelController* m_channelController[4];
 
-		//Audio
+	// Registers
 
-		AudioBuffer m_audioBuffer[2];
-		AudioBuffer* m_activeAudioBuffer;
-		AudioBuffer* m_stableAudioBuffer;
-		int m_audioBufferCount;
+	u8 m_inaccessible;  ///< For registers like the unused memory before wave ram.
 
-		float m_ticksPerSample;
-		float m_ticksUntilNextSample;
+	u8 m_nr50;  ///< ff24
+	u8 m_nr51;  ///< ff25
+	u8 m_nr52;  ///< ff26
+};
 
-		unsigned int m_nextSampleIndex;
-
-
-		//Frame sequencer
-
-		int m_frameSequencerTimer;	///<Ticks remaining until the timer clocks.
-		int m_frameSequencerPeriod;
-		int m_frameSequencerPosition;	///<Controls the tick rates for the components (length/envelope/sweep)
-
-
-		//Sound master
-
-		bool m_hasPower;
-		bool m_terminalOutputs[2][4];	///<2 output channels (stereo left/right), 4 component channels (Sound1,2,3,4)
-
-
-		//Sound generators
-
-		Sound1* m_sound1;
-		Sound2* m_sound2;
-		Sound3* m_sound3;
-		Sound4* m_sound4;
-
-		SoundGenerator* m_soundGenerator[4];		///<Convenience alias for iterating over m_sound1-4
-		ChannelController* m_channelController[4];
-
-
-		//Registers
-
-		u8 m_inaccessible;	///<For registers like the unused memory before wave ram.
-
-		u8 m_nr50;	///<ff24
-		u8 m_nr51;	///<ff25
-		u8 m_nr52;	///<ff26
-	};
-
-}	//namespace Emunisce
-
-
+}  // namespace Emunisce
 
 #endif

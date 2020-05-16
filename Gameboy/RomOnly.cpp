@@ -21,12 +21,9 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 using namespace Emunisce;
 
 #include <cstdlib>
-
 #include <fstream>
 
-
-bool RomOnly::LoadFile(const char* filename)
-{
+bool RomOnly::LoadFile(const char* filename) {
 	std::ifstream ifile(filename, std::ios::in | std::ios::binary);
 
 	if (ifile.fail() || ifile.eof() || !ifile.good()) {

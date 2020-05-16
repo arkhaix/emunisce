@@ -20,48 +20,38 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "FileSerializer.h"
 using namespace Emunisce;
 
-#include "Archive.h"
-
 #include <stdio.h>
 #include <string.h>
 
+#include "Archive.h"
 
-FileSerializer::FileSerializer()
-{
+FileSerializer::FileSerializer() {
 	m_filename = "";
 	m_fileStream = nullptr;
 
 	m_archiveMode = -1;
 }
 
-FileSerializer::~FileSerializer()
-{
+FileSerializer::~FileSerializer() {
 	CloseFile();
 }
 
-
-void FileSerializer::SetFile(const char* filename)
-{
+void FileSerializer::SetFile(const char* filename) {
 	m_filename = filename;
 	OpenStream();
 }
 
-void FileSerializer::CloseFile()
-{
-	if (m_fileStream != nullptr)
-	{
+void FileSerializer::CloseFile() {
+	if (m_fileStream != nullptr) {
 		m_fileStream->close();
 		delete m_fileStream;
 		m_fileStream = nullptr;
 	}
 }
 
-
-
 // ISerializer
 
-void FileSerializer::SetArchive(Archive* archive)
-{
+void FileSerializer::SetArchive(Archive* archive) {
 	if (archive == nullptr) {
 		return;
 	}
@@ -70,8 +60,7 @@ void FileSerializer::SetArchive(Archive* archive)
 	OpenStream();
 }
 
-void FileSerializer::Save(unsigned char* data, unsigned int bytes)
-{
+void FileSerializer::Save(unsigned char* data, unsigned int bytes) {
 	if (m_fileStream == nullptr || m_fileStream->fail()) {
 		return;
 	}
@@ -79,8 +68,7 @@ void FileSerializer::Save(unsigned char* data, unsigned int bytes)
 	m_fileStream->write((const char*)data, bytes);
 }
 
-void FileSerializer::Restore(unsigned char* buffer, unsigned int bytes)
-{
+void FileSerializer::Restore(unsigned char* buffer, unsigned int bytes) {
 	if (m_fileStream == nullptr || m_fileStream->fail()) {
 		return;
 	}
@@ -88,15 +76,11 @@ void FileSerializer::Restore(unsigned char* buffer, unsigned int bytes)
 	m_fileStream->read((char*)buffer, bytes);
 }
 
-void FileSerializer::Close()
-{
+void FileSerializer::Close() {
 	CloseFile();
 }
 
-
-
-void FileSerializer::OpenStream()
-{
+void FileSerializer::OpenStream() {
 	if (m_fileStream != nullptr) {
 		return;
 	}
@@ -109,24 +93,19 @@ void FileSerializer::OpenStream()
 		return;
 	}
 
-	if (m_archiveMode == ArchiveMode::Saving)
-	{
+	if (m_archiveMode == ArchiveMode::Saving) {
 		m_fileStream = new std::fstream();
 		m_fileStream->open(m_filename.c_str(), std::ios::out | std::ios::binary);
 
-		if (m_fileStream->fail())
-		{
+		if (m_fileStream->fail()) {
 			delete m_fileStream;
 			m_fileStream = nullptr;
 		}
-	}
-	else if (m_archiveMode == ArchiveMode::Loading)
-	{
+	} else if (m_archiveMode == ArchiveMode::Loading) {
 		m_fileStream = new std::fstream();
 		m_fileStream->open(m_filename.c_str(), std::ios::in | std::ios::binary);
 
-		if (m_fileStream->fail())
-		{
+		if (m_fileStream->fail()) {
 			delete m_fileStream;
 			m_fileStream = nullptr;
 		}

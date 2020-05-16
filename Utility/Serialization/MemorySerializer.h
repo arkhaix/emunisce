@@ -22,46 +22,44 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "ISerializer.h"
 
-namespace Emunisce
-{
+namespace Emunisce {
 
-	class MemorySerializer : public ISerializer
-	{
-	public:
+class MemorySerializer : public ISerializer {
+   public:
+	// MemorySerializer
 
-		// MemorySerializer
+	MemorySerializer();
+	~MemorySerializer() override;
 
-		MemorySerializer();
-		~MemorySerializer() override;
+	virtual unsigned char* GetBuffer();
+	virtual unsigned int GetBufferSize();
+	virtual void TransferBuffer(
+		unsigned char** buffer,
+		unsigned int* size);  ///< Similar to calling GetBuffer and GetBufferSize, but releases ownership of the buffer
+							  ///< to the caller.  MemorySerializer will no longer delete the buffer or reference it in
+							  ///< any way after this is called.
 
-		virtual unsigned char* GetBuffer();
-		virtual unsigned int GetBufferSize();
-		virtual void TransferBuffer(unsigned char** buffer, unsigned int* size);	///<Similar to calling GetBuffer and GetBufferSize, but releases ownership of the buffer to the caller.  MemorySerializer will no longer delete the buffer or reference it in any way after this is called.
+	virtual void SetBuffer(unsigned char* buffer, unsigned int size);
 
-		virtual void SetBuffer(unsigned char* buffer, unsigned int size);
+	// ISerializer
 
+	void SetArchive(Archive* archive) override;
 
-		// ISerializer
+	void Save(unsigned char* data, unsigned int bytes) override;
+	void Restore(unsigned char* buffer, unsigned int bytes) override;
 
-		void SetArchive(Archive* archive) override;
+	void Close() override;
 
-		void Save(unsigned char* data, unsigned int bytes) override;
-		void Restore(unsigned char* buffer, unsigned int bytes) override;
+   protected:
+	unsigned char* m_buffer;
 
-		void Close() override;
+	unsigned int m_usedSize;
+	unsigned int m_reservedSize;
+	float m_reserveMultiplier;
 
+	unsigned int m_restorePosition;
+};
 
-	protected:
-
-		unsigned char* m_buffer;
-
-		unsigned int m_usedSize;
-		unsigned int m_reservedSize;
-		float m_reserveMultiplier;
-
-		unsigned int m_restorePosition;
-	};
-
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

@@ -20,32 +20,27 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef WAVEOUTSOUND_H
 #define WAVEOUTSOUND_H
 
+namespace Emunisce {
 
-namespace Emunisce
-{
+class EmunisceApplication;
+class IEmulatedMachine;
 
-	class EmunisceApplication;
-	class IEmulatedMachine;
+class WaveOutSound {
+   public:
+	WaveOutSound();
+	~WaveOutSound();
 
-	class WaveOutSound
-	{
-	public:
+	void Initialize(EmunisceApplication* phoenix);
+	void Shutdown();
 
-		WaveOutSound();
-		~WaveOutSound();
+	void SetMachine(IEmulatedMachine* machine);
 
-		void Initialize(EmunisceApplication* phoenix);
-		void Shutdown();
+	void SetMute(bool mute);
 
-		void SetMachine(IEmulatedMachine* machine);
+   private:
+	class WaveOutSound_Private* m_private;
+};
 
-		void SetMute(bool mute);
-
-	private:
-
-		class WaveOutSound_Private* m_private;
-	};
-
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

@@ -20,16 +20,15 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MACHINESERIALIZATION_H
 #define MACHINESERIALIZATION_H
 
-namespace Emunisce
-{
+namespace Emunisce {
 
-	class Archive;
-	struct AudioBuffer;
-	class ScreenBuffer;
+class Archive;
+struct AudioBuffer;
+class ScreenBuffer;
 
-	void SerializeItem(Archive& archive, AudioBuffer& data);
-	void SerializeItem(Archive& archive, ScreenBuffer& data);
+void SerializeItem(Archive& archive, AudioBuffer& data);
+void SerializeItem(Archive& archive, ScreenBuffer& data);
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

@@ -18,9 +18,7 @@ You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//This is a convenience header for pulling in all platform layer types
+// This is a convenience header for pulling in all platform layer types
 
 #include "PlatformDefines.h"
-
 #include "PlatformTypes.h"
-

@@ -20,137 +20,123 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef EMUNISCE_H
 #define EMUNISCE_H
 
-//BaseApplication
+// BaseApplication
 #include "BaseApplication/BaseApplication.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 
-//WindowsApplication
-#include "../GdiPlusRenderer/GdiPlusRenderer.h"
-#include "../WaveOutSound/WaveOutSound.h"
-
-#include "../Win32Common/Window.h"
-
+// WindowsApplication
 #include <string>
 
+#include "../GdiPlusRenderer/GdiPlusRenderer.h"
+#include "../WaveOutSound/WaveOutSound.h"
+#include "../Win32Common/Window.h"
 
-namespace Emunisce
-{
+namespace Emunisce {
 
-	class ConsoleDebugger;
+class ConsoleDebugger;
 
-	class GdiPlusRenderer;
-	class WaveOutSound;
+class GdiPlusRenderer;
+class WaveOutSound;
 
+class EmunisceApplication : public BaseApplication, public IWindowMessageListener {
+   public:
+	EmunisceApplication();
+	~EmunisceApplication();
 
-	class EmunisceApplication : public BaseApplication, public IWindowMessageListener
-	{
-	public:
+	void RunWindow();  ///< Pumps messages on the window until shutdown is requested.  Blocks until shutdown.
 
-		EmunisceApplication();
-		~EmunisceApplication();
+	Window* GetWindow();
 
-		void RunWindow();	///<Pumps messages on the window until shutdown is requested.  Blocks until shutdown.
+	ConsoleDebugger* GetDebugger();
+	WaveOutSound* GetSound();
 
-		Window* GetWindow();
+	// BaseApplication overrides
 
-		ConsoleDebugger* GetDebugger();
-		WaveOutSound* GetSound();
+	virtual void NotifyMachineChanged(IEmulatedMachine* newMachine);
+	virtual void RequestShutdown();
 
+	// BaseApplication interface
 
-		// BaseApplication overrides
+	virtual void SetVsync(bool enabled);
 
-		virtual void NotifyMachineChanged(IEmulatedMachine* newMachine);
-		virtual void RequestShutdown();
+	virtual void DisplayStatusMessage(const char* message);
+	virtual void DisplayImportantMessage(MessageType::Type messageType, const char* message);
+	virtual PromptResult::Type DisplayPrompt(PromptType::Type promptType, const char* title, const char* message,
+											 void** extraResult);
 
+	virtual bool SelectFile(char** result, const char* fileMask);
 
-		// BaseApplication interface
+	void ConsolePrint(const char* text) override;
 
-		virtual void SetVsync(bool enabled);
+	virtual unsigned int GetRomDataSize(const char* title);
 
-		virtual void DisplayStatusMessage(const char* message);
-		virtual void DisplayImportantMessage(MessageType::Type messageType, const char* message);
-		virtual PromptResult::Type DisplayPrompt(PromptType::Type promptType, const char* title, const char* message, void** extraResult);
+	// IWindowMessageListener
 
-		virtual bool SelectFile(char** result, const char* fileMask);
+	virtual void Closed();
 
-		void ConsolePrint(const char* text) override;
+	virtual void Draw();
 
-		virtual unsigned int GetRomDataSize(const char* title);
+	virtual void Resize(int newWidth, int newHeight);
 
+	virtual void KeyDown(int key);
+	virtual void KeyUp(int key);
 
-		// IWindowMessageListener
+   private:
+	void AdjustWindowSize();
+	void HandlePendingMachineChange();
 
-		virtual void Closed();
+	Archive* OpenFileArchive(const char* fileName, bool saving);
+	void ReleaseArchive(Archive* archive);
 
-		virtual void Draw();
+	// BaseApplication interface
 
-		virtual void Resize(int newWidth, int newHeight);
+	virtual Archive* OpenRomData(const char* name, bool saving);
+	virtual void CloseRomData(Archive* archive);
 
-		virtual void KeyDown(int key);
-		virtual void KeyUp(int key);
+	virtual Archive* OpenSavestate(const char* name, bool saving);
+	virtual void CloseSavestate(Archive* archive);
 
+	virtual Archive* OpenMovie(const char* name, bool saving);
+	virtual void CloseMovie(Archive* archive);
 
-	private:
+	virtual Archive* OpenMacro(const char* name, bool saving);
+	virtual void CloseMacro(Archive* archive);
 
-		void AdjustWindowSize();
-		void HandlePendingMachineChange();
+	// Persistence
 
-		Archive* OpenFileArchive(const char* fileName, bool saving);
-		void ReleaseArchive(Archive* archive);
+	std::string GetDataFolder();
 
+	std::string GetBaseSaveStateFolder();
+	std::string GetCurrentSaveStateFolder();
+	std::string GetCurrentSaveStateFile(const char* id);
 
-		// BaseApplication interface
+	std::string GetBaseRomDataFolder();
+	std::string GetCurrentRomDataFolder();
+	std::string GetCurrentRomDataFile(const char* name);
 
-		virtual Archive* OpenRomData(const char* name, bool saving);
-		virtual void CloseRomData(Archive* archive);
+	std::string GetBaseMovieFolder();
+	std::string GetCurrentMovieFolder();
+	std::string GetCurrentMovieFile(const char* name);
 
-		virtual Archive* OpenSavestate(const char* name, bool saving);
-		virtual void CloseSavestate(Archive* archive);
+	std::string GetBaseMacroFolder();
+	std::string GetCurrentMacroFolder();
+	std::string GetCurrentMacroFile(const char* name);
 
-		virtual Archive* OpenMovie(const char* name, bool saving);
-		virtual void CloseMovie(Archive* archive);
+	// Input
 
-		virtual Archive* OpenMacro(const char* name, bool saving);
-		virtual void CloseMacro(Archive* archive);
+	void MapDefaultKeys();
 
+	Window* m_window;
 
-		// Persistence
+	IEmulatedMachine* m_pendingMachine;
 
-		std::string GetDataFolder();
+	ConsoleDebugger* m_debugger;
 
-		std::string GetBaseSaveStateFolder();
-		std::string GetCurrentSaveStateFolder();
-		std::string GetCurrentSaveStateFile(const char* id);
+	// GdiPlusRenderer* m_renderer;
+	OpenGLRenderer* m_renderer;
+	WaveOutSound* m_sound;
+};
 
-		std::string GetBaseRomDataFolder();
-		std::string GetCurrentRomDataFolder();
-		std::string GetCurrentRomDataFile(const char* name);
-
-		std::string GetBaseMovieFolder();
-		std::string GetCurrentMovieFolder();
-		std::string GetCurrentMovieFile(const char* name);
-
-		std::string GetBaseMacroFolder();
-		std::string GetCurrentMacroFolder();
-		std::string GetCurrentMacroFile(const char* name);
-
-
-		// Input
-
-		void MapDefaultKeys();
-
-
-		Window* m_window;
-
-		IEmulatedMachine* m_pendingMachine;
-
-		ConsoleDebugger* m_debugger;
-
-		//GdiPlusRenderer* m_renderer;
-		OpenGLRenderer* m_renderer;
-		WaveOutSound* m_sound;
-	};
-
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

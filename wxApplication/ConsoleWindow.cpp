@@ -23,13 +23,12 @@ using namespace Emunisce;
 
 #include "Application.h"
 
-class ConsoleTextCtrl : public wxTextCtrl
-{
-public:
-
-	ConsoleTextCtrl(ConsoleWindow* console, wxWindow *parent, wxWindowID id, const wxString &value = wxEmptyString, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize, long style = 0L, const wxValidator &validator = wxDefaultValidator, const wxString &name = wxTextCtrlNameStr) :
-		wxTextCtrl(parent, id, value, pos, size, style, validator, name)
-	{
+class ConsoleTextCtrl : public wxTextCtrl {
+   public:
+	ConsoleTextCtrl(ConsoleWindow* console, wxWindow* parent, wxWindowID id, const wxString& value = wxEmptyString,
+					const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0L,
+					const wxValidator& validator = wxDefaultValidator, const wxString& name = wxTextCtrlNameStr)
+		: wxTextCtrl(parent, id, value, pos, size, style, validator, name) {
 		Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(ConsoleTextCtrl::OnKeyDown));
 		Connect(wxEVT_KEY_UP, wxKeyEventHandler(ConsoleTextCtrl::OnKeyUp));
 		Connect(wxEVT_COMMAND_TEXT_UPDATED, wxTextEventHandler(ConsoleTextCtrl::OnText));
@@ -39,73 +38,48 @@ public:
 		m_console = console;
 	}
 
-	void OnKeyDown(wxKeyEvent& event)
-	{
-		m_console->OnKeyDown(event);
-	}
+	void OnKeyDown(wxKeyEvent& event) { m_console->OnKeyDown(event); }
 
-	void OnKeyUp(wxKeyEvent& event)
-	{
-		m_console->OnKeyUp(event);
-	}
+	void OnKeyUp(wxKeyEvent& event) { m_console->OnKeyUp(event); }
 
-	void OnText(wxCommandEvent& event)
-	{
-		m_console->OnText(event);
-	}
+	void OnText(wxCommandEvent& event) { m_console->OnText(event); }
 
-	void OnTextEnter(wxCommandEvent& event)
-	{
-		m_console->OnTextEnter(event);
-	}
+	void OnTextEnter(wxCommandEvent& event) { m_console->OnTextEnter(event); }
 
-	void OnSetFocus(wxFocusEvent& event)
-	{
-		m_console->OnSetFocus(event);
-	}
+	void OnSetFocus(wxFocusEvent& event) { m_console->OnSetFocus(event); }
 
-
-private:
-
+   private:
 	ConsoleWindow* m_console;
 };
 
-class ConsoleFrame : public wxFrame
-{
-public:
-
+class ConsoleFrame : public wxFrame {
+   public:
 	ConsoleFrame(ConsoleWindow* consoleWindow, wxFrame* parent, wxString& title, wxPoint& position, wxSize& size)
-		: wxFrame(parent, wxID_ANY, title, position, size)
-	{
+		: wxFrame(parent, wxID_ANY, title, position, size) {
 		m_consoleWindow = consoleWindow;
 
 		Connect(wxEVT_CLOSE_WINDOW, wxCloseEventHandler(ConsoleFrame::OnClose));
 	}
 
-	void OnClose(wxCloseEvent& event)
-	{
+	void OnClose(wxCloseEvent& event) {
 		m_consoleWindow->OnFrameClosed(event);
 		event.Skip(true);
 	}
 
-private:
-
+   private:
 	ConsoleWindow* m_consoleWindow;
 };
 
-ConsoleWindow::ConsoleWindow(Application* application, wxFrame* mainFrame)
-{
+ConsoleWindow::ConsoleWindow(Application* application, wxFrame* mainFrame) {
 	Initialize(application, mainFrame);
 }
 
-ConsoleWindow::~ConsoleWindow()
-{
-	//wx child windows and controls get cleaned up automatically,
-	//so there's no need to delete them here
+ConsoleWindow::~ConsoleWindow() {
+	// wx child windows and controls get cleaned up automatically,
+	// so there's no need to delete them here
 }
 
-void ConsoleWindow::Initialize(Application* application, wxFrame* mainFrame)
-{
+void ConsoleWindow::Initialize(Application* application, wxFrame* mainFrame) {
 	static const int frameHeight = 240;
 	static const int inputHeight = 20;
 
@@ -123,14 +97,15 @@ void ConsoleWindow::Initialize(Application* application, wxFrame* mainFrame)
 
 	m_frame = new ConsoleFrame(this, mainFrame, title, consolePos, consoleSize);
 
-	m_output = new ConsoleTextCtrl(this, m_frame, wxID_ANY, wxT(""), wxPoint(0, 0), wxSize(frameMinWidth, frameHeight - inputHeight),
-		wxTE_READONLY | wxTE_MULTILINE | wxTE_RICH | wxTE_BESTWRAP | wxTE_AUTO_SCROLL);
+	m_output = new ConsoleTextCtrl(this, m_frame, wxID_ANY, wxT(""), wxPoint(0, 0),
+								   wxSize(frameMinWidth, frameHeight - inputHeight),
+								   wxTE_READONLY | wxTE_MULTILINE | wxTE_RICH | wxTE_BESTWRAP | wxTE_AUTO_SCROLL);
 	m_output->SetBackgroundColour(*wxBLACK);
 	m_output->SetDefaultStyle(wxTextAttr(*wxLIGHT_GREY, *wxBLACK));
 
 	int inputY = m_frame->GetClientSize().GetHeight() - inputHeight;
-	m_input = new ConsoleTextCtrl(this, m_frame, wxID_ANY, wxT(""), wxPoint(0, inputY), wxSize(frameMinWidth, inputHeight),
-		wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB);
+	m_input = new ConsoleTextCtrl(this, m_frame, wxID_ANY, wxT(""), wxPoint(0, inputY),
+								  wxSize(frameMinWidth, inputHeight), wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB);
 	m_input->SetBackgroundColour(*wxBLACK);
 	m_input->SetDefaultStyle(wxTextAttr(*wxLIGHT_GREY, *wxBLACK));
 
@@ -150,8 +125,7 @@ void ConsoleWindow::Initialize(Application* application, wxFrame* mainFrame)
 	m_frame->Show();
 }
 
-void ConsoleWindow::GiveFocus()
-{
+void ConsoleWindow::GiveFocus() {
 	if (m_frame == nullptr)
 		Initialize(m_application, m_mainFrame);
 
@@ -161,48 +135,38 @@ void ConsoleWindow::GiveFocus()
 	m_input->SetFocus();
 }
 
-void ConsoleWindow::Close()
-{
+void ConsoleWindow::Close() {
 	m_frame->Close();
 }
 
-void ConsoleWindow::ConsolePrint(const char* text)
-{
-	if (m_output != nullptr)
-	{
+void ConsoleWindow::ConsolePrint(const char* text) {
+	if (m_output != nullptr) {
 		*m_output << wxString::FromAscii(text);
 	}
 }
 
-
-void ConsoleWindow::OnKeyDown(wxKeyEvent& event)
-{
+void ConsoleWindow::OnKeyDown(wxKeyEvent& event) {
 	int key = event.GetKeyCode();
 
-	if (key == (int)'`' || key == WXK_ESCAPE)
-	{
+	if (key == (int)'`' || key == WXK_ESCAPE) {
 		m_application->ShowGameWindow();
 		event.Skip(false);
 	}
 
-	else
-	{
+	else {
 		event.Skip(true);
 	}
 }
 
-void ConsoleWindow::OnKeyUp(wxKeyEvent& event)
-{
+void ConsoleWindow::OnKeyUp(wxKeyEvent& event) {
 	event.Skip(true);
 }
 
-void ConsoleWindow::OnText(wxCommandEvent& event)
-{
+void ConsoleWindow::OnText(wxCommandEvent& event) {
 	event.Skip(true);
 }
 
-void ConsoleWindow::OnTextEnter(wxCommandEvent& event)
-{
+void ConsoleWindow::OnTextEnter(wxCommandEvent& event) {
 	*m_output << wxT("> ");
 
 	// Use green for the user's commands
@@ -222,8 +186,7 @@ void ConsoleWindow::OnTextEnter(wxCommandEvent& event)
 	bool result = m_application->ExecuteConsoleCommand(m_input->GetValue().ToAscii());
 
 	// Re-color the command text and print an error message on invalid commands
-	if (result == false)
-	{
+	if (result == false) {
 		m_output->SetStyle(userCommandPosition, userCommandPosition + commandLength, wxTextAttr(*wxRED));
 		ConsolePrint("Invalid command\n");
 	}
@@ -236,20 +199,17 @@ void ConsoleWindow::OnTextEnter(wxCommandEvent& event)
 	}
 }
 
-void ConsoleWindow::OnSetFocus(wxFocusEvent& event)
-{
-	if (event.GetWindow() != m_input)
-	{
+void ConsoleWindow::OnSetFocus(wxFocusEvent& event) {
+	if (event.GetWindow() != m_input) {
 		m_input->SetFocus();
 	}
 
 	event.Skip(true);
 }
 
-void ConsoleWindow::OnFrameClosed(wxCloseEvent& event)
-{
-	//wx child windows and controls get deleted automatically,
-	//so we don't need call delete on these.
+void ConsoleWindow::OnFrameClosed(wxCloseEvent& event) {
+	// wx child windows and controls get deleted automatically,
+	// so we don't need call delete on these.
 	m_frame = nullptr;
 	m_input = nullptr;
 	m_output = nullptr;

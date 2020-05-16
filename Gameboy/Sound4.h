@@ -21,78 +21,64 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #define SOUND4_H
 
 #include "PlatformTypes.h"
-
 #include "SoundGenerator.h"
 
+namespace Emunisce {
 
+class Gameboy;
 
-namespace Emunisce
-{
+class Sound4 : public SoundGenerator {
+   public:
+	Sound4();
+	virtual ~Sound4();
 
-	class Gameboy;
+	// Sound component
 
+	void Initialize(ChannelController* channelController) override;
+	void SetMachine(Gameboy* machine) override;
 
-	class Sound4 : public SoundGenerator
-	{
-	public:
+	void Serialize(Archive& archive) override;
 
-		Sound4();
-		virtual ~Sound4();
+	// Sound generation
 
+	void PowerOff() override;
+	void PowerOn() override;
 
-		//Sound component
+	void Run(int ticks) override;
 
-		void Initialize(ChannelController* channelController) override;
-		void SetMachine(Gameboy* machine) override;
+	void TickEnvelope();
 
-		void Serialize(Archive& archive) override;
+	float GetSample() override;
 
+	// Registers
 
-		//Sound generation
+	void SetNR41(u8 value);
+	void SetNR42(u8 value);
+	void SetNR43(u8 value);
+	void SetNR44(u8 value);
 
-		void PowerOff() override;
-		void PowerOn() override;
+   private:
+	void Trigger() override;
 
-		void Run(int ticks) override;
+	// Sound generation
 
-		void TickEnvelope();
+	u16 m_lfsr;
+	int m_lfsrTapBit;
+	int m_lfsrFeedbackBit;
+	float m_lfsrOut;
 
-		float GetSample() override;
+	int m_timerPeriod;
+	int m_timerValue;
 
+	// Registers
 
-		//Registers
+	u8 m_nr40;  ///< ff1f
+	u8 m_nr41;  ///< ff20
+	u8 m_nr42;  ///< ff21
+	u8 m_nr43;  ///< ff22
+	u8 m_nr44;  ///< ff23
+};
 
-		void SetNR41(u8 value);
-		void SetNR42(u8 value);
-		void SetNR43(u8 value);
-		void SetNR44(u8 value);
-
-
-	private:
-
-		void Trigger() override;
-
-
-		//Sound generation
-
-		u16 m_lfsr;
-		int m_lfsrTapBit;
-		int m_lfsrFeedbackBit;
-		float m_lfsrOut;
-
-		int m_timerPeriod;
-		int m_timerValue;
-
-
-		//Registers
-
-		u8 m_nr40;	///<ff1f
-		u8 m_nr41;	///<ff20
-		u8 m_nr42;	///<ff21
-		u8 m_nr43;	///<ff22
-		u8 m_nr44;	///<ff23
-	};
-
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif
