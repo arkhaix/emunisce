@@ -24,145 +24,145 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-namespace DisplayFilter
-{
-	typedef int Type;
-
-	enum
+	namespace DisplayFilter
 	{
-		NoFilter = 0,   ///<Was 'None', but changed due to a name conflict
+		typedef int Type;
 
-		Hq2x,
-		Hq3x,
-		Hq4x,
+		enum
+		{
+			NoFilter = 0,   ///<Was 'None', but changed due to a name conflict
 
-		NumDisplayFilters
-	};
-}
+			Hq2x,
+			Hq3x,
+			Hq4x,
 
-namespace MessageType
-{
-	typedef int Type;
+			NumDisplayFilters
+		};
+	}
 
-	enum
+	namespace MessageType
 	{
-		Unspecified,
+		typedef int Type;
 
-		Information,
-		Warning,
-		Error,
+		enum
+		{
+			Unspecified,
 
-		NumMessageTypes
-	};
-}
+			Information,
+			Warning,
+			Error,
 
-namespace PromptType
-{
-	typedef int Type;
+			NumMessageTypes
+		};
+	}
 
-	enum
+	namespace PromptType
 	{
-		Ok,
-		OkCancel,
+		typedef int Type;
 
-		YesNo,
-		YesNoCancel,
+		enum
+		{
+			Ok,
+			OkCancel,
 
-		NumPromptTypes
-	};
-}
+			YesNo,
+			YesNoCancel,
 
-namespace PromptResult
-{
-	typedef int Type;
+			NumPromptTypes
+		};
+	}
 
-	enum
+	namespace PromptResult
 	{
-		Cancel,
+		typedef int Type;
 
-		Ok,
+		enum
+		{
+			Cancel,
 
-		Yes,
-		No,
+			Ok,
 
-		NumPromptResults
-	};
+			Yes,
+			No,
+
+			NumPromptResults
+		};
 
 #ifdef PromptResult_ToString
-	static const char* ToString[] =
-	{
-		"Cancel",
+		static const char* ToString[] =
+		{
+			"Cancel",
 
-		"Ok",
+			"Ok",
 
-		"Yes",
-		"No",
+			"Yes",
+			"No",
 
-		"NumPromptResults"
-	};
+			"NumPromptResults"
+		};
 #endif
-}
+	}
 
 
-class IUserInterface
-{
-public:
+	class IUserInterface
+	{
+	public:
 
 
-	// User to application
+		// User to application
 
-	//Rom
-	virtual bool LoadRom(const char* filename) = 0;	///<Attempts to load the specified rom.  Returns true on success, false on failure.
-	virtual void Reset() = 0;	///<Reloads the last successfully loaded rom and resets the machine state to the beginning.
+		//Rom
+		virtual bool LoadRom(const char* filename) = 0;	///<Attempts to load the specified rom.  Returns true on success, false on failure.
+		virtual void Reset() = 0;	///<Reloads the last successfully loaded rom and resets the machine state to the beginning.
 
-	//Emulation
-	virtual void SetEmulationSpeed(float multiplier) = 0;	///<1.0 = normal, 0.5 = half normal, 2.0 = twice normal, any value less than or equal to 0 = no throttle (max speed)
+		//Emulation
+		virtual void SetEmulationSpeed(float multiplier) = 0;	///<1.0 = normal, 0.5 = half normal, 2.0 = twice normal, any value less than or equal to 0 = no throttle (max speed)
 
-	virtual void Run() = 0;	///<Runs the machine at the speed defined by SetEmulationSpeed.
-	virtual void Pause() = 0;	///<Pauses the machine.  Preserves the SetEmulationSpeed setting.
+		virtual void Run() = 0;	///<Runs the machine at the speed defined by SetEmulationSpeed.
+		virtual void Pause() = 0;	///<Pauses the machine.  Preserves the SetEmulationSpeed setting.
 
-	virtual void StepInstruction() = 0;	///<Pauses if necessary, then steps forward one cpu instruction.
-	virtual void StepFrame() = 0;	///<Pauses if necessary, then steps forward 1/60th of a second.
+		virtual void StepInstruction() = 0;	///<Pauses if necessary, then steps forward one cpu instruction.
+		virtual void StepFrame() = 0;	///<Pauses if necessary, then steps forward 1/60th of a second.
 
-	//State
-	virtual void SaveState(const char* id) = 0;	///<Requires that a rom is loaded.  Saves state basd on rom name.  id is a slot identifier (any value is okay).
-	virtual void LoadState(const char* id) = 0;	///<Requires that a rom is loaded.  Loads state based on rom name and specified slot id.
+		//State
+		virtual void SaveState(const char* id) = 0;	///<Requires that a rom is loaded.  Saves state basd on rom name.  id is a slot identifier (any value is okay).
+		virtual void LoadState(const char* id) = 0;	///<Requires that a rom is loaded.  Loads state based on rom name and specified slot id.
 
-	//Gui
-	virtual void EnableBackgroundAnimation() = 0;
-	virtual void DisableBackgroundAnimation() = 0;
+		//Gui
+		virtual void EnableBackgroundAnimation() = 0;
+		virtual void DisableBackgroundAnimation() = 0;
 
-	//Display
-	virtual void SetDisplayFilter(DisplayFilter::Type displayFilter) = 0;	///<Sets the desired display filter.
-	virtual void SetVsync(bool enabled) = 0;	///<Enabled = true enables vsync if possible.  Not all renderers support this.  Enabled by default.
+		//Display
+		virtual void SetDisplayFilter(DisplayFilter::Type displayFilter) = 0;	///<Sets the desired display filter.
+		virtual void SetVsync(bool enabled) = 0;	///<Enabled = true enables vsync if possible.  Not all renderers support this.  Enabled by default.
 
-	//Input movie
-	virtual void StartRecordingInput() = 0;
-	virtual void StopRecordingInput() = 0;
+		//Input movie
+		virtual void StartRecordingInput() = 0;
+		virtual void StopRecordingInput() = 0;
 
-	virtual void PlayMovie() = 0;
-	virtual void StopMovie() = 0;
+		virtual void PlayMovie() = 0;
+		virtual void StopMovie() = 0;
 
-	virtual void SaveMovie(const char* id) = 0;	///<Requires that a rom is loaded.  Saves movie based on rom name + id.
-	virtual void LoadMovie(const char* id) = 0;	///<Requires that a rom is loaded.  Loads movie based on rom name + id.
+		virtual void SaveMovie(const char* id) = 0;	///<Requires that a rom is loaded.  Saves movie based on rom name + id.
+		virtual void LoadMovie(const char* id) = 0;	///<Requires that a rom is loaded.  Loads movie based on rom name + id.
 
-	virtual void PlayMacro(bool loop) = 0;
-	virtual void StopMacro() = 0;
+		virtual void PlayMacro(bool loop) = 0;
+		virtual void StopMacro() = 0;
 
-	virtual void SaveMacro(const char* id) = 0;
-	virtual void LoadMacro(const char* id) = 0;
+		virtual void SaveMacro(const char* id) = 0;
+		virtual void LoadMacro(const char* id) = 0;
 
 
-	//Application to user
+		//Application to user
 
-	virtual void DisplayStatusMessage(const char* message) = 0;	///<Updates a global status element.  Use for occasionally informing the user of non-essential information.  No acknowledgement required.
-	virtual void DisplayImportantMessage(MessageType::Type messageType, const char* message) = 0;	///<Displays a message to the user and blocks until the message is acknowledged.
-	virtual PromptResult::Type DisplayPrompt(PromptType::Type promptType, const char* title, const char* message, void** extraResult) = 0;	///<Displays a prompt the user and blocks until the prompt is answered.  extraResult is for responses from the user that can't be returned as PromptResult values.
+		virtual void DisplayStatusMessage(const char* message) = 0;	///<Updates a global status element.  Use for occasionally informing the user of non-essential information.  No acknowledgement required.
+		virtual void DisplayImportantMessage(MessageType::Type messageType, const char* message) = 0;	///<Displays a message to the user and blocks until the message is acknowledged.
+		virtual PromptResult::Type DisplayPrompt(PromptType::Type promptType, const char* title, const char* message, void** extraResult) = 0;	///<Displays a prompt the user and blocks until the prompt is answered.  extraResult is for responses from the user that can't be returned as PromptResult values.
 
-	virtual bool SelectFile(char** result, const char* fileMask = 0) = 0;	///<Prompts the user to select a file.  Allocates result, sets it to the absolute path to the file, and returns true on success.  On cancellation, failure, or an invalid file selection, result is unchanged and the function returns false.
+		virtual bool SelectFile(char** result, const char* fileMask = 0) = 0;	///<Prompts the user to select a file.  Allocates result, sets it to the absolute path to the file, and returns true on success.  On cancellation, failure, or an invalid file selection, result is unchanged and the function returns false.
 
-    virtual void ConsolePrint(const char* text) = 0;    ///<Displays a message in the console.
-};
+		virtual void ConsolePrint(const char* text) = 0;    ///<Displays a message in the console.
+	};
 
 }	//namespace Emunisce
 

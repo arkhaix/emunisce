@@ -148,7 +148,7 @@ void Sound2::SetNR21(u8 value)
 	//DMG allows writing this even when the power is off
 	//todo: CGB does not
 
-	if(m_hasPower == true)
+	if (m_hasPower == true)
 	{
 		m_dutyUnit->WriteDutyRegister(value & 0xc0);
 		m_nr21 = value & 0xc0;
@@ -161,8 +161,9 @@ void Sound2::SetNR21(u8 value)
 
 void Sound2::SetNR22(u8 value)
 {
-	if(m_hasPower == false)
+	if (m_hasPower == false) {
 		return;
+	}
 
 	m_envelopeUnit->WriteEnvelopeRegister(value);
 
@@ -171,8 +172,9 @@ void Sound2::SetNR22(u8 value)
 
 void Sound2::SetNR23(u8 value)
 {
-	if(m_hasPower == false)
+	if (m_hasPower == false) {
 		return;
+	}
 
 	m_frequency &= ~(0xff);
 	m_frequency |= value;
@@ -183,8 +185,9 @@ void Sound2::SetNR23(u8 value)
 
 void Sound2::SetNR24(u8 value)
 {
-	if(m_hasPower == false)
+	if (m_hasPower == false) {
 		return;
+	}
 
 	m_frequency &= ~(0x700);
 	m_frequency |= ((value & 0x07) << 8);

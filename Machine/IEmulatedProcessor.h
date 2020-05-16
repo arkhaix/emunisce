@@ -24,9 +24,9 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class IEmulatedProcessor
-{
-};
+	class IEmulatedProcessor
+	{
+	};
 
 }	//namespace Emunisce
 

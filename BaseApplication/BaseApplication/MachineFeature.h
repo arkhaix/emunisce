@@ -26,134 +26,134 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class BaseApplication;
+	class BaseApplication;
 
-class IExecutableFeature
-{
-public:
+	class IExecutableFeature
+	{
+	public:
 
-	//Machine info
-	virtual unsigned int GetFrameCount() = 0;
-	virtual unsigned int GetTickCount() = 0;
-	virtual unsigned int GetTicksPerSecond() = 0;
-	virtual unsigned int GetTicksUntilNextFrame() = 0;
+		//Machine info
+		virtual unsigned int GetFrameCount() = 0;
+		virtual unsigned int GetTickCount() = 0;
+		virtual unsigned int GetTicksPerSecond() = 0;
+		virtual unsigned int GetTicksUntilNextFrame() = 0;
 
-	//Execution
-	virtual void Step() = 0;
-	virtual void RunToNextFrame() = 0;
-};
+		//Execution
+		virtual void Step() = 0;
+		virtual void RunToNextFrame() = 0;
+	};
 
-class MachineFeature : public IEmulatedMachine, public IEmulatedDisplay, public IEmulatedInput, public IEmulatedMemory, public IEmulatedProcessor, public IEmulatedSound
-{
-public:
+	class MachineFeature : public IEmulatedMachine, public IEmulatedDisplay, public IEmulatedInput, public IEmulatedMemory, public IEmulatedProcessor, public IEmulatedSound
+	{
+	public:
 
-	// MachineFeature
+		// MachineFeature
 
-	MachineFeature();
-	virtual ~MachineFeature();
+		MachineFeature();
+		virtual ~MachineFeature();
 
-	virtual void SetApplication(BaseApplication* application);
+		virtual void SetApplication(BaseApplication* application);
 
-	virtual void SetComponentMachine(IEmulatedMachine* componentMachine);
-	virtual void SetEmulatedMachine(IEmulatedMachine* emulatedMachine);
+		virtual void SetComponentMachine(IEmulatedMachine* componentMachine);
+		virtual void SetEmulatedMachine(IEmulatedMachine* emulatedMachine);
 
-	virtual void SetFocus(bool hasFocus);
-
-
-	// IEmulatedMachine
-
-	//Machine type
-	EmulatedMachine::Type GetType() override;
-	const char* GetRomTitle() override;
-	
-	//Application interface
-	void SetApplicationInterface(IMachineToApplication* applicationInterface) override;
-	void AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount /*= true*/) override;
-	void RemoveApplicationEvent(unsigned int eventId) override;
-
-	//Component access
-	IEmulatedDisplay* GetDisplay() override;
-	IEmulatedInput* GetInput() override;
-	IEmulatedMemory* GetMemory() override;
-	IEmulatedProcessor* GetProcessor() override;
-	IEmulatedSound* GetSound() override;
-
-	//Machine info
-	unsigned int GetFrameCount() override;
-	unsigned int GetTickCount() override;
-	unsigned int GetTicksPerSecond() override;
-	unsigned int GetTicksUntilNextFrame() override;
-
-	//Execution
-	void Step() override;
-	void RunToNextFrame() override;
-
-	//Persistence
-	void SaveState(Archive& archive) override;
-	void LoadState(Archive& archive) override;
-
-	//Debugging
-	void EnableBreakpoint(int address) override;
-	void DisableBreakpoint(int address) override;
+		virtual void SetFocus(bool hasFocus);
 
 
-	// IEmulatedDisplay
+		// IEmulatedMachine
 
-	ScreenResolution GetScreenResolution() override;
-	ScreenBuffer* GetStableScreenBuffer() override;
-	int GetScreenBufferCount() override;
+		//Machine type
+		EmulatedMachine::Type GetType() override;
+		const char* GetRomTitle() override;
+
+		//Application interface
+		void SetApplicationInterface(IMachineToApplication* applicationInterface) override;
+		void AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount /*= true*/) override;
+		void RemoveApplicationEvent(unsigned int eventId) override;
+
+		//Component access
+		IEmulatedDisplay* GetDisplay() override;
+		IEmulatedInput* GetInput() override;
+		IEmulatedMemory* GetMemory() override;
+		IEmulatedProcessor* GetProcessor() override;
+		IEmulatedSound* GetSound() override;
+
+		//Machine info
+		unsigned int GetFrameCount() override;
+		unsigned int GetTickCount() override;
+		unsigned int GetTicksPerSecond() override;
+		unsigned int GetTicksUntilNextFrame() override;
+
+		//Execution
+		void Step() override;
+		void RunToNextFrame() override;
+
+		//Persistence
+		void SaveState(Archive& archive) override;
+		void LoadState(Archive& archive) override;
+
+		//Debugging
+		void EnableBreakpoint(int address) override;
+		void DisableBreakpoint(int address) override;
 
 
-	// IEmulatedInput
+		// IEmulatedDisplay
 
-	unsigned int NumButtons() override;
-	const char* GetButtonName(unsigned int index) override;
-
-	void ButtonDown(unsigned int index) override;
-	void ButtonUp(unsigned int index) override;
-
-	bool IsButtonDown(unsigned int index) override;
+		ScreenResolution GetScreenResolution() override;
+		ScreenBuffer* GetStableScreenBuffer() override;
+		int GetScreenBufferCount() override;
 
 
-	// IEmulatedMemory
+		// IEmulatedInput
 
-	// IEmulatedProcessor
+		unsigned int NumButtons() override;
+		const char* GetButtonName(unsigned int index) override;
 
-	// IEmulatedSound
+		void ButtonDown(unsigned int index) override;
+		void ButtonUp(unsigned int index) override;
 
-	AudioBuffer GetStableAudioBuffer() override;
-	int GetAudioBufferCount() override;
-
-	void SetSquareSynthesisMethod(SquareSynthesisMethod::Type method) override;
+		bool IsButtonDown(unsigned int index) override;
 
 
-protected:
+		// IEmulatedMemory
 
-	BaseApplication* m_application;
+		// IEmulatedProcessor
 
-	bool m_hasFocus;
+		// IEmulatedSound
 
-	IEmulatedMachine* m_wrappedMachine;
-	bool m_isWrappingComponent;
+		AudioBuffer GetStableAudioBuffer() override;
+		int GetAudioBufferCount() override;
 
-	IEmulatedDisplay* m_wrappedDisplay;
-	IEmulatedInput* m_wrappedInput;
-	IEmulatedMemory* m_wrappedMemory;
-	IEmulatedProcessor* m_wrappedProcessor;
-	IEmulatedSound* m_wrappedSound;
+		void SetSquareSynthesisMethod(SquareSynthesisMethod::Type method) override;
 
-	IExecutableFeature* m_featureExecution;
 
-	IEmulatedDisplay* m_featureDisplay;
-	IEmulatedInput* m_featureInput;
-	IEmulatedMemory* m_featureMemory;
-	IEmulatedProcessor* m_featureProcessor;
-	IEmulatedSound* m_featureSound;
+	protected:
 
-	ScreenResolution m_defaultScreenResolution;
-	TScreenBuffer<640, 480> m_defaultScreenBuffer;
-	AudioBuffer m_defaultAudioBuffer;
-};
+		BaseApplication* m_application;
+
+		bool m_hasFocus;
+
+		IEmulatedMachine* m_wrappedMachine;
+		bool m_isWrappingComponent;
+
+		IEmulatedDisplay* m_wrappedDisplay;
+		IEmulatedInput* m_wrappedInput;
+		IEmulatedMemory* m_wrappedMemory;
+		IEmulatedProcessor* m_wrappedProcessor;
+		IEmulatedSound* m_wrappedSound;
+
+		IExecutableFeature* m_featureExecution;
+
+		IEmulatedDisplay* m_featureDisplay;
+		IEmulatedInput* m_featureInput;
+		IEmulatedMemory* m_featureMemory;
+		IEmulatedProcessor* m_featureProcessor;
+		IEmulatedSound* m_featureSound;
+
+		ScreenResolution m_defaultScreenResolution;
+		TScreenBuffer<640, 480> m_defaultScreenBuffer;
+		AudioBuffer m_defaultAudioBuffer;
+	};
 
 }	//namespace Emunisce
 

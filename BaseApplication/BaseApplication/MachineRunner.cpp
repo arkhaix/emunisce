@@ -34,7 +34,7 @@ MachineRunner::MachineRunner()
 
 	m_emulationSpeed = 1.f;
 
-    m_syncState.MillisecondsPerFrame = 1000.f / 60.f;
+	m_syncState.MillisecondsPerFrame = 1000.f / 60.f;
 
 	ResetSynchronizationState();
 }
@@ -52,7 +52,7 @@ void MachineRunner::Initialize()
 
 void MachineRunner::Shutdown()
 {
-	if(m_runnerThread.joinable())
+	if (m_runnerThread.joinable())
 	{
 		Pause();
 
@@ -107,7 +107,7 @@ void MachineRunner::Pause()
 		return;
 	}
 
-	while(m_waiting == false)
+	while (m_waiting == false)
 	{
 		m_waitRequested = true;
 		std::this_thread::yield();
@@ -148,9 +148,9 @@ void MachineRunner::StepFrame()
 
 int MachineRunner::RunnerThread()
 {
-	for(;;)
+	for (;;)
 	{
-		if(m_waitRequested == true)
+		if (m_waitRequested == true)
 		{
 			m_waiting = true;
 			{
@@ -165,20 +165,21 @@ int MachineRunner::RunnerThread()
 			m_waiting = false;
 		}
 
-		if(m_shutdownRequested == true)
+		if (m_shutdownRequested == true) {
 			break;
+		}
 
-		if(m_machine == nullptr)
+		if (m_machine == nullptr)
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds(250));
 			continue;
 		}
 
-		if(m_stepMode == StepMode::Instruction)
+		if (m_stepMode == StepMode::Instruction)
 		{
 			m_machine->Step();
 		}
-		else if(m_stepMode == StepMode::Frame)
+		else if (m_stepMode == StepMode::Frame)
 		{
 			m_machine->RunToNextFrame();
 			Synchronize();
@@ -190,22 +191,23 @@ int MachineRunner::RunnerThread()
 
 void MachineRunner::Synchronize()
 {
-	if(m_emulationSpeed < +1e-5)
+	if (m_emulationSpeed < +1e-5) {
 		return;
+	}
 
 
 	//Note: This function assumes it's being called 60 times per second (defined by CountsPerFrame).
 	//		It will synchronize itself to that rate.
 
-    m_syncState.CurrentRealTime = clock::now();
+	m_syncState.CurrentRealTime = clock::now();
 	m_syncState.CurrentMachineTime += std::chrono::milliseconds((long long)(m_syncState.MillisecondsPerFrame * (1.f / m_emulationSpeed)));
 
 	m_syncState.ElapsedRealTime = m_syncState.CurrentRealTime - m_syncState.RunStartTime;
 	m_syncState.ElapsedMachineTime = m_syncState.CurrentMachineTime - m_syncState.RunStartTime;
 
-    auto millisecondsAhead = std::chrono::duration_cast<std::chrono::milliseconds>(m_syncState.ElapsedMachineTime - m_syncState.ElapsedRealTime).count();
+	auto millisecondsAhead = std::chrono::duration_cast<std::chrono::milliseconds>(m_syncState.ElapsedMachineTime - m_syncState.ElapsedRealTime).count();
 
-    if(millisecondsAhead <= 0)
+	if (millisecondsAhead <= 0)
 	{
 		//Real time is ahead of the machine time, so the emulator is running too slow already.
 		return;
@@ -217,9 +219,9 @@ void MachineRunner::Synchronize()
 	// due to the minimum timer resolution being higher than the specified sleep value.  If the emulator is running
 	// fast enough to catch up (and if it doesn't cause too many thread context switches), then that's probably okay.
 	//Using a high value (greater than ~50 or so) may result in noticeable jitter.
-	if(millisecondsAhead >= 5)
+	if (millisecondsAhead >= 5)
 	{
-	    std::this_thread::sleep_for(std::chrono::milliseconds(millisecondsAhead));
+		std::this_thread::sleep_for(std::chrono::milliseconds(millisecondsAhead));
 	}
 
 	return;
@@ -229,12 +231,12 @@ void MachineRunner::ResetSynchronizationState()
 {
 	auto now = clock::now();
 
-    m_syncState.RunStartTime = now;
+	m_syncState.RunStartTime = now;
 
-    m_syncState.CurrentRealTime = now;
-    m_syncState.CurrentMachineTime = now;
+	m_syncState.CurrentRealTime = now;
+	m_syncState.CurrentMachineTime = now;
 
-    m_syncState.ElapsedRealTime.zero();
-    m_syncState.ElapsedMachineTime.zero();
+	m_syncState.ElapsedRealTime.zero();
+	m_syncState.ElapsedMachineTime.zero();
 }
 

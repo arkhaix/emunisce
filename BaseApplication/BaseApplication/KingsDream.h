@@ -33,70 +33,70 @@ I don't know if he was the original creator.  No license was specified.
 namespace Emunisce
 {
 
-class ScreenBuffer;
+	class ScreenBuffer;
 
-class KingsDream
-{
-public:
+	class KingsDream
+	{
+	public:
 
-	KingsDream();
+		KingsDream();
 
-	void UpdateAnimation();	///<Applies one point to the frame.  Expects PointsPerFrame calls per frame.
-	ScreenBuffer* GetFrame();
+		void UpdateAnimation();	///<Applies one point to the frame.  Expects PointsPerFrame calls per frame.
+		ScreenBuffer* GetFrame();
 
 
-	// Properties
+		// Properties
 
-	void SetScreenResolution(unsigned int width, unsigned int height);	///<Determines the size of the ScreenBuffer returned from GetFrame.  Default is 320x240.
+		void SetScreenResolution(unsigned int width, unsigned int height);	///<Determines the size of the ScreenBuffer returned from GetFrame.  Default is 320x240.
 
-	void SetAnimationRate(float incrementPerFrame);	///<The independent variable of the generator is incremented by this value each frame.  Default is 0.002f.
-	float GetAnimationRate();
+		void SetAnimationRate(float incrementPerFrame);	///<The independent variable of the generator is incremented by this value each frame.  Default is 0.002f.
+		float GetAnimationRate();
 
-	void SetBrightness(unsigned int brightness);	///<The value each point is incremented by.  Default is 5.  This property can overflow if set too high.  Note that PointsPerFrame can also affect brightness.
-	unsigned int GetBrightness();
+		void SetBrightness(unsigned int brightness);	///<The value each point is incremented by.  Default is 5.  This property can overflow if set too high.  Note that PointsPerFrame can also affect brightness.
+		unsigned int GetBrightness();
 
-	void SetFramesPerColor(unsigned int numFrames);	///<The number of frames required to complete one color transition
-	unsigned int GetFramesPerColor();
+		void SetFramesPerColor(unsigned int numFrames);	///<The number of frames required to complete one color transition
+		unsigned int GetFramesPerColor();
 
-	void SetPointsPerFrame(unsigned int numPoints);	///<One point is applied per call to UpdateAnimation.  Default is 20000.
-	unsigned int GetPointsPerFrame();
+		void SetPointsPerFrame(unsigned int numPoints);	///<One point is applied per call to UpdateAnimation.  Default is 20000.
+		unsigned int GetPointsPerFrame();
 
-	void SetBlendFrames(unsigned int numFrames);	///<Number of frames to blend together.  Default is 5.  Max is 10.
-	unsigned int GetBlendFrames();
+		void SetBlendFrames(unsigned int numFrames);	///<Number of frames to blend together.  Default is 5.  Max is 10.
+		unsigned int GetBlendFrames();
 
-private:
+	private:
 
-	void ResizeScreenBuffers(unsigned int width, unsigned int height);
+		void ResizeScreenBuffers(unsigned int width, unsigned int height);
 
-	void IncrementGenerator();
-	void BlendBuffers();
+		void IncrementGenerator();
+		void BlendBuffers();
 
-	inline void SilentDream();
-	inline void Dream();
+		inline void SilentDream();
+		inline void Dream();
 
-	ScreenBuffer* m_screenBuffer;
+		ScreenBuffer* m_screenBuffer;
 
-	static const unsigned int m_maxNumBlendFrames = 10;	///<Maximum number of frames that can be blended together.
-	unsigned int m_numBlendFrames;
-	ScreenBuffer* m_frames[m_maxNumBlendFrames];
-	unsigned int m_currentFrame;
+		static const unsigned int m_maxNumBlendFrames = 10;	///<Maximum number of frames that can be blended together.
+		unsigned int m_numBlendFrames;
+		ScreenBuffer* m_frames[m_maxNumBlendFrames];
+		unsigned int m_currentFrame;
 
-	float m_incrementPerFrame;	///<The generator's independent variable (m_a) gets incremented by this value each frame
+		float m_incrementPerFrame;	///<The generator's independent variable (m_a) gets incremented by this value each frame
 
-	unsigned int m_brightness;
+		unsigned int m_brightness;
 
-	unsigned int m_framesPerColor;
-	unsigned int m_pointsPerColor;
-	unsigned int m_pointsThisColor;
+		unsigned int m_framesPerColor;
+		unsigned int m_pointsPerColor;
+		unsigned int m_pointsThisColor;
 
-	unsigned int m_pointsPerFrame;
-	unsigned int m_pointsThisFrame;
+		unsigned int m_pointsPerFrame;
+		unsigned int m_pointsThisFrame;
 
-	float m_x, m_y;
-	float m_a, m_b, m_c, m_d;
+		float m_x, m_y;
+		float m_a, m_b, m_c, m_d;
 
-	std::list< std::pair<float, float> > m_skipRanges;
-};
+		std::list< std::pair<float, float> > m_skipRanges;
+	};
 
 }	//namespace Emunsice
 

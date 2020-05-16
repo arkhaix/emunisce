@@ -23,21 +23,21 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class Archive;
+	class Archive;
 
-class ISerializer
-{
-public:
+	class ISerializer
+	{
+	public:
 
-	virtual ~ISerializer() {}
+		virtual ~ISerializer() {}
 
-	virtual void SetArchive(Archive* archive) = 0;
+		virtual void SetArchive(Archive* archive) = 0;
 
-	virtual void Save(unsigned char* data, unsigned int bytes) = 0;
-	virtual void Restore(unsigned char* buffer, unsigned int bytes) = 0;
+		virtual void Save(unsigned char* data, unsigned int bytes) = 0;
+		virtual void Restore(unsigned char* buffer, unsigned int bytes) = 0;
 
-	virtual void Close() = 0;
-};
+		virtual void Close() = 0;
+	};
 
 }
 

@@ -24,18 +24,18 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class ScreenBuffer;
+	class ScreenBuffer;
 
-class HqNx
-{
-public:
+	class HqNx
+	{
+	public:
 
-	static ScreenBuffer* Hq2x(ScreenBuffer* originalScreen);
-	static ScreenBuffer* Hq3x(ScreenBuffer* originalScreen);
-	static ScreenBuffer* Hq4x(ScreenBuffer* originalScreen);
+		static ScreenBuffer* Hq2x(ScreenBuffer* originalScreen);
+		static ScreenBuffer* Hq3x(ScreenBuffer* originalScreen);
+		static ScreenBuffer* Hq4x(ScreenBuffer* originalScreen);
 
-	static void Release(ScreenBuffer* buffer);
-};
+		static void Release(ScreenBuffer* buffer);
+	};
 
 }	//namespace Emunisce
 

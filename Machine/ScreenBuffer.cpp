@@ -37,9 +37,11 @@ void ScreenBuffer::Serialize(Archive& archive)
 	int height = GetHeight();
 	DisplayPixel* pixels = GetPixels();
 
-	for(int y=0;y<height;y++)
-		for(int x=0;x<width;x++)
+	for (int y = 0; y < height; y++) {
+		for (int x = 0; x < width; x++) {
 			SerializeItem(archive, pixels[y*width + x]);
+		}
+	}
 }
 
 
@@ -75,8 +77,9 @@ DisplayPixel* DynamicScreenBuffer::GetPixels()
 void DynamicScreenBuffer::Clear(DisplayPixel clearColor)
 {
 	int numPixels = Width * Height;
-	for(int i=0;i<numPixels;i++)
+	for (int i = 0; i < numPixels; i++) {
 		Pixels[i] = clearColor;
+	}
 }
 
 ScreenBuffer* DynamicScreenBuffer::Clone()

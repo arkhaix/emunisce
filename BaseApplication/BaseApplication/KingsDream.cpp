@@ -32,8 +32,9 @@ KingsDream::KingsDream()
 	srand((unsigned int)time(nullptr));
 
 	m_screenBuffer = nullptr;
-	for(auto& frame : m_frames)
+	for (auto& frame : m_frames) {
 		frame = nullptr;
+	}
 
 	ResizeScreenBuffers(320, 240);
 
@@ -45,11 +46,12 @@ KingsDream::KingsDream()
 	m_d = 0.744728f;
 
 	//Let the generator settle
-	for(int i=0;i<10000;i++)
+	for (int i = 0; i < 10000; i++) {
 		SilentDream();
+	}
 
 	//Clear the screen buffer
-	m_screenBuffer->Clear( DisplayPixelFromRGBA((u8)0, (u8)0, (u8)0) );
+	m_screenBuffer->Clear(DisplayPixelFromRGBA((u8)0, (u8)0, (u8)0));
 
 	m_numBlendFrames = 5;
 	m_currentFrame = 0;
@@ -67,15 +69,15 @@ KingsDream::KingsDream()
 	m_pointsThisColor = 0;
 
 	//Skip ranges
-	m_skipRanges.push_back( std::make_pair(-4.05f, -4.00f) );	///<Jarring blank section
-	m_skipRanges.push_back( std::make_pair(-3.73f, -3.67f) );	///<Jarring blank section
-	m_skipRanges.push_back( std::make_pair(-3.16f, -3.05f) );	///<Blank section
-	m_skipRanges.push_back( std::make_pair(-2.64f, -2.52f) );	///<Blank section
-	m_skipRanges.push_back( std::make_pair(-1.88f, -1.72f) );	///<Blinky section
-	m_skipRanges.push_back( std::make_pair(-0.72f, 0.f) );	///<Bad place.  This range murders the cpu.  Probably throws bad values into sin().
-	m_skipRanges.push_back( std::make_pair(0.f, 1.72f) );	///<Boring section
+	m_skipRanges.push_back(std::make_pair(-4.05f, -4.00f));	///<Jarring blank section
+	m_skipRanges.push_back(std::make_pair(-3.73f, -3.67f));	///<Jarring blank section
+	m_skipRanges.push_back(std::make_pair(-3.16f, -3.05f));	///<Blank section
+	m_skipRanges.push_back(std::make_pair(-2.64f, -2.52f));	///<Blank section
+	m_skipRanges.push_back(std::make_pair(-1.88f, -1.72f));	///<Blinky section
+	m_skipRanges.push_back(std::make_pair(-0.72f, 0.f));	///<Bad place.  This range murders the cpu.  Probably throws bad values into sin().
+	m_skipRanges.push_back(std::make_pair(0.f, 1.72f));	///<Boring section
 	//m_skipRanges.push_back( std::make_pair(0.7f, 1.28f) );	///<Blank section	///<Above "boring section" encompasses this
-	m_skipRanges.push_back( std::make_pair(2.65f, 3.15f) );	///<Blank section
+	m_skipRanges.push_back(std::make_pair(2.65f, 3.15f));	///<Blank section
 }
 
 
@@ -84,7 +86,7 @@ void KingsDream::UpdateAnimation()
 	Dream();
 
 	m_pointsThisFrame++;
-	if(m_pointsThisFrame >= m_pointsPerFrame)
+	if (m_pointsThisFrame >= m_pointsPerFrame)
 	{
 		m_pointsThisFrame -= m_pointsPerFrame;
 
@@ -93,10 +95,11 @@ void KingsDream::UpdateAnimation()
 		BlendBuffers();
 
 		m_currentFrame++;
-		if(m_currentFrame >= m_numBlendFrames)
+		if (m_currentFrame >= m_numBlendFrames) {
 			m_currentFrame = 0;
+		}
 
-		m_frames[ m_currentFrame ]->Clear( DisplayPixelFromRGBA((u8)0, (u8)0, (u8)0) );
+		m_frames[m_currentFrame]->Clear(DisplayPixelFromRGBA((u8)0, (u8)0, (u8)0));
 	}
 }
 
@@ -163,16 +166,19 @@ unsigned int KingsDream::GetBlendFrames()
 
 void KingsDream::ResizeScreenBuffers(unsigned int width, unsigned int height)
 {
-	if(m_screenBuffer != nullptr && m_screenBuffer->GetWidth() == (int)width && m_screenBuffer->GetHeight() == (int)height)
+	if (m_screenBuffer != nullptr && m_screenBuffer->GetWidth() == (int)width && m_screenBuffer->GetHeight() == (int)height) {
 		return;
+	}
 
 	delete m_screenBuffer;
-	for(auto & m_frame : m_frames)
+	for (auto & m_frame : m_frames) {
 		delete m_frame;
+	}
 
 	m_screenBuffer = new DynamicScreenBuffer(width, height);
-	for(auto & m_frame : m_frames)
+	for (auto & m_frame : m_frames) {
 		m_frame = new DynamicScreenBuffer(width, height);
+	}
 }
 
 
@@ -181,14 +187,16 @@ void KingsDream::IncrementGenerator()
 	m_a += m_incrementPerFrame;
 
 	//Reset after a certain point
-	if(m_a > 4.85f)	///<Arbitrary reset point.
+	if (m_a > 4.85f) {	///<Arbitrary reset point.
 		m_a = -4.45f;	///<Arbitrary start position.
+	}
 
 	//Skip bad ranges
-	for(auto & m_skipRange : m_skipRanges)
+	for (auto & m_skipRange : m_skipRanges)
 	{
-		if(m_a > m_skipRange.first && m_a < m_skipRange.second)
+		if (m_a > m_skipRange.first && m_a < m_skipRange.second) {
 			m_a += m_skipRange.second - m_skipRange.first;
+		}
 	}
 }
 
@@ -196,22 +204,23 @@ void KingsDream::BlendBuffers()
 {
 	DisplayPixel* screenPixels = m_screenBuffer->GetPixels();
 
-	DisplayPixel* framePixels[m_maxNumBlendFrames] = {nullptr};
-	for(unsigned int i=0;i<m_numBlendFrames;i++)
+	DisplayPixel* framePixels[m_maxNumBlendFrames] = { nullptr };
+	for (unsigned int i = 0; i < m_numBlendFrames; i++) {
 		framePixels[i] = m_frames[i]->GetPixels();
+	}
 
 	int numPixels = m_screenBuffer->GetWidth() * m_screenBuffer->GetHeight();
 
 	u8 r, g, b, a;
 	int nr, ng, nb;	///<int to handle overflow
 
-	for(int pixelIndex=0; pixelIndex < numPixels; pixelIndex++)
+	for (int pixelIndex = 0; pixelIndex < numPixels; pixelIndex++)
 	{
 		nr = 0;
 		ng = 0;
 		nb = 0;
 
-		for(unsigned int frameIndex=0; frameIndex < m_numBlendFrames; frameIndex++)
+		for (unsigned int frameIndex = 0; frameIndex < m_numBlendFrames; frameIndex++)
 		{
 			DisplayPixelToRGBA(framePixels[frameIndex][pixelIndex], r, g, b, a);
 
@@ -231,8 +240,8 @@ void KingsDream::BlendBuffers()
 
 void KingsDream::SilentDream()
 {
-	float newX = sin(m_y*m_b) + m_c*sin(m_x*m_b);
-	float newY = sin(m_x*m_a) + m_d*sin(m_y*m_a);
+	float newX = sin(m_y*m_b) + m_c * sin(m_x*m_b);
+	float newY = sin(m_x*m_a) + m_d * sin(m_y*m_a);
 
 	m_x = newX;
 	m_y = newY;
@@ -245,14 +254,14 @@ void KingsDream::Dream()
 	int width = m_screenBuffer->GetWidth();
 	int height = m_screenBuffer->GetHeight();
 
-	int xPos = (int)(((m_x+2.f)/4.f) * width);
-	int yPos = (int)(((m_y+2.f)/4.f) * height);
+	int xPos = (int)(((m_x + 2.f) / 4.f) * width);
+	int yPos = (int)(((m_y + 2.f) / 4.f) * height);
 	int index = yPos * width + xPos;
 
-    u8 incZero = 0;
-    u8 incOne = (u8)m_brightness;
+	u8 incZero = 0;
+	u8 incOne = (u8)m_brightness;
 
-	DisplayPixel* pixels = m_frames[ m_currentFrame ]->GetPixels();
+	DisplayPixel* pixels = m_frames[m_currentFrame]->GetPixels();
 
 	static DisplayPixel randomIncrement = DisplayPixelFromRGBA(incOne, incZero, incZero);
 	static const DisplayPixel mask = DisplayPixelFromRGBA(incZero, incZero, incZero, (u8)255);
@@ -268,9 +277,9 @@ void KingsDream::Dream()
 	DisplayPixelToRGBA(randomIncrement, newR, newG, newB, newA);
 
 	float blend = (float)m_pointsThisColor / (float)m_pointsPerColor;
-	u8 br = (u8)((newR * blend) + (oldR * (1.f-blend)));
-	u8 bg = (u8)((newG * blend) + (oldG * (1.f-blend)));
-	u8 bb = (u8)((newB * blend) + (oldB * (1.f-blend)));
+	u8 br = (u8)((newR * blend) + (oldR * (1.f - blend)));
+	u8 bg = (u8)((newG * blend) + (oldG * (1.f - blend)));
+	u8 bb = (u8)((newB * blend) + (oldB * (1.f - blend)));
 
 	blendIncrement = DisplayPixelFromRGBA(br, bg, bb);
 
@@ -279,20 +288,20 @@ void KingsDream::Dream()
 	pixels[index] |= mask;
 
 	m_pointsThisColor++;
-	if(m_pointsThisColor >= m_pointsPerColor)
+	if (m_pointsThisColor >= m_pointsPerColor)
 	{
 		m_pointsThisColor = 0;
 		oldIncrement = randomIncrement;
 
-	    u8 rr = 0;
+		u8 rr = 0;
 		u8 rg = 0;
 		u8 rb = 0;
-		while(rr + rg + rb < incOne)	///<Make sure our random color is at least as bright as the default increment
+		while (rr + rg + rb < incOne)	///<Make sure our random color is at least as bright as the default increment
 		{
-			rr = rand() % (incOne+1);
-			rg = rand() % (incOne+1);
-			rb = rand() % (incOne+1);
+			rr = rand() % (incOne + 1);
+			rg = rand() % (incOne + 1);
+			rb = rand() % (incOne + 1);
 		}
-	    randomIncrement = DisplayPixelFromRGBA(rr, rg, rb);
+		randomIncrement = DisplayPixelFromRGBA(rr, rg, rb);
 	}
 }

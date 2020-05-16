@@ -100,7 +100,7 @@ void ConsoleDebugger::Run()
 
 	RunMachine();
 
-	while(m_phoenix->ShutdownRequested() == false)
+	while (m_phoenix->ShutdownRequested() == false)
 	{
 		UpdateDisplay();
 		FetchCommand();
@@ -180,7 +180,7 @@ void ConsoleDebugger::FetchCommand()
 	COORD newCursorPos = consoleInfo.dwCursorPosition;
 	WORD textAttributes = consoleInfo.wAttributes;
 
-	if(result == true)
+	if (result == true)
 	{
 		SetConsoleCursorPosition(hStdOut, inputCursorPos);
 		SetConsoleTextAttribute(hStdOut, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
@@ -210,7 +210,7 @@ void ConsoleDebugger::FetchCommand()
 #else
 
 	std::vector<std::string> args = SplitCommand(line);
-	if(args.empty())
+	if (args.empty())
 		return;
 
 	const char* command = args[0].c_str();
@@ -221,131 +221,131 @@ void ConsoleDebugger::FetchCommand()
 #define COMMAND2(name, target)	else if( _stricmp(command, name) == 0 && args.size() > 2 ) { target; }
 
 	//COMMAND0("quit", m_phoenix->RequestShutdown())
-	if(_stricmp(command, "quit") == 0) { m_phoenix->RequestShutdown(); }
+	if (_stricmp(command, "quit") == 0) { m_phoenix->RequestShutdown(); }
 	COMMAND0("q", m_phoenix->RequestShutdown())
-	COMMAND0("exit", m_phoenix->RequestShutdown())
-	COMMAND0("x", m_phoenix->RequestShutdown())
+		COMMAND0("exit", m_phoenix->RequestShutdown())
+		COMMAND0("x", m_phoenix->RequestShutdown())
 
-	COMMAND0("help", Help())
-	COMMAND0("h", Help())
+		COMMAND0("help", Help())
+		COMMAND0("h", Help())
 
-	COMMAND1("load", LoadROM(line.substr(args[0].size()+1).c_str()))
-	COMMAND1("l", LoadROM(line.substr(args[0].size()+1).c_str()))
-	COMMAND1("open", LoadROM(line.substr(args[0].size()+1).c_str()))
-	COMMAND1("o", LoadROM(line.substr(args[0].size()+1).c_str()))
+		COMMAND1("load", LoadROM(line.substr(args[0].size() + 1).c_str()))
+		COMMAND1("l", LoadROM(line.substr(args[0].size() + 1).c_str()))
+		COMMAND1("open", LoadROM(line.substr(args[0].size() + 1).c_str()))
+		COMMAND1("o", LoadROM(line.substr(args[0].size() + 1).c_str()))
 
-	COMMAND0("load", LoadROM(nullptr))
-	COMMAND0("l", LoadROM(nullptr))
-	COMMAND0("open", LoadROM(nullptr))
-	COMMAND0("o", LoadROM(nullptr))
+		COMMAND0("load", LoadROM(nullptr))
+		COMMAND0("l", LoadROM(nullptr))
+		COMMAND0("open", LoadROM(nullptr))
+		COMMAND0("o", LoadROM(nullptr))
 
-	COMMAND0("reset", Reset())
+		COMMAND0("reset", Reset())
 
-	COMMAND0("step", StepInto())
-	COMMAND0("s", StepInto())
+		COMMAND0("step", StepInto())
+		COMMAND0("s", StepInto())
 
-	COMMAND0("stepover", StepOver())
-	COMMAND0("so", StepOver())
+		COMMAND0("stepover", StepOver())
+		COMMAND0("so", StepOver())
 
-	COMMAND1("run", RunMachineTo(strtol(args[1].c_str(), nullptr, 16)))
-	COMMAND1("rt", RunMachineTo(strtol(args[1].c_str(), nullptr, 16)))
-	COMMAND1("r", RunMachineTo(strtol(args[1].c_str(), nullptr, 16)))
-	COMMAND1("go", RunMachineTo(strtol(args[1].c_str(), nullptr, 16)))
-	COMMAND1("gt", RunMachineTo(strtol(args[1].c_str(), nullptr, 16)))
-	COMMAND1("g", RunMachineTo(strtol(args[1].c_str(), nullptr, 16)))
+		COMMAND1("run", RunMachineTo(strtol(args[1].c_str(), nullptr, 16)))
+		COMMAND1("rt", RunMachineTo(strtol(args[1].c_str(), nullptr, 16)))
+		COMMAND1("r", RunMachineTo(strtol(args[1].c_str(), nullptr, 16)))
+		COMMAND1("go", RunMachineTo(strtol(args[1].c_str(), nullptr, 16)))
+		COMMAND1("gt", RunMachineTo(strtol(args[1].c_str(), nullptr, 16)))
+		COMMAND1("g", RunMachineTo(strtol(args[1].c_str(), nullptr, 16)))
 
-	COMMAND0("run", RunMachine())
-	COMMAND0("r", RunMachine())
-	COMMAND0("go", RunMachine())
-	COMMAND0("g", RunMachine())
+		COMMAND0("run", RunMachine())
+		COMMAND0("r", RunMachine())
+		COMMAND0("go", RunMachine())
+		COMMAND0("g", RunMachine())
 
-	COMMAND0("pause", Pause())
-	COMMAND0("p", Pause())
+		COMMAND0("pause", Pause())
+		COMMAND0("p", Pause())
 
-	COMMAND1("speed", Speed((float)strtod(args[1].c_str(), nullptr)))
-	COMMAND1("sp", Speed((float)strtod(args[1].c_str(), nullptr)))
+		COMMAND1("speed", Speed((float)strtod(args[1].c_str(), nullptr)))
+		COMMAND1("sp", Speed((float)strtod(args[1].c_str(), nullptr)))
 
-	COMMAND1("savestate", SaveState(args[1].c_str()))
-	COMMAND1("ss", SaveState(args[1].c_str()))
-	COMMAND1("loadstate", LoadState(args[1].c_str()))
-	COMMAND1("ls", LoadState(args[1].c_str()))
+		COMMAND1("savestate", SaveState(args[1].c_str()))
+		COMMAND1("ss", SaveState(args[1].c_str()))
+		COMMAND1("loadstate", LoadState(args[1].c_str()))
+		COMMAND1("ls", LoadState(args[1].c_str()))
 
-	COMMAND1("breakpoint", ToggleBreakpoint(strtol(args[1].c_str(), nullptr, 16)))
-	COMMAND1("break", ToggleBreakpoint(strtol(args[1].c_str(), nullptr, 16)))
-	COMMAND1("b", ToggleBreakpoint(strtol(args[1].c_str(), nullptr, 16)))
+		COMMAND1("breakpoint", ToggleBreakpoint(strtol(args[1].c_str(), nullptr, 16)))
+		COMMAND1("break", ToggleBreakpoint(strtol(args[1].c_str(), nullptr, 16)))
+		COMMAND1("b", ToggleBreakpoint(strtol(args[1].c_str(), nullptr, 16)))
 
-	COMMAND0("breakpoints", ListBreakpoints())
-	COMMAND0("breakpoint", ListBreakpoints())
-	COMMAND0("break", ListBreakpoints())
-	COMMAND0("b", ListBreakpoints())
+		COMMAND0("breakpoints", ListBreakpoints())
+		COMMAND0("breakpoint", ListBreakpoints())
+		COMMAND0("break", ListBreakpoints())
+		COMMAND0("b", ListBreakpoints())
 
-	COMMAND0("clearbreakpoints", ClearBreakpoints())
-	COMMAND0("cb", ClearBreakpoints())
+		COMMAND0("clearbreakpoints", ClearBreakpoints())
+		COMMAND0("cb", ClearBreakpoints())
 
-	COMMAND2("memory", PrintMemory(strtol(args[1].c_str(), nullptr, 16), strtol(args[2].c_str(), nullptr, 16)))
-	COMMAND2("mem", PrintMemory(strtol(args[1].c_str(), nullptr, 16), strtol(args[2].c_str(), nullptr, 16)))
-	COMMAND2("m", PrintMemory(strtol(args[1].c_str(), nullptr, 16), strtol(args[2].c_str(), nullptr, 16)))
+		COMMAND2("memory", PrintMemory(strtol(args[1].c_str(), nullptr, 16), strtol(args[2].c_str(), nullptr, 16)))
+		COMMAND2("mem", PrintMemory(strtol(args[1].c_str(), nullptr, 16), strtol(args[2].c_str(), nullptr, 16)))
+		COMMAND2("m", PrintMemory(strtol(args[1].c_str(), nullptr, 16), strtol(args[2].c_str(), nullptr, 16)))
 
-	COMMAND1("memory", PrintMemory(strtol(args[1].c_str(), nullptr, 16), 16))
-	COMMAND1("mem", PrintMemory(strtol(args[1].c_str(), nullptr, 16), 16))
-	COMMAND1("m", PrintMemory(strtol(args[1].c_str(), nullptr, 16), 16))
+		COMMAND1("memory", PrintMemory(strtol(args[1].c_str(), nullptr, 16), 16))
+		COMMAND1("mem", PrintMemory(strtol(args[1].c_str(), nullptr, 16), 16))
+		COMMAND1("m", PrintMemory(strtol(args[1].c_str(), nullptr, 16), 16))
 
-	//COMMAND0("memory", PrintMemory(m_cpu->pc, 16))
-	//COMMAND0("mem", PrintMemory(m_cpu->pc, 16))
-	//COMMAND0("m", PrintMemory(m_cpu->pc, 16))
+		//COMMAND0("memory", PrintMemory(m_cpu->pc, 16))
+		//COMMAND0("mem", PrintMemory(m_cpu->pc, 16))
+		//COMMAND0("m", PrintMemory(m_cpu->pc, 16))
 
-	COMMAND0("audio", ToggleMute())
-	COMMAND0("mute", ToggleMute())
-	COMMAND0("sound", ToggleMute())
+		COMMAND0("audio", ToggleMute())
+		COMMAND0("mute", ToggleMute())
+		COMMAND0("sound", ToggleMute())
 
-	COMMAND1("square", SetSquareSynthesisMethod(args[1].c_str()))
+		COMMAND1("square", SetSquareSynthesisMethod(args[1].c_str()))
 
-	COMMAND1("background", SetBackgroundAnimation(args[1].c_str()))
-	COMMAND1("bg", SetBackgroundAnimation(args[1].c_str()))
+		COMMAND1("background", SetBackgroundAnimation(args[1].c_str()))
+		COMMAND1("bg", SetBackgroundAnimation(args[1].c_str()))
 
-	COMMAND1("displayfilter", SetDisplayFilter(args[1].c_str()))
-	COMMAND1("display", SetDisplayFilter(args[1].c_str()))
-	COMMAND1("filter", SetDisplayFilter(args[1].c_str()))
-	COMMAND1("df", SetDisplayFilter(args[1].c_str()))
+		COMMAND1("displayfilter", SetDisplayFilter(args[1].c_str()))
+		COMMAND1("display", SetDisplayFilter(args[1].c_str()))
+		COMMAND1("filter", SetDisplayFilter(args[1].c_str()))
+		COMMAND1("df", SetDisplayFilter(args[1].c_str()))
 
-	COMMAND1("vsync", SetVsync(args[1].c_str()))
-	COMMAND1("vs", SetVsync(args[1].c_str()))
-
-
-	COMMAND0("record", ToggleRecording())
-	COMMAND0("rec", ToggleRecording())
-	//COMMAND0("r", ToggleRecording())	///< r = "run"
+		COMMAND1("vsync", SetVsync(args[1].c_str()))
+		COMMAND1("vs", SetVsync(args[1].c_str()))
 
 
-	COMMAND0("playmovie", TogglePlayMovie())
-	COMMAND0("play", TogglePlayMovie())
-	COMMAND0("pm", TogglePlayMovie())
-	//COMMAND0("p", TogglePlayback())	///< p = "pause"
-
-	COMMAND1("savemovie", SaveMovie(args[1].c_str()))
-	COMMAND1("sm", SaveMovie(args[1].c_str()))
-
-	COMMAND1("loadmovie", LoadMovie(args[1].c_str()))
-	COMMAND1("lm", LoadMovie(args[1].c_str()))
+		COMMAND0("record", ToggleRecording())
+		COMMAND0("rec", ToggleRecording())
+		//COMMAND0("r", ToggleRecording())	///< r = "run"
 
 
-	COMMAND1("playmacro", TogglePlayMacro(args[1].c_str()))
-	COMMAND1("playr", TogglePlayMacro(args[1].c_str()))
-	COMMAND1("pr", TogglePlayMacro(args[1].c_str()))
+		COMMAND0("playmovie", TogglePlayMovie())
+		COMMAND0("play", TogglePlayMovie())
+		COMMAND0("pm", TogglePlayMovie())
+		//COMMAND0("p", TogglePlayback())	///< p = "pause"
 
-	COMMAND0("playmacro", TogglePlayMacro(nullptr))
-	COMMAND0("playr", TogglePlayMacro(nullptr))
-	COMMAND0("pr", TogglePlayMacro(nullptr))
+		COMMAND1("savemovie", SaveMovie(args[1].c_str()))
+		COMMAND1("sm", SaveMovie(args[1].c_str()))
 
-	COMMAND1("savemacro", SaveMacro(args[1].c_str()))
-	COMMAND1("sr", SaveMacro(args[1].c_str()))
+		COMMAND1("loadmovie", LoadMovie(args[1].c_str()))
+		COMMAND1("lm", LoadMovie(args[1].c_str()))
 
-	COMMAND1("loadmacro", LoadMacro(args[1].c_str()))
-	COMMAND1("lr", LoadMacro(args[1].c_str()))
 
-	COMMAND0("buttons", PrintButtons())
+		COMMAND1("playmacro", TogglePlayMacro(args[1].c_str()))
+		COMMAND1("playr", TogglePlayMacro(args[1].c_str()))
+		COMMAND1("pr", TogglePlayMacro(args[1].c_str()))
 
-	COMMAND0("machine", PrintMachineType())
+		COMMAND0("playmacro", TogglePlayMacro(nullptr))
+		COMMAND0("playr", TogglePlayMacro(nullptr))
+		COMMAND0("pr", TogglePlayMacro(nullptr))
+
+		COMMAND1("savemacro", SaveMacro(args[1].c_str()))
+		COMMAND1("sr", SaveMacro(args[1].c_str()))
+
+		COMMAND1("loadmacro", LoadMacro(args[1].c_str()))
+		COMMAND1("lr", LoadMacro(args[1].c_str()))
+
+		COMMAND0("buttons", PrintButtons())
+
+		COMMAND0("machine", PrintMachineType())
 
 
 	else
@@ -451,7 +451,7 @@ std::string ConsoleDebugger::FetchLine()
 			{
 				if (!result.empty())
 				{
-					result = result.substr(0, result.length()-1);
+					result = result.substr(0, result.length() - 1);
 					printf("%c", c);
 					printf(" ");
 					printf("%c", c);
@@ -534,7 +534,7 @@ void ConsoleDebugger::RunMachineTo(int address)
 	bool addedBreakpoint = false;
 
 	auto iter = m_breakpoints.find(gbAddress);
-	if(iter == m_breakpoints.end())
+	if (iter == m_breakpoints.end())
 	{
 		m_breakpoints.insert(gbAddress);
 		iter = m_breakpoints.find(gbAddress);
@@ -545,10 +545,10 @@ void ConsoleDebugger::RunMachineTo(int address)
 
 	RunMachine();
 
-	if(addedBreakpoint && iter != m_breakpoints.end())
+	if (addedBreakpoint && iter != m_breakpoints.end())
 	{
 		m_breakpoints.erase(iter);
-		if(m_breakpoints.empty())
+		if (m_breakpoints.empty())
 			m_breakpointsEnabled = false;
 	}
 }
@@ -591,7 +591,7 @@ void ConsoleDebugger::ToggleBreakpoint(int address)
 
 	u16 gbAddress = (u16)address;
 	auto iter = m_breakpoints.find(gbAddress);
-	if(iter == m_breakpoints.end())
+	if (iter == m_breakpoints.end())
 	{
 		m_breakpoints.insert(gbAddress);
 		printf("Enabled a breakpoint at: %04X\n", gbAddress);
@@ -602,7 +602,7 @@ void ConsoleDebugger::ToggleBreakpoint(int address)
 		printf("Removed a breakpoint at: %04X\n", gbAddress);
 	}
 
-	if(m_breakpoints.empty() == false)
+	if (m_breakpoints.empty() == false)
 		m_breakpointsEnabled = true;
 	else
 		m_breakpointsEnabled = false;
@@ -617,7 +617,7 @@ void ConsoleDebugger::ListBreakpoints()
 	printf("\nThere are %zu breakpoint addresses:\n", m_breakpoints.size());
 	printf("\n");
 
-	for(auto iter = m_breakpoints.begin(); iter != m_breakpoints.end(); ++iter)
+	for (auto iter = m_breakpoints.begin(); iter != m_breakpoints.end(); ++iter)
 		printf("%04X\n", *iter);
 
 	printf("---\n\n");
@@ -671,17 +671,17 @@ void ConsoleDebugger::SetSquareSynthesisMethod(const char* strMethod)
 {
 	printf("%s\n", __FUNCTION__);
 
-	if(strMethod == nullptr || strlen(strMethod) == 0)
+	if (strMethod == nullptr || strlen(strMethod) == 0)
 		strMethod = "linear";
 
 	SquareSynthesisMethod::Type method = SquareSynthesisMethod::LinearInterpolation;
 
-	if( _stricmp(strMethod, "linear") == 0 || _stricmp(strMethod, "interpolation") == 0 ||
-		_stricmp(strMethod, "interp") == 0 || _stricmp(strMethod, "1") == 0 )
+	if (_stricmp(strMethod, "linear") == 0 || _stricmp(strMethod, "interpolation") == 0 ||
+		_stricmp(strMethod, "interp") == 0 || _stricmp(strMethod, "1") == 0)
 		method = SquareSynthesisMethod::LinearInterpolation;
 
-	else if( _stricmp(strMethod, "naive") == 0 || _stricmp(strMethod, "simple") == 0 ||
-			_stricmp(strMethod, "0") == 0 )
+	else if (_stricmp(strMethod, "naive") == 0 || _stricmp(strMethod, "simple") == 0 ||
+		_stricmp(strMethod, "0") == 0)
 		method = SquareSynthesisMethod::Naive;
 
 	m_machine->GetSound()->SetSquareSynthesisMethod(method);
@@ -692,7 +692,7 @@ void ConsoleDebugger::SetBackgroundAnimation(const char* state)
 {
 	printf("%s\n", __FUNCTION__);
 
-	if(state == nullptr || strlen(state) == 0 ||
+	if (state == nullptr || strlen(state) == 0 ||
 		_stricmp(state, "0") == 0 ||
 		_stricmp(state, "off") == 0)
 	{
@@ -709,25 +709,25 @@ void ConsoleDebugger::SetDisplayFilter(const char* strFilter)
 {
 	printf("%s\n", __FUNCTION__);
 
-	if(strFilter == nullptr || strlen(strFilter) == 0)
+	if (strFilter == nullptr || strlen(strFilter) == 0)
 		strFilter = "none";
 
 	DisplayFilter::Type filter = DisplayFilter::NoFilter;
 
-	if( _stricmp(strFilter, "none") == 0 || _stricmp(strFilter, "0") == 0 ||
-		_stricmp(strFilter, "1") == 0 )
+	if (_stricmp(strFilter, "none") == 0 || _stricmp(strFilter, "0") == 0 ||
+		_stricmp(strFilter, "1") == 0)
 		filter = DisplayFilter::NoFilter;
 
-	else if( _stricmp(strFilter, "hq2x") == 0 || _stricmp(strFilter, "2x") == 0 ||
-		_stricmp(strFilter, "2") == 0 )
+	else if (_stricmp(strFilter, "hq2x") == 0 || _stricmp(strFilter, "2x") == 0 ||
+		_stricmp(strFilter, "2") == 0)
 		filter = DisplayFilter::Hq2x;
 
-	else if( _stricmp(strFilter, "hq3x") == 0 || _stricmp(strFilter, "3x") == 0 ||
-		_stricmp(strFilter, "3") == 0 )
+	else if (_stricmp(strFilter, "hq3x") == 0 || _stricmp(strFilter, "3x") == 0 ||
+		_stricmp(strFilter, "3") == 0)
 		filter = DisplayFilter::Hq3x;
 
-	else if( _stricmp(strFilter, "hq4x") == 0 || _stricmp(strFilter, "4x") == 0 ||
-		_stricmp(strFilter, "4") == 0 )
+	else if (_stricmp(strFilter, "hq4x") == 0 || _stricmp(strFilter, "4x") == 0 ||
+		_stricmp(strFilter, "4") == 0)
 		filter = DisplayFilter::Hq4x;
 
 	m_userInterface->SetDisplayFilter(filter);
@@ -738,7 +738,7 @@ void ConsoleDebugger::SetVsync(const char* strMode)
 {
 	printf("%s\n", __FUNCTION__);
 
-	if( _stricmp(strMode, "0") == 0 || _stricmp(strMode, "off") == 0 )
+	if (_stricmp(strMode, "0") == 0 || _stricmp(strMode, "off") == 0)
 		m_userInterface->SetVsync(false);
 	else
 		m_userInterface->SetVsync(true);
@@ -749,7 +749,7 @@ void ConsoleDebugger::ToggleRecording()
 {
 	printf("%s\n", __FUNCTION__);
 
-	if(m_recordingInput == true)
+	if (m_recordingInput == true)
 	{
 		m_userInterface->StopRecordingInput();
 	}
@@ -765,7 +765,7 @@ void ConsoleDebugger::TogglePlayMovie()
 {
 	printf("%s\n", __FUNCTION__);
 
-	if(m_playingInput == true)
+	if (m_playingInput == true)
 	{
 		m_userInterface->StopMovie();
 	}
@@ -782,10 +782,10 @@ void ConsoleDebugger::TogglePlayMacro(const char* loop)
 	printf("%s\n", __FUNCTION__);
 
 	bool loopMacro = true;
-	if( loop != nullptr && (_stricmp(loop, "0") == 0 || _stricmp(loop, "off") == 0 || _stricmp(loop, "false") == 0) )
+	if (loop != nullptr && (_stricmp(loop, "0") == 0 || _stricmp(loop, "off") == 0 || _stricmp(loop, "false") == 0))
 		loopMacro = false;
 
-	if(m_playingInput == true)
+	if (m_playingInput == true)
 	{
 		m_userInterface->StopMacro();
 	}
@@ -833,7 +833,7 @@ void ConsoleDebugger::PrintButtons()
 	printf("%s\n", __FUNCTION__);
 
 	IEmulatedInput* input = m_machine->GetInput();
-	if(input == nullptr)
+	if (input == nullptr)
 	{
 		printf("No input\n");
 		return;
@@ -841,7 +841,7 @@ void ConsoleDebugger::PrintButtons()
 
 	printf("%d total buttons:\n", input->NumButtons());
 	printf("-----\n");
-	for(unsigned int i=0;i<input->NumButtons();i++)
+	for (unsigned int i = 0; i < input->NumButtons(); i++)
 	{
 		printf(" %d: %s\n", i, input->GetButtonName(i));
 	}

@@ -26,67 +26,67 @@ using namespace Emunisce;
 namespace Emunisce
 {
 
-void SerializeBuffer(Archive& archive, unsigned char* buffer, unsigned int bytes)
-{
-	archive.SerializeBuffer(buffer, bytes);
-}
+	void SerializeBuffer(Archive& archive, unsigned char* buffer, unsigned int bytes)
+	{
+		archive.SerializeBuffer(buffer, bytes);
+	}
 
-void SerializeItem(Archive& archive, u8& data)
-{
-	archive & data;
-}
+	void SerializeItem(Archive& archive, u8& data)
+	{
+		archive & data;
+	}
 
-void SerializeItem(Archive& archive, u16& data)
-{
-	archive & data;
-}
+	void SerializeItem(Archive& archive, u16& data)
+	{
+		archive & data;
+	}
 
-void SerializeItem(Archive& archive, u32& data)
-{
-	archive & data;
-}
+	void SerializeItem(Archive& archive, u32& data)
+	{
+		archive & data;
+	}
 
-void SerializeItem(Archive& archive, u64& data)
-{
-	archive & data;
-}
-
-
-void SerializeItem(Archive& archive, s8& data)
-{
-	archive & data;
-}
-
-void SerializeItem(Archive& archive, s16& data)
-{
-	archive & data;
-}
-
-void SerializeItem(Archive& archive, s32& data)
-{
-	archive & data;
-}
-
-void SerializeItem(Archive& archive, s64& data)
-{
-	archive & data;
-}
+	void SerializeItem(Archive& archive, u64& data)
+	{
+		archive & data;
+	}
 
 
-void SerializeItem(Archive& archive, bool& data)
-{
-	archive & data;
-}
+	void SerializeItem(Archive& archive, s8& data)
+	{
+		archive & data;
+	}
 
-void SerializeItem(Archive& archive, float& data)
-{
-	archive & data;
-}
+	void SerializeItem(Archive& archive, s16& data)
+	{
+		archive & data;
+	}
 
-void SerializeItem(Archive& archive, double& data)
-{
-	archive & data;
-}
+	void SerializeItem(Archive& archive, s32& data)
+	{
+		archive & data;
+	}
+
+	void SerializeItem(Archive& archive, s64& data)
+	{
+		archive & data;
+	}
+
+
+	void SerializeItem(Archive& archive, bool& data)
+	{
+		archive & data;
+	}
+
+	void SerializeItem(Archive& archive, float& data)
+	{
+		archive & data;
+	}
+
+	void SerializeItem(Archive& archive, double& data)
+	{
+		archive & data;
+	}
 
 
 }	//namespace Emunisce

@@ -27,21 +27,21 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class ChannelController
-{
-public:
+	class ChannelController
+	{
+	public:
 
-	ChannelController(u8& nr52, int channelBit);
+		ChannelController(u8& nr52, int channelBit);
 
-	void EnableChannel();
-	void DisableChannel();
-	bool IsChannelEnabled();
+		void EnableChannel();
+		void DisableChannel();
+		bool IsChannelEnabled();
 
-private:
+	private:
 
-	u8& m_nr52;
-	int m_channelBit;
-};
+		u8& m_nr52;
+		int m_channelBit;
+	};
 
 }	//namespace Emunisce
 

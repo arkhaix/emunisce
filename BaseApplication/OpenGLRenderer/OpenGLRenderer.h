@@ -24,35 +24,35 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class IEmulatedMachine;
+	class IEmulatedMachine;
 
-class OpenGLRenderer
-{
-public:
+	class OpenGLRenderer
+	{
+	public:
 
-	OpenGLRenderer();
-	~OpenGLRenderer();
+		OpenGLRenderer();
+		~OpenGLRenderer();
 
-	void Initialize(void* windowHandle);
-	void Shutdown();
+		void Initialize(void* windowHandle);
+		void Shutdown();
 
-	void SetMachine(IEmulatedMachine* machine);
+		void SetMachine(IEmulatedMachine* machine);
 
-	int GetLastFrameRendered();
+		int GetLastFrameRendered();
 
-	void SetVsync(bool enabled);
-
-	
-	//Window events
-
-	void Draw();
-	void Resize(int newWidth, int newHeight);
+		void SetVsync(bool enabled);
 
 
-private:
+		//Window events
 
-	class OpenGLRenderer_Private* m_private;
-};
+		void Draw();
+		void Resize(int newWidth, int newHeight);
+
+
+	private:
+
+		class OpenGLRenderer_Private* m_private;
+	};
 
 }	//namespace Emunisce
 

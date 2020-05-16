@@ -49,12 +49,14 @@ MachineFeature::MachineFeature()
 	m_defaultScreenResolution.width = 640;
 	m_defaultScreenResolution.height = 480;
 
-	for(int y=0;y<m_defaultScreenBuffer.GetHeight();y++)
-		for(int x=0;x<m_defaultScreenBuffer.GetWidth();x++)
+	for (int y = 0; y < m_defaultScreenBuffer.GetHeight(); y++) {
+		for (int x = 0; x < m_defaultScreenBuffer.GetWidth(); x++) {
 			m_defaultScreenBuffer.SetPixel(x, y, (DisplayPixel)0);
+		}
+	}
 
 	m_defaultAudioBuffer.NumSamples = m_defaultAudioBuffer.BufferSizeSamples;
-	for(unsigned int i=0;i<m_defaultAudioBuffer.NumSamples;i++)
+	for (unsigned int i = 0; i < m_defaultAudioBuffer.NumSamples; i++)
 	{
 		m_defaultAudioBuffer.Samples[0][i] = SilentSample;
 		m_defaultAudioBuffer.Samples[1][i] = SilentSample;
@@ -77,7 +79,7 @@ void MachineFeature::SetComponentMachine(IEmulatedMachine* componentMachine)
 	m_wrappedMachine = componentMachine;
 	m_isWrappingComponent = true;
 
-	if(m_wrappedMachine != nullptr)
+	if (m_wrappedMachine != nullptr)
 	{
 		m_wrappedDisplay = componentMachine->GetDisplay();
 		m_wrappedInput = componentMachine->GetInput();
@@ -97,10 +99,10 @@ void MachineFeature::SetComponentMachine(IEmulatedMachine* componentMachine)
 
 void MachineFeature::SetEmulatedMachine(IEmulatedMachine* wrappedMachine)
 {
-	if(m_isWrappingComponent == true && m_wrappedMachine != nullptr)
+	if (m_isWrappingComponent == true && m_wrappedMachine != nullptr)
 	{
 		MachineFeature* componentMachine = dynamic_cast<MachineFeature*>(m_wrappedMachine);
-		if(componentMachine != nullptr)
+		if (componentMachine != nullptr)
 		{
 			componentMachine->SetEmulatedMachine(wrappedMachine);
 			return;
@@ -112,7 +114,7 @@ void MachineFeature::SetEmulatedMachine(IEmulatedMachine* wrappedMachine)
 
 	m_wrappedMachine = wrappedMachine;
 
-	if(m_wrappedMachine != nullptr)
+	if (m_wrappedMachine != nullptr)
 	{
 		m_wrappedDisplay = wrappedMachine->GetDisplay();
 		m_wrappedInput = wrappedMachine->GetInput();
@@ -142,16 +144,18 @@ void MachineFeature::SetFocus(bool hasFocus)
 //Machine type
 EmulatedMachine::Type MachineFeature::GetType()
 {
-	if(m_wrappedMachine == nullptr)
+	if (m_wrappedMachine == nullptr) {
 		return EmulatedMachine::NoMachine;
+	}
 
 	return m_wrappedMachine->GetType();
 }
 
 const char* MachineFeature::GetRomTitle()
 {
-	if(m_wrappedMachine == nullptr)
+	if (m_wrappedMachine == nullptr) {
 		return nullptr;
+	}
 
 	return m_wrappedMachine->GetRomTitle();
 }
@@ -160,24 +164,27 @@ const char* MachineFeature::GetRomTitle()
 //Application interface
 void MachineFeature::SetApplicationInterface(IMachineToApplication* applicationInterface)
 {
-	if(m_wrappedMachine == nullptr)
+	if (m_wrappedMachine == nullptr) {
 		return;
+	}
 
 	m_wrappedMachine->SetApplicationInterface(applicationInterface);
 }
 
 void MachineFeature::AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount /*= true*/)
 {
-	if(m_wrappedMachine == nullptr)
+	if (m_wrappedMachine == nullptr) {
 		return;
+	}
 
 	m_wrappedMachine->AddApplicationEvent(applicationEvent, relativeFrameCount);
 }
 
 void MachineFeature::RemoveApplicationEvent(unsigned int eventId)
 {
-	if(m_wrappedMachine == nullptr)
+	if (m_wrappedMachine == nullptr) {
 		return;
+	}
 
 	m_wrappedMachine->RemoveApplicationEvent(eventId);
 }
@@ -213,44 +220,52 @@ IEmulatedSound* MachineFeature::GetSound()
 //Machine info
 unsigned int MachineFeature::GetFrameCount()
 {
-	if((m_hasFocus || m_wrappedMachine == nullptr) && m_featureExecution != nullptr)
+	if ((m_hasFocus || m_wrappedMachine == nullptr) && m_featureExecution != nullptr) {
 		return m_featureExecution->GetFrameCount();
 
-	else if(m_wrappedMachine != nullptr)
+	}
+	else if (m_wrappedMachine != nullptr) {
 		return m_wrappedMachine->GetFrameCount();
+	}
 
 	return 0;
 }
 
 unsigned int MachineFeature::GetTickCount()
 {
-	if((m_hasFocus || m_wrappedMachine == nullptr) && m_featureExecution != nullptr)
+	if ((m_hasFocus || m_wrappedMachine == nullptr) && m_featureExecution != nullptr) {
 		return m_featureExecution->GetTickCount();
 
-	else if(m_wrappedMachine != nullptr)
+	}
+	else if (m_wrappedMachine != nullptr) {
 		return m_wrappedMachine->GetTickCount();
+	}
 
 	return 0;
 }
 
 unsigned int MachineFeature::GetTicksPerSecond()
 {
-	if((m_hasFocus || m_wrappedMachine == nullptr) && m_featureExecution != nullptr)
+	if ((m_hasFocus || m_wrappedMachine == nullptr) && m_featureExecution != nullptr) {
 		return m_featureExecution->GetTicksPerSecond();
 
-	else if(m_wrappedMachine != nullptr)
+	}
+	else if (m_wrappedMachine != nullptr) {
 		return m_wrappedMachine->GetTicksPerSecond();
+	}
 
 	return 1;
 }
 
 unsigned int MachineFeature::GetTicksUntilNextFrame()
 {
-	if((m_hasFocus || m_wrappedMachine == nullptr) && m_featureExecution != nullptr)
+	if ((m_hasFocus || m_wrappedMachine == nullptr) && m_featureExecution != nullptr) {
 		return m_featureExecution->GetTicksUntilNextFrame();
 
-	else if(m_wrappedMachine != nullptr)
+	}
+	else if (m_wrappedMachine != nullptr) {
 		return m_wrappedMachine->GetTicksUntilNextFrame();
+	}
 
 	return (unsigned int)-1;
 }
@@ -259,36 +274,42 @@ unsigned int MachineFeature::GetTicksUntilNextFrame()
 //Execution
 void MachineFeature::Step()
 {
-	if((m_hasFocus || m_wrappedMachine == nullptr) && m_featureExecution != nullptr)
+	if ((m_hasFocus || m_wrappedMachine == nullptr) && m_featureExecution != nullptr) {
 		m_featureExecution->Step();
 
-	else if(m_wrappedMachine != nullptr)
+	}
+	else if (m_wrappedMachine != nullptr) {
 		m_wrappedMachine->Step();
+	}
 }
 
 void MachineFeature::RunToNextFrame()
 {
-	if((m_hasFocus || m_wrappedMachine == nullptr) && m_featureExecution != nullptr)
+	if ((m_hasFocus || m_wrappedMachine == nullptr) && m_featureExecution != nullptr) {
 		m_featureExecution->RunToNextFrame();
 
-	else if(m_wrappedMachine != nullptr)
+	}
+	else if (m_wrappedMachine != nullptr) {
 		m_wrappedMachine->RunToNextFrame();
+	}
 }
 
 
 //Persistence
 void MachineFeature::SaveState(Archive& archive)
 {
-	if(m_wrappedMachine == nullptr)
+	if (m_wrappedMachine == nullptr) {
 		return;
+	}
 
 	m_wrappedMachine->SaveState(archive);
 }
 
 void MachineFeature::LoadState(Archive& archive)
 {
-	if(m_wrappedMachine == nullptr)
+	if (m_wrappedMachine == nullptr) {
 		return;
+	}
 
 	m_wrappedMachine->LoadState(archive);
 }
@@ -297,16 +318,18 @@ void MachineFeature::LoadState(Archive& archive)
 //Debugging
 void MachineFeature::EnableBreakpoint(int address)
 {
-	if(m_wrappedMachine == nullptr)
+	if (m_wrappedMachine == nullptr) {
 		return;
+	}
 
 	m_wrappedMachine->EnableBreakpoint(address);
 }
 
 void MachineFeature::DisableBreakpoint(int address)
 {
-	if(m_wrappedMachine == nullptr)
+	if (m_wrappedMachine == nullptr) {
 		return;
+	}
 
 	m_wrappedMachine->DisableBreakpoint(address);
 }
@@ -316,12 +339,12 @@ void MachineFeature::DisableBreakpoint(int address)
 
 ScreenResolution MachineFeature::GetScreenResolution()
 {
-	if( (m_hasFocus || m_wrappedDisplay == nullptr) && m_featureDisplay != nullptr )
+	if ((m_hasFocus || m_wrappedDisplay == nullptr) && m_featureDisplay != nullptr)
 	{
 		return m_featureDisplay->GetScreenResolution();
 	}
 
-	if(m_wrappedDisplay != nullptr)
+	if (m_wrappedDisplay != nullptr)
 	{
 		return m_wrappedDisplay->GetScreenResolution();
 	}
@@ -331,12 +354,12 @@ ScreenResolution MachineFeature::GetScreenResolution()
 
 ScreenBuffer* MachineFeature::GetStableScreenBuffer()
 {
-	if( (m_hasFocus || m_wrappedDisplay == nullptr) && m_featureDisplay != nullptr )
+	if ((m_hasFocus || m_wrappedDisplay == nullptr) && m_featureDisplay != nullptr)
 	{
 		return m_featureDisplay->GetStableScreenBuffer();
 	}
 
-	if(m_wrappedDisplay != nullptr)
+	if (m_wrappedDisplay != nullptr)
 	{
 		return m_wrappedDisplay->GetStableScreenBuffer();
 	}
@@ -346,12 +369,12 @@ ScreenBuffer* MachineFeature::GetStableScreenBuffer()
 
 int MachineFeature::GetScreenBufferCount()
 {
-	if( (m_hasFocus || m_wrappedDisplay == nullptr) && m_featureDisplay != nullptr )
+	if ((m_hasFocus || m_wrappedDisplay == nullptr) && m_featureDisplay != nullptr)
 	{
 		return m_featureDisplay->GetScreenBufferCount();
 	}
 
-	if(m_wrappedDisplay != nullptr)
+	if (m_wrappedDisplay != nullptr)
 	{
 		return m_wrappedDisplay->GetScreenBufferCount();
 	}
@@ -367,12 +390,12 @@ unsigned int MachineFeature::NumButtons()
 {
 	unsigned int result = 0;
 
-	if(m_featureInput != nullptr)
+	if (m_featureInput != nullptr)
 	{
 		result += m_featureInput->NumButtons();
 	}
 
-	if(m_wrappedInput != nullptr)
+	if (m_wrappedInput != nullptr)
 	{
 		result += m_wrappedInput->NumButtons();
 	}
@@ -382,15 +405,16 @@ unsigned int MachineFeature::NumButtons()
 
 const char* MachineFeature::GetButtonName(unsigned int index)
 {
-	if(m_featureInput != nullptr )
+	if (m_featureInput != nullptr)
 	{
-		if(index < m_featureInput->NumButtons())
+		if (index < m_featureInput->NumButtons()) {
 			return m_featureInput->GetButtonName(index);
+		}
 
 		index -= m_featureInput->NumButtons();
 	}
 
-	if(m_wrappedInput != nullptr)
+	if (m_wrappedInput != nullptr)
 	{
 		return m_wrappedInput->GetButtonName(index);
 	}
@@ -401,15 +425,16 @@ const char* MachineFeature::GetButtonName(unsigned int index)
 
 void MachineFeature::ButtonDown(unsigned int index)
 {
-	if(m_featureInput != nullptr)
+	if (m_featureInput != nullptr)
 	{
-		if(index < m_featureInput->NumButtons())
+		if (index < m_featureInput->NumButtons()) {
 			return m_featureInput->ButtonDown(index);
+		}
 
 		index -= m_featureInput->NumButtons();
 	}
 
-	if(m_wrappedInput != nullptr)
+	if (m_wrappedInput != nullptr)
 	{
 		return m_wrappedInput->ButtonDown(index);
 	}
@@ -419,15 +444,16 @@ void MachineFeature::ButtonDown(unsigned int index)
 
 void MachineFeature::ButtonUp(unsigned int index)
 {
-	if(m_featureInput != nullptr)
+	if (m_featureInput != nullptr)
 	{
-		if(index < m_featureInput->NumButtons())
+		if (index < m_featureInput->NumButtons()) {
 			return m_featureInput->ButtonUp(index);
+		}
 
 		index -= m_featureInput->NumButtons();
 	}
 
-	if(m_wrappedInput != nullptr)
+	if (m_wrappedInput != nullptr)
 	{
 		return m_wrappedInput->ButtonUp(index);
 	}
@@ -437,15 +463,16 @@ void MachineFeature::ButtonUp(unsigned int index)
 
 bool MachineFeature::IsButtonDown(unsigned int index)
 {
-	if(m_featureInput != nullptr)
+	if (m_featureInput != nullptr)
 	{
-		if(index < m_featureInput->NumButtons())
+		if (index < m_featureInput->NumButtons()) {
 			return m_featureInput->IsButtonDown(index);
+		}
 
 		index -= m_featureInput->NumButtons();
 	}
 
-	if(m_wrappedInput != nullptr)
+	if (m_wrappedInput != nullptr)
 	{
 		return m_wrappedInput->IsButtonDown(index);
 	}
@@ -463,12 +490,12 @@ bool MachineFeature::IsButtonDown(unsigned int index)
 
 AudioBuffer MachineFeature::GetStableAudioBuffer()
 {
-	if( (m_hasFocus || m_wrappedSound == nullptr) && m_featureSound != nullptr )
+	if ((m_hasFocus || m_wrappedSound == nullptr) && m_featureSound != nullptr)
 	{
 		return m_featureSound->GetStableAudioBuffer();
 	}
 
-	if(m_wrappedSound != nullptr)
+	if (m_wrappedSound != nullptr)
 	{
 		return m_wrappedSound->GetStableAudioBuffer();
 	}
@@ -478,12 +505,12 @@ AudioBuffer MachineFeature::GetStableAudioBuffer()
 
 int MachineFeature::GetAudioBufferCount()
 {
-	if( (m_hasFocus || m_wrappedSound == nullptr) && m_featureSound != nullptr )
+	if ((m_hasFocus || m_wrappedSound == nullptr) && m_featureSound != nullptr)
 	{
 		return m_featureSound->GetAudioBufferCount();
 	}
 
-	if(m_wrappedSound != nullptr)
+	if (m_wrappedSound != nullptr)
 	{
 		return m_wrappedSound->GetAudioBufferCount();
 	}
@@ -494,12 +521,12 @@ int MachineFeature::GetAudioBufferCount()
 
 void MachineFeature::SetSquareSynthesisMethod(SquareSynthesisMethod::Type method)
 {
-	if( (m_hasFocus || m_wrappedSound == nullptr) && m_featureSound != nullptr )
+	if ((m_hasFocus || m_wrappedSound == nullptr) && m_featureSound != nullptr)
 	{
 		return m_featureSound->SetSquareSynthesisMethod(method);
 	}
 
-	if(m_wrappedSound != nullptr)
+	if (m_wrappedSound != nullptr)
 	{
 		return m_wrappedSound->SetSquareSynthesisMethod(method);
 	}

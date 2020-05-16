@@ -26,14 +26,14 @@ using namespace Emunisce;
 
 
 Cpu::Cpu()
-: a(*(((u8*)&af)+1))
-, f(*(((u8*)&af)+0))
-, b(*(((u8*)&bc)+1))
-, c(*(((u8*)&bc)+0))
-, d(*(((u8*)&de)+1))
-, e(*(((u8*)&de)+0))
-, h(*(((u8*)&hl)+1))
-, l(*(((u8*)&hl)+0))
+	: a(*(((u8*)&af) + 1))
+	, f(*(((u8*)&af) + 0))
+	, b(*(((u8*)&bc) + 1))
+	, c(*(((u8*)&bc) + 0))
+	, d(*(((u8*)&de) + 1))
+	, e(*(((u8*)&de) + 0))
+	, h(*(((u8*)&hl) + 1))
+	, l(*(((u8*)&hl) + 0))
 {
 	m_machine = nullptr;
 	m_memory = nullptr;
@@ -95,8 +95,9 @@ void Cpu::Initialize()
 
 	pc = 0x0000;
 
-	if(m_machineType == EmulatedMachine::GameboyColor)
+	if (m_machineType == EmulatedMachine::GameboyColor) {
 		a = 0x11;
+	}
 }
 
 
@@ -156,21 +157,25 @@ void Cpu::SetTimerControl(u8 value)
 	//TAC[1:0] Input Clock Select
 	int clockSelect = value & 0x03;
 
-	if(clockSelect == 0)
+	if (clockSelect == 0) {
 		m_ticksPerCounterIncrement = 1024;	///<4096 Hz
-	else if(clockSelect == 1)
+	}
+	else if (clockSelect == 1) {
 		m_ticksPerCounterIncrement = 16;	///<262144 Hz
-	else if(clockSelect == 2)
+	}
+	else if (clockSelect == 2) {
 		m_ticksPerCounterIncrement = 64;	///<65536 Hz
-	else //(clockSelect == 3)
+	}
+	else { //(clockSelect == 3)
 		m_ticksPerCounterIncrement = 256;	///<16384 Hz
+	}
 
 	m_ticksUntilCounterIncrement = m_ticksPerCounterIncrement;
 
 
 	//TAC[2] Timer Enable
 	m_timerEnabled = false;
-	if(value & 0x04)
+	if (value & 0x04)
 	{
 		m_timerEnabled = true;
 	}
@@ -180,8 +185,9 @@ void Cpu::SetTimerControl(u8 value)
 
 void Cpu::SetCgbSpeedSwitch(u8 value)
 {
-	if(m_machineType != EmulatedMachine::GameboyColor)
+	if (m_machineType != EmulatedMachine::GameboyColor) {
 		return;
+	}
 
 	//Only bit 0 (speed switch enable) is writable
 	m_cgbSpeedSwitch &= ~(0x01);
@@ -192,24 +198,25 @@ void Cpu::RunTimer(int ticks)
 {
 	//Divider
 	m_ticksUntilDividerIncrement -= ticks;
-	if(m_ticksUntilDividerIncrement <= 0)
+	if (m_ticksUntilDividerIncrement <= 0)
 	{
 		m_ticksUntilDividerIncrement += m_ticksPerDividerIncrement;
 
 		m_timerDivider++;
 	}
 
-	if(m_timerEnabled == false)
+	if (m_timerEnabled == false) {
 		return;
+	}
 
 	//Counter
 	m_ticksUntilCounterIncrement -= ticks;
-	while(m_ticksUntilCounterIncrement <= 0)
+	while (m_ticksUntilCounterIncrement <= 0)
 	{
 		m_ticksUntilCounterIncrement += m_ticksPerCounterIncrement;
 
 		m_timerCounter++;
-		if(m_timerCounter == 0)
+		if (m_timerCounter == 0)
 		{
 			m_timerCounter = m_timerModulo;
 
@@ -243,27 +250,33 @@ u16 Cpu::ReadNext16()
 void Cpu::ExecADC(u8* target, u8 value)
 {
 	int res = *target + value + TST_C;
-	
+
 	//Z
-	if((res & 0xff) == 0) 
+	if ((res & 0xff) == 0) {
 		SET_Z;
-	else 
+	}
+	else {
 		RES_Z;
+	}
 
 	//N
 	RES_N;
 
 	//H
-	if( (*target ^ value ^ res) & 0x10 )
+	if ((*target ^ value ^ res) & 0x10) {
 		SET_H;
-	else
+	}
+	else {
 		RES_H;
+	}
 
 	//C
-	if(res & 0x100) 
+	if (res & 0x100) {
 		SET_C;
-	else 
+	}
+	else {
 		RES_C;
+	}
 
 	*target = (u8)res;
 }
@@ -273,25 +286,31 @@ void Cpu::ExecADC(u16* target, u16 value)
 	int res = *target + value + TST_C;
 
 	//Z
-	if((res & 0xffff) == 0) 
+	if ((res & 0xffff) == 0) {
 		SET_Z;
-	else 
+	}
+	else {
 		RES_Z;
+	}
 
 	//N
 	RES_N;
 
 	//H
-	if( (*target ^ value ^ res) & 0x1000 )
+	if ((*target ^ value ^ res) & 0x1000) {
 		SET_H;
-	else
+	}
+	else {
 		RES_H;
+	}
 
 	//C
-	if(res & 0x10000) 
+	if (res & 0x10000) {
 		SET_C;
-	else 
+	}
+	else {
 		RES_C;
+	}
 
 	*target = (u16)res;
 }
@@ -299,27 +318,33 @@ void Cpu::ExecADC(u16* target, u16 value)
 void Cpu::ExecADD(u8* target, u8 value)
 {
 	int res = *target + value;
-	
+
 	//Z
-	if((res & 0xff) == 0) 
+	if ((res & 0xff) == 0) {
 		SET_Z;
-	else 
+	}
+	else {
 		RES_Z;
+	}
 
 	//N
 	RES_N;
 
 	//H
-	if( (*target ^ value ^ res) & 0x10 )
+	if ((*target ^ value ^ res) & 0x10) {
 		SET_H;
-	else
+	}
+	else {
 		RES_H;
+	}
 
 	//C
-	if(res & 0x100) 
+	if (res & 0x100) {
 		SET_C;
-	else 
+	}
+	else {
 		RES_C;
+	}
 
 	*target = (u8)res;
 }
@@ -334,16 +359,20 @@ void Cpu::ExecADD(u16* target, u16 value)
 	RES_N;
 
 	//H
-	if( (*target ^ value ^ res) & 0x1000 )
+	if ((*target ^ value ^ res) & 0x1000) {
 		SET_H;
-	else
+	}
+	else {
 		RES_H;
+	}
 
 	//C
-	if(res & 0x10000) 
+	if (res & 0x10000) {
 		SET_C;
-	else 
+	}
+	else {
 		RES_C;
+	}
 
 	*target = (u16)res;
 }
@@ -371,10 +400,12 @@ void Cpu::ExecAND(u8 value)
 	a = a & value;
 
 	//Z
-	if(a == 0)
+	if (a == 0) {
 		SET_Z;
-	else
+	}
+	else {
 		RES_Z;
+	}
 
 	//N
 	RES_N;
@@ -389,10 +420,12 @@ void Cpu::ExecAND(u8 value)
 void Cpu::ExecBIT(u8 value, int n)
 {
 	//Z
-	if(value & (1<<n))
+	if (value & (1 << n)) {
 		RES_Z;
-	else
+	}
+	else {
 		SET_Z;
+	}
 
 	//N
 	RES_N;
@@ -434,7 +467,7 @@ void Cpu::ExecCCF()
 
 	//H
 	RES_H;
-	
+
 	//C
 	INV_C;
 }
@@ -444,27 +477,33 @@ void Cpu::ExecCP(u8 value)
 	int res = a - value;
 
 	//Z
-	if(res == 0)
+	if (res == 0) {
 		SET_Z;
-	else
+	}
+	else {
 		RES_Z;
+	}
 
 	//N
 	SET_N;
 
 	//H
 	//???
-	if( (a ^ value ^ res) & 0x10 )
+	if ((a ^ value ^ res) & 0x10) {
 		SET_H;
-	else
+	}
+	else {
 		RES_H;
+	}
 
 	//C
 	//???
-	if(res < 0)
+	if (res < 0) {
 		SET_C;
-	else
+	}
+	else {
 		RES_C;
+	}
 }
 
 void Cpu::ExecCPL()
@@ -484,40 +523,48 @@ void Cpu::ExecCPL()
 
 void Cpu::ExecDAA()
 {
-	if(TST_N)
+	if (TST_N)
 	{
-		if(TST_C && TST_H)
+		if (TST_C && TST_H) {
 			a += 0x9a;
-		else if(TST_C)
+		}
+		else if (TST_C) {
 			a += 0xa0;
-		else if(TST_H)
+		}
+		else if (TST_H) {
 			a += 0xfa;
+		}
 	}
 	else
 	{
-		if(a >= 0x9a)
+		if (a >= 0x9a)
 		{
 			a += 0x60;
 			SET_C;
 
-			if(TST_H || ((a & 0x0f) >= 0x0a))
+			if (TST_H || ((a & 0x0f) >= 0x0a)) {
 				a += 0x06;
+			}
 		}
 		else
 		{
-			if(TST_C)
+			if (TST_C) {
 				a += 0x60;
-			if(TST_H || ((a & 0x0f) >= 0x0a))
+			}
+			if (TST_H || ((a & 0x0f) >= 0x0a)) {
 				a += 0x06;
+			}
 		}
 	}
 
 
 	//Z
-	if(a == 0)
+	if (a == 0) {
 		SET_Z;
-	else
+	}
+	else {
 		RES_Z;
+	}
 
 	//N unaffected
 
@@ -532,19 +579,23 @@ void Cpu::ExecDEC(u8* target)
 	u8 res = (*target) - 1;
 
 	//Z
-	if(res == 0)
+	if (res == 0) {
 		SET_Z;
-	else
+	}
+	else {
 		RES_Z;
+	}
 
 	//N
 	SET_N;
 
 	//H
-	if( (*target & 0x0f) == 0 )
+	if ((*target & 0x0f) == 0) {
 		SET_H;
-	else
+	}
+	else {
 		RES_H;
+	}
 
 	//C unaffected
 
@@ -627,19 +678,23 @@ void Cpu::ExecINC(u8* target)
 	u8 res = *target + 1;
 
 	//Z
-	if(res == 0)
+	if (res == 0) {
 		SET_Z;
-	else
+	}
+	else {
 		RES_Z;
+	}
 
 	//N
 	RES_N;
 
 	//H
-	if( (*target & 0x0f) == 0x0f )
+	if ((*target & 0x0f) == 0x0f) {
 		SET_H;
-	else
+	}
+	else {
 		RES_H;
+	}
 
 	//C unaffected
 
@@ -665,7 +720,7 @@ void Cpu::ExecINC(u16* target)
 void Cpu::ExecJP(u16 address)
 {
 	pc = address;
-	
+
 	//Z unaffected
 
 	//N unaffected
@@ -730,10 +785,12 @@ void Cpu::ExecOR(u8* target)
 	a |= *target;
 
 	//Z
-	if(a == 0)
+	if (a == 0) {
 		SET_Z;
-	else
+	}
+	else {
 		RES_Z;
+	}
 
 	//N
 	RES_N;
@@ -750,10 +807,12 @@ void Cpu::ExecOR(u8 value)
 	a |= value;
 
 	//Z
-	if(a == 0)
+	if (a == 0) {
 		SET_Z;
-	else
+	}
+	else {
 		RES_Z;
+	}
 
 	//N
 	RES_N;
@@ -808,7 +867,7 @@ void Cpu::ExecPUSH(u16* target)
 
 void Cpu::ExecRES(u8* target, int n)
 {
-	*target &= ~(1<<n);
+	*target &= ~(1 << n);
 
 	//Z unaffected
 
@@ -844,26 +903,30 @@ void Cpu::ExecRL(u8* target)
 {
 	int oldC = TST_C;
 
-	if(*target & 0x80)
+	if (*target & 0x80) {
 		SET_C;
-	else
+	}
+	else {
 		RES_C;
+	}
 
 	*target <<= 1;
 	*target |= oldC;
 
 	//Z
-	if(*target == 0)
+	if (*target == 0) {
 		SET_Z;
-	else
+	}
+	else {
 		RES_Z;
+	}
 
 	//N
 	RES_N;
 
 	//H
 	RES_H;
-	
+
 	//C handled above
 }
 
@@ -871,10 +934,12 @@ void Cpu::ExecRLA()
 {
 	int oldC = TST_C;
 
-	if(a & 0x80)
+	if (a & 0x80) {
 		SET_C;
-	else
+	}
+	else {
 		RES_C;
+	}
 
 	a <<= 1;
 	a |= oldC;
@@ -893,19 +958,23 @@ void Cpu::ExecRLA()
 
 void Cpu::ExecRLC(u8* target)
 {
-	if(*target & 0x80)
+	if (*target & 0x80) {
 		SET_C;
-	else
+	}
+	else {
 		RES_C;
+	}
 
 	*target <<= 1;
 	*target |= TST_C;
 
 	//Z
-	if(*target == 0)
+	if (*target == 0) {
 		SET_Z;
-	else
+	}
+	else {
 		RES_Z;
+	}
 
 	//N
 	RES_N;
@@ -918,10 +987,12 @@ void Cpu::ExecRLC(u8* target)
 
 void Cpu::ExecRLCA()
 {
-	if(a & 0x80)
+	if (a & 0x80) {
 		SET_C;
-	else
+	}
+	else {
 		RES_C;
+	}
 
 	a <<= 1;
 	a |= TST_C;
@@ -942,19 +1013,23 @@ void Cpu::ExecRR(u8* target)
 {
 	int oldC = TST_C;
 
-	if(*target & 0x01)
+	if (*target & 0x01) {
 		SET_C;
-	else
+	}
+	else {
 		RES_C;
+	}
 
 	*target >>= 1;
 	*target |= (oldC << 7);
 
 	//Z
-	if(*target == 0)
+	if (*target == 0) {
 		SET_Z;
-	else
+	}
+	else {
 		RES_Z;
+	}
 
 	//N
 	RES_N;
@@ -969,10 +1044,12 @@ void Cpu::ExecRRA()
 {
 	int oldC = TST_C;
 
-	if(a & 0x01)
+	if (a & 0x01) {
 		SET_C;
-	else
+	}
+	else {
 		RES_C;
+	}
 
 	a >>= 1;
 	a |= (oldC << 7);
@@ -991,19 +1068,23 @@ void Cpu::ExecRRA()
 
 void Cpu::ExecRRC(u8* target)
 {
-	if(*target & 0x01)
+	if (*target & 0x01) {
 		SET_C;
-	else
+	}
+	else {
 		RES_C;
+	}
 
 	*target >>= 1;
 	*target |= (TST_C << 7);
 
 	//Z
-	if(*target == 0)
+	if (*target == 0) {
 		SET_Z;
-	else
+	}
+	else {
 		RES_Z;
+	}
 
 	//N
 	RES_N;
@@ -1016,10 +1097,12 @@ void Cpu::ExecRRC(u8* target)
 
 void Cpu::ExecRRCA()
 {
-	if(a & 0x01)
+	if (a & 0x01) {
 		SET_C;
-	else
+	}
+	else {
 		RES_C;
+	}
 
 	a >>= 1;
 	a |= (TST_C << 7);
@@ -1046,25 +1129,31 @@ void Cpu::ExecSBC(u8 value)
 	int res = a - value - TST_C;
 
 	//Z
-	if((res & 0xff) == 0)
+	if ((res & 0xff) == 0) {
 		SET_Z;
-	else
+	}
+	else {
 		RES_Z;
+	}
 
 	//N
 	SET_N;
 
 	//H
-	if( (a ^ value ^ res) & 0x10 )
+	if ((a ^ value ^ res) & 0x10) {
 		SET_H;
-	else
+	}
+	else {
 		RES_H;
+	}
 
 	//C
-	if(res < 0)
+	if (res < 0) {
 		SET_C;
-	else
+	}
+	else {
 		RES_C;
+	}
 
 	a = (u8)res;
 }
@@ -1085,7 +1174,7 @@ void Cpu::ExecSCF()
 
 void Cpu::ExecSET(u8* target, int n)
 {
-	*target |= (1<<n);
+	*target |= (1 << n);
 
 	//Z unaffected
 
@@ -1098,18 +1187,22 @@ void Cpu::ExecSET(u8* target, int n)
 
 void Cpu::ExecSLA(u8* target)
 {
-	if(*target & 0x80)
+	if (*target & 0x80) {
 		SET_C;
-	else
+	}
+	else {
 		RES_C;
+	}
 
 	*target <<= 1;
 
 	//Z
-	if(*target == 0)
+	if (*target == 0) {
 		SET_Z;
-	else
+	}
+	else {
 		RES_Z;
+	}
 
 	//N
 	RES_N;
@@ -1124,19 +1217,23 @@ void Cpu::ExecSRA(u8* target)
 {
 	int bit7 = (*target & 0x80);
 
-	if(*target & 0x01)
+	if (*target & 0x01) {
 		SET_C;
-	else
+	}
+	else {
 		RES_C;
+	}
 
 	*target >>= 1;
 	*target |= bit7;
 
 	//Z
-	if(*target == 0)
+	if (*target == 0) {
 		SET_Z;
-	else
+	}
+	else {
 		RES_Z;
+	}
 
 	//N
 	RES_N;
@@ -1149,18 +1246,22 @@ void Cpu::ExecSRA(u8* target)
 
 void Cpu::ExecSRL(u8* target)
 {
-	if(*target & 0x01)
+	if (*target & 0x01) {
 		SET_C;
-	else
+	}
+	else {
 		RES_C;
+	}
 
 	*target >>= 1;
 
 	//Z
-	if(*target == 0)
+	if (*target == 0) {
 		SET_Z;
-	else
+	}
+	else {
 		RES_Z;
+	}
 
 	//N
 	RES_N;
@@ -1176,25 +1277,31 @@ void Cpu::ExecSUB(u8 value)
 	int res = a - value;
 
 	//Z
-	if(res == 0)
+	if (res == 0) {
 		SET_Z;
-	else
+	}
+	else {
 		RES_Z;
+	}
 
 	//N
 	SET_N;
 
 	//H
-	if( (a ^ value ^ res) & 0x10 )
+	if ((a ^ value ^ res) & 0x10) {
 		SET_H;
-	else
+	}
+	else {
 		RES_H;
+	}
 
 	//C
-	if(res < 0)
+	if (res < 0) {
 		SET_C;
-	else
+	}
+	else {
 		RES_C;
+	}
 
 	a = (u8)res;
 }
@@ -1203,13 +1310,15 @@ void Cpu::ExecSWAP(u8* target)
 {
 	u8 low = (*target) & 0x0f;
 	*target >>= 4;
-	*target |= (low<<4);
+	*target |= (low << 4);
 
 	//Z
-	if(*target == 0)
+	if (*target == 0) {
 		SET_Z;
-	else
+	}
+	else {
 		RES_Z;
+	}
 
 	//N
 	RES_N;
@@ -1226,10 +1335,12 @@ void Cpu::ExecXOR(u8 value)
 	a ^= value;
 
 	//Z
-	if(a == 0)
+	if (a == 0) {
 		SET_Z;
-	else
+	}
+	else {
 		RES_Z;
+	}
 
 	//N
 	RES_N;

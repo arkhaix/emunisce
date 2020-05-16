@@ -48,7 +48,7 @@ void EnvelopeUnit::Serialize(Archive& archive)
 	SerializeItem(archive, m_volumeIncreasing);
 	SerializeItem(archive, m_initialVolume);
 	SerializeItem(archive, m_currentVolume);
-	
+
 	SerializeItem(archive, m_timerValue);
 	SerializeItem(archive, m_timerPeriod);
 }
@@ -56,26 +56,31 @@ void EnvelopeUnit::Serialize(Archive& archive)
 
 void EnvelopeUnit::Tick()
 {
-	if(m_enabled == false)
+	if (m_enabled == false) {
 		return;
+	}
 
-	if(m_timerPeriod == 0)
+	if (m_timerPeriod == 0) {
 		return;
+	}
 
 	m_timerValue--;
-	while(m_timerValue <= 0)
+	while (m_timerValue <= 0)
 	{
 		m_timerValue += m_timerPeriod;
 
-		if(m_volumeIncreasing == true)
+		if (m_volumeIncreasing == true) {
 			m_currentVolume++;
-		else
+		}
+		else {
 			m_currentVolume--;
+		}
 
 		m_currentVolume &= 0x0f;
 
-		if(m_currentVolume == 0 || m_currentVolume == 15)
+		if (m_currentVolume == 0 || m_currentVolume == 15) {
 			m_enabled = false;
+		}
 	}
 }
 
@@ -91,20 +96,24 @@ void EnvelopeUnit::WriteEnvelopeRegister(u8 value)
 {
 	m_timerPeriod = value & 0x07;
 
-	if(m_timerPeriod == 0)
+	if (m_timerPeriod == 0) {
 		m_enabled = false;
-	else
+	}
+	else {
 		m_enabled = true;
+	}
 
-	if(value & 0x08)
+	if (value & 0x08) {
 		m_volumeIncreasing = true;
-	else
+	}
+	else {
 		m_volumeIncreasing = false;
+	}
 
 	m_initialVolume = (value & 0xf0) >> 4;
 
 	//Disable the DAC?
-	if(m_initialVolume == 0 && m_volumeIncreasing == false)
+	if (m_initialVolume == 0 && m_volumeIncreasing == false)
 	{
 		m_soundGenerator->m_channelController->DisableChannel();
 		m_soundGenerator->m_dacEnabled = false;

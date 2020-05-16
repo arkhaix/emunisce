@@ -9,23 +9,23 @@ using namespace Emunisce;
 namespace Emunisce
 {
 
-class CommandTrie_Private
-{
-public:
-
-	CommandTrie_Private()
+	class CommandTrie_Private
 	{
-	}
+	public:
 
-	CommandTrie* owner;
+		CommandTrie_Private()
+		{
+		}
 
-	CommandTrie* parent;
+		CommandTrie* owner;
 
-	std::string value;
-	CommandTrie* children[26]; //a-z
+		CommandTrie* parent;
 
-	std::vector<CommandTrie*> leaves;
-};
+		std::string value;
+		CommandTrie* children[26]; //a-z
+
+		std::vector<CommandTrie*> leaves;
+	};
 
 } // namespace Emunisce
 
@@ -58,8 +58,9 @@ CommandTrie::~CommandTrie()
 
 void CommandTrie::Add(const char* command, unsigned int position)
 {
-	if (command == nullptr || strlen(command) == 0)
+	if (command == nullptr || strlen(command) == 0) {
 		return;
+	}
 
 	//Leaf
 	if (position >= strlen(command) && m_private->parent != nullptr)
@@ -72,12 +73,14 @@ void CommandTrie::Add(const char* command, unsigned int position)
 	else
 	{
 		// Must be a-z
-		if (command[position] < 'a' || command[position] > 'z')
+		if (command[position] < 'a' || command[position] > 'z') {
 			return;
+		}
 
 		unsigned int index = (unsigned int)(command[position] - 'a');
-		if (m_private->children[index] == nullptr)
+		if (m_private->children[index] == nullptr) {
 			m_private->children[index] = new CommandTrie(this);
+		}
 
 		m_private->children[index]->Add(command, position + 1);
 	}
@@ -101,31 +104,36 @@ unsigned int CommandTrie::NumLeaves()
 
 CommandTrie* CommandTrie::GetLeaf(unsigned int index)
 {
-	if (index >= m_private->leaves.size())
+	if (index >= m_private->leaves.size()) {
 		return nullptr;
+	}
 
 	return m_private->leaves[index];
 }
 
 CommandTrie* CommandTrie::GetNode(const char* prefix, unsigned int position)
 {
-	if (prefix == nullptr || strlen(prefix) == 0)
+	if (prefix == nullptr || strlen(prefix) == 0) {
 		return this;
+	}
 
-	if (position >= strlen(prefix) && m_private->parent != nullptr)
+	if (position >= strlen(prefix) && m_private->parent != nullptr) {
 		return this;
+	}
 
 	unsigned int index = (unsigned int)(prefix[position] - 'a');
-	if (m_private->children[index] == nullptr)
+	if (m_private->children[index] == nullptr) {
 		return nullptr;
+	}
 
 	return m_private->children[index]->GetNode(prefix, position + 1);
 }
 
 void CommandTrie::RegisterLeaf(CommandTrie* leaf)
 {
-	if (leaf == nullptr)
+	if (leaf == nullptr) {
 		return;
+	}
 
 	m_private->leaves.push_back(leaf);
 	if (m_private->parent != nullptr)

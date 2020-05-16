@@ -29,21 +29,21 @@ namespace Emunisce
 
 
 
-struct ScreenResolution
-{
-	int width;
-	int height;
-};
+	struct ScreenResolution
+	{
+		int width;
+		int height;
+	};
 
 
-class IEmulatedDisplay
-{
-public:
+	class IEmulatedDisplay
+	{
+	public:
 
-	virtual ScreenResolution GetScreenResolution() = 0;	///<Returns the native resolution of the screen.  Should be static per machine.
-	virtual ScreenBuffer* GetStableScreenBuffer() = 0;	///<Returns the most recent screen buffer.  Note that the resolution may be different from GetScreenResolution, especially if filters are applied.
-	virtual int GetScreenBufferCount() = 0;	///<Returns the id of the current screen buffer.  Not guaranteed to be unique or sequential, so use != when polling for changes.
-};
+		virtual ScreenResolution GetScreenResolution() = 0;	///<Returns the native resolution of the screen.  Should be static per machine.
+		virtual ScreenBuffer* GetStableScreenBuffer() = 0;	///<Returns the most recent screen buffer.  Note that the resolution may be different from GetScreenResolution, especially if filters are applied.
+		virtual int GetScreenBufferCount() = 0;	///<Returns the id of the current screen buffer.  Not guaranteed to be unique or sequential, so use != when polling for changes.
+	};
 
 }	//namespace Emunisce
 

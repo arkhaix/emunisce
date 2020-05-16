@@ -43,9 +43,9 @@ Display::Display()
 	m_vramOffset = 0x8000;
 	m_oamOffset = 0xfe00;
 
-	for(int y=0;y<144;y++)
+	for (int y = 0; y < 144; y++)
 	{
-		for(int x=0;x<160;x++)
+		for (int x = 0; x < 160; x++)
 		{
 			m_frameBackgroundData.SetPixel(x, y, PIXEL_NOT_CACHED);
 			m_frameWindowData.SetPixel(x, y, PIXEL_NOT_CACHED);
@@ -60,7 +60,7 @@ Display::Display()
 	m_displayPalette[2] = DisplayPixelFromRGBA(0.33f, 0.33f, 0.33f);
 	m_displayPalette[3] = DisplayPixelFromRGBA(0.00f, 0.00f, 0.00f);
 
-	for(int i=0;i<8*4;i++)	///<8 palettes * 4 colors per palette
+	for (int i = 0; i < 8 * 4; i++)	///<8 palettes * 4 colors per palette
 	{
 		m_cgbBackgroundDisplayColor[i] = DisplayPixelFromRGBA(1.f, 1.f, 1.f);
 		m_cgbSpriteDisplayColor[i] = DisplayPixelFromRGBA(1.f, 1.f, 1.f);
@@ -83,8 +83,9 @@ ScreenResolution Display::GetScreenResolution()
 
 ScreenBuffer* Display::GetStableScreenBuffer()
 {
-	if(m_screenBufferCopyId == m_screenBufferCount)
+	if (m_screenBufferCopyId == m_screenBufferCount) {
 		return &m_screenBufferCopy;
+	}
 
 	{
 		std::lock_guard<std::mutex> scopedLock(m_screenBufferLock);
@@ -160,21 +161,26 @@ void Display::Initialize()
 
 void Display::Run(int ticks)
 {
-	if(m_lcdEnabled == false)
+	if (m_lcdEnabled == false) {
 		return;
+	}
 
-	if(m_currentState == DisplayState::VBlank)
+	if (m_currentState == DisplayState::VBlank) {
 		Run_VBlank(ticks);
+	}
 
 	m_stateTicksRemaining -= ticks;
-	if(m_stateTicksRemaining <= 0)
+	if (m_stateTicksRemaining <= 0)
 	{
-		if(m_currentState == DisplayState::VBlank)
+		if (m_currentState == DisplayState::VBlank) {
 			Begin_SpritesLocked();
-		else if(m_currentState == DisplayState::SpritesLocked)
+		}
+		else if (m_currentState == DisplayState::SpritesLocked) {
 			Begin_VideoRamLocked();
-		else if(m_currentState == DisplayState::VideoRamLocked)
+		}
+		else if (m_currentState == DisplayState::VideoRamLocked) {
 			Begin_HBlank();
+		}
 		else //m_currentState == DisplayState::HBlank
 		{
 			m_memory->EndHBlank();
@@ -196,8 +202,9 @@ void Display::Serialize(Archive& archive)
 	SerializeItem(archive, m_nextPixelToRenderX);
 	SerializeItem(archive, m_ticksSpentThisScanline);
 
-	for(bool& priority : m_spriteHasPriority)
+	for (bool& priority : m_spriteHasPriority) {
 		SerializeItem(archive, priority);
+	}
 
 
 	// Screens  (these use a ton of space, but the first frame is inaccurate without them)
@@ -248,7 +255,7 @@ void Display::Serialize(Archive& archive)
 	SerializeItem(archive, m_cgbSpritePaletteIndex);
 	SerializeItem(archive, m_cgbSpritePaletteData);
 
-	for(int i=0;i<8*4;i++)	///<8 palettes, 4 colors per palette
+	for (int i = 0; i < 8 * 4; i++)	///<8 palettes, 4 colors per palette
 	{
 		SerializeItem(archive, m_cgbBackgroundPaletteColor[i]);
 		SerializeItem(archive, m_cgbBackgroundDisplayColor[i]);
@@ -266,8 +273,9 @@ void Display::WriteVram(int bank, u16 address, u8 value)
 	vram[address - 0x8000] = value;
 
 	//Update tile data
-	if(address >= 0x8000 && address < 0x9800)
+	if (address >= 0x8000 && address < 0x9800) {
 		UpdateTileData(bank, address, value);
+	}
 }
 
 void Display::WriteOam(u16 address, u8 value)
@@ -279,9 +287,9 @@ void Display::SetLcdControl(u8 value)
 {
 	m_lcdControl = value;
 
-	if(m_lcdControl & 0x80)
+	if (m_lcdControl & 0x80)
 	{
-		if(m_lcdEnabled == false)
+		if (m_lcdEnabled == false)
 		{
 			//When re-enabling the lcd, it needs to pick up a couple cycles into the sprites-locked phase.
 			m_stateTicksRemaining = -4;
@@ -295,9 +303,9 @@ void Display::SetLcdControl(u8 value)
 	else
 	{
 		//Clear caches
-		for(int y=0;y<144;y++)
+		for (int y = 0; y < 144; y++)
 		{
-			for(int x=0;x<160;x++)
+			for (int x = 0; x < 160; x++)
 			{
 				m_frameBackgroundData.SetPixel(x, y, PIXEL_NOT_CACHED);
 				m_frameWindowData.SetPixel(x, y, PIXEL_NOT_CACHED);
@@ -321,8 +329,9 @@ void Display::SetLcdControl(u8 value)
 void Display::SetLcdStatus(u8 value)
 {
 	//Writing to bit 3 clears it in this register
-	if(value & STAT_Coincidence)
+	if (value & STAT_Coincidence) {
 		m_lcdStatus &= ~(STAT_Coincidence);
+	}
 
 	m_lcdStatus &= ~(0x78);
 	m_lcdStatus |= (value & 0x78);
@@ -332,9 +341,9 @@ void Display::SetLcdStatus(u8 value)
 	CheckCoincidence();	///<Enabling or disabling this seems to have no impact?  Probably because writing STAT_Coincidence can only clear it?
 
 	//"STAT bug" causes an interrupt to fire if this register is written to during h-blank or v-blank
-	if(m_lcdEnabled == true)
+	if (m_lcdEnabled == true)
 	{
-		if(m_currentState == DisplayState::HBlank || m_currentState == DisplayState::VBlank)
+		if (m_currentState == DisplayState::HBlank || m_currentState == DisplayState::VBlank)
 		{
 			u8 interrupts = m_memory->Read8(REG_IF);
 			interrupts |= IF_LCDC;
@@ -367,10 +376,12 @@ void Display::SetCgbBackgroundPaletteTarget(u8 value)
 	index /= 2;
 	u16 paletteData = m_cgbBackgroundPaletteColor[index];
 
-	if(value & 0x01)
+	if (value & 0x01) {
 		m_cgbBackgroundPaletteData = (u8)(paletteData >> 8);
-	else
+	}
+	else {
 		m_cgbBackgroundPaletteData = (u8)paletteData;
+	}
 }
 
 void Display::SetCgbBackgroundPaletteData(u8 value)
@@ -387,7 +398,7 @@ void Display::SetCgbBackgroundPaletteData(u8 value)
 
 	u16 paletteData = m_cgbBackgroundPaletteColor[index];
 
-	if(highByte)
+	if (highByte)
 	{
 		paletteData &= 0x00ff;
 		paletteData |= (value << 8);
@@ -406,7 +417,7 @@ void Display::SetCgbBackgroundPaletteData(u8 value)
 	u8 b = (u8)((float)((paletteData & (0x1f << 10)) >> 10) * cgbToRgb);	///<0b0111110000000000
 	m_cgbBackgroundDisplayColor[index] = DisplayPixelFromRGBA(r, g, b);
 
-	if(autoIncrement)
+	if (autoIncrement)
 	{
 		m_cgbBackgroundPaletteIndex++;
 		m_cgbBackgroundPaletteIndex &= ~(0x40);	///<clears bit 6 (which is unusable) so we don't overflow
@@ -424,10 +435,12 @@ void Display::SetCgbSpritePaletteTarget(u8 value)
 	index /= 2;
 	u16 paletteData = m_cgbSpritePaletteColor[index];
 
-	if(value & 0x01)
+	if (value & 0x01) {
 		m_cgbSpritePaletteData = (u8)(paletteData >> 8);
-	else
+	}
+	else {
 		m_cgbSpritePaletteData = (u8)paletteData;
+	}
 }
 
 void Display::SetCgbSpritePaletteData(u8 value)
@@ -444,7 +457,7 @@ void Display::SetCgbSpritePaletteData(u8 value)
 
 	u16 paletteData = m_cgbSpritePaletteColor[index];
 
-	if(highByte)
+	if (highByte)
 	{
 		paletteData &= 0x00ff;
 		paletteData |= (value << 8);
@@ -463,7 +476,7 @@ void Display::SetCgbSpritePaletteData(u8 value)
 	u8 b = (u8)((float)((paletteData & (0x1f << 10)) >> 10) * cgbToRgb);	///<0b0111110000000000
 	m_cgbSpriteDisplayColor[index] = DisplayPixelFromRGBA(r, g, b);
 
-	if(autoIncrement)
+	if (autoIncrement)
 	{
 		m_cgbSpritePaletteIndex++;
 		m_cgbSpritePaletteIndex &= ~(0x40);	///<clears bit 6 (which is unusable) so we don't overflow
@@ -490,7 +503,7 @@ void Display::Begin_HBlank()
 	m_memory->BeginHBlank();
 
 	//LCDC interrupt
-	if(m_lcdStatus & STAT_Interrupt_HBlank)
+	if (m_lcdStatus & STAT_Interrupt_HBlank)
 	{
 		u8 interrupts = m_memory->Read8(REG_IF);
 		interrupts |= IF_LCDC;
@@ -507,8 +520,9 @@ void Display::Begin_VBlank()
 	CheckCoincidence();	///<Disabling this has no impact?  IF_VBLANK is higher priority... but some games might still rely on LCDC LYC=LY only?
 
 	m_vblankScanlineTicksRemaining = m_stateTicksRemaining % 456;
-	if(m_vblankScanlineTicksRemaining == 0)
+	if (m_vblankScanlineTicksRemaining == 0) {
 		m_vblankScanlineTicksRemaining += 456;
+	}
 
 	//Set mode 01
 	m_lcdStatus &= ~(STAT_Mode);
@@ -524,7 +538,7 @@ void Display::Begin_VBlank()
 	m_memory->Write8(REG_IF, interrupts);
 
 	//LCDC interrupt
-	if(m_lcdStatus & STAT_Interrupt_VBlank)
+	if (m_lcdStatus & STAT_Interrupt_VBlank)
 	{
 		interrupts |= IF_LCDC;
 		m_memory->Write8(REG_IF, interrupts);
@@ -533,7 +547,7 @@ void Display::Begin_VBlank()
 
 void Display::Begin_SpritesLocked()
 {
-	if(m_currentScanline == 143)
+	if (m_currentScanline == 143)
 	{
 		Begin_VBlank();
 		return;
@@ -543,8 +557,9 @@ void Display::Begin_SpritesLocked()
 	m_stateTicksRemaining += 80;
 
 	m_currentScanline++;
-	if(m_currentScanline >= 144)	///<After a VBlank, this will be 153.  If we've reached this point, then we've started a new frame.
+	if (m_currentScanline >= 144) {	///<After a VBlank, this will be 153.  If we've reached this point, then we've started a new frame.
 		m_currentScanline = 0;
+	}
 
 	CheckCoincidence();	///<This one's important.  Disabling it breaks lots of stuff.
 
@@ -557,7 +572,7 @@ void Display::Begin_SpritesLocked()
 	m_memory->SetOamLock(true);
 
 	//LCDC interrupt
-	if(m_lcdStatus & STAT_Interrupt_SpriteLock)
+	if (m_lcdStatus & STAT_Interrupt_SpriteLock)
 	{
 		u8 interrupts = m_memory->Read8(REG_IF);
 		interrupts |= IF_LCDC;
@@ -585,7 +600,7 @@ void Display::Run_VBlank(int ticks)
 {
 	//Update LY
 	m_vblankScanlineTicksRemaining -= ticks;
-	if(m_vblankScanlineTicksRemaining <= 0)
+	if (m_vblankScanlineTicksRemaining <= 0)
 	{
 		m_currentScanline++;
 		m_vblankScanlineTicksRemaining += 456;
@@ -594,7 +609,7 @@ void Display::Run_VBlank(int ticks)
 	}
 
 	//End of VBlank
-	if(m_stateTicksRemaining <= ticks)
+	if (m_stateTicksRemaining <= ticks)
 	{
 		//Swap buffers
 		{
@@ -607,9 +622,9 @@ void Display::Run_VBlank(int ticks)
 		}
 
 		//Clear caches
-		for(int y=0;y<144;y++)
+		for (int y = 0; y < 144; y++)
 		{
-			for(int x=0;x<160;x++)
+			for (int x = 0; x < 160; x++)
 			{
 				m_frameBackgroundData.SetPixel(x, y, PIXEL_NOT_CACHED);
 				m_frameWindowData.SetPixel(x, y, PIXEL_NOT_CACHED);
@@ -622,12 +637,13 @@ void Display::Run_VBlank(int ticks)
 
 void Display::RenderBackgroundPixel(int screenX, int screenY)
 {
-	if((m_lcdControl & LCDC_Background) == 0 && m_machineType != EmulatedMachine::GameboyColor)
+	if ((m_lcdControl & LCDC_Background) == 0 && m_machineType != EmulatedMachine::GameboyColor) {
 		return;
+	}
 
 	//Cached?
 	DisplayPixel cachedValue = m_frameBackgroundData.GetPixel(screenX, screenY);
-	if(cachedValue != PIXEL_NOT_CACHED)
+	if (cachedValue != PIXEL_NOT_CACHED)
 	{
 		m_activeScreenBuffer->SetPixel(screenX, screenY, cachedValue);
 		return;
@@ -635,8 +651,9 @@ void Display::RenderBackgroundPixel(int screenX, int screenY)
 
 	//Which tile map?
 	u16 bgTileMapAddress = 0x9800;
-	if(m_lcdControl & LCDC_BackgroundTileMap)
+	if (m_lcdControl & LCDC_BackgroundTileMap) {
 		bgTileMapAddress = 0x9c00;
+	}
 
 	//Convert screen pixel coordinates to background pixel coordinates
 	u8 bgPixelX = (u8)(screenX + m_scrollX);
@@ -654,7 +671,7 @@ void Display::RenderBackgroundPixel(int screenX, int screenY)
 	//Get the tile attributes (cgb only)
 	u8* cgbVram = nullptr;
 	u8 bgTileAttributes = 0;
-	if(m_machineType == EmulatedMachine::GameboyColor)
+	if (m_machineType == EmulatedMachine::GameboyColor)
 	{
 		cgbVram = m_memory->GetVram(1);
 		bgTileAttributes = cgbVram[bgTileMapAddress + bgTileIndex - m_vramOffset];
@@ -663,7 +680,7 @@ void Display::RenderBackgroundPixel(int screenX, int screenY)
 	//Which tile data?
 	s8 bytesPerTile = 16;
 	u16 bgTileAddress = (u16)0x8000 + (bgTileValue * bytesPerTile);
-	if( !(m_lcdControl & LCDC_TileData) )
+	if (!(m_lcdControl & LCDC_TileData))
 	{
 		s8 signedBgTileValue = (s8)bgTileValue;
 		bgTileAddress = (u16)0x9000 + (signedBgTileValue * bytesPerTile);
@@ -681,29 +698,32 @@ void Display::RenderBackgroundPixel(int screenX, int screenY)
 
 	//Write all the tile pixels on this line to the cache
 	int cacheScreenX = screenX;
-	while(tilePixelX <= 7 && cacheScreenX < 160)
+	while (tilePixelX <= 7 && cacheScreenX < 160)
 	{
 		int bank = 0;
 		int finalPixelX = tilePixelX;
 		int finalPixelY = tilePixelY;
 
-		if(m_machineType == EmulatedMachine::GameboyColor)
+		if (m_machineType == EmulatedMachine::GameboyColor)
 		{
-			if(bgTileAttributes & 0x08)
+			if (bgTileAttributes & 0x08) {
 				bank = 1;
+			}
 
-			if(bgTileAttributes & 0x20)
+			if (bgTileAttributes & 0x20) {
 				finalPixelX = 7 - finalPixelX;
+			}
 
-			if(bgTileAttributes & 0x40)
+			if (bgTileAttributes & 0x40) {
 				finalPixelY = 7 - finalPixelY;
+			}
 		}
 
-		u8 bgPixelValue = m_tileData[bank][ cacheTileAddress + (finalPixelY * 8) + finalPixelX ];
+		u8 bgPixelValue = m_tileData[bank][cacheTileAddress + (finalPixelY * 8) + finalPixelX];
 		DisplayPixel finalValue = m_displayPalette[0];	///<Re-assigned after a palette lookup
 
 		//Ok...so we have our pixel.  Now we still have to look it up in the palette.
-		if(m_machineType == EmulatedMachine::GameboyColor)
+		if (m_machineType == EmulatedMachine::GameboyColor)
 		{
 			//CGB uses one of 8 background color palette registers
 			int paletteIndex = bgTileAttributes & 0x07;
@@ -714,7 +734,7 @@ void Display::RenderBackgroundPixel(int screenX, int screenY)
 			//DMG uses the background palette register
 			int bgPixelPaletteShift = bgPixelValue * 2;	///<2 bits per entry
 			u8 bgPixelPaletteValue = (m_backgroundPalette & (0x03 << bgPixelPaletteShift)) >> bgPixelPaletteShift;
-			finalValue = m_displayPalette[ bgPixelPaletteValue ];
+			finalValue = m_displayPalette[bgPixelPaletteValue];
 		}
 
 		//Done
@@ -726,24 +746,27 @@ void Display::RenderBackgroundPixel(int screenX, int screenY)
 
 	//Write this pixel out of the cache
 	cachedValue = m_frameBackgroundData.GetPixel(screenX, screenY);
-	if(cachedValue != PIXEL_NOT_CACHED)
+	if (cachedValue != PIXEL_NOT_CACHED) {
 		m_activeScreenBuffer->SetPixel(screenX, screenY, cachedValue);
+	}
 }
 
 void Display::RenderSpritePixel(int screenX, int screenY)
 {
-	if((m_lcdControl & LCDC_Sprites) == 0)
+	if ((m_lcdControl & LCDC_Sprites) == 0) {
 		return;
+	}
 
 	//Check priority
-	if(m_machineType != EmulatedMachine::GameboyColor)
+	if (m_machineType != EmulatedMachine::GameboyColor)
 	{
-		if(m_spriteHasPriority[screenX] == false && m_activeScreenBuffer->GetPixel(screenX, screenY) != m_displayPalette[0])
+		if (m_spriteHasPriority[screenX] == false && m_activeScreenBuffer->GetPixel(screenX, screenY) != m_displayPalette[0]) {
 			return;
+		}
 	}
 	else /*GBC*/
 	{
-		if(m_lcdControl & LCDC_Background)	///<LCDC_Background in CGB mode is a master priority flag.  If 0, then sprites have priority.
+		if (m_lcdControl & LCDC_Background)	///<LCDC_Background in CGB mode is a master priority flag.  If 0, then sprites have priority.
 		{
 			//todo: background priority flag, background data != 00 (palettes)
 		}
@@ -751,22 +774,25 @@ void Display::RenderSpritePixel(int screenX, int screenY)
 
 	//RenderSprites fills m_frameSpriteData.  If there's no value there at this pixel, then there's no sprite at this pixel.
 	DisplayPixel cachedValue = m_frameSpriteData.GetPixel(screenX, screenY);
-	if(cachedValue != PIXEL_NOT_CACHED && cachedValue != PIXEL_TRANSPARENT)
+	if (cachedValue != PIXEL_NOT_CACHED && cachedValue != PIXEL_TRANSPARENT) {
 		m_activeScreenBuffer->SetPixel(screenX, screenY, cachedValue);
+	}
 }
 
 void Display::RenderWindowPixel(int screenX, int screenY)
 {
-	if((m_lcdControl & LCDC_Window) == 0)
+	if ((m_lcdControl & LCDC_Window) == 0) {
 		return;
+	}
 
 	//Visible?
-	if(screenX + 7 < m_windowX || screenY < m_windowY)
+	if (screenX + 7 < m_windowX || screenY < m_windowY) {
 		return;
+	}
 
 	//Cached?
 	DisplayPixel cachedValue = m_frameWindowData.GetPixel(screenX, screenY);
-	if(cachedValue != PIXEL_NOT_CACHED)
+	if (cachedValue != PIXEL_NOT_CACHED)
 	{
 		m_activeScreenBuffer->SetPixel(screenX, screenY, cachedValue);
 		return;
@@ -774,8 +800,9 @@ void Display::RenderWindowPixel(int screenX, int screenY)
 
 	//Which tile map?
 	u16 tileMapAddress = 0x9800;
-	if(m_lcdControl & LCDC_WindowTileMap)
+	if (m_lcdControl & LCDC_WindowTileMap) {
 		tileMapAddress = 0x9c00;
+	}
 
 	//Convert screen pixel coordinates to window pixel coordinates
 	u8 windowPixelX = screenX - (m_windowX - 7);
@@ -793,7 +820,7 @@ void Display::RenderWindowPixel(int screenX, int screenY)
 	//Get the tile attributes (cgb only)
 	u8* cgbVram = nullptr;
 	u8 tileAttributes = 0;
-	if(m_machineType == EmulatedMachine::GameboyColor)
+	if (m_machineType == EmulatedMachine::GameboyColor)
 	{
 		cgbVram = m_memory->GetVram(1);
 		tileAttributes = cgbVram[tileMapAddress + tilePositionIndex - m_vramOffset];
@@ -802,7 +829,7 @@ void Display::RenderWindowPixel(int screenX, int screenY)
 	//Which tile data?
 	s8 bytesPerTile = 16;
 	u16 tileAddress = (u16)0x8000 + (tileValue * bytesPerTile);
-	if( !(m_lcdControl & LCDC_TileData) )
+	if (!(m_lcdControl & LCDC_TileData))
 	{
 		s8 signedTileValue = (s8)tileValue;
 		tileAddress = (u16)0x9000 + (signedTileValue * bytesPerTile);
@@ -820,29 +847,32 @@ void Display::RenderWindowPixel(int screenX, int screenY)
 
 	//Write all the tile pixels on this line to the cache
 	int cacheScreenX = screenX;
-	while(tilePixelX <= 7)
+	while (tilePixelX <= 7)
 	{
 		int bank = 0;
 		int finalPixelX = tilePixelX;
 		int finalPixelY = tilePixelY;
 
-		if(m_machineType == EmulatedMachine::GameboyColor)
+		if (m_machineType == EmulatedMachine::GameboyColor)
 		{
-			if(tileAttributes & 0x08)
+			if (tileAttributes & 0x08) {
 				bank = 1;
+			}
 
-			if(tileAttributes & 0x20)
+			if (tileAttributes & 0x20) {
 				finalPixelX = 7 - finalPixelX;
+			}
 
-			if(tileAttributes & 0x40)
+			if (tileAttributes & 0x40) {
 				finalPixelY = 7 - finalPixelY;
+			}
 		}
 
-		u8 pixelValue = m_tileData[bank][ cacheTileAddress + (finalPixelY * 8) + finalPixelX ];
+		u8 pixelValue = m_tileData[bank][cacheTileAddress + (finalPixelY * 8) + finalPixelX];
 		DisplayPixel finalValue = m_displayPalette[0];	///<value is overwritten after the palette lookup
 
 		//Ok...so we have our pixel.  Now we still have to look it up in the palette.
-		if(m_machineType == EmulatedMachine::GameboyColor)
+		if (m_machineType == EmulatedMachine::GameboyColor)
 		{
 			//CGB uses one of 8 background color palette registers
 			int paletteIndex = tileAttributes & 0x07;
@@ -853,7 +883,7 @@ void Display::RenderWindowPixel(int screenX, int screenY)
 			//DMG uses the background palette register
 			int PixelPaletteShift = pixelValue * 2;	///<2 bits per entry
 			u8 PixelPaletteValue = (m_backgroundPalette & (0x03 << PixelPaletteShift)) >> PixelPaletteShift;
-			finalValue = m_displayPalette[ PixelPaletteValue ];
+			finalValue = m_displayPalette[PixelPaletteValue];
 		}
 
 		//Done
@@ -865,57 +895,64 @@ void Display::RenderWindowPixel(int screenX, int screenY)
 
 	//Write this pixel out of the cache
 	cachedValue = m_frameWindowData.GetPixel(screenX, screenY);
-	if(cachedValue != PIXEL_NOT_CACHED)
+	if (cachedValue != PIXEL_NOT_CACHED) {
 		m_activeScreenBuffer->SetPixel(screenX, screenY, cachedValue);
+	}
 }
 
 void Display::RenderSprites(int screenY)
 {
 	//Default to no priority
-	for(bool& priority : m_spriteHasPriority)
+	for (bool& priority : m_spriteHasPriority) {
 		priority = false;
+	}
 
 	//Sprites can be 8x8 or 8x16
 	int spriteWidth = 8;
 	int spriteHeight = 8;
-	if(m_lcdControl & LCDC_SpriteSize)
+	if (m_lcdControl & LCDC_SpriteSize) {
 		spriteHeight = 16;
+	}
 
 	int spriteTileSize = 16;
 
 	//Iterate over all sprite entries in the table
-	for(int i=0;i<40;i++)
+	for (int i = 0; i < 40; i++)
 	{
-		u16 spriteDataAddress = 0xfe00 + (i*4);
+		u16 spriteDataAddress = 0xfe00 + (i * 4);
 
 		u8* oam = m_memory->GetOam();
 		int spriteY = oam[spriteDataAddress - m_oamOffset];
-		int spriteX = oam[spriteDataAddress+1 - m_oamOffset];
+		int spriteX = oam[spriteDataAddress + 1 - m_oamOffset];
 
 		//Sprite coordinates are offset, so sprite[8,16] = screen[0,0].
 		spriteX -= 8;
 		spriteY -= 16;
 
 		//Is the sprite relevant to this line?
-		if(spriteY > screenY || spriteY+spriteHeight <= screenY)
+		if (spriteY > screenY || spriteY + spriteHeight <= screenY) {
 			continue;
+		}
 
 		//Is the sprite visible?
-		if(spriteX+spriteWidth < 0 || spriteX >= 160)
+		if (spriteX + spriteWidth < 0 || spriteX >= 160) {
 			continue;
+		}
 
 		//It's relevant, so get the rest of the data
-		int spriteTileValue = oam[spriteDataAddress+2 - m_oamOffset];
-		int spriteFlags = oam[spriteDataAddress+3 - m_oamOffset];
+		int spriteTileValue = oam[spriteDataAddress + 2 - m_oamOffset];
+		int spriteFlags = oam[spriteDataAddress + 3 - m_oamOffset];
 
 		//In 8x16 mode, the least significant bit of the tile value is ignored
-		if(m_lcdControl & LCDC_SpriteSize)
+		if (m_lcdControl & LCDC_SpriteSize) {
 			spriteTileValue &= ~(0x01);
+		}
 
 		//Figure out which line we need
 		int targetTileLine = screenY - spriteY;
-		if(spriteFlags & (1<<6))	///<Flip Y if set
-			targetTileLine = (spriteHeight-1) - targetTileLine;
+		if (spriteFlags & (1 << 6)) {	///<Flip Y if set
+			targetTileLine = (spriteHeight - 1) - targetTileLine;
+		}
 
 		//Figure out where to get the bytes that correspond to this line of the tile
 		u16 tileDataAddress = 0x8000 + (spriteTileValue * spriteTileSize);
@@ -923,13 +960,14 @@ void Display::RenderSprites(int screenY)
 
 		//Figure out which bank to read the tile data from (cgb only)
 		int bank = 0;
-		if(m_machineType == EmulatedMachine::GameboyColor && (spriteFlags & 0x08))
+		if (m_machineType == EmulatedMachine::GameboyColor && (spriteFlags & 0x08)) {
 			bank = 1;
+		}
 
 		//Read the two bytes for this line of the tile
 		u8* vram = m_memory->GetVram(bank);
 		u8 tileLineLow = vram[tileLineAddress - m_vramOffset];
-		u8 tileLineHigh = vram[tileLineAddress+1 - m_vramOffset];
+		u8 tileLineHigh = vram[tileLineAddress + 1 - m_vramOffset];
 
 		//Cache the rest of the sprite values on this line
 		int tileX = 0;
@@ -937,11 +975,11 @@ void Display::RenderSprites(int screenY)
 
 		int cacheScreenY = screenY; ///<todo: This is leftover from when full tiles were cached (as opposed to only the current line).  It's safe to remove this.
 
-		while(tileX <= 7)
+		while (tileX <= 7)
 		{
 			//Have we already drawn a sprite at this pixel?
 			DisplayPixel cachedValue = m_frameSpriteData.GetPixel(cacheScreenX, cacheScreenY);
-			if(cachedValue != PIXEL_NOT_CACHED && cachedValue != PIXEL_TRANSPARENT)
+			if (cachedValue != PIXEL_NOT_CACHED && cachedValue != PIXEL_TRANSPARENT)
 			{
 				tileX++;
 				cacheScreenX++;
@@ -950,19 +988,21 @@ void Display::RenderSprites(int screenY)
 
 			//Determine the bit offset for the X value
 			int bitOffset = tileX;
-			if(spriteFlags & (1<<5))	///<Flip X if set
+			if (spriteFlags & (1 << 5)) {	///<Flip X if set
 				bitOffset = 7 - bitOffset;
+			}
 
 			//At bit7, we get the value for x=0.  We need to reverse it to get a shift value.
 			bitOffset = 7 - bitOffset;
 
 			//Get the value for the pixel
-			u8 pixelValue = (tileLineLow & (1<<bitOffset)) ? 1 : 0;
-			if(tileLineHigh & (1<<bitOffset))
+			u8 pixelValue = (tileLineLow & (1 << bitOffset)) ? 1 : 0;
+			if (tileLineHigh & (1 << bitOffset)) {
 				pixelValue |= 0x02;
+			}
 
 			//Transparent?
-			if(pixelValue == 0)
+			if (pixelValue == 0)
 			{
 				m_frameSpriteData.SetPixel(cacheScreenX, cacheScreenY, PIXEL_TRANSPARENT);
 			}
@@ -972,7 +1012,7 @@ void Display::RenderSprites(int screenY)
 				DisplayPixel finalValue = m_displayPalette[0];	///<value is overwritten after the palette lookup
 
 				//Ok...so we have our pixel.  Now we still have to look it up in the palette.
-				if(m_machineType == EmulatedMachine::GameboyColor)
+				if (m_machineType == EmulatedMachine::GameboyColor)
 				{
 					//CGB uses one of 8 background color palette registers
 					int paletteIndex = spriteFlags & 0x07;
@@ -983,20 +1023,23 @@ void Display::RenderSprites(int screenY)
 					//DMG uses one of 2 sprite palette registers
 					u8 pixelPaletteShift = pixelValue * 2;	///<2 bits per palette entry
 					u8 pixelPaletteValue = (m_spritePalette0 & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
-					if(spriteFlags & (1<<4))	///<Use sprite palette 1 if set
+					if (spriteFlags & (1 << 4)) {	///<Use sprite palette 1 if set
 						pixelPaletteValue = (m_spritePalette1 & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
+					}
 
-					finalValue = m_displayPalette[ pixelPaletteValue ];
+					finalValue = m_displayPalette[pixelPaletteValue];
 				}
 
 				//Write the pixel
 				m_frameSpriteData.SetPixel(cacheScreenX, cacheScreenY, finalValue);
 
 				//Save the priority
-				if(spriteFlags & (1<<7))	///<Lower priority if set, higher priority otherwise
+				if (spriteFlags & (1 << 7)) {	///<Lower priority if set, higher priority otherwise
 					m_spriteHasPriority[cacheScreenX] = false;
-				else
+				}
+				else {
 					m_spriteHasPriority[cacheScreenX] = true;
+				}
 			}
 
 			cacheScreenX++;
@@ -1008,9 +1051,9 @@ void Display::RenderSprites(int screenY)
 void Display::Render(int ticks)
 {
 	//Finish rendering the line if necessary
-	if(m_currentState == DisplayState::HBlank && m_ticksSpentThisScanline != 0)
+	if (m_currentState == DisplayState::HBlank && m_ticksSpentThisScanline != 0)
 	{
-		for(; m_nextPixelToRenderX < 160; m_nextPixelToRenderX++)
+		for (; m_nextPixelToRenderX < 160; m_nextPixelToRenderX++)
 		{
 			RenderBackgroundPixel(m_nextPixelToRenderX, m_currentScanline);
 			RenderWindowPixel(m_nextPixelToRenderX, m_currentScanline);
@@ -1022,25 +1065,29 @@ void Display::Render(int ticks)
 	}
 
 	//Rendering only occurs during mode 11
-	if(m_currentState != DisplayState::VideoRamLocked)
+	if (m_currentState != DisplayState::VideoRamLocked) {
 		return;
+	}
 
-	if(m_stateTicksRemaining > 168)
+	if (m_stateTicksRemaining > 168) {
 		return;
+	}
 
 	//Figure out how many pixels we should have rendered by now
 	static const float TicksPerPixel = 1.f;	///< Render during 160 of the mode 11 ticks (172).
 	m_ticksSpentThisScanline += ticks;
-	int numPixelsRendered = (int)( (float)m_ticksSpentThisScanline / TicksPerPixel );
-	if(numPixelsRendered > 160)
+	int numPixelsRendered = (int)((float)m_ticksSpentThisScanline / TicksPerPixel);
+	if (numPixelsRendered > 160) {
 		numPixelsRendered = 160;
+	}
 
 	//Cache the sprites if they haven't been cached yet
-	if(m_nextPixelToRenderX == 0)
+	if (m_nextPixelToRenderX == 0) {
 		RenderSprites(m_currentScanline);
+	}
 
 	//Render them
-	for(; m_nextPixelToRenderX < numPixelsRendered; m_nextPixelToRenderX++)
+	for (; m_nextPixelToRenderX < numPixelsRendered; m_nextPixelToRenderX++)
 	{
 		RenderBackgroundPixel(m_nextPixelToRenderX, m_currentScanline);
 		RenderWindowPixel(m_nextPixelToRenderX, m_currentScanline);
@@ -1050,16 +1097,17 @@ void Display::Render(int ticks)
 
 void Display::CheckCoincidence()
 {
-	if(m_lcdEnabled == false)
+	if (m_lcdEnabled == false) {
 		return;
+	}
 
-	if(m_currentScanline == m_scanlineCompare)
+	if (m_currentScanline == m_scanlineCompare)
 	{
 		//LYC=LY flag
 		m_lcdStatus |= STAT_Coincidence;
 
 		//LCDC interrupt
-		if(m_lcdStatus & STAT_Interrupt_Coincidence)
+		if (m_lcdStatus & STAT_Interrupt_Coincidence)
 		{
 			u8 interrupts = m_memory->Read8(REG_IF);
 			interrupts |= IF_LCDC;
@@ -1075,19 +1123,21 @@ void Display::CheckCoincidence()
 
 void Display::UpdateTileData(int bank, u16 address, u8 data)
 {
-	if(bank < 0 || bank > 1)
+	if (bank < 0 || bank > 1) {
 		return;
+	}
 
 	u8* vram = m_memory->GetVram(bank);
 	int baseVramAddress = address - 0x8000;
 
 	//Get both bytes corresponding to the line
 	int lineAddress = baseVramAddress;
-	if(baseVramAddress & 1)	///<Bytes 0 and 1 of the line will always start on an even boundary.  If baseVramAddress is odd, then we're modifying the high byte and the low byte is baseVramAddress-1.
+	if (baseVramAddress & 1) {	///<Bytes 0 and 1 of the line will always start on an even boundary.  If baseVramAddress is odd, then we're modifying the high byte and the low byte is baseVramAddress-1.
 		lineAddress--;
+	}
 
 	u8 tileDataLow = vram[lineAddress];
-	u8 tileDataHigh = vram[lineAddress+1];
+	u8 tileDataHigh = vram[lineAddress + 1];
 
 	//In vram, each tile is 8 lines tall with 2 bytes per line, so each tile is 16 bytes.
 	int tileIndex = baseVramAddress / 16;
@@ -1098,15 +1148,17 @@ void Display::UpdateTileData(int bank, u16 address, u8 data)
 	int cacheLineAddress = cacheTileAddress + (changedLine * 8);	///<Starting address of the line within the cache
 
 	//Update the cache
-	for(int x=0;x<8;x++)
+	for (int x = 0; x < 8; x++)
 	{
 		u8 pixelValue = 0;
 
-		if(tileDataLow & (1<<(7-x)))
+		if (tileDataLow & (1 << (7 - x))) {
 			pixelValue |= 0x01;
+		}
 
-		if(tileDataHigh & (1<<(7-x)))
+		if (tileDataHigh & (1 << (7 - x))) {
 			pixelValue |= 0x02;
+		}
 
 		m_tileData[bank][cacheLineAddress + x] = pixelValue;
 	}

@@ -30,67 +30,67 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class Gameboy;
-class DutyUnit;
+	class Gameboy;
+	class DutyUnit;
 
 
-class Sound2 : public SoundGenerator
-{
-public:
+	class Sound2 : public SoundGenerator
+	{
+	public:
 
-	Sound2();
-	virtual ~Sound2();
-
-
-	//Sound component
-
-	void Initialize(ChannelController* channelController) override;
-	void SetMachine(Gameboy* machine) override;
-
-	void Serialize(Archive& archive) override;
-
-	void SetSynthesisMethod(SquareSynthesisMethod::Type method);
+		Sound2();
+		virtual ~Sound2();
 
 
-	//Sound generation
+		//Sound component
 
-	void PowerOff() override;
-	void PowerOn() override;
+		void Initialize(ChannelController* channelController) override;
+		void SetMachine(Gameboy* machine) override;
 
-	void Run(int ticks) override;
+		void Serialize(Archive& archive) override;
 
-	void TickEnvelope();
-
-	float GetSample() override;
+		void SetSynthesisMethod(SquareSynthesisMethod::Type method);
 
 
-	//Registers
+		//Sound generation
 
-	void SetNR21(u8 value);
-	void SetNR22(u8 value);
-	void SetNR23(u8 value);
-	void SetNR24(u8 value);
+		void PowerOff() override;
+		void PowerOn() override;
 
+		void Run(int ticks) override;
 
-private:
+		void TickEnvelope();
 
-	void Trigger() override;
-
-
-	//Sound generation
-
-	DutyUnit* m_dutyUnit;
-	int m_frequency;
+		float GetSample() override;
 
 
-	//Registers
+		//Registers
 
-	u8 m_nr20;	///<ff15
-	u8 m_nr21;	///<ff16
-	u8 m_nr22;	///<ff17
-	u8 m_nr23;	///<ff18
-	u8 m_nr24;	///<ff19
-};
+		void SetNR21(u8 value);
+		void SetNR22(u8 value);
+		void SetNR23(u8 value);
+		void SetNR24(u8 value);
+
+
+	private:
+
+		void Trigger() override;
+
+
+		//Sound generation
+
+		DutyUnit* m_dutyUnit;
+		int m_frequency;
+
+
+		//Registers
+
+		u8 m_nr20;	///<ff15
+		u8 m_nr21;	///<ff16
+		u8 m_nr22;	///<ff17
+		u8 m_nr23;	///<ff18
+		u8 m_nr24;	///<ff19
+	};
 
 }	//namespace Emunisce
 

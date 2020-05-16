@@ -26,40 +26,40 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class DutyUnit
-{
-public:
+	class DutyUnit
+	{
+	public:
 
-	DutyUnit();
+		DutyUnit();
 
-	void Serialize(Archive& archive);
+		void Serialize(Archive& archive);
 
-	void Run(int ticks);
-	void Trigger();
+		void Run(int ticks);
+		void Trigger();
 
-	void SetFrequency(int frequency);
-	void WriteDutyRegister(u8 value);
+		void SetFrequency(int frequency);
+		void WriteDutyRegister(u8 value);
 
-	float GetSample();
+		float GetSample();
 
-	void SetSynthesisMethod(SquareSynthesisMethod::Type method);
+		void SetSynthesisMethod(SquareSynthesisMethod::Type method);
 
-private:
+	private:
 
-	int m_timerPeriod;
-	int m_timerValue;
+		int m_timerPeriod;
+		int m_timerValue;
 
-	int m_dutyPosition;
-	int m_dutyMode;
-	int m_dutyTable[4][8];
+		int m_dutyPosition;
+		int m_dutyMode;
+		int m_dutyTable[4][8];
 
-	SquareSynthesisMethod::Type m_synthesisMethod;
+		SquareSynthesisMethod::Type m_synthesisMethod;
 
-	bool m_hasTransitioned;
-	bool m_hitNyquist;
-	int m_ticksSinceLastSample;
-	int m_sumSinceLastSample;
-};
+		bool m_hasTransitioned;
+		bool m_hitNyquist;
+		int m_ticksSinceLastSample;
+		int m_sumSinceLastSample;
+	};
 
 }	//namespace Emunisce
 

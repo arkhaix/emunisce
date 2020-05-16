@@ -24,27 +24,27 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class EmunisceApplication;
-class IEmulatedMachine;
+	class EmunisceApplication;
+	class IEmulatedMachine;
 
-class WaveOutSound
-{
-public:
+	class WaveOutSound
+	{
+	public:
 
-	WaveOutSound();
-	~WaveOutSound();
+		WaveOutSound();
+		~WaveOutSound();
 
-	void Initialize(EmunisceApplication* phoenix);
-	void Shutdown();
+		void Initialize(EmunisceApplication* phoenix);
+		void Shutdown();
 
-	void SetMachine(IEmulatedMachine* machine);
+		void SetMachine(IEmulatedMachine* machine);
 
-	void SetMute(bool mute);
+		void SetMute(bool mute);
 
-private:
+	private:
 
-	class WaveOutSound_Private* m_private;
-};
+		class WaveOutSound_Private* m_private;
+	};
 
 }	//namespace Emunisce
 

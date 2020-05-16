@@ -29,75 +29,75 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class Gameboy;
-class ChannelController;
+	class Gameboy;
+	class ChannelController;
 
 
-class Sound3 : public SoundGenerator
-{
-public:
+	class Sound3 : public SoundGenerator
+	{
+	public:
 
-	Sound3();
-	virtual ~Sound3() = default;
-
-
-	//Sound component
-
-	void Initialize(ChannelController* channelController) override;
-	void SetMachine(Gameboy* machine) override;
-
-	void Serialize(Archive& archive) override;
+		Sound3();
+		virtual ~Sound3() = default;
 
 
-	//Sound generation
+		//Sound component
 
-	void PowerOff() override;
-	void PowerOn() override;
+		void Initialize(ChannelController* channelController) override;
+		void SetMachine(Gameboy* machine) override;
 
-	void Run(int ticks) override;
-	float GetSample() override;
-
-
-	//Registers
-
-	void SetNR30(u8 value);
-	void SetNR31(u8 value);
-	void SetNR32(u8 value);
-	void SetNR33(u8 value);
-	void SetNR34(u8 value);
+		void Serialize(Archive& archive) override;
 
 
-private:
+		//Sound generation
 
-	void Trigger() override;
+		void PowerOff() override;
+		void PowerOn() override;
 
-
-	//Sound generation
-
-	int m_frequency;
-	int m_outputLevelShift;
-
-	int m_waveTimerPeriod;
-	int m_waveTimerValue;
-
-	int m_waveSamplePosition;
-
-	u8 m_waveSampleValue;
+		void Run(int ticks) override;
+		float GetSample() override;
 
 
-	//Memory access
+		//Registers
 
-	int m_sampleReadTimerValue;
+		void SetNR30(u8 value);
+		void SetNR31(u8 value);
+		void SetNR32(u8 value);
+		void SetNR33(u8 value);
+		void SetNR34(u8 value);
 
 
-	//Registers
+	private:
 
-	u8 m_nr30;	///<ff1a
-	u8 m_nr31;	///<ff1b
-	u8 m_nr32;	///<ff1c
-	u8 m_nr33;	///<ff1d
-	u8 m_nr34;	///<ff1e
-};
+		void Trigger() override;
+
+
+		//Sound generation
+
+		int m_frequency;
+		int m_outputLevelShift;
+
+		int m_waveTimerPeriod;
+		int m_waveTimerValue;
+
+		int m_waveSamplePosition;
+
+		u8 m_waveSampleValue;
+
+
+		//Memory access
+
+		int m_sampleReadTimerValue;
+
+
+		//Registers
+
+		u8 m_nr30;	///<ff1a
+		u8 m_nr31;	///<ff1b
+		u8 m_nr32;	///<ff1c
+		u8 m_nr33;	///<ff1d
+		u8 m_nr34;	///<ff1e
+	};
 
 }	//namespace Emunisce
 

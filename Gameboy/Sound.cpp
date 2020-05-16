@@ -46,12 +46,15 @@ Sound::Sound()
 
 	m_hasPower = true;
 
-	for(auto& terminalOutput : m_terminalOutputs)
-		for(int generatorChannel=0;generatorChannel<4;generatorChannel++)
+	for (auto& terminalOutput : m_terminalOutputs) {
+		for (int generatorChannel = 0; generatorChannel < 4; generatorChannel++) {
 			terminalOutput[generatorChannel] = false;
+		}
+	}
 
-	for(int i=0;i<4;i++)
+	for (int i = 0; i < 4; i++) {
 		m_channelController[i] = new ChannelController(m_nr52, i);
+	}
 
 	m_sound1 = new Sound1();
 	m_sound2 = new Sound2();
@@ -71,8 +74,9 @@ Sound::~Sound()
 	delete m_sound3;
 	delete m_sound4;
 
-	for(auto& controller : m_channelController)
+	for (auto& controller : m_channelController) {
 		delete controller;
+	}
 }
 
 void Sound::Initialize()
@@ -130,18 +134,19 @@ void Sound::Run(int ticks)
 	//Update the frame sequencer
 
 	m_frameSequencerTimer -= ticks;
-	while(m_frameSequencerTimer <= 0)
+	while (m_frameSequencerTimer <= 0)
 	{
 		m_frameSequencerTimer += m_frameSequencerPeriod;
 
-		if(m_hasPower)
+		if (m_hasPower)
 		{
 
 			m_frameSequencerPosition++;
-			if(m_frameSequencerPosition > 7)
+			if (m_frameSequencerPosition > 7) {
 				m_frameSequencerPosition = 0;
+			}
 
-			if(m_frameSequencerPosition == 0 || m_frameSequencerPosition == 2 || 
+			if (m_frameSequencerPosition == 0 || m_frameSequencerPosition == 2 ||
 				m_frameSequencerPosition == 4 || m_frameSequencerPosition == 6)
 			{
 				m_sound1->TickLength();
@@ -150,12 +155,12 @@ void Sound::Run(int ticks)
 				m_sound4->TickLength();
 			}
 
-			if(m_frameSequencerPosition == 2 || m_frameSequencerPosition == 6)
+			if (m_frameSequencerPosition == 2 || m_frameSequencerPosition == 6)
 			{
 				m_sound1->TickSweep();
 			}
 
-			if(m_frameSequencerPosition == 7)
+			if (m_frameSequencerPosition == 7)
 			{
 				m_sound1->TickEnvelope();
 				m_sound2->TickEnvelope();
@@ -177,19 +182,20 @@ void Sound::Run(int ticks)
 	//Get a sample
 
 	m_ticksUntilNextSample -= ticks;
-	while(m_ticksUntilNextSample < 0.f+1e-5)
+	while (m_ticksUntilNextSample < 0.f + 1e-5)
 	{
 		m_ticksUntilNextSample += m_ticksPerSample;
 
 
 		//Read the samples from the generators
 
-		float sourceSamples[4] = {0.f, 0.f, 0.f, 0.f};
-		
-		for(int i=0;i<4;i++)
+		float sourceSamples[4] = { 0.f, 0.f, 0.f, 0.f };
+
+		for (int i = 0; i < 4; i++)
 		{
-			if(m_channelController[i]->IsChannelEnabled() == false)
+			if (m_channelController[i]->IsChannelEnabled() == false) {
 				continue;
+			}
 
 			sourceSamples[i] = m_soundGenerator[i]->GetSample();
 		}
@@ -197,14 +203,14 @@ void Sound::Run(int ticks)
 
 		//Mix the samples together
 
-		float outputSamples[2] = {0.f, 0.f};	///<left and right channels
+		float outputSamples[2] = { 0.f, 0.f };	///<left and right channels
 
 		MixSamples(sourceSamples, outputSamples);
 
 
 		//Output the final samples
 
-		for(int outputChannel=0;outputChannel<2;outputChannel++)
+		for (int outputChannel = 0; outputChannel < 2; outputChannel++)
 		{
 			//Expand it to the sample integer range ( [0,255] or [-32768,+32767] )
 			outputSamples[outputChannel] *= (float)MaxSample;
@@ -217,7 +223,7 @@ void Sound::Run(int ticks)
 		//Update the sample index
 
 		m_nextSampleIndex++;
-		if(m_nextSampleIndex >= AudioBuffer::BufferSizeSamples)
+		if (m_nextSampleIndex >= AudioBuffer::BufferSizeSamples)
 		{
 			m_nextSampleIndex = 0;
 
@@ -252,15 +258,18 @@ void Sound::Serialize(Archive& archive)
 	//Sound master
 
 	SerializeItem(archive, m_hasPower);
-	for(auto& terminalOutput : m_terminalOutputs)
-		for(int j=0;j<4;j++)
+	for (auto& terminalOutput : m_terminalOutputs) {
+		for (int j = 0; j < 4; j++) {
 			SerializeItem(archive, terminalOutput[j]);
+		}
+	}
 
 
 	//Sound generators
 
-	for(auto& generator : m_soundGenerator)
+	for (auto& generator : m_soundGenerator) {
 		generator->Serialize(archive);
+	}
 
 
 	//Registers
@@ -298,35 +307,35 @@ void Sound::SetNR10(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
-	m_sound1->SetNR10(value);
+		m_sound1->SetNR10(value);
 }
 
 void Sound::SetNR11(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
-	m_sound1->SetNR11(value);
+		m_sound1->SetNR11(value);
 }
 
 void Sound::SetNR12(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
-	m_sound1->SetNR12(value);
+		m_sound1->SetNR12(value);
 }
 
 void Sound::SetNR13(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
-	m_sound1->SetNR13(value);
+		m_sound1->SetNR13(value);
 }
 
 void Sound::SetNR14(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
-	m_sound1->SetNR14(value);
+		m_sound1->SetNR14(value);
 }
 
 
@@ -334,28 +343,28 @@ void Sound::SetNR21(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
-	m_sound2->SetNR21(value);
+		m_sound2->SetNR21(value);
 }
 
 void Sound::SetNR22(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
-	m_sound2->SetNR22(value);
+		m_sound2->SetNR22(value);
 }
 
 void Sound::SetNR23(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
-	m_sound2->SetNR23(value);
+		m_sound2->SetNR23(value);
 }
 
 void Sound::SetNR24(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
-	m_sound2->SetNR24(value);
+		m_sound2->SetNR24(value);
 }
 
 
@@ -363,35 +372,35 @@ void Sound::SetNR30(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
-	m_sound3->SetNR30(value);
+		m_sound3->SetNR30(value);
 }
 
 void Sound::SetNR31(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
-	m_sound3->SetNR31(value);
+		m_sound3->SetNR31(value);
 }
 
 void Sound::SetNR32(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
-	m_sound3->SetNR32(value);
+		m_sound3->SetNR32(value);
 }
 
 void Sound::SetNR33(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
-	m_sound3->SetNR33(value);
+		m_sound3->SetNR33(value);
 }
 
 void Sound::SetNR34(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
-	m_sound3->SetNR34(value);
+		m_sound3->SetNR34(value);
 }
 
 
@@ -399,28 +408,28 @@ void Sound::SetNR41(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
-	m_sound4->SetNR41(value);
+		m_sound4->SetNR41(value);
 }
 
 void Sound::SetNR42(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
-	m_sound4->SetNR42(value);
+		m_sound4->SetNR42(value);
 }
 
 void Sound::SetNR43(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
-	m_sound4->SetNR43(value);
+		m_sound4->SetNR43(value);
 }
 
 void Sound::SetNR44(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
-	m_sound4->SetNR44(value);
+		m_sound4->SetNR44(value);
 }
 
 
@@ -428,8 +437,9 @@ void Sound::SetNR50(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
-	if(m_hasPower == false)
-		return;
+		if (m_hasPower == false) {
+			return;
+		}
 
 	m_nr50 = value;
 }
@@ -438,20 +448,25 @@ void Sound::SetNR51(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
-	if(m_hasPower == false)
-		return;
+		if (m_hasPower == false) {
+			return;
+		}
 
-	for(int i=0;i<4;i++)
+	for (int i = 0; i < 4; i++)
 	{
-		if(value & (1<<i))
+		if (value & (1 << i)) {
 			m_terminalOutputs[0][i] = true;
-		else
+		}
+		else {
 			m_terminalOutputs[0][i] = false;
+		}
 
-		if(value & (1<<(4+i)))
+		if (value & (1 << (4 + i))) {
 			m_terminalOutputs[1][i] = true;
-		else
+		}
+		else {
 			m_terminalOutputs[1][i] = false;
+		}
 	}
 
 	m_nr51 = value;
@@ -461,53 +476,53 @@ void Sound::SetNR52(u8 value)
 {
 	TRACE_REGISTER_WRITE
 
-	if(value & 0x80)
-	{
-		if(m_hasPower == false)
+		if (value & 0x80)
 		{
-			m_hasPower = true;
+			if (m_hasPower == false)
+			{
+				m_hasPower = true;
 
-			m_sound1->PowerOn();
-			m_sound2->PowerOn();
-			m_sound3->PowerOn();
-			m_sound4->PowerOn();
+				m_sound1->PowerOn();
+				m_sound2->PowerOn();
+				m_sound3->PowerOn();
+				m_sound4->PowerOn();
+			}
 		}
-	}
-	else
-	{
-		if(m_hasPower == true)
+		else
 		{
-			m_sound1->PowerOff();
-			m_sound2->PowerOff();
-			m_sound3->PowerOff();
-			m_sound4->PowerOff();
+			if (m_hasPower == true)
+			{
+				m_sound1->PowerOff();
+				m_sound2->PowerOff();
+				m_sound3->PowerOff();
+				m_sound4->PowerOff();
 
-			m_frameSequencerPosition = 7;
+				m_frameSequencerPosition = 7;
+			}
+
+			SetNR50(0);
+			SetNR51(0);
+			m_nr52 = 0x70;
+
+			m_hasPower = false;
 		}
 
-		SetNR50(0);
-		SetNR51(0);
-		m_nr52 = 0x70;
-
-		m_hasPower = false;
-	}
-	
 	m_nr52 = (value & 0x80) | 0x70 | (m_nr52 & 0x0f);
 }
 
 
-void Sound::MixSamples(float samples[4], float (&outSamples)[2])
+void Sound::MixSamples(float samples[4], float(&outSamples)[2])
 {
 	//Mix the samples
 
-	int numSampleValues[2] = {0, 0};
+	int numSampleValues[2] = { 0, 0 };
 
-	for(int outputChannel=0;outputChannel<2;outputChannel++)
+	for (int outputChannel = 0; outputChannel < 2; outputChannel++)
 	{
 		//Combine the 4 component channels into a final output channel value
-		for(int componentChannel=0;componentChannel<4;componentChannel++)
+		for (int componentChannel = 0; componentChannel < 4; componentChannel++)
 		{
-			if(m_terminalOutputs[outputChannel][componentChannel])
+			if (m_terminalOutputs[outputChannel][componentChannel])
 			{
 				outSamples[outputChannel] += samples[componentChannel];
 				numSampleValues[outputChannel]++;
@@ -515,7 +530,7 @@ void Sound::MixSamples(float samples[4], float (&outSamples)[2])
 		}
 
 		//Play silence if there are no components assigned to a channel
-		if(numSampleValues[outputChannel] == 0)
+		if (numSampleValues[outputChannel] == 0)
 		{
 			outSamples[outputChannel] = 0.f;
 			numSampleValues[outputChannel] = 1;
@@ -525,7 +540,7 @@ void Sound::MixSamples(float samples[4], float (&outSamples)[2])
 		outSamples[outputChannel] /= (float)numSampleValues[outputChannel];
 
 		//In 8-bits per sample mode, the final value needs to be in the [0,1] range instead of [-1,+1]
-		if(BytesPerSample == 1)
+		if (BytesPerSample == 1)
 		{
 			outSamples[outputChannel] /= 2.f;
 			outSamples[outputChannel] += 0.5f;

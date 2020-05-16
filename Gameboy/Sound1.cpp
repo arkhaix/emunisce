@@ -144,42 +144,50 @@ void Sound1::TickEnvelope()
 
 void Sound1::TickSweep()
 {
-	if(m_sweepEnabled == false)
+	if (m_sweepEnabled == false) {
 		return;
+	}
 
 	m_sweepTimerValue--;
-	if(m_sweepTimerValue > 0)
+	if (m_sweepTimerValue > 0) {
 		return;
+	}
 
-	if(m_sweepTimerPeriod == 0)
+	if (m_sweepTimerPeriod == 0) {
 		m_sweepTimerValue += 8;
-	else
+	}
+	else {
 		m_sweepTimerValue += m_sweepTimerPeriod;
+	}
 
-	if(m_sweepTimerPeriod == 0)
+	if (m_sweepTimerPeriod == 0) {
 		return;
+	}
 
 	int newFrequency = CalculateFrequency();
-	if(newFrequency > 2047)
+	if (newFrequency > 2047)
 	{
 		m_channelController->DisableChannel();
 		return;
 	}
 
-	if(m_sweepIncreasing == false)
+	if (m_sweepIncreasing == false) {
 		m_hasPerformedDecreasingCalculation = true;
+	}
 
-	if(m_sweepShift == 0)
+	if (m_sweepShift == 0) {
 		return;
+	}
 
-	if(newFrequency < 0)
+	if (newFrequency < 0) {
 		newFrequency = 0;
+	}
 
 	m_frequency = newFrequency;
 	m_frequencyShadow = newFrequency;
 
 	newFrequency = CalculateFrequency();
-	if(newFrequency > 2047)
+	if (newFrequency > 2047)
 	{
 		m_channelController->DisableChannel();
 		return;
@@ -201,8 +209,9 @@ float Sound1::GetSample()
 
 void Sound1::SetNR10(u8 value)
 {
-	if(m_hasPower == false)
+	if (m_hasPower == false) {
 		return;
+	}
 
 	WriteSweepRegister(value);
 
@@ -215,7 +224,7 @@ void Sound1::SetNR11(u8 value)
 	//DMG allows writing length even when the power is off
 	//todo: CGB does not
 
-	if(m_hasPower == true)
+	if (m_hasPower == true)
 	{
 		m_dutyUnit->WriteDutyRegister(value & 0xc0);
 		m_nr11 = value & 0xc0;
@@ -228,8 +237,9 @@ void Sound1::SetNR11(u8 value)
 
 void Sound1::SetNR12(u8 value)
 {
-	if(m_hasPower == false)
+	if (m_hasPower == false) {
 		return;
+	}
 
 	m_envelopeUnit->WriteEnvelopeRegister(value);
 
@@ -238,8 +248,9 @@ void Sound1::SetNR12(u8 value)
 
 void Sound1::SetNR13(u8 value)
 {
-	if(m_hasPower == false)
+	if (m_hasPower == false) {
 		return;
+	}
 
 	m_frequency &= ~(0xff);
 	m_frequency |= value;
@@ -249,8 +260,9 @@ void Sound1::SetNR13(u8 value)
 
 void Sound1::SetNR14(u8 value)
 {
-	if(m_hasPower == false)
+	if (m_hasPower == false) {
 		return;
+	}
 
 	m_frequency &= ~(0x700);
 	m_frequency |= ((value & 0x07) << 8);
@@ -277,24 +289,28 @@ void Sound1::TriggerSweep()
 	m_frequencyShadow = m_frequency;
 
 	m_sweepTimerValue = m_sweepTimerPeriod;
-	if(m_sweepTimerPeriod == 0)
+	if (m_sweepTimerPeriod == 0) {
 		m_sweepTimerValue = 8;
+	}
 
-	if(m_sweepTimerPeriod == 0 && m_sweepShift == 0)
+	if (m_sweepTimerPeriod == 0 && m_sweepShift == 0) {
 		m_sweepEnabled = false;
-	else
+	}
+	else {
 		m_sweepEnabled = true;
+	}
 
-	if(m_sweepShift > 0)
+	if (m_sweepShift > 0)
 	{
 		int newFrequency = CalculateFrequency();
-		if(newFrequency > 2047)
+		if (newFrequency > 2047)
 		{
 			m_channelController->DisableChannel();
 		}
 
-		if(m_sweepIncreasing == false)
+		if (m_sweepIncreasing == false) {
 			m_hasPerformedDecreasingCalculation = true;
+		}
 	}
 }
 
@@ -302,13 +318,14 @@ void Sound1::WriteSweepRegister(u8 value)
 {
 	m_sweepShift = value & 0x07;
 
-	if(value & 0x08)
+	if (value & 0x08) {
 		m_sweepIncreasing = false;
+	}
 	else
 	{
 		m_sweepIncreasing = true;
 
-		if(m_hasPerformedDecreasingCalculation)
+		if (m_hasPerformedDecreasingCalculation)
 		{
 			m_channelController->DisableChannel();
 		}
@@ -323,10 +340,12 @@ int Sound1::CalculateFrequency()
 
 	int result = m_frequencyShadow;
 
-	if(m_sweepIncreasing == true)
+	if (m_sweepIncreasing == true) {
 		result += delta;
-	else
+	}
+	else {
 		result -= delta;
+	}
 
 	return result;
 }

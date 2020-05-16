@@ -26,63 +26,63 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class Archive;
+	class Archive;
 
-class Gameboy;
-class ChannelController;
-class EnvelopeUnit;
-class LengthUnit;
-
-
-class SoundGenerator
-{
-public:
-
-	SoundGenerator();
-	~SoundGenerator();
-
-	virtual void Initialize(ChannelController* channelController);
-	virtual void SetMachine(Gameboy* machine);
-
-	virtual void Serialize(Archive& archive);
-
-	virtual void PowerOff();
-	virtual void PowerOn();
-
-	virtual void Run(int ticks);
-
-	virtual void TickLength();
-
-	virtual float GetSample();
-
-protected:
-
-	virtual void Trigger();
-	virtual void WriteTriggerRegister(u8 value);
-
-	Gameboy* m_machine;
-	bool m_hasPower;
-	bool m_dacEnabled;
-	ChannelController* m_channelController;
+	class Gameboy;
+	class ChannelController;
+	class EnvelopeUnit;
+	class LengthUnit;
 
 
-	//Length counter
+	class SoundGenerator
+	{
+	public:
 
-	friend class LengthUnit;
-	LengthUnit* m_lengthUnit;
+		SoundGenerator();
+		~SoundGenerator();
+
+		virtual void Initialize(ChannelController* channelController);
+		virtual void SetMachine(Gameboy* machine);
+
+		virtual void Serialize(Archive& archive);
+
+		virtual void PowerOff();
+		virtual void PowerOn();
+
+		virtual void Run(int ticks);
+
+		virtual void TickLength();
+
+		virtual float GetSample();
+
+	protected:
+
+		virtual void Trigger();
+		virtual void WriteTriggerRegister(u8 value);
+
+		Gameboy* m_machine;
+		bool m_hasPower;
+		bool m_dacEnabled;
+		ChannelController* m_channelController;
 
 
-	//Sweep
+		//Length counter
 
-	//Duty
+		friend class LengthUnit;
+		LengthUnit* m_lengthUnit;
 
-	//Envelope
 
-	friend class EnvelopeUnit;
-	EnvelopeUnit* m_envelopeUnit;
+		//Sweep
 
-	//Noise
-};
+		//Duty
+
+		//Envelope
+
+		friend class EnvelopeUnit;
+		EnvelopeUnit* m_envelopeUnit;
+
+		//Noise
+	};
 
 }	//namespace Emunisce
 

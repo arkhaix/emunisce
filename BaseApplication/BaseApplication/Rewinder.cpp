@@ -49,19 +49,21 @@ Rewinder::Segment::~Segment()
 {
 	ClearCache();
 
-	if(m_inputMovieData != nullptr)
+	if (m_inputMovieData != nullptr) {
 		delete m_inputMovieData;
+	}
 }
 
 
 void Rewinder::Segment::RecordFrame()
 {
-	if(m_locked == true)
+	if (m_locked == true) {
 		return;
+	}
 
 
 	//First frame
-	if(m_numFramesRecorded == 0)
+	if (m_numFramesRecorded == 0)
 	{
 		//Start the input recorder
 		m_recorder->StartRecording();
@@ -73,14 +75,14 @@ void Rewinder::Segment::RecordFrame()
 
 
 	//Cache the frame
-	CachedFrame& frame = m_frameCache[ m_numFramesRecorded ];
+	CachedFrame& frame = m_frameCache[m_numFramesRecorded];
 	frame.MachineFrameId = m_rewinder->Internal_GetFrameCount();
 	frame.ScreenBufferId = m_rewinder->Internal_GetScreenBufferCount();
 	frame.Screen = m_rewinder->Internal_GetStableScreenBuffer()->Clone();
 
 
 	//Last frame
-	if(m_numFramesRecorded == FramesPerSegment-1)
+	if (m_numFramesRecorded == FramesPerSegment - 1)
 	{
 		//Stop the input recorder and save the movie
 		m_recorder->StopRecording();
@@ -104,11 +106,13 @@ unsigned int Rewinder::Segment::NumFramesRecorded()
 
 bool Rewinder::Segment::CanRecordMoreFrames()
 {
-	if(m_locked == true)
+	if (m_locked == true) {
 		return false;
+	}
 
-	if(m_numFramesRecorded < FramesPerSegment)
+	if (m_numFramesRecorded < FramesPerSegment) {
 		return true;
+	}
 
 	return false;
 }
@@ -117,7 +121,7 @@ bool Rewinder::Segment::CanRecordMoreFrames()
 void Rewinder::Segment::CacheFrame()
 {
 	//First frame
-	if(m_numFramesCached == 0)
+	if (m_numFramesCached == 0)
 	{
 		//Stop recording
 		m_recorder->StopRecording();
@@ -137,9 +141,9 @@ void Rewinder::Segment::CacheFrame()
 
 
 	//Cache the frame
-	if(m_numFramesCached < FramesPerSegment)
+	if (m_numFramesCached < FramesPerSegment)
 	{
-		CachedFrame& frame = m_frameCache[ m_numFramesCached ];
+		CachedFrame& frame = m_frameCache[m_numFramesCached];
 		frame.MachineFrameId = m_rewinder->Internal_GetFrameCount();
 		frame.ScreenBufferId = m_rewinder->Internal_GetScreenBufferCount();
 		frame.Screen = m_rewinder->Internal_GetStableScreenBuffer()->Clone();
@@ -147,10 +151,10 @@ void Rewinder::Segment::CacheFrame()
 		frame.Audio = m_rewinder->Internal_GetStableAudioBuffer();
 
 		//Reverse the audio
-		for(unsigned int i=0;i<frame.Audio.NumSamples/2;i++)
+		for (unsigned int i = 0; i < frame.Audio.NumSamples / 2; i++)
 		{
-			std::swap(frame.Audio.Samples[0][i], frame.Audio.Samples[0][ frame.Audio.NumSamples-i-1 ]);
-			std::swap(frame.Audio.Samples[1][i], frame.Audio.Samples[1][ frame.Audio.NumSamples-i-1 ]);
+			std::swap(frame.Audio.Samples[0][i], frame.Audio.Samples[0][frame.Audio.NumSamples - i - 1]);
+			std::swap(frame.Audio.Samples[1][i], frame.Audio.Samples[1][frame.Audio.NumSamples - i - 1]);
 		}
 
 		m_numFramesCached++;
@@ -164,8 +168,9 @@ unsigned int Rewinder::Segment::NumFramesCached()
 
 bool Rewinder::Segment::CanCacheMoreFrames()
 {
-	if(m_numFramesCached < FramesPerSegment && m_numFramesCached < m_numFramesRecorded)
+	if (m_numFramesCached < FramesPerSegment && m_numFramesCached < m_numFramesRecorded) {
 		return true;
+	}
 
 	return false;
 }
@@ -173,8 +178,9 @@ bool Rewinder::Segment::CanCacheMoreFrames()
 
 Rewinder::CachedFrame Rewinder::Segment::GetCachedFrame(unsigned int index)
 {
-	if(index < m_numFramesCached)
+	if (index < m_numFramesCached) {
 		return m_frameCache[index];
+	}
 
 	Rewinder::CachedFrame defaultFrame;
 	return defaultFrame;
@@ -185,7 +191,7 @@ void Rewinder::Segment::ClearCache()
 {
 	CachedFrame defaultFrame;
 
-	for(unsigned int i=0;i<m_numFramesCached;i++)
+	for (unsigned int i = 0; i < m_numFramesCached; i++)
 	{
 		delete m_frameCache[i].Screen;
 		m_frameCache[i] = defaultFrame;
@@ -197,7 +203,7 @@ void Rewinder::Segment::ClearCache()
 
 void Rewinder::Segment::RestoreState()
 {
-	if(m_inputMovieData != nullptr && m_inputMovieDataSize > 0)
+	if (m_inputMovieData != nullptr && m_inputMovieDataSize > 0)
 	{
 		MemorySerializer serializer;
 		serializer.SetBuffer(m_inputMovieData, m_inputMovieDataSize);
@@ -210,23 +216,24 @@ void Rewinder::Segment::RestoreState()
 
 void Rewinder::Segment::LockAtFrame(unsigned int frameId)
 {
-	for(unsigned int i=0;i<m_numFramesRecorded;i++)
+	for (unsigned int i = 0; i < m_numFramesRecorded; i++)
 	{
-		if(m_frameCache[i].MachineFrameId == frameId)
+		if (m_frameCache[i].MachineFrameId == frameId)
 		{
 			//Found the specified frame.  Kill everything after this one.
 
 			CachedFrame defaultFrame;
-			for(unsigned int j=i+1;j<m_numFramesRecorded;j++)
+			for (unsigned int j = i + 1; j < m_numFramesRecorded; j++)
 			{
-				if(m_frameCache[j].Screen != nullptr)
+				if (m_frameCache[j].Screen != nullptr) {
 					delete m_frameCache[j].Screen;
+				}
 
 				m_frameCache[j] = defaultFrame;
 			}
 
 			m_locked = true;
-			m_numFramesRecorded = i+1;
+			m_numFramesRecorded = i + 1;
 			m_numFramesCached = m_numFramesRecorded;
 			break;
 		}
@@ -271,8 +278,9 @@ unsigned int Rewinder::InputHandler::NumButtons()
 
 const char* Rewinder::InputHandler::GetButtonName(unsigned int index)
 {
-	if(index >= RewinderButtons::NumButtons)
+	if (index >= RewinderButtons::NumButtons) {
 		return nullptr;
+	}
 
 	return RewinderButtons::ToString[index];
 }
@@ -280,14 +288,16 @@ const char* Rewinder::InputHandler::GetButtonName(unsigned int index)
 
 void Rewinder::InputHandler::ButtonDown(unsigned int index)
 {
-	if(index == RewinderButtons::Rewind)
+	if (index == RewinderButtons::Rewind) {
 		m_rewinder->StartRewinding();
+	}
 }
 
 void Rewinder::InputHandler::ButtonUp(unsigned int index)
 {
-	if(index == RewinderButtons::Rewind)
+	if (index == RewinderButtons::Rewind) {
 		m_rewinder->StopRewinding();
+	}
 }
 
 bool Rewinder::InputHandler::IsButtonDown(unsigned int /*index*/)
@@ -318,7 +328,7 @@ Rewinder::~Rewinder()
 {
 	m_isRewinding = false;
 
-	for(auto& segment : m_segments)
+	for (auto& segment : m_segments)
 	{
 		delete segment;
 	}
@@ -333,8 +343,9 @@ Rewinder::~Rewinder()
 
 void Rewinder::StartRewinding()
 {
-	if(m_segments.empty())
+	if (m_segments.empty()) {
 		return;
+	}
 
 	bool wasPaused = m_application->GetMachineRunner()->IsPaused();
 	m_application->GetMachineRunner()->Pause();
@@ -342,27 +353,31 @@ void Rewinder::StartRewinding()
 	{
 		std::lock_guard<std::mutex> scopedLock(m_frameHistoryLock);
 
-		m_playingSegment = (unsigned int)m_segments.size()-1;
+		m_playingSegment = (unsigned int)m_segments.size() - 1;
 
-		Segment* playingSegment = m_segments[ m_playingSegment ];
+		Segment* playingSegment = m_segments[m_playingSegment];
 
-		while(playingSegment->CanCacheMoreFrames())
+		while (playingSegment->CanCacheMoreFrames()) {
 			playingSegment->CacheFrame();
+		}
 
 		m_frameHistory.clear();
-		for(unsigned int i=0;i<playingSegment->NumFramesCached();i++)
+		for (unsigned int i = 0; i < playingSegment->NumFramesCached(); i++) {
 			m_frameHistory.push_back(playingSegment->GetCachedFrame(i));
+		}
 
-		if(m_playingSegment > 0)
+		if (m_playingSegment > 0) {
 			m_playingSegment--;
+		}
 
 		m_isRewinding = true;
 		m_playbackFrame = m_frameHistory.end();
 		--m_playbackFrame;
 	}
 
-	if(wasPaused == false)
+	if (wasPaused == false) {
 		m_application->GetMachineRunner()->Run();
+	}
 }
 
 void Rewinder::StopRewinding()
@@ -370,13 +385,13 @@ void Rewinder::StopRewinding()
 	bool wasPaused = m_application->GetMachineRunner()->IsPaused();
 	m_application->GetMachineRunner()->Pause();
 
-	unsigned int visibleSegmentIndex = m_playingSegment+1;
+	unsigned int visibleSegmentIndex = m_playingSegment + 1;
 	Segment* visibleSegment = nullptr;
 
 	{
 		std::lock_guard<std::mutex> scopedLock(m_frameHistoryLock);
 
-		visibleSegmentIndex = m_playingSegment+1;
+		visibleSegmentIndex = m_playingSegment + 1;
 		visibleSegment = nullptr;
 
 		m_isRewinding = false;
@@ -384,24 +399,27 @@ void Rewinder::StopRewinding()
 		//m_playingSegment represents the segment being played in the background to generate caches.
 		// However, the currently visible segment is m_playingSegment+1 -- it's the segment that most
 		// recently finished generating caches and whose screen buffers are being displayed.
-		if(visibleSegmentIndex >= m_segments.size())
-			visibleSegmentIndex = (unsigned int)m_segments.size()-1;
+		if (visibleSegmentIndex >= m_segments.size()) {
+			visibleSegmentIndex = (unsigned int)m_segments.size() - 1;
+		}
 
-		if(visibleSegmentIndex < m_segments.size())
-			visibleSegment = m_segments[ visibleSegmentIndex ];
+		if (visibleSegmentIndex < m_segments.size()) {
+			visibleSegment = m_segments[visibleSegmentIndex];
+		}
 	}
 
 
 	//Run the visible segment up until we hit the frame that's currently being displayed
 
-	if(visibleSegment != nullptr)
+	if (visibleSegment != nullptr)
 	{
 		visibleSegment->ClearCache();
 
 		visibleSegment->RestoreState();
 
-		while(visibleSegment->CanCacheMoreFrames() && m_wrappedMachine->GetFrameCount() != m_playbackFrame->MachineFrameId)
+		while (visibleSegment->CanCacheMoreFrames() && m_wrappedMachine->GetFrameCount() != m_playbackFrame->MachineFrameId) {
 			visibleSegment->CacheFrame();
+		}
 
 		visibleSegment->ClearCache();
 
@@ -416,22 +434,23 @@ void Rewinder::StopRewinding()
 
 		unsigned int oldFutureSegmentIndex = visibleSegmentIndex + 1;
 
-		if(m_segments.empty() == false && oldFutureSegmentIndex < m_segments.size())
+		if (m_segments.empty() == false && oldFutureSegmentIndex < m_segments.size())
 		{
-			for(unsigned int i=oldFutureSegmentIndex;i<m_segments.size();i++)
+			for (unsigned int i = oldFutureSegmentIndex; i < m_segments.size(); i++) {
 				delete m_segments[i];
+			}
 
 			m_segments.erase(m_segments.begin() + oldFutureSegmentIndex, m_segments.end());
 
 			m_segments.push_back(new Segment(this, m_recorder));
-			m_playingSegment = (unsigned int)m_segments.size()-1;
+			m_playingSegment = (unsigned int)m_segments.size() - 1;
 		}
 
 
 		//Clear input state so keys don't get stuck
-		if(m_wrappedInput != nullptr)
+		if (m_wrappedInput != nullptr)
 		{
-			for(unsigned int i=0;i<m_wrappedInput->NumButtons();i++)
+			for (unsigned int i = 0; i < m_wrappedInput->NumButtons(); i++)
 			{
 				m_wrappedInput->ButtonDown(i);
 				m_wrappedInput->ButtonUp(i);
@@ -440,8 +459,9 @@ void Rewinder::StopRewinding()
 	}
 
 
-	if(wasPaused == false)
+	if (wasPaused == false) {
 		m_application->GetMachineRunner()->Run();
+	}
 }
 
 void Rewinder::ApplicationEvent(unsigned int eventId)
@@ -508,7 +528,7 @@ unsigned int Rewinder::GetFrameCount()
 {
 	std::lock_guard<std::mutex> scopedLock(m_frameHistoryLock);
 
-	if(m_isRewinding == false || m_frameHistory.empty())
+	if (m_isRewinding == false || m_frameHistory.empty())
 	{
 		//Not rewinding.  Just pass through.
 		return MachineFeature::GetFrameCount();
@@ -522,37 +542,39 @@ void Rewinder::RunToNextFrame()
 {
 	std::lock_guard<std::mutex> scopedLock(m_frameHistoryLock);
 
-	if(m_isRewinding == false || m_frameHistory.empty())
+	if (m_isRewinding == false || m_frameHistory.empty())
 	{
 		//Not rewinding.  Just run the machine normally and capture its frame for the history.
 		// Segment::RecordFrame runs the machine
 
-		unsigned int lastSegmentIndex = (unsigned int)m_segments.size()-1;
+		unsigned int lastSegmentIndex = (unsigned int)m_segments.size() - 1;
 
 		Segment* recordingSegment = nullptr;
-		if(lastSegmentIndex < m_segments.size())	///<This check is here in case m_segments.size() == 0
-			recordingSegment = m_segments[ lastSegmentIndex ];
+		if (lastSegmentIndex < m_segments.size()) {	///<This check is here in case m_segments.size() == 0
+			recordingSegment = m_segments[lastSegmentIndex];
+		}
 
-		if(recordingSegment == nullptr || recordingSegment->CanRecordMoreFrames() == false)
+		if (recordingSegment == nullptr || recordingSegment->CanRecordMoreFrames() == false)
 		{
 			m_segments.push_back(new Segment(this, m_recorder));
-			lastSegmentIndex = (unsigned int)m_segments.size()-1;
-			recordingSegment = m_segments[ lastSegmentIndex ];
+			lastSegmentIndex = (unsigned int)m_segments.size() - 1;
+			recordingSegment = m_segments[lastSegmentIndex];
 
 			//Clear old caches
-			for(auto& segment : m_segments)
+			for (auto& segment : m_segments) {
 				segment->ClearCache();
+			}
 
 			//Delete earliest segments if we have too many
-			while(m_segments.size() >= m_maxSegments)
+			while (m_segments.size() >= m_maxSegments)
 			{
 				delete m_segments[0];
 				m_segments.erase(m_segments.begin());
-				lastSegmentIndex = (unsigned int)m_segments.size()-1;
+				lastSegmentIndex = (unsigned int)m_segments.size() - 1;
 			}
 		}
 
-		m_segments[ lastSegmentIndex ]->RecordFrame();
+		m_segments[lastSegmentIndex]->RecordFrame();
 	}
 	else
 	{
@@ -560,33 +582,37 @@ void Rewinder::RunToNextFrame()
 		// Segment::CacheFrame runs the machine (playing an input movie "in the past"), generating new frames to cache.
 
 		//If we're at the beginning of the frame history, try to get more history from the segments.
-		if(m_playbackFrame == m_frameHistory.begin())
+		if (m_playbackFrame == m_frameHistory.begin())
 		{
 			Segment* playingSegment = nullptr;
-			if(m_playingSegment < m_segments.size())
-				playingSegment = m_segments[ m_playingSegment ];
+			if (m_playingSegment < m_segments.size()) {
+				playingSegment = m_segments[m_playingSegment];
+			}
 
-			if(playingSegment != nullptr)
+			if (playingSegment != nullptr)
 			{
 				//The segment should already be fully cached (except the first segment when rewinding has just begun).
-				while(playingSegment->CanCacheMoreFrames() == true)
+				while (playingSegment->CanCacheMoreFrames() == true) {
 					playingSegment->CacheFrame();
+				}
 
 				//Replace the active frame history with the segment data
 				m_frameHistory.clear();
 
-				for(unsigned int i=0;i<playingSegment->NumFramesCached();i++)
+				for (unsigned int i = 0; i < playingSegment->NumFramesCached(); i++)
 				{
 					//Note: This is very hackish and is currently Gameboy-specific.
 					// The first frame after restoring state contains garbage.  This is very visible
 					// when restoring lots of states frequently and expecting them to blend together nicely.
 					// To work around this, I'm doubling up the second frame and copying it over the first.
 					// <--
-					if(i==0 && playingSegment->NumFramesCached() > 1)
+					if (i == 0 && playingSegment->NumFramesCached() > 1) {
 						continue;
+					}
 
-					if(i == 1)
+					if (i == 1) {
 						m_frameHistory.push_back(playingSegment->GetCachedFrame(i));
+					}
 					// -->
 
 					m_frameHistory.push_back(playingSegment->GetCachedFrame(i));
@@ -596,22 +622,26 @@ void Rewinder::RunToNextFrame()
 			}
 
 			//Next segment
-			if(m_playingSegment > 0)
+			if (m_playingSegment > 0) {
 				m_playingSegment--;
+			}
 		}
 
 		//If we're not at the beginning of the frame history, then advance backward one frame.
 		// The frame history might have been refilled by the block above just before this, so use a bare if-check and not an else.
-		if(m_playbackFrame != m_frameHistory.begin())
+		if (m_playbackFrame != m_frameHistory.begin()) {
 			--m_playbackFrame;
+		}
 
 		//Advance the segment cache
 		Segment* playingSegment = nullptr;
-		if(m_playingSegment < m_segments.size())
-			playingSegment = m_segments[ m_playingSegment ];
+		if (m_playingSegment < m_segments.size()) {
+			playingSegment = m_segments[m_playingSegment];
+		}
 
-		if(playingSegment != nullptr && playingSegment->CanCacheMoreFrames())
+		if (playingSegment != nullptr && playingSegment->CanCacheMoreFrames()) {
 			playingSegment->CacheFrame();
+		}
 	}
 }
 
@@ -623,7 +653,7 @@ ScreenBuffer* Rewinder::GetStableScreenBuffer()
 {
 	std::lock_guard<std::mutex> scopedLock(m_frameHistoryLock);
 
-	if(m_isRewinding == false || m_frameHistory.empty() || m_playbackFrame == m_frameHistory.end())
+	if (m_isRewinding == false || m_frameHistory.empty() || m_playbackFrame == m_frameHistory.end())
 	{
 		//Not rewinding.  Just pass through.
 		return MachineFeature::GetStableScreenBuffer();
@@ -639,7 +669,7 @@ int Rewinder::GetScreenBufferCount()
 {
 	std::lock_guard<std::mutex> scopedLock(m_frameHistoryLock);
 
-	if(m_isRewinding == false || m_frameHistory.empty() || m_playbackFrame == m_frameHistory.end())
+	if (m_isRewinding == false || m_frameHistory.empty() || m_playbackFrame == m_frameHistory.end())
 	{
 		//Not rewinding.  Just pass through.
 		return MachineFeature::GetScreenBufferCount();
@@ -658,7 +688,7 @@ AudioBuffer Rewinder::GetStableAudioBuffer()
 {
 	std::lock_guard<std::mutex> scopedLock(m_frameHistoryLock);
 
-	if(m_isRewinding == false || m_frameHistory.empty() || m_playbackFrame == m_frameHistory.end())
+	if (m_isRewinding == false || m_frameHistory.empty() || m_playbackFrame == m_frameHistory.end())
 	{
 		//Not rewinding.  Just pass through.
 		return MachineFeature::GetStableAudioBuffer();
@@ -674,7 +704,7 @@ int Rewinder::GetAudioBufferCount()
 {
 	std::lock_guard<std::mutex> scopedLock(m_frameHistoryLock);
 
-	if(m_isRewinding == false || m_frameHistory.empty() || m_playbackFrame == m_frameHistory.end())
+	if (m_isRewinding == false || m_frameHistory.empty() || m_playbackFrame == m_frameHistory.end())
 	{
 		//Not rewinding.  Just pass through.
 		return MachineFeature::GetAudioBufferCount();

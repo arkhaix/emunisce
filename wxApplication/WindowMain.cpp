@@ -30,7 +30,7 @@ using namespace Emunisce;
 
 void WindowMain::SetApplication(Application* application)
 {
-    m_application = application;
+	m_application = application;
 }
 
 
@@ -58,39 +58,39 @@ END_EVENT_TABLE()
 
 void WindowMain::OnKeyDown(wxKeyEvent& event)
 {
-    if(m_application != nullptr)
-    {
-        if(event.GetKeyCode() == (int)'`')
-            m_application->ShowConsoleWindow();
-        else
-            m_application->KeyDown(event.GetKeyCode());
-    }
+	if (m_application != nullptr)
+	{
+		if (event.GetKeyCode() == (int)'`')
+			m_application->ShowConsoleWindow();
+		else
+			m_application->KeyDown(event.GetKeyCode());
+	}
 }
 
 void WindowMain::OnKeyUp(wxKeyEvent& event)
 {
-    if(m_application != nullptr)
-        m_application->KeyUp(event.GetKeyCode());
+	if (m_application != nullptr)
+		m_application->KeyUp(event.GetKeyCode());
 }
 
 void WindowMain::OnResize(wxSizeEvent& event)
 {
-//	wxGLCanvas::OnSize(evt);
+	//	wxGLCanvas::OnSize(evt);
 
-    Refresh();
+	Refresh();
 
-    if(m_application != nullptr)
-        m_application->Resize(event.GetSize().GetWidth(), event.GetSize().GetHeight());
+	if (m_application != nullptr)
+		m_application->Resize(event.GetSize().GetWidth(), event.GetSize().GetHeight());
 }
 
 void WindowMain::OnPaint(wxPaintEvent& event)
 {
-    if(!IsShown()) return;
+	if (!IsShown()) return;
 
-    wxGLCanvas::SetCurrent(*m_context);
-    wxPaintDC(this); // only to be used in paint events. use wxClientDC to paint outside the paint event
+	wxGLCanvas::SetCurrent(*m_context);
+	wxPaintDC(this); // only to be used in paint events. use wxClientDC to paint outside the paint event
 
-	if(m_application != nullptr)
+	if (m_application != nullptr)
 		m_application->Draw();
 
 	glFlush();
@@ -99,27 +99,27 @@ void WindowMain::OnPaint(wxPaintEvent& event)
 
 void WindowMain::OnEraseBackground(wxEraseEvent& event)
 {
-    //Do nothing.  Prevents flicker on Windows.
+	//Do nothing.  Prevents flicker on Windows.
 }
 
 void WindowMain::OnIdle(wxIdleEvent &event)
 {
-    Refresh();
+	Refresh();
 	std::this_thread::yield();
 }
 
 
 
 WindowMain::WindowMain(wxFrame* parent, int* args) :
-    wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE)
+	wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE)
 {
-    m_application = nullptr;
+	m_application = nullptr;
 
 
 	m_context = new wxGLContext(this);
 
-    // To avoid flashing on MSW
-    SetBackgroundStyle(wxBG_STYLE_CUSTOM);
+	// To avoid flashing on MSW
+	SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 }
 
 WindowMain::~WindowMain()
@@ -129,12 +129,12 @@ WindowMain::~WindowMain()
 
 int WindowMain::getWidth()
 {
-    return GetSize().x;
+	return GetSize().x;
 }
 
 int WindowMain::getHeight()
 {
-    return GetSize().y;
+	return GetSize().y;
 }
 
 

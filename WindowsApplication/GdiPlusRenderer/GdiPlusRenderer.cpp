@@ -45,136 +45,136 @@ using namespace Gdiplus;
 namespace Emunisce
 {
 
-class GdiPlusRenderer_Private
-{
-public:
-
-	EmunisceApplication* _Phoenix;
-
-	HWND _WindowHandle;
-
-	Bitmap* _Bitmap;
-
-	int _LastFrameRendered;
-
-	GdiplusStartupInput _GdiplusStartupInput;
-	ULONG_PTR _GdiplusToken;
-
-	IEmulatedMachine* _Machine;
-
-	GdiPlusRenderer_Private()
+	class GdiPlusRenderer_Private
 	{
-		_Phoenix = nullptr;
-		_WindowHandle = nullptr;
-		_Bitmap = nullptr;
+	public:
 
-		_LastFrameRendered = -1;
+		EmunisceApplication* _Phoenix;
 
-		_Machine = nullptr;
-	}
+		HWND _WindowHandle;
 
-	~GdiPlusRenderer_Private()
-	{
-	}
+		Bitmap* _Bitmap;
 
-	void InitializeGdiPlus()
-	{
-		GdiplusStartup(&_GdiplusToken, &_GdiplusStartupInput, nullptr);
+		int _LastFrameRendered;
 
-		_Bitmap = nullptr;
-	}
+		GdiplusStartupInput _GdiplusStartupInput;
+		ULONG_PTR _GdiplusToken;
 
-	void ShutdownGdiPlus()
-	{
-		delete _Bitmap;
+		IEmulatedMachine* _Machine;
 
-		GdiplusShutdown(_GdiplusToken);
-	}
-
-
-	void OnPaint()
-	{
-		//Check conditions
-
-		if(_Machine == nullptr)
-			return;
-
-		if(_LastFrameRendered == _Machine->GetDisplay()->GetScreenBufferCount())
-			return;
-
-
-		//Render the frame
-
-		Render();
-
-
-		//Paint the rendered frame to the window
-
-		PAINTSTRUCT paintStruct;
-		HDC hdc = BeginPaint(_WindowHandle, &paintStruct);
-
-		Graphics graphics(hdc);
-		graphics.SetInterpolationMode(InterpolationModeNearestNeighbor);	///<Disable antialiasing
-		graphics.SetSmoothingMode(SmoothingModeHighSpeed);	///<Dunno if this does anything useful
-		graphics.SetPixelOffsetMode(PixelOffsetModeHighSpeed);	///<Dunno if this does anything useful
-
-		RECT clientRect;
-		GetClientRect(_WindowHandle, &clientRect);
-		graphics.DrawImage(_Bitmap, 0, 0, clientRect.right - clientRect.left, clientRect.bottom - clientRect.top);
-
-		EndPaint(_WindowHandle, &paintStruct);
-	}
-
-	void Render()
-	{
-		if(_Machine == nullptr || _Machine->GetDisplay() == nullptr)
-			return;
-
-		IEmulatedDisplay* display = _Machine->GetDisplay();
-
-		if(_LastFrameRendered == display->GetScreenBufferCount())
-			return;
-
-		_LastFrameRendered = display->GetScreenBufferCount();
-
-
-		ScreenBuffer* screen = display->GetStableScreenBuffer();
-
-		int screenWidth = screen->GetWidth();
-		int screenHeight = screen->GetHeight();
-
-		if(_Bitmap == nullptr || (int)_Bitmap->GetWidth() != screenWidth || (int)_Bitmap->GetHeight() != screenHeight)
+		GdiPlusRenderer_Private()
 		{
-			if(_Bitmap != nullptr)
-				delete _Bitmap;
+			_Phoenix = nullptr;
+			_WindowHandle = nullptr;
+			_Bitmap = nullptr;
 
-			_Bitmap = new Bitmap(screenWidth, screenHeight, PixelFormat32bppARGB);
+			_LastFrameRendered = -1;
+
+			_Machine = nullptr;
 		}
 
-		BitmapData bitmapData;
-		Gdiplus::Rect bitmapRect(0, 0, screenWidth, screenHeight);
-		Status lockResult = _Bitmap->LockBits(&bitmapRect, ImageLockModeWrite, PixelFormat32bppARGB, &bitmapData);
-		if(lockResult != Ok)
-			return;
-
-		for(int y=0;y<screenHeight;y++)
+		~GdiPlusRenderer_Private()
 		{
-			u32* pixel = (u32*)bitmapData.Scan0;
-			pixel += bitmapData.Stride * y / 4;
+		}
 
-			for(int x=0;x<screenWidth;x++)
+		void InitializeGdiPlus()
+		{
+			GdiplusStartup(&_GdiplusToken, &_GdiplusStartupInput, nullptr);
+
+			_Bitmap = nullptr;
+		}
+
+		void ShutdownGdiPlus()
+		{
+			delete _Bitmap;
+
+			GdiplusShutdown(_GdiplusToken);
+		}
+
+
+		void OnPaint()
+		{
+			//Check conditions
+
+			if (_Machine == nullptr)
+				return;
+
+			if (_LastFrameRendered == _Machine->GetDisplay()->GetScreenBufferCount())
+				return;
+
+
+			//Render the frame
+
+			Render();
+
+
+			//Paint the rendered frame to the window
+
+			PAINTSTRUCT paintStruct;
+			HDC hdc = BeginPaint(_WindowHandle, &paintStruct);
+
+			Graphics graphics(hdc);
+			graphics.SetInterpolationMode(InterpolationModeNearestNeighbor);	///<Disable antialiasing
+			graphics.SetSmoothingMode(SmoothingModeHighSpeed);	///<Dunno if this does anything useful
+			graphics.SetPixelOffsetMode(PixelOffsetModeHighSpeed);	///<Dunno if this does anything useful
+
+			RECT clientRect;
+			GetClientRect(_WindowHandle, &clientRect);
+			graphics.DrawImage(_Bitmap, 0, 0, clientRect.right - clientRect.left, clientRect.bottom - clientRect.top);
+
+			EndPaint(_WindowHandle, &paintStruct);
+		}
+
+		void Render()
+		{
+			if (_Machine == nullptr || _Machine->GetDisplay() == nullptr)
+				return;
+
+			IEmulatedDisplay* display = _Machine->GetDisplay();
+
+			if (_LastFrameRendered == display->GetScreenBufferCount())
+				return;
+
+			_LastFrameRendered = display->GetScreenBufferCount();
+
+
+			ScreenBuffer* screen = display->GetStableScreenBuffer();
+
+			int screenWidth = screen->GetWidth();
+			int screenHeight = screen->GetHeight();
+
+			if (_Bitmap == nullptr || (int)_Bitmap->GetWidth() != screenWidth || (int)_Bitmap->GetHeight() != screenHeight)
 			{
-				DisplayPixel screenPixel = screen->GetPixels()[y * screenWidth + x];
+				if (_Bitmap != nullptr)
+					delete _Bitmap;
 
-				*pixel = (u32)screenPixel;
-
-				pixel++;
+				_Bitmap = new Bitmap(screenWidth, screenHeight, PixelFormat32bppARGB);
 			}
-		}
 
-		_Bitmap->UnlockBits(&bitmapData);
-	}
-};
+			BitmapData bitmapData;
+			Gdiplus::Rect bitmapRect(0, 0, screenWidth, screenHeight);
+			Status lockResult = _Bitmap->LockBits(&bitmapRect, ImageLockModeWrite, PixelFormat32bppARGB, &bitmapData);
+			if (lockResult != Ok)
+				return;
+
+			for (int y = 0; y < screenHeight; y++)
+			{
+				u32* pixel = (u32*)bitmapData.Scan0;
+				pixel += bitmapData.Stride * y / 4;
+
+				for (int x = 0; x < screenWidth; x++)
+				{
+					DisplayPixel screenPixel = screen->GetPixels()[y * screenWidth + x];
+
+					*pixel = (u32)screenPixel;
+
+					pixel++;
+				}
+			}
+
+			_Bitmap->UnlockBits(&bitmapData);
+		}
+	};
 
 }	//namespace Emunisce
 

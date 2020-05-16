@@ -125,28 +125,29 @@ void Sound4::Run(int ticks)
 {
 	SoundGenerator::Run(ticks);
 
-	if(m_timerPeriod == 0)
+	if (m_timerPeriod == 0) {
 		return;
+	}
 
 	m_timerValue -= ticks;
-	while(m_timerValue <= 0)
+	while (m_timerValue <= 0)
 	{
 		m_timerValue += m_timerPeriod;
 
 		int a = (m_lfsr & 1) ? 1 : 0;
-		int b = (m_lfsr & (1<<m_lfsrTapBit)) ? 1 : 0;
+		int b = (m_lfsr & (1 << m_lfsrTapBit)) ? 1 : 0;
 
 		m_lfsr >>= 1;
 
 		int result = a ^ b;
-		if(result)
+		if (result)
 		{
-			m_lfsr |= (1<<m_lfsrFeedbackBit);
+			m_lfsr |= (1 << m_lfsrFeedbackBit);
 			m_lfsrOut = -1.f;
 		}
 		else
 		{
-			m_lfsr &= ~(1<<m_lfsrFeedbackBit);
+			m_lfsr &= ~(1 << m_lfsrFeedbackBit);
 			m_lfsrOut = 1.f;
 		}
 	}
@@ -162,7 +163,7 @@ void Sound4::TickEnvelope()
 float Sound4::GetSample()
 {
 	float sample = m_lfsrOut;
-	
+
 	sample *= m_envelopeUnit->GetCurrentVolume();
 
 	return sample;
@@ -183,8 +184,9 @@ void Sound4::SetNR41(u8 value)
 
 void Sound4::SetNR42(u8 value)
 {
-	if(m_hasPower == false)
+	if (m_hasPower == false) {
 		return;
+	}
 
 	m_envelopeUnit->WriteEnvelopeRegister(value);
 
@@ -193,10 +195,11 @@ void Sound4::SetNR42(u8 value)
 
 void Sound4::SetNR43(u8 value)
 {
-	if(m_hasPower == false)
+	if (m_hasPower == false) {
 		return;
+	}
 
-	if(value & 0x08)
+	if (value & 0x08)
 	{
 		m_lfsrFeedbackBit = 7;
 		m_lfsrTapBit = 1;	///<1 is most tone-like, 3 is most white-noise-like
@@ -208,10 +211,12 @@ void Sound4::SetNR43(u8 value)
 	}
 
 	int divisor = (value & 0x07);
-	if(divisor == 0)
+	if (divisor == 0) {
 		divisor = 8;
-	else
+	}
+	else {
 		divisor = 16 * divisor;
+	}
 
 	int divisorShift = (value & 0xf0) >> 4;
 	divisorShift++;
@@ -223,8 +228,9 @@ void Sound4::SetNR43(u8 value)
 
 void Sound4::SetNR44(u8 value)
 {
-	if(m_hasPower == false)
+	if (m_hasPower == false) {
 		return;
+	}
 
 	WriteTriggerRegister(value);
 

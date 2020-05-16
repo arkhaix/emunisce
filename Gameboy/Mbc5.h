@@ -26,14 +26,14 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class Mbc5 : public Mbc1
-{
-public:
+	class Mbc5 : public Mbc1
+	{
+	public:
 
-	Mbc5();
+		Mbc5();
 
-	void Write8(u16 address, u8 value) override;
-};
+		void Write8(u16 address, u8 value) override;
+	};
 
 }	//namespace Emunisce
 

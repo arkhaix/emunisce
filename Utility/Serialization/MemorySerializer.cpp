@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "MemorySerializer.h"
 using namespace Emunisce;
 
-#include <memory.h>
+#include <Memory.h>
 #include <stdlib.h>
 
 
@@ -37,8 +37,9 @@ MemorySerializer::MemorySerializer()
 
 MemorySerializer::~MemorySerializer()
 {
-	if(m_buffer != nullptr)
+	if (m_buffer != nullptr) {
 		free(m_buffer);
+	}
 }
 
 
@@ -54,8 +55,9 @@ unsigned int MemorySerializer::GetBufferSize()
 
 void MemorySerializer::TransferBuffer(unsigned char** buffer, unsigned int* size)
 {
-	if(buffer == nullptr || size == nullptr)
+	if (buffer == nullptr || size == nullptr) {
 		return;
+	}
 
 	*buffer = m_buffer;
 	*size = m_usedSize;
@@ -87,7 +89,7 @@ void MemorySerializer::SetArchive(Archive* archive)
 
 void MemorySerializer::Save(unsigned char* data, unsigned int bytes)
 {
-	if(m_usedSize + bytes >= m_reservedSize)
+	if (m_usedSize + bytes >= m_reservedSize)
 	{
 		float fNewSize = (float)(m_reservedSize + bytes) * m_reserveMultiplier;
 		unsigned int newSize = (unsigned int)fNewSize;
@@ -96,21 +98,23 @@ void MemorySerializer::Save(unsigned char* data, unsigned int bytes)
 
 		memcpy((void*)newBuffer, m_buffer, m_usedSize);
 
-		if(m_buffer != nullptr)
+		if (m_buffer != nullptr) {
 			free(m_buffer);
+		}
 
 		m_buffer = newBuffer;
 		m_reservedSize = newSize;
 	}
 
-	memcpy((void*)(m_buffer+ m_usedSize), (void*)data, bytes);
+	memcpy((void*)(m_buffer + m_usedSize), (void*)data, bytes);
 	m_usedSize += bytes;
 }
 
 void MemorySerializer::Restore(unsigned char* buffer, unsigned int bytes)
 {
-	if(m_buffer == nullptr || buffer == nullptr)
+	if (m_buffer == nullptr || buffer == nullptr) {
 		return;
+	}
 
 	memcpy((void*)buffer, (void*)(m_buffer + m_usedSize), bytes);
 	m_usedSize += bytes;

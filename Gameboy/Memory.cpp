@@ -24,7 +24,7 @@ using namespace Emunisce;
 #include <cstring>
 #include <ctime>
 #include <fstream>
-#include <memory.h>
+#include <Memory.h>
 
 //Project
 #include "RomOnly.h"
@@ -52,7 +52,7 @@ Memory::Memory()
 	m_vramLocked = false;
 	m_waveRamLockMode = WaveRamLock::Normal;
 
-	for(int i=0;i<0x100;i++)
+	for (int i = 0; i < 0x100; i++)
 	{
 		m_registerLocation[i] = nullptr;
 		m_callWriteRegister[i] = false;
@@ -71,7 +71,7 @@ void Memory::SetMachine(Gameboy* machine)
 	m_machineType = machine->GetType();
 
 	//Reset Machine-dependent values
-	for(int i=0;i<0x100;i++)
+	for (int i = 0; i < 0x100; i++)
 	{
 		m_registerLocation[i] = nullptr;
 		m_callWriteRegister[i] = false;
@@ -150,22 +150,25 @@ void Memory::Initialize()
 	m_selectedCgbVramBank = 0;
 
 	//Randomize the active RAM
-	for(int i=0;i<0x2000;i++)
-		m_memoryData[0xa000+i] = (u8)rand();
+	for (int i = 0; i < 0x2000; i++) {
+		m_memoryData[0xa000 + i] = (u8)rand();
+	}
 
 	LoadBootRom("dmg_rom.bin");
 
 	//Tell the cpu to skip the bootrom if there isn't one loaded
-	if(m_bootRomEnabled == false && m_cpu)
+	if (m_bootRomEnabled == false && m_cpu) {
 		m_cpu->pc = 0x100;
+	}
 }
 
 void Memory::Run(int ticks)
 {
-	if((m_cgbDmaLength & 0x80) == 0 || m_dmaMode == DmaMode::None)
+	if ((m_cgbDmaLength & 0x80) == 0 || m_dmaMode == DmaMode::None) {
 		return;
+	}
 
-	if(m_dmaMode == DmaMode::General)
+	if (m_dmaMode == DmaMode::General)
 	{
 		bool vramLocked = m_vramLocked;
 		m_vramLocked = false;
@@ -174,7 +177,7 @@ void Memory::Run(int ticks)
 		length += 1;
 		length *= 0x10;
 
-		for(int i=0;i<length;i++)
+		for (int i = 0; i < length; i++)
 		{
 			u8 value = Read8(m_cgbDmaSource + i);
 			Write8(0x8000 + m_cgbDmaDestination + i, value);
@@ -186,10 +189,10 @@ void Memory::Run(int ticks)
 		m_vramLocked = vramLocked;
 	}
 
-	if(m_dmaMode == DmaMode::HBlank && m_inHBlank == true && m_hblankDoneThisLine == false)
+	if (m_dmaMode == DmaMode::HBlank && m_inHBlank == true && m_hblankDoneThisLine == false)
 	{
 		//Transfer 10h bytes
-		for(int i=0;i<0x10;i++)
+		for (int i = 0; i < 0x10; i++)
 		{
 			u8 value = Read8(m_cgbDmaSource);
 			Write8(0x8000 + m_cgbDmaDestination, value);
@@ -199,7 +202,7 @@ void Memory::Run(int ticks)
 		}
 
 		//DMA done?
-		if( (m_cgbDmaLength & 0x7f) == 0 )
+		if ((m_cgbDmaLength & 0x7f) == 0)
 		{
 			m_cgbDmaLength = 0;	///<Clears 0x80: the DMA-is-active flag
 			m_dmaMode = DmaMode::None;
@@ -254,35 +257,40 @@ void Memory::Serialize(Archive& archive)
 	SerializeItem(archive, m_selectedCgbRamBank);
 	SerializeItem(archive, m_selectedCgbVramBank);
 
-	for(auto& cgbRamBank : m_cgbRamBanks)
+	for (auto& cgbRamBank : m_cgbRamBanks) {
 		SerializeBuffer(archive, &cgbRamBank[0], 0x1000);
+	}
 
-	for(auto& cgbVramBank : m_cgbVramBanks)
+	for (auto& cgbVramBank : m_cgbVramBanks) {
 		SerializeBuffer(archive, &cgbVramBank[0], 0x2000);
+	}
 
 
 	//Update Display caches on load
-	if(archive.GetArchiveMode() == ArchiveMode::Loading)
+	if (archive.GetArchiveMode() == ArchiveMode::Loading)
 	{
 		//The Display doesn't save its vram and oam caches since they're already saved by Memory
 		// so this is here to restore those caches
 
 		if (m_machineType == EmulatedMachine::Gameboy)
 		{
-			for (int address = 0x8000; address < 0xa000; address++)
+			for (int address = 0x8000; address < 0xa000; address++) {
 				m_display->WriteVram(0, address, m_memoryData[address]);
+			}
 		}
 		else if (m_machineType == EmulatedMachine::GameboyColor)
 		{
 			for (int bank = 0; bank < 2; bank++)
 			{
-				for (int address = 0x8000; address < 0xa000; address++)
+				for (int address = 0x8000; address < 0xa000; address++) {
 					m_display->WriteVram(bank, address, m_cgbVramBanks[bank][address - 0x8000]);
+				}
 			}
 		}
 
-		for(int address = 0xfe00; address < 0xfea0; address++)
+		for (int address = 0xfe00; address < 0xfea0; address++) {
 			m_display->WriteOam(address, m_memoryData[address]);
+		}
 	}
 }
 
@@ -294,11 +302,13 @@ void Memory::SetRegisterLocation(u8 registerOffset, u8* pRegister, bool writeabl
 
 u8* Memory::GetVram(int bank)
 {
-	if(m_machineType != EmulatedMachine::GameboyColor)
+	if (m_machineType != EmulatedMachine::GameboyColor) {
 		return &m_memoryData[0x8000];
+	}
 
-	if(bank < 0)
+	if (bank < 0) {
 		return &m_cgbVramBanks[m_selectedCgbVramBank][0];
+	}
 
 	bank = bank & 0x01;	///<The only valid banks are 0 and 1.
 
@@ -323,21 +333,22 @@ void Memory::EndHBlank()
 
 u8 Memory::Read8(u16 address)
 {
-	if(address >= 0xff00)
+	if (address >= 0xff00)
 	{
 		u8 offset = (u8)(address & 0x00ff);
 		u8* pRegister = m_registerLocation[offset];
-		if(pRegister != nullptr)
+		if (pRegister != nullptr) {
 			return *pRegister;
+		}
 
-		if(address >= 0xff30 && address < 0xff40)
+		if (address >= 0xff30 && address < 0xff40)
 		{
-			if(m_waveRamLockMode == WaveRamLock::NoAccess)
+			if (m_waveRamLockMode == WaveRamLock::NoAccess)
 			{
 				//printf("Read(%04X):NoAccess: %02X\n", address, 0xff);
 				return 0xff;
 			}
-			else if(m_waveRamLockMode == WaveRamLock::SingleValue)
+			else if (m_waveRamLockMode == WaveRamLock::SingleValue)
 			{
 				//printf("Read(%04X):SingleValue: %02X\n", address, m_waveRamReadValue);
 				return m_waveRamReadValue;
@@ -348,15 +359,15 @@ u8 Memory::Read8(u16 address)
 			}
 		}
 	}
-	else if(address >= 0x8000 && address < 0xa000 && m_vramLocked)
+	else if (address >= 0x8000 && address < 0xa000 && m_vramLocked)
 	{
 		return 0xff;
 	}
-	else if(address >= 0xfe00 && address < 0xfea0 && m_oamLocked)
+	else if (address >= 0xfe00 && address < 0xfea0 && m_oamLocked)
 	{
 		return 0xff;
 	}
-	else if(address < 0x0100 && m_bootRomEnabled == true)
+	else if (address < 0x0100 && m_bootRomEnabled == true)
 	{
 		return m_bootRom[address];
 	}
@@ -367,7 +378,7 @@ u8 Memory::Read8(u16 address)
 u16 Memory::Read16(u16 address)
 {
 	u8 low = Read8(address);
-	u8 high = Read8(address+1);
+	u8 high = Read8(address + 1);
 
 	u16 result = low | (high << 8);
 	return result;
@@ -376,18 +387,20 @@ u16 Memory::Read16(u16 address)
 void Memory::Write8(u16 address, u8 value)
 {
 	//Read-only addresses
-	if(address < 0x8000)
+	if (address < 0x8000) {
 		return;
+	}
 
 	//Registers
-	if(address >= 0xff00)
+	if (address >= 0xff00)
 	{
 		u8 offset = (u8)(address & 0x00ff);
 
-		if(m_callWriteRegister[offset])
+		if (m_callWriteRegister[offset]) {
 			WriteRegister(address, value);
+		}
 
-		if(m_registerWriteable[offset] && m_registerLocation[offset] != nullptr)
+		if (m_registerWriteable[offset] && m_registerLocation[offset] != nullptr)
 		{
 			*(m_registerLocation[offset]) = value;
 			return;
@@ -395,31 +408,39 @@ void Memory::Write8(u16 address, u8 value)
 	}
 
 	//Ignore writes to locked areas
-	if(address >= 0x8000 && address < 0xa000 && m_vramLocked)
+	if (address >= 0x8000 && address < 0xa000 && m_vramLocked) {
 		return;
-	if(address >= 0xfe00 && address < 0xfea0 && m_oamLocked)
+	}
+	if (address >= 0xfe00 && address < 0xfea0 && m_oamLocked) {
 		return;
-	if(address >= 0xff30 && address < 0xff40 && m_waveRamLockMode == WaveRamLock::NoAccess)
+	}
+	if (address >= 0xff30 && address < 0xff40 && m_waveRamLockMode == WaveRamLock::NoAccess) {
 		return;
+	}
 
 	//Send notifications when applicable
-	if(address >= 0x8000 && address < 0xa000)
+	if (address >= 0x8000 && address < 0xa000) {
 		m_display->WriteVram(m_selectedCgbVramBank, address, value);
-	if(address >= 0xfe00 && address < 0xfea0)
+	}
+	if (address >= 0xfe00 && address < 0xfea0) {
 		m_display->WriteOam(address, value);
+	}
 
 	//[$e000,$fdff] is mirrored to [$c000,$ddff]
-	if(address >= 0xe000 && address < 0xfe00)
+	if (address >= 0xe000 && address < 0xfe00) {
 		Write8(address - 0x2000, value);
+	}
 
 	//CGB banks
-	if(m_machineType == EmulatedMachine::GameboyColor)
+	if (m_machineType == EmulatedMachine::GameboyColor)
 	{
-		if(address >= 0x8000 && address < 0xa000)
+		if (address >= 0x8000 && address < 0xa000) {
 			m_cgbVramBanks[m_selectedCgbVramBank][address - 0x8000] = value;
+		}
 
-		if(address >= 0xd000 && address < 0xe000)
+		if (address >= 0xd000 && address < 0xe000) {
 			m_cgbRamBanks[m_selectedCgbRamBank][address - 0xd000] = value;
+		}
 	}
 
 	//Write it
@@ -432,7 +453,7 @@ void Memory::Write16(u16 address, u16 value)
 	Write8(address, low);
 
 	u8 high = (u8)(value >> 8);
-	Write8(address+1, high);
+	Write8(address + 1, high);
 }
 
 void Memory::SetDmaStartLocation(u8 value)
@@ -444,7 +465,7 @@ void Memory::SetDmaStartLocation(u8 value)
 	bool preserveOamLock = m_oamLocked;
 	m_oamLocked = false;
 
-	for(int i=0;i<0xa0;i++)
+	for (int i = 0; i < 0xa0; i++)
 	{
 		u16 sourceAddress = startAddress + i;
 		u16 targetAddress = 0xfe00 + i;
@@ -463,12 +484,14 @@ void Memory::DisableBootRom(u8 value)
 
 void Memory::SetCgbRamBank(u8 value)
 {
-	if(m_machineType != EmulatedMachine::GameboyColor)
+	if (m_machineType != EmulatedMachine::GameboyColor) {
 		return;
+	}
 
 	m_selectedCgbRamBank = value & 0x07;
-	if(m_selectedCgbRamBank == 0)
+	if (m_selectedCgbRamBank == 0) {
 		m_selectedCgbRamBank = 1;
+	}
 
 	memcpy((void*)(&m_memoryData[0xd000]), (void*)(&m_cgbRamBanks[m_selectedCgbRamBank][0]), 0x1000);
 	memcpy((void*)(&m_memoryData[0xf000]), (void*)(&m_cgbRamBanks[m_selectedCgbRamBank][0]), 0x0e00);
@@ -476,8 +499,9 @@ void Memory::SetCgbRamBank(u8 value)
 
 void Memory::SetCgbVramBank(u8 value)
 {
-	if(m_machineType != EmulatedMachine::GameboyColor)
+	if (m_machineType != EmulatedMachine::GameboyColor) {
 		return;
+	}
 
 	m_selectedCgbVramBank = (value & 0x01);
 
@@ -503,8 +527,9 @@ void Memory::SetWaveRamLock(WaveRamLock::Type lockType, u8 readValue)
 
 void Memory::SetCgbDmaSourceHigh(u8 value)
 {
-	if(m_machineType != EmulatedMachine::GameboyColor)
+	if (m_machineType != EmulatedMachine::GameboyColor) {
 		return;
+	}
 
 	m_cgbDmaSource &= 0x00ff;
 	m_cgbDmaSource |= (value << 8);
@@ -512,8 +537,9 @@ void Memory::SetCgbDmaSourceHigh(u8 value)
 
 void Memory::SetCgbDmaSourceLow(u8 value)
 {
-	if(m_machineType != EmulatedMachine::GameboyColor)
+	if (m_machineType != EmulatedMachine::GameboyColor) {
 		return;
+	}
 
 	value &= 0xf0;	///<Lower 4 bits are ignored since it must be aligned on a 0x10 boundary.
 
@@ -523,8 +549,9 @@ void Memory::SetCgbDmaSourceLow(u8 value)
 
 void Memory::SetCgbDmaDestinationHigh(u8 value)
 {
-	if(m_machineType != EmulatedMachine::GameboyColor)
+	if (m_machineType != EmulatedMachine::GameboyColor) {
 		return;
+	}
 
 	value &= 0x1f;	///<Upper 3 bits are ignored since destination is always in vram.
 
@@ -534,8 +561,9 @@ void Memory::SetCgbDmaDestinationHigh(u8 value)
 
 void Memory::SetCgbDmaDestinationLow(u8 value)
 {
-	if(m_machineType != EmulatedMachine::GameboyColor)
+	if (m_machineType != EmulatedMachine::GameboyColor) {
 		return;
+	}
 
 	value &= 0xf0;	///<Lower 4 bits are ignored since it must be aligned on a 0x10 boundary.
 
@@ -545,22 +573,25 @@ void Memory::SetCgbDmaDestinationLow(u8 value)
 
 void Memory::CgbDmaTrigger(u8 value)
 {
-	if(m_machineType != EmulatedMachine::GameboyColor)
+	if (m_machineType != EmulatedMachine::GameboyColor) {
 		return;
+	}
 
-	if(value & 0x80)
+	if (value & 0x80)
 	{
 		m_dmaMode = DmaMode::HBlank;
 	}
 	else
 	{
 		//Writing 0 to bit 7 while HBlank DMA is active cancels that DMA
-		if(m_dmaMode == DmaMode::HBlank)
+		if (m_dmaMode == DmaMode::HBlank) {
 			m_dmaMode = DmaMode::None;
 
-		//If HBlank DMA is not active, then writing 0 to bit 7 begins a general DMA
-		else
+			//If HBlank DMA is not active, then writing 0 to bit 7 begins a general DMA
+		}
+		else {
 			m_dmaMode = DmaMode::General;
+		}
 	}
 
 	m_cgbDmaLength = value;
@@ -573,10 +604,11 @@ Memory* Memory::CreateFromFile(const char* filename)
 	//Read the gb cart header out of the file
 	std::ifstream ifile(filename, std::ios::in | std::ios::binary);
 
-	if(ifile.fail() || ifile.eof() || !ifile.good())
+	if (ifile.fail() || ifile.eof() || !ifile.good()) {
 		return nullptr;
+	}
 
-	u8 header[0x150] = {0};
+	u8 header[0x150] = { 0 };
 	ifile.read((char*)&header[0], 0x150);
 	ifile.close();
 
@@ -585,38 +617,41 @@ Memory* Memory::CreateFromFile(const char* filename)
 	Memory* memoryController = nullptr;
 	u8 cartType = header[0x147];
 
-	if(cartType == 0 || cartType == 8 || cartType == 9)
+	if (cartType == 0 || cartType == 8 || cartType == 9)
 	{
 		memoryController = new RomOnly();
 		printf("Memory controller: RomOnly\n");
 	}
-	else if(cartType >= 1 && cartType <= 3)
+	else if (cartType >= 1 && cartType <= 3)
 	{
 		memoryController = new Mbc1();
 		printf("Memory controller: MBC1\n");
 	}
-	else if(cartType >= 0x0f && cartType <= 0x13)
+	else if (cartType >= 0x0f && cartType <= 0x13)
 	{
 		memoryController = new Mbc3();
 		printf("Memory controller: MBC3\n");
 	}
-	else if(cartType >= 0x19 && cartType <= 0x1e)
+	else if (cartType >= 0x19 && cartType <= 0x1e)
 	{
 		memoryController = new Mbc5();
 		printf("Memory controller: MBC5\n");
 	}
 
-	if(memoryController != nullptr)
+	if (memoryController != nullptr) {
 		printf("Cartridge type ok: %d (0x%02X)\n", cartType, cartType);
-	else
+	}
+	else {
 		printf("Unsupported cartridge type: %d (0x%02X)\n", cartType, cartType);
+	}
 
-	if(memoryController == nullptr)
+	if (memoryController == nullptr) {
 		return nullptr;
+	}
 
 
 	//Have the MBC class load the file
-	if(memoryController->LoadFile(filename) == false)
+	if (memoryController->LoadFile(filename) == false)
 	{
 		delete memoryController;
 		return nullptr;
@@ -632,7 +667,7 @@ void Memory::LoadBootRom(const char* filename)
 	std::ifstream bootRom;
 	bootRom.open(filename, std::ios::in | std::ios::binary);
 
-	if(bootRom.eof() || bootRom.fail() || !bootRom.good())
+	if (bootRom.eof() || bootRom.fail() || !bootRom.good())
 	{
 		//Use default boot rom
 		u8 defaultBootRom[] =
@@ -670,7 +705,7 @@ void Memory::LoadBootRom(const char* filename)
 
 void Memory::WriteRegister(u16 address, u8 value)
 {
-	switch(address)
+	switch (address)
 	{
 	case 0xff00: m_input->SetJoypadMode(value); break;
 

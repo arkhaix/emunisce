@@ -29,8 +29,9 @@ bool RomOnly::LoadFile(const char* filename)
 {
 	std::ifstream ifile(filename, std::ios::in | std::ios::binary);
 
-	if(ifile.fail() || ifile.eof() || !ifile.good())
+	if (ifile.fail() || ifile.eof() || !ifile.good()) {
 		return false;
+	}
 
 	ifile.read((char*)&m_memoryData[0], 0x8000);
 	ifile.close();

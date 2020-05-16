@@ -28,18 +28,20 @@ Mbc5::Mbc5()
 void Mbc5::Write8(u16 address, u8 value)
 {
 	//RAM Enable/Disable
-	if(address < 0x2000)
+	if (address < 0x2000)
 	{
-		if((value & 0x0a) != 0x0a)
+		if ((value & 0x0a) != 0x0a) {
 			SaveRAM();
-		else if(m_sramLoaded == false)
+		}
+		else if (m_sramLoaded == false) {
 			LoadRAM();
+		}
 
 		return;
 	}
 
 	//ROM Bank Select (low 8 bits)
-	else if(address < 0x3000)
+	else if (address < 0x3000)
 	{
 		m_selectedRomBank &= ~(0xff);
 		m_selectedRomBank |= value;
@@ -48,7 +50,7 @@ void Mbc5::Write8(u16 address, u8 value)
 	}
 
 	//ROM Bank Select (high 1 bit)
-	else if(address < 0x4000)
+	else if (address < 0x4000)
 	{
 		value &= 0x01;
 
@@ -59,7 +61,7 @@ void Mbc5::Write8(u16 address, u8 value)
 	}
 
 	//RAM Bank Select (3:0)
-	else if(address < 0x6000)
+	else if (address < 0x6000)
 	{
 		value &= 0x0f;
 		m_selectedRamBank = value;
@@ -68,7 +70,7 @@ void Mbc5::Write8(u16 address, u8 value)
 	}
 
 	//Switchable RAM Write 
-	else if(address >= 0xa000 && address < 0xc000)
+	else if (address >= 0xa000 && address < 0xc000)
 	{
 		//We need to save this value in addition to letting base memory handle it.
 		m_ramBanks[m_selectedRamBank][address - 0xa000] = value;

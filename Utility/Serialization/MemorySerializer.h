@@ -25,42 +25,42 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class MemorySerializer : public ISerializer
-{
-public:
+	class MemorySerializer : public ISerializer
+	{
+	public:
 
-	// MemorySerializer
+		// MemorySerializer
 
-	MemorySerializer();
-	~MemorySerializer() override;
+		MemorySerializer();
+		~MemorySerializer() override;
 
-	virtual unsigned char* GetBuffer();
-	virtual unsigned int GetBufferSize();
-	virtual void TransferBuffer(unsigned char** buffer, unsigned int* size);	///<Similar to calling GetBuffer and GetBufferSize, but releases ownership of the buffer to the caller.  MemorySerializer will no longer delete the buffer or reference it in any way after this is called.
+		virtual unsigned char* GetBuffer();
+		virtual unsigned int GetBufferSize();
+		virtual void TransferBuffer(unsigned char** buffer, unsigned int* size);	///<Similar to calling GetBuffer and GetBufferSize, but releases ownership of the buffer to the caller.  MemorySerializer will no longer delete the buffer or reference it in any way after this is called.
 
-	virtual void SetBuffer(unsigned char* buffer, unsigned int size);
-
-
-	// ISerializer
-
-	void SetArchive(Archive* archive) override;
-
-	void Save(unsigned char* data, unsigned int bytes) override;
-	void Restore(unsigned char* buffer, unsigned int bytes) override;
-
-	void Close() override;
+		virtual void SetBuffer(unsigned char* buffer, unsigned int size);
 
 
-protected:
+		// ISerializer
 
-	unsigned char* m_buffer;
+		void SetArchive(Archive* archive) override;
 
-	unsigned int m_usedSize;
-	unsigned int m_reservedSize;
-	float m_reserveMultiplier;
+		void Save(unsigned char* data, unsigned int bytes) override;
+		void Restore(unsigned char* buffer, unsigned int bytes) override;
 
-	unsigned int m_restorePosition;
-};
+		void Close() override;
+
+
+	protected:
+
+		unsigned char* m_buffer;
+
+		unsigned int m_usedSize;
+		unsigned int m_reservedSize;
+		float m_reserveMultiplier;
+
+		unsigned int m_restorePosition;
+	};
 
 }	//namespace Emunisce
 

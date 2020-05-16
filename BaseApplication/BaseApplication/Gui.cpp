@@ -26,7 +26,7 @@ using namespace Emunisce;
 
 #include "HqNx/HqNx.h"
 
-#include <memory.h>
+#include <Memory.h>
 
 
 // Gui
@@ -34,7 +34,7 @@ using namespace Emunisce;
 Gui::Gui()
 {
 	m_screenBufferCopy = nullptr;
-    m_filteredScreenBuffer = nullptr;
+	m_filteredScreenBuffer = nullptr;
 	m_filteredScreenBufferId = -1;
 	m_displayFilter = DisplayFilter::NoFilter;
 
@@ -51,23 +51,27 @@ Gui::~Gui()
 	m_featureInput = nullptr;
 	delete m_guiFeature;
 
-	if(m_screenBufferCopy != nullptr)
-        delete m_screenBufferCopy;
+	if (m_screenBufferCopy != nullptr) {
+		delete m_screenBufferCopy;
+	}
 }
 
 ScreenBuffer* Gui::GetStableScreenBuffer()
 {
-    if(MachineFeature::GetScreenBufferCount() == m_filteredScreenBufferId && m_displayFilter == m_screenBufferCopyFilter)
-        return m_filteredScreenBuffer;
+	if (MachineFeature::GetScreenBufferCount() == m_filteredScreenBufferId && m_displayFilter == m_screenBufferCopyFilter) {
+		return m_filteredScreenBuffer;
+	}
 
-    ScreenBuffer* screenBuffer = MachineFeature::GetStableScreenBuffer();
+	ScreenBuffer* screenBuffer = MachineFeature::GetStableScreenBuffer();
 
-    bool needToDeleteFilteredBuffer = false;
-    if(m_filteredScreenBuffer != nullptr && m_filteredScreenBuffer != m_screenBufferCopy)
-        needToDeleteFilteredBuffer = true;
+	bool needToDeleteFilteredBuffer = false;
+	if (m_filteredScreenBuffer != nullptr && m_filteredScreenBuffer != m_screenBufferCopy) {
+		needToDeleteFilteredBuffer = true;
+	}
 
-	if(m_screenBufferCopy != nullptr)
+	if (m_screenBufferCopy != nullptr) {
 		delete m_screenBufferCopy;
+	}
 
 	int width = screenBuffer->GetWidth();
 	int height = screenBuffer->GetHeight();
@@ -75,38 +79,44 @@ ScreenBuffer* Gui::GetStableScreenBuffer()
 	m_screenBufferCopy = new DynamicScreenBuffer(width, height);
 	memcpy((void*)m_screenBufferCopy->GetPixels(), (void*)screenBuffer->GetPixels(), width * height * sizeof(DisplayPixel));
 
-    if(needToDeleteFilteredBuffer == true)
-        delete m_filteredScreenBuffer;
+	if (needToDeleteFilteredBuffer == true) {
+		delete m_filteredScreenBuffer;
+	}
 
-    m_filteredScreenBuffer = m_screenBufferCopy;
-    m_filteredScreenBufferId = MachineFeature::GetScreenBufferCount();
+	m_filteredScreenBuffer = m_screenBufferCopy;
+	m_filteredScreenBufferId = MachineFeature::GetScreenBufferCount();
 	m_screenBufferCopyFilter = m_displayFilter;
 
-    if(m_displayFilter == DisplayFilter::Hq2x)
+	if (m_displayFilter == DisplayFilter::Hq2x) {
 		m_filteredScreenBuffer = HqNx::Hq2x(m_screenBufferCopy);
-	else if(m_displayFilter == DisplayFilter::Hq3x)
+	}
+	else if (m_displayFilter == DisplayFilter::Hq3x) {
 		m_filteredScreenBuffer = HqNx::Hq3x(m_screenBufferCopy);
-	else if(m_displayFilter == DisplayFilter::Hq4x)
+	}
+	else if (m_displayFilter == DisplayFilter::Hq4x) {
 		m_filteredScreenBuffer = HqNx::Hq4x(m_screenBufferCopy);
+	}
 
 	return m_filteredScreenBuffer;
 }
 
 void Gui::EnableBackgroundAnimation()
 {
-	if(m_guiFeature != nullptr)
+	if (m_guiFeature != nullptr) {
 		m_guiFeature->EnableBackgroundAnimation();
+	}
 }
 
 void Gui::DisableBackgroundAnimation()
 {
-	if(m_guiFeature != nullptr)
+	if (m_guiFeature != nullptr) {
 		m_guiFeature->DisableBackgroundAnimation();
+	}
 }
 
 void Gui::SetDisplayFilter(DisplayFilter::Type filter)
 {
-    m_displayFilter = filter;
+	m_displayFilter = filter;
 }
 
 
@@ -118,7 +128,7 @@ Gui::GuiFeature::GuiFeature()
 	m_backgroundAnimation = new KingsDream();
 	m_backgroundEnabled = true;
 
-	m_backgroundAnimation->SetScreenResolution( m_screenBuffer.GetWidth(), m_screenBuffer.GetHeight() );
+	m_backgroundAnimation->SetScreenResolution(m_screenBuffer.GetWidth(), m_screenBuffer.GetHeight());
 
 	m_ticksThisFrame = 0;
 	m_ticksPerFrame = m_backgroundAnimation->GetPointsPerFrame() / 2;	///<Only update the background at 30fps.  This is because it uses a bit of cpu.  Don't forget to update the brightness (or points per frame) if you change this.
@@ -161,21 +171,23 @@ unsigned int Gui::GuiFeature::GetTicksUntilNextFrame()
 void Gui::GuiFeature::Step()
 {
 	m_ticksThisFrame++;
-	if(m_ticksThisFrame >= m_ticksPerFrame)
+	if (m_ticksThisFrame >= m_ticksPerFrame)
 	{
 		m_ticksThisFrame = 0;
 		m_frameCount++;
 	}
 
-	if(m_backgroundEnabled == true)
+	if (m_backgroundEnabled == true) {
 		m_backgroundAnimation->UpdateAnimation();
+	}
 }
 
 void Gui::GuiFeature::RunToNextFrame()
 {
 	int frameCount = m_frameCount;
-	while(m_frameCount == frameCount)
+	while (m_frameCount == frameCount) {
 		Step();
+	}
 }
 
 
@@ -192,8 +204,9 @@ ScreenResolution Gui::GuiFeature::GetScreenResolution()
 ScreenBuffer* Gui::GuiFeature::GetStableScreenBuffer()
 {
 	ScreenBuffer* result = &m_screenBuffer;
-	if(m_backgroundEnabled == true)
+	if (m_backgroundEnabled == true) {
 		result = m_backgroundAnimation->GetFrame();
+	}
 
 	return result;
 }
@@ -215,8 +228,9 @@ unsigned int Gui::GuiFeature::NumButtons()
 
 const char* Gui::GuiFeature::GetButtonName(unsigned int index)
 {
-	if(index < GuiButtons::NumGuiButtons)
+	if (index < GuiButtons::NumGuiButtons) {
 		return GuiButtons::ToString[index];
+	}
 
 	return nullptr;
 }
@@ -224,16 +238,18 @@ const char* Gui::GuiFeature::GetButtonName(unsigned int index)
 
 void Gui::GuiFeature::ButtonDown(unsigned int index)
 {
-	if(index >= GuiButtons::NumGuiButtons)
+	if (index >= GuiButtons::NumGuiButtons) {
 		return;
+	}
 
 	//todo
 }
 
 void Gui::GuiFeature::ButtonUp(unsigned int index)
 {
-	if(index >= GuiButtons::NumGuiButtons)
+	if (index >= GuiButtons::NumGuiButtons) {
 		return;
+	}
 
 	//todo
 }

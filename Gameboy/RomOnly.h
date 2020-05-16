@@ -26,14 +26,14 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class RomOnly : public Memory
-{
-public:
+	class RomOnly : public Memory
+	{
+	public:
 
-protected:
+	protected:
 
-	bool LoadFile(const char* filename) override;
-};
+		bool LoadFile(const char* filename) override;
+	};
 
 }	//namespace Emunisce
 

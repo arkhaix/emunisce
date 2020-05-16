@@ -26,44 +26,44 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class Application;
+	class Application;
 
-class WindowMain : public wxGLCanvas
-{
-    //Emunsice stuff
+	class WindowMain : public wxGLCanvas
+	{
+		//Emunsice stuff
 
-public:
+	public:
 
-    void SetApplication(Application* application);
+		void SetApplication(Application* application);
 
-private:
+	private:
 
-    Application* m_application;
+		Application* m_application;
 
 
-    //wx stuff
+		//wx stuff
 
-private:
+	private:
 
-    wxGLContext*	m_context;
+		wxGLContext*	m_context;
 
-public:
-	WindowMain(wxFrame* parent, int* args);
-	virtual ~WindowMain();
+	public:
+		WindowMain(wxFrame* parent, int* args);
+		virtual ~WindowMain();
 
-	int getWidth();
-	int getHeight();
+		int getWidth();
+		int getHeight();
 
-	// events
-	void OnKeyDown(wxKeyEvent& event);
-	void OnKeyUp(wxKeyEvent& event);
-	void OnResize(wxSizeEvent& event);
-	void OnPaint(wxPaintEvent& event);
-	void OnEraseBackground(wxEraseEvent& event);
-	void OnIdle(wxIdleEvent& event);
+		// events
+		void OnKeyDown(wxKeyEvent& event);
+		void OnKeyUp(wxKeyEvent& event);
+		void OnResize(wxSizeEvent& event);
+		void OnPaint(wxPaintEvent& event);
+		void OnEraseBackground(wxEraseEvent& event);
+		void OnIdle(wxIdleEvent& event);
 
-	DECLARE_EVENT_TABLE()
-};
+		DECLARE_EVENT_TABLE()
+	};
 
 }   //namespace Emunisce
 

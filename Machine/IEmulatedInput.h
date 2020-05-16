@@ -24,20 +24,20 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class IEmulatedInput
-{
-public:
+	class IEmulatedInput
+	{
+	public:
 
-	//Digital buttons
+		//Digital buttons
 
-	virtual unsigned int NumButtons() = 0;
-	virtual const char* GetButtonName(unsigned int index) = 0;
+		virtual unsigned int NumButtons() = 0;
+		virtual const char* GetButtonName(unsigned int index) = 0;
 
-	virtual void ButtonDown(unsigned int index) = 0;
-	virtual void ButtonUp(unsigned int index) = 0;
+		virtual void ButtonDown(unsigned int index) = 0;
+		virtual void ButtonUp(unsigned int index) = 0;
 
-	virtual bool IsButtonDown(unsigned int index) = 0;
-};
+		virtual bool IsButtonDown(unsigned int index) = 0;
+	};
 
 }	//namespace Emunisce
 

@@ -29,38 +29,38 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class FileSerializer : public ISerializer
-{
-public:
+	class FileSerializer : public ISerializer
+	{
+	public:
 
-	// FileSerializer
+		// FileSerializer
 
-	FileSerializer();
-	~FileSerializer() override;
+		FileSerializer();
+		~FileSerializer() override;
 
-	virtual void SetFile(const char* filename);
-	virtual void CloseFile();
-
-
-	// ISerializer
-
-	void SetArchive(Archive* archive) override;
-
-	void Save(unsigned char* data, unsigned int bytes) override;
-	void Restore(unsigned char* buffer, unsigned int bytes) override;
-
-	void Close() override;
+		virtual void SetFile(const char* filename);
+		virtual void CloseFile();
 
 
-protected:
+		// ISerializer
 
-	void OpenStream();
+		void SetArchive(Archive* archive) override;
 
-	std::fstream* m_fileStream;
+		void Save(unsigned char* data, unsigned int bytes) override;
+		void Restore(unsigned char* buffer, unsigned int bytes) override;
 
-	int m_archiveMode;
-	std::string m_filename;
-};
+		void Close() override;
+
+
+	protected:
+
+		void OpenStream();
+
+		std::fstream* m_fileStream;
+
+		int m_archiveMode;
+		std::string m_filename;
+	};
 
 }	//namespace Emunisce
 

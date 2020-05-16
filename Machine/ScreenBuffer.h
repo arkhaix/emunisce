@@ -28,97 +28,97 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class Archive;
+	class Archive;
 
-class ScreenBuffer
-{
-public:
-
-	virtual ~ScreenBuffer();
-
-	virtual int GetWidth() = 0;
-	virtual int GetHeight() = 0;
-
-	virtual DisplayPixel* GetPixels() = 0;
-
-	virtual void Clear(DisplayPixel clearColor) = 0;
-	virtual ScreenBuffer* Clone() = 0;
-
-	virtual void Serialize(Archive& archive);
-};
-
-template<int TWidth, int THeight>
-class TScreenBuffer : public ScreenBuffer
-{
-public:
-
-	DisplayPixel Pixels[TWidth * THeight];
-
-	inline DisplayPixel GetPixel(int x, int y)
+	class ScreenBuffer
 	{
-		if(x<0 || x>=TWidth || y<0 || y>=THeight)
-			return (DisplayPixel)0;
+	public:
 
-		return Pixels[y*TWidth + x];
-	}
+		virtual ~ScreenBuffer();
 
-	inline void SetPixel(int x, int y, DisplayPixel value)
+		virtual int GetWidth() = 0;
+		virtual int GetHeight() = 0;
+
+		virtual DisplayPixel* GetPixels() = 0;
+
+		virtual void Clear(DisplayPixel clearColor) = 0;
+		virtual ScreenBuffer* Clone() = 0;
+
+		virtual void Serialize(Archive& archive);
+	};
+
+	template<int TWidth, int THeight>
+	class TScreenBuffer : public ScreenBuffer
 	{
-		if(x<0 || x>=TWidth || y<0 || y>=THeight)
-			return;
+	public:
 
-		Pixels[y*TWidth+x] = value;
-	}
+		DisplayPixel Pixels[TWidth * THeight];
 
-	int GetWidth() override
+		inline DisplayPixel GetPixel(int x, int y)
+		{
+			if (x < 0 || x >= TWidth || y < 0 || y >= THeight)
+				return (DisplayPixel)0;
+
+			return Pixels[y*TWidth + x];
+		}
+
+		inline void SetPixel(int x, int y, DisplayPixel value)
+		{
+			if (x < 0 || x >= TWidth || y < 0 || y >= THeight)
+				return;
+
+			Pixels[y*TWidth + x] = value;
+		}
+
+		int GetWidth() override
+		{
+			return TWidth;
+		}
+
+		int GetHeight() override
+		{
+			return THeight;
+		}
+
+		DisplayPixel* GetPixels() override
+		{
+			return &Pixels[0];
+		}
+
+		void Clear(DisplayPixel clearColor) override
+		{
+			int numPixels = THeight * TWidth;
+			for (int i = 0; i < numPixels; i++)
+				Pixels[i] = clearColor;
+		}
+
+		ScreenBuffer* Clone() override
+		{
+			TScreenBuffer<TWidth, THeight>* result = new TScreenBuffer<TWidth, THeight>();
+			memcpy(&result->Pixels[0], &Pixels[0], TWidth * THeight * sizeof(DisplayPixel));
+			return result;
+		}
+	};
+
+	class DynamicScreenBuffer : public ScreenBuffer
 	{
-		return TWidth;
-	}
+	public:
 
-	int GetHeight() override
-	{
-		return THeight;
-	}
+		DisplayPixel* Pixels;
+		int Width;
+		int Height;
 
-	DisplayPixel* GetPixels() override
-	{
-		return &Pixels[0];
-	}
+		DynamicScreenBuffer(int width, int height);
+		~DynamicScreenBuffer() override;
 
-	void Clear(DisplayPixel clearColor) override
-	{
-		int numPixels = THeight * TWidth;
-		for(int i=0;i<numPixels;i++)
-			Pixels[i] = clearColor;
-	}
+		int GetWidth() override;
+		int GetHeight() override;
 
-	ScreenBuffer* Clone() override
-	{
-		TScreenBuffer<TWidth, THeight>* result = new TScreenBuffer<TWidth, THeight>();
-		memcpy(&result->Pixels[0], &Pixels[0], TWidth * THeight * sizeof(DisplayPixel));
-		return result;
-	}
-};
+		DisplayPixel* GetPixels() override;
 
-class DynamicScreenBuffer : public ScreenBuffer
-{
-public:
-
-	DisplayPixel* Pixels;
-	int Width;
-	int Height;
-
-	DynamicScreenBuffer(int width, int height);
-	~DynamicScreenBuffer() override;
-
-	int GetWidth() override;
-	int GetHeight() override;
-
-	DisplayPixel* GetPixels() override;
-
-	void Clear(DisplayPixel clearColor) override;
-	ScreenBuffer* Clone() override;
-};
+		void Clear(DisplayPixel clearColor) override;
+		ScreenBuffer* Clone() override;
+	};
 
 }	//namespace Emunisce
 

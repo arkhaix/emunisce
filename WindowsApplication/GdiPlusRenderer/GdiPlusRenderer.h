@@ -26,32 +26,32 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class EmunisceApplication;
-class IEmulatedMachine;
+	class EmunisceApplication;
+	class IEmulatedMachine;
 
-class GdiPlusRenderer
-{
-public:
+	class GdiPlusRenderer
+	{
+	public:
 
-	void Initialize(EmunisceApplication* phoenix, HWND windowHandle);
-	void Shutdown();
+		void Initialize(EmunisceApplication* phoenix, HWND windowHandle);
+		void Shutdown();
 
-	void SetMachine(IEmulatedMachine* machine);
+		void SetMachine(IEmulatedMachine* machine);
 
-	int GetLastFrameRendered();
+		int GetLastFrameRendered();
 
-	void SetVsync(bool enabled);
-
-
-	// Window events
-
-	void Draw();
+		void SetVsync(bool enabled);
 
 
-private:
+		// Window events
 
-	class GdiPlusRenderer_Private* m_private;
-};
+		void Draw();
+
+
+	private:
+
+		class GdiPlusRenderer_Private* m_private;
+	};
 
 }	//namespace Emunisce
 

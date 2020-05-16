@@ -34,108 +34,108 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class EmunisceApplication;
+	class EmunisceApplication;
 
 
-class ConsoleDebugger
-{
-public:
+	class ConsoleDebugger
+	{
+	public:
 
-	ConsoleDebugger();
+		ConsoleDebugger();
 
-	void Initialize(EmunisceApplication* phoenix);
-	void Shutdown();
+		void Initialize(EmunisceApplication* phoenix);
+		void Shutdown();
 
-	void SetMachine(IEmulatedMachine* machine);
+		void SetMachine(IEmulatedMachine* machine);
 
-	void Run();
+		void Run();
 
-	void Print(const char* text);
+		void Print(const char* text);
 
-private:
+	private:
 
-	void Help();
+		void Help();
 
-	void SetupConsole();
+		void SetupConsole();
 
-	void UpdateDisplay();
-	void FetchCommand();
-	std::string FetchLine();
+		void UpdateDisplay();
+		void FetchCommand();
+		std::string FetchLine();
 
-	std::vector<std::string> SplitCommand(std::string command);
-
-
-	//Commands
-
-	void LoadROM(const char* filename);
-	void Reset();
-
-	void StepInto();
-	void StepOver();
-	void RunMachine();
-	void RunMachineTo(int address);
-
-	void Pause();
-
-	void Speed(float multiplier);
-
-	void SaveState(const char* id);
-	void LoadState(const char* id);
-
-	void ToggleBreakpoint(int address);
-	void ListBreakpoints();
-	void ClearBreakpoints();
-
-	void PrintMemory(int address, int length);
-
-	void ToggleMute();
-	void SetSquareSynthesisMethod(const char* strMethod);
-
-	void SetBackgroundAnimation(const char* state);
-
-	void SetDisplayFilter(const char* strFilter);
-	void SetVsync(const char* strMode);
-
-	void ToggleRecording();
-
-	void TogglePlayMovie();
-	void TogglePlayMacro(const char* loop);
-
-	void SaveMovie(const char* id);
-	void LoadMovie(const char* id);
-
-	void SaveMacro(const char* id);
-	void LoadMacro(const char* id);
-
-	void PrintButtons();
-
-	void PrintMachineType();
+		std::vector<std::string> SplitCommand(std::string command);
 
 
-	//Properties
+		//Commands
 
-	EmunisceApplication* m_phoenix;
-	IUserInterface* m_userInterface;
+		void LoadROM(const char* filename);
+		void Reset();
 
-	IEmulatedMachine* m_machine;
-	IEmulatedProcessor* m_cpu;
-	IEmulatedDisplay* m_display;
-	IEmulatedMemory* m_memory;
+		void StepInto();
+		void StepOver();
+		void RunMachine();
+		void RunMachineTo(int address);
 
-	std::string m_lastFileLoaded;
-	int m_frameTicksRemaining;
+		void Pause();
 
-	bool m_breakpointsEnabled;
-	std::set<u16> m_breakpoints;
+		void Speed(float multiplier);
 
-	bool m_muteSound;
+		void SaveState(const char* id);
+		void LoadState(const char* id);
 
-	SquareSynthesisMethod::Type m_squareSynthesisMethod;
-	DisplayFilter::Type m_displayFilter;
+		void ToggleBreakpoint(int address);
+		void ListBreakpoints();
+		void ClearBreakpoints();
 
-	bool m_recordingInput;
-	bool m_playingInput;
-};
+		void PrintMemory(int address, int length);
+
+		void ToggleMute();
+		void SetSquareSynthesisMethod(const char* strMethod);
+
+		void SetBackgroundAnimation(const char* state);
+
+		void SetDisplayFilter(const char* strFilter);
+		void SetVsync(const char* strMode);
+
+		void ToggleRecording();
+
+		void TogglePlayMovie();
+		void TogglePlayMacro(const char* loop);
+
+		void SaveMovie(const char* id);
+		void LoadMovie(const char* id);
+
+		void SaveMacro(const char* id);
+		void LoadMacro(const char* id);
+
+		void PrintButtons();
+
+		void PrintMachineType();
+
+
+		//Properties
+
+		EmunisceApplication* m_phoenix;
+		IUserInterface* m_userInterface;
+
+		IEmulatedMachine* m_machine;
+		IEmulatedProcessor* m_cpu;
+		IEmulatedDisplay* m_display;
+		IEmulatedMemory* m_memory;
+
+		std::string m_lastFileLoaded;
+		int m_frameTicksRemaining;
+
+		bool m_breakpointsEnabled;
+		std::set<u16> m_breakpoints;
+
+		bool m_muteSound;
+
+		SquareSynthesisMethod::Type m_squareSynthesisMethod;
+		DisplayFilter::Type m_displayFilter;
+
+		bool m_recordingInput;
+		bool m_playingInput;
+	};
 
 }	//namespace Emunisce
 

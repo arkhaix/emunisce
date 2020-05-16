@@ -29,85 +29,85 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class Gameboy;
-class DutyUnit;
+	class Gameboy;
+	class DutyUnit;
 
 
-class Sound1 : public SoundGenerator
-{
-public:
+	class Sound1 : public SoundGenerator
+	{
+	public:
 
-	Sound1();
-	virtual ~Sound1();
-
-
-	//Sound component
-
-	void Initialize(ChannelController* channelController) override;
-	void SetMachine(Gameboy* machine) override;
-
-	void Serialize(Archive& archive) override;
-
-	void SetSynthesisMethod(SquareSynthesisMethod::Type method);
+		Sound1();
+		virtual ~Sound1();
 
 
-	//Sound generation
+		//Sound component
 
-	void PowerOff() override;
-	void PowerOn() override;
+		void Initialize(ChannelController* channelController) override;
+		void SetMachine(Gameboy* machine) override;
 
-	void Run(int ticks) override;
+		void Serialize(Archive& archive) override;
 
-	void TickEnvelope();
-	virtual void TickSweep();
-
-	float GetSample() override;
+		void SetSynthesisMethod(SquareSynthesisMethod::Type method);
 
 
-	//Registers
+		//Sound generation
 
-	void SetNR10(u8 value);
-	void SetNR11(u8 value);
-	void SetNR12(u8 value);
-	void SetNR13(u8 value);
-	void SetNR14(u8 value);
+		void PowerOff() override;
+		void PowerOn() override;
 
+		void Run(int ticks) override;
 
-private:
+		void TickEnvelope();
+		virtual void TickSweep();
 
-
-	//Sound generation
-
-	DutyUnit* m_dutyUnit;
-
-	int m_frequency;	///<11-bit frequency
+		float GetSample() override;
 
 
-	void Trigger() override;
-	void TriggerSweep();
-	void WriteSweepRegister(u8 value);
+		//Registers
 
-	int CalculateFrequency();
-
-	int m_frequencyShadow;
-
-	bool m_sweepEnabled;
-	int m_sweepShift;
-	bool m_sweepIncreasing;
-	int m_sweepTimerValue;
-	int m_sweepTimerPeriod;
-	bool m_hasPerformedDecreasingCalculation;
+		void SetNR10(u8 value);
+		void SetNR11(u8 value);
+		void SetNR12(u8 value);
+		void SetNR13(u8 value);
+		void SetNR14(u8 value);
 
 
+	private:
 
-	//Registers
 
-	u8 m_nr10;	///<ff10
-	u8 m_nr11;	///<ff11
-	u8 m_nr12;	///<ff12
-	u8 m_nr13;	///<ff13
-	u8 m_nr14;	///<ff14
-};
+		//Sound generation
+
+		DutyUnit* m_dutyUnit;
+
+		int m_frequency;	///<11-bit frequency
+
+
+		void Trigger() override;
+		void TriggerSweep();
+		void WriteSweepRegister(u8 value);
+
+		int CalculateFrequency();
+
+		int m_frequencyShadow;
+
+		bool m_sweepEnabled;
+		int m_sweepShift;
+		bool m_sweepIncreasing;
+		int m_sweepTimerValue;
+		int m_sweepTimerPeriod;
+		bool m_hasPerformedDecreasingCalculation;
+
+
+
+		//Registers
+
+		u8 m_nr10;	///<ff10
+		u8 m_nr11;	///<ff11
+		u8 m_nr12;	///<ff12
+		u8 m_nr13;	///<ff13
+		u8 m_nr14;	///<ff14
+	};
 
 }	//namespace Emunisce
 

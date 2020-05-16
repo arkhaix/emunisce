@@ -24,16 +24,16 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-//Component forward-declarations
-class Gameboy;
-class Cpu;
-class Memory;
-class Display;
-class Input;
-class Sound;
+	//Component forward-declarations
+	class Gameboy;
+	class Cpu;
+	class Memory;
+	class Display;
+	class Input;
+	class Sound;
 
 
-//Registers
+	//Registers
 #define REG_P1 (0xff00) //Joypad info and system type
 #define REG_SB (0xff01) //Serial transfer data
 #define REG_SC (0xff02) //Serial I/O control

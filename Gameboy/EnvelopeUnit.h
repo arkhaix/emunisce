@@ -26,38 +26,38 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class Archive;
-class SoundGenerator;
+	class Archive;
+	class SoundGenerator;
 
-class EnvelopeUnit
-{
-public:
+	class EnvelopeUnit
+	{
+	public:
 
-	EnvelopeUnit(SoundGenerator* soundGenerator);
+		EnvelopeUnit(SoundGenerator* soundGenerator);
 
-	void Serialize(Archive& archive);
+		void Serialize(Archive& archive);
 
-	void Tick();
-	void Trigger();
+		void Tick();
+		void Trigger();
 
-	void WriteEnvelopeRegister(u8 value);
+		void WriteEnvelopeRegister(u8 value);
 
-	float GetCurrentVolume();
+		float GetCurrentVolume();
 
 
-private:
+	private:
 
-	SoundGenerator* m_soundGenerator;
+		SoundGenerator* m_soundGenerator;
 
-	bool m_enabled;
+		bool m_enabled;
 
-	bool m_volumeIncreasing;
-	int m_initialVolume;
-	int m_currentVolume;
-	
-	int m_timerValue;
-	int m_timerPeriod;
-};
+		bool m_volumeIncreasing;
+		int m_initialVolume;
+		int m_currentVolume;
+
+		int m_timerValue;
+		int m_timerPeriod;
+	};
 
 }	//namespace Emunisce
 

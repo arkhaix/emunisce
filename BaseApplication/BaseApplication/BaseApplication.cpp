@@ -76,27 +76,27 @@ BaseApplication::BaseApplication()
 
 	// Utilities
 
-    m_inputManager = new InputManager();
-    m_inputManager->Initialize(this);
+	m_inputManager = new InputManager();
+	m_inputManager->Initialize(this);
 
 	m_machineRunner = new MachineRunner();
 	m_machineRunner->Initialize();
 
 
-    // Console commands
+	// Console commands
 	m_commandTrie = new CommandTrie();
-    m_numConsoleCommands = 0;
-    AddConsoleCommand("help", &BaseApplication::CommandHelp, "Displays this help text");
-    AddConsoleCommand("quit", &BaseApplication::CommandQuit, "Exits the application");
-    AddConsoleCommand("load", &BaseApplication::CommandLoad, "Select a ROM to load");
-    AddConsoleCommand("pause", &BaseApplication::CommandPause, "Pauses the game");
-    AddConsoleCommand("run", &BaseApplication::CommandRun, "Resumes the game");
-    AddConsoleCommand("savestate", &BaseApplication::CommandSaveState, "(name) Saves the current state to disk");
-    AddConsoleCommand("loadstate", &BaseApplication::CommandLoadState, "(name) Loads the state from disk");
-    AddConsoleCommand("speed", &BaseApplication::CommandSpeed, "(speed) Sets the emulation speed. 1=normal, 0.5=half, 2=double, etc");
-    AddConsoleCommand("displayfilter", &BaseApplication::CommandDisplayFilter, "(filter) Sets the display filter. 1=normal, 2=hq2x, 3=hq3x, 4=hq4x");
-    AddConsoleCommand("vsync", &BaseApplication::CommandVsync, "(on/off) Toggles vsync on or off");
-    AddConsoleCommand("background", &BaseApplication::CommandBackground, "(on/off) Toggles the background animation on or off");
+	m_numConsoleCommands = 0;
+	AddConsoleCommand("help", &BaseApplication::CommandHelp, "Displays this help text");
+	AddConsoleCommand("quit", &BaseApplication::CommandQuit, "Exits the application");
+	AddConsoleCommand("load", &BaseApplication::CommandLoad, "Select a ROM to load");
+	AddConsoleCommand("pause", &BaseApplication::CommandPause, "Pauses the game");
+	AddConsoleCommand("run", &BaseApplication::CommandRun, "Resumes the game");
+	AddConsoleCommand("savestate", &BaseApplication::CommandSaveState, "(name) Saves the current state to disk");
+	AddConsoleCommand("loadstate", &BaseApplication::CommandLoadState, "(name) Loads the state from disk");
+	AddConsoleCommand("speed", &BaseApplication::CommandSpeed, "(speed) Sets the emulation speed. 1=normal, 0.5=half, 2=double, etc");
+	AddConsoleCommand("displayfilter", &BaseApplication::CommandDisplayFilter, "(filter) Sets the display filter. 1=normal, 2=hq2x, 3=hq3x, 4=hq4x");
+	AddConsoleCommand("vsync", &BaseApplication::CommandVsync, "(on/off) Toggles vsync on or off");
+	AddConsoleCommand("background", &BaseApplication::CommandBackground, "(on/off) Toggles the background animation on or off");
 }
 
 BaseApplication::~BaseApplication()
@@ -107,13 +107,13 @@ BaseApplication::~BaseApplication()
 	delete m_machineRunner;
 
 	//input manager doesn't need shutdown
-    delete m_inputManager;
+	delete m_inputManager;
 
 	delete m_inputRecorder;
 	delete m_rewinder;
 	delete m_gui;
 
-	if(m_wrappedMachine)
+	if (m_wrappedMachine)
 	{
 		MachineFactory::ReleaseMachine(m_wrappedMachine);
 	}
@@ -123,14 +123,14 @@ BaseApplication::~BaseApplication()
 //Emulated machine
 void BaseApplication::NotifyMachineChanged(IEmulatedMachine* newMachine)
 {
-	if(newMachine != m_gui && newMachine != m_inputRecorder && newMachine != m_rewinder)
+	if (newMachine != m_gui && newMachine != m_inputRecorder && newMachine != m_rewinder)
 	{
 		m_gui->SetFocus(false);
 		m_machine->SetEmulatedMachine(newMachine);
 		m_wrappedMachine = newMachine;
 	}
 
-    m_inputManager->SetMachine(m_machine);
+	m_inputManager->SetMachine(m_machine);
 	m_machineRunner->SetMachine(m_machine);
 
 	newMachine->SetApplicationInterface(this);
@@ -161,7 +161,7 @@ InputRecording* BaseApplication::GetInputRecorder()
 
 InputManager* BaseApplication::GetInputManager()
 {
-    return m_inputManager;
+	return m_inputManager;
 }
 
 MachineRunner* BaseApplication::GetMachineRunner()
@@ -192,22 +192,24 @@ bool BaseApplication::LoadRom(const char* filename)
 {
 	//Prompt for a file if one wasn't provided
 	char* selectedFilename = nullptr;
-	if(filename == nullptr || strlen(filename) == 0)
+	if (filename == nullptr || strlen(filename) == 0)
 	{
 		bool fileSelected = SelectFile(&selectedFilename);
 
-		if(fileSelected == false)
+		if (fileSelected == false) {
 			return false;
+		}
 
 		filename = selectedFilename;
 	}
 
 	//Load it
 	IEmulatedMachine* machine = MachineFactory::CreateMachine(filename);
-	if(machine == nullptr)
+	if (machine == nullptr)
 	{
-		if(selectedFilename != nullptr)
+		if (selectedFilename != nullptr) {
 			free((void*)selectedFilename);
+		}
 
 		return false;
 	}
@@ -221,18 +223,21 @@ bool BaseApplication::LoadRom(const char* filename)
 	//Let everyone know that the old one is going away
 	NotifyMachineChanged(machine);
 
-	if(wasPaused == false)
+	if (wasPaused == false) {
 		m_machineRunner->Run();
+	}
 
 	//Release the old one
-	if(oldMachine != nullptr)
+	if (oldMachine != nullptr) {
 		MachineFactory::ReleaseMachine(oldMachine);
+	}
 
 	//Remember the file used so we can reset later if necessary
 	m_lastRomLoaded = filename;
 
-	if(selectedFilename != nullptr)
+	if (selectedFilename != nullptr) {
 		free((void*)selectedFilename);
+	}
 
 	return true;
 }
@@ -276,16 +281,18 @@ void BaseApplication::StepFrame()
 void BaseApplication::SaveState(const char* name)
 {
 	Archive* archive = OpenSavestate(name, true);
-	if(archive == nullptr)
+	if (archive == nullptr) {
 		return;
+	}
 
 	bool wasPaused = m_machineRunner->IsPaused();
 	m_machineRunner->Pause();
 
 	m_machine->SaveState(*archive);
 
-	if(wasPaused == false)
+	if (wasPaused == false) {
 		m_machineRunner->Run();
+	}
 
 	CloseSavestate(archive);
 }
@@ -293,16 +300,18 @@ void BaseApplication::SaveState(const char* name)
 void BaseApplication::LoadState(const char* name)
 {
 	Archive* archive = OpenSavestate(name, false);
-	if(archive == nullptr)
+	if (archive == nullptr) {
 		return;
+	}
 
 	bool wasPaused = m_machineRunner->IsPaused();
 	m_machineRunner->Pause();
 
 	m_machine->LoadState(*archive);
 
-	if(wasPaused == false)
+	if (wasPaused == false) {
 		m_machineRunner->Run();
+	}
 
 	CloseSavestate(archive);
 }
@@ -311,57 +320,65 @@ void BaseApplication::LoadState(const char* name)
 //Gui
 void BaseApplication::EnableBackgroundAnimation()
 {
-	if(m_gui != nullptr)
+	if (m_gui != nullptr) {
 		m_gui->EnableBackgroundAnimation();
+	}
 }
 
 void BaseApplication::DisableBackgroundAnimation()
 {
-	if(m_gui != nullptr)
+	if (m_gui != nullptr) {
 		m_gui->DisableBackgroundAnimation();
+	}
 }
 
 
 //Display
 void BaseApplication::SetDisplayFilter(DisplayFilter::Type displayFilter)
 {
-	if(m_gui != nullptr)
+	if (m_gui != nullptr) {
 		m_gui->SetDisplayFilter(displayFilter);
+	}
 }
 
 
 //Input movie
 void BaseApplication::StartRecordingInput()
 {
-	if(m_inputRecorder != nullptr)
+	if (m_inputRecorder != nullptr) {
 		m_inputRecorder->StartRecording();
+	}
 }
 
 void BaseApplication::StopRecordingInput()
 {
-	if(m_inputRecorder != nullptr)
+	if (m_inputRecorder != nullptr) {
 		m_inputRecorder->StopRecording();
+	}
 }
 
 
 void BaseApplication::PlayMovie()
 {
-	if(m_inputRecorder != nullptr)
+	if (m_inputRecorder != nullptr) {
 		m_inputRecorder->StartPlayback(true, true, false);
+	}
 }
 
 void BaseApplication::StopMovie()
 {
-	if(m_inputRecorder != nullptr)
+	if (m_inputRecorder != nullptr) {
 		m_inputRecorder->StopPlayback();
+	}
 }
 
 
 void BaseApplication::SaveMovie(const char* name)
 {
 	Archive* archive = OpenMovie(name, true);
-	if(archive == nullptr)
+	if (archive == nullptr) {
 		return;
+	}
 
 	m_inputRecorder->SerializeMovie(*archive);
 
@@ -371,8 +388,9 @@ void BaseApplication::SaveMovie(const char* name)
 void BaseApplication::LoadMovie(const char* name)
 {
 	Archive* archive = OpenMovie(name, false);
-	if(archive == nullptr)
+	if (archive == nullptr) {
 		return;
+	}
 
 	m_inputRecorder->SerializeMovie(*archive);
 
@@ -382,22 +400,25 @@ void BaseApplication::LoadMovie(const char* name)
 
 void BaseApplication::PlayMacro(bool loop)
 {
-	if(m_inputRecorder != nullptr)
+	if (m_inputRecorder != nullptr) {
 		m_inputRecorder->StartPlayback(false, false, loop);
+	}
 }
 
 void BaseApplication::StopMacro()
 {
-	if(m_inputRecorder != nullptr)
+	if (m_inputRecorder != nullptr) {
 		m_inputRecorder->StopPlayback();
+	}
 }
 
 
 void BaseApplication::SaveMacro(const char* name)
 {
 	Archive* archive = OpenMacro(name, true);
-	if(archive == nullptr)
+	if (archive == nullptr) {
 		return;
+	}
 
 	m_inputRecorder->SerializeHistory(*archive);
 
@@ -407,8 +428,9 @@ void BaseApplication::SaveMacro(const char* name)
 void BaseApplication::LoadMacro(const char* name)
 {
 	Archive* archive = OpenMacro(name, false);
-	if(archive == nullptr)
+	if (archive == nullptr) {
 		return;
+	}
 
 	m_inputRecorder->SerializeHistory(*archive);
 
@@ -420,15 +442,17 @@ void BaseApplication::LoadMacro(const char* name)
 
 void BaseApplication::HandleApplicationEvent(unsigned int eventId)
 {
-	if(eventId >= 0x01000000 && eventId < 0x02000000)
+	if (eventId >= 0x01000000 && eventId < 0x02000000)
 	{
-		if(m_inputRecorder != nullptr)
+		if (m_inputRecorder != nullptr) {
 			m_inputRecorder->ApplicationEvent(eventId);
+		}
 	}
-	else if(eventId >= 0x02000000 && eventId < 0x03000000)
+	else if (eventId >= 0x02000000 && eventId < 0x03000000)
 	{
-		if(m_rewinder != nullptr)
+		if (m_rewinder != nullptr) {
 			m_rewinder->ApplicationEvent(eventId);
+		}
 	}
 }
 
@@ -436,8 +460,9 @@ void BaseApplication::HandleApplicationEvent(unsigned int eventId)
 void BaseApplication::SaveRomData(const char* title, unsigned char* buffer, unsigned int bytes)
 {
 	Archive* archive = OpenRomData(title, true);
-	if(archive == nullptr)
+	if (archive == nullptr) {
 		return;
+	}
 
 	archive->SerializeBuffer(buffer, bytes);
 
@@ -447,8 +472,9 @@ void BaseApplication::SaveRomData(const char* title, unsigned char* buffer, unsi
 void BaseApplication::LoadRomData(const char* title, unsigned char* buffer, unsigned int bytes)
 {
 	Archive* archive = OpenRomData(title, false);
-	if(archive == nullptr)
+	if (archive == nullptr) {
 		return;
+	}
 
 	archive->SerializeBuffer(buffer, bytes);
 
@@ -458,35 +484,38 @@ void BaseApplication::LoadRomData(const char* title, unsigned char* buffer, unsi
 
 void BaseApplication::AddConsoleCommand(const char* command, ConsoleCommandHandler func, const char* helpText)
 {
-    if(m_numConsoleCommands >= MaxConsoleCommands)
-        return;
+	if (m_numConsoleCommands >= MaxConsoleCommands) {
+		return;
+	}
 
-    if(func == nullptr)
-        return;
+	if (func == nullptr) {
+		return;
+	}
 
-    std::string lowercaseCommand = command;
-	transform(lowercaseCommand.begin(), lowercaseCommand.end(), lowercaseCommand.begin(), [](unsigned char c)->char{return (char) ::tolower(c);});
+	std::string lowercaseCommand = command;
+	transform(lowercaseCommand.begin(), lowercaseCommand.end(), lowercaseCommand.begin(), [](unsigned char c)->char {return (char) ::tolower(c); });
 
-    m_consoleCommands[m_numConsoleCommands].command = lowercaseCommand;
-    m_consoleCommands[m_numConsoleCommands].helpText = helpText;
-    m_consoleCommands[m_numConsoleCommands].func = func;
+	m_consoleCommands[m_numConsoleCommands].command = lowercaseCommand;
+	m_consoleCommands[m_numConsoleCommands].helpText = helpText;
+	m_consoleCommands[m_numConsoleCommands].func = func;
 
-    m_numConsoleCommands++;
+	m_numConsoleCommands++;
 
 	m_commandTrie->Add(command);
 }
 
 unsigned int BaseApplication::NumConsoleCommands()
 {
-   return m_numConsoleCommands;
+	return m_numConsoleCommands;
 }
 
 const char* BaseApplication::GetConsoleCommand(unsigned int index)
 {
-    if(index >= m_numConsoleCommands)
-        return nullptr;
+	if (index >= m_numConsoleCommands) {
+		return nullptr;
+	}
 
-    return m_consoleCommands[index].command.c_str();
+	return m_consoleCommands[index].command.c_str();
 }
 
 std::vector<std::string> SplitCommand(std::string command)
@@ -500,19 +529,21 @@ std::vector<std::string> SplitCommand(std::string command)
 
 bool BaseApplication::ExecuteConsoleCommand(const char* command)
 {
-    std::vector<std::string> splitCommand = SplitCommand(command);
-    if(splitCommand.size() < 1)
-        return false;
+	std::vector<std::string> splitCommand = SplitCommand(command);
+	if (splitCommand.size() < 1) {
+		return false;
+	}
 
-    const char* commandName = splitCommand[0].c_str();
-    std::string lowercaseCommandName = commandName;
-	transform(lowercaseCommandName.begin(), lowercaseCommandName.end(), lowercaseCommandName.begin(), [](unsigned char c)->char{return (char) ::tolower(c);});
+	const char* commandName = splitCommand[0].c_str();
+	std::string lowercaseCommandName = commandName;
+	transform(lowercaseCommandName.begin(), lowercaseCommandName.end(), lowercaseCommandName.begin(), [](unsigned char c)->char {return (char) ::tolower(c); });
 	ConsolePrint(lowercaseCommandName.c_str()); ConsolePrint("\n");
 
 	// Resolve to a full command name via the prefix tree
 	CommandTrie* node = m_commandTrie->GetNode(lowercaseCommandName.c_str());
-	if (node == nullptr)
+	if (node == nullptr) {
 		return false;
+	}
 
 	if (node->NumLeaves() > 1 && node->IsLeaf() == false)
 	{
@@ -530,35 +561,38 @@ bool BaseApplication::ExecuteConsoleCommand(const char* command)
 		return false;
 	}
 
-	if (node->NumLeaves() == 0)
+	if (node->NumLeaves() == 0) {
 		return false;
+	}
 
 	std::string resolvedCommandName = node->GetLeaf(0)->GetValue();
 
 	// Search for the full command using the resolved name
-    for(unsigned int i = 0; i < m_numConsoleCommands; i++)
-    {
-		if(resolvedCommandName == m_consoleCommands[i].command)
-        {
-            const char* params = nullptr;
-            if(splitCommand.size() >= 2)
-                params = strstr(command, splitCommand[1].c_str());
+	for (unsigned int i = 0; i < m_numConsoleCommands; i++)
+	{
+		if (resolvedCommandName == m_consoleCommands[i].command)
+		{
+			const char* params = nullptr;
+			if (splitCommand.size() >= 2) {
+				params = strstr(command, splitCommand[1].c_str());
+			}
 
-            ((*this).*m_consoleCommands[i].func)(params);
+			((*this).*m_consoleCommands[i].func)(params);
 
-            return true;
-        }
-    }
+			return true;
+		}
+	}
 
-    return false;
+	return false;
 }
 
 unsigned int BaseApplication::NumPossibleCommands(const char* prefix)
 {
 	CommandTrie* node = m_commandTrie->GetNode(prefix);
 
-	if (node == nullptr)
+	if (node == nullptr) {
 		return 0;
+	}
 
 	return node->NumLeaves();
 }
@@ -567,15 +601,18 @@ const char* BaseApplication::GetPossibleCommand(const char* prefix, unsigned int
 {
 	CommandTrie* node = m_commandTrie->GetNode(prefix);
 
-	if (node == nullptr)
+	if (node == nullptr) {
 		return 0;
+	}
 
-	if (index >= node->NumLeaves())
+	if (index >= node->NumLeaves()) {
 		return nullptr;
+	}
 
 	CommandTrie* leaf = node->GetLeaf(index);
-	if (leaf == nullptr)
+	if (leaf == nullptr) {
 		return nullptr;
+	}
 
 	return leaf->GetValue();
 }
@@ -585,131 +622,139 @@ const char* BaseApplication::GetPossibleCommand(const char* prefix, unsigned int
 
 void BaseApplication::CommandHelp(const char* /*params*/)
 {
-    for(unsigned int i = 0; i < m_numConsoleCommands; i++)
-    {
+	for (unsigned int i = 0; i < m_numConsoleCommands; i++)
+	{
 		std::string command = m_consoleCommands[i].command + std::string(" - ") + m_consoleCommands[i].helpText;
-        ConsolePrint(command.c_str());
-    }
+		ConsolePrint(command.c_str());
+	}
 
-    ConsolePrint("\n");
+	ConsolePrint("\n");
 }
 
 void BaseApplication::CommandQuit(const char* /*params*/)
 {
-    ConsolePrint("Shutting down...\n");
-    RequestShutdown();
+	ConsolePrint("Shutting down...\n");
+	RequestShutdown();
 }
 
 void BaseApplication::CommandLoad(const char* /*params*/)
 {
-    char* fileSelected = nullptr;
+	char* fileSelected = nullptr;
 
-    SelectFile(&fileSelected, nullptr);
+	SelectFile(&fileSelected, nullptr);
 
-    if(fileSelected != nullptr)
-    {
-        bool result = LoadRom(fileSelected);
-        if(result == false)
-        {
-            ConsolePrint("Failed to load the specified file\n");
-        }
-        else
-        {
-            ConsolePrint("Loaded "); ConsolePrint(fileSelected); ConsolePrint("\n");
-        }
+	if (fileSelected != nullptr)
+	{
+		bool result = LoadRom(fileSelected);
+		if (result == false)
+		{
+			ConsolePrint("Failed to load the specified file\n");
+		}
+		else
+		{
+			ConsolePrint("Loaded "); ConsolePrint(fileSelected); ConsolePrint("\n");
+		}
 
-        free(fileSelected);
-    }
+		free(fileSelected);
+	}
 }
 
 void BaseApplication::CommandPause(const char* /*params*/)
 {
-    Pause();
-    ConsolePrint("Emulation paused\n");
+	Pause();
+	ConsolePrint("Emulation paused\n");
 }
 void BaseApplication::CommandRun(const char* /*params*/)
 {
-   Run();
-   ConsolePrint("Emulation resumed\n");
+	Run();
+	ConsolePrint("Emulation resumed\n");
 }
 
 void BaseApplication::CommandSaveState(const char* params)
 {
-    const char* stateName = "default";
-    if(params != nullptr && strlen(params) != 0)
-        stateName = params;
+	const char* stateName = "default";
+	if (params != nullptr && strlen(params) != 0) {
+		stateName = params;
+	}
 
-    SaveState(stateName);
+	SaveState(stateName);
 
-    ConsolePrint("Saved state "); ConsolePrint(stateName); ConsolePrint("\n");
+	ConsolePrint("Saved state "); ConsolePrint(stateName); ConsolePrint("\n");
 }
 
 void BaseApplication::CommandLoadState(const char* params)
 {
-    const char* stateName = "default";
-    if(params != nullptr && strlen(params) != 0)
-        stateName = params;
+	const char* stateName = "default";
+	if (params != nullptr && strlen(params) != 0) {
+		stateName = params;
+	}
 
-    LoadState(stateName);
+	LoadState(stateName);
 
-    ConsolePrint("Loaded state "); ConsolePrint(stateName); ConsolePrint("\n");
+	ConsolePrint("Loaded state "); ConsolePrint(stateName); ConsolePrint("\n");
 }
 
 void BaseApplication::CommandSpeed(const char* params)
 {
-    double speed = 1.0;
+	double speed = 1.0;
 
-    if(params != nullptr && strlen(params) > 0)
-        speed = atof(params);
+	if (params != nullptr && strlen(params) > 0) {
+		speed = atof(params);
+	}
 
-    SetEmulationSpeed((float)speed);
+	SetEmulationSpeed((float)speed);
 
 	std::stringstream ss;
 	ss << "Set emulation speed to " << speed << std::endl;
-    ConsolePrint(ss.str().c_str());
+	ConsolePrint(ss.str().c_str());
 }
 
 void BaseApplication::CommandMute(const char* /*params*/)
 {
-    ConsolePrint("Unsupported\n");
+	ConsolePrint("Unsupported\n");
 }
 
 void BaseApplication::CommandDisplayFilter(const char* in_params)
 {
 	std::string params(in_params);
 
-	if(params.empty())
+	if (params.empty()) {
 		params = "none";
+	}
 
 	DisplayFilter::Type filter = DisplayFilter::NoFilter;
 
-	if(params == "none" || params == "0" || params == "1")
+	if (params == "none" || params == "0" || params == "1") {
 		filter = DisplayFilter::NoFilter;
 
-	else if(params == "hq2x" || params == "2x" || params == "2")
+	}
+	else if (params == "hq2x" || params == "2x" || params == "2") {
 		filter = DisplayFilter::Hq2x;
 
-	else if(params == "hq3x" || params == "3x" || params == "3")
+	}
+	else if (params == "hq3x" || params == "3x" || params == "3") {
 		filter = DisplayFilter::Hq3x;
 
-	else if(params == "hq4x" || params == "4x" || params == "4")
+	}
+	else if (params == "hq4x" || params == "4x" || params == "4") {
 		filter = DisplayFilter::Hq4x;
+	}
 
 	SetDisplayFilter(filter);
 
-    const char* filterNames[] = {
-        "None",
-        "Hq2x",
-        "Hq3x",
-        "Hq4x"
-    };
-    ConsolePrint("Set display filter to "); ConsolePrint(filterNames[filter]); ConsolePrint("\n");
+	const char* filterNames[] = {
+		"None",
+		"Hq2x",
+		"Hq3x",
+		"Hq4x"
+	};
+	ConsolePrint("Set display filter to "); ConsolePrint(filterNames[filter]); ConsolePrint("\n");
 }
 
 void BaseApplication::CommandVsync(const char* in_params)
 {
 	std::string params(in_params);
-	if(params.empty() || params == "0" || params == "off")
+	if (params.empty() || params == "0" || params == "off")
 	{
 		SetVsync(false);
 		ConsolePrint("Vsync disabled\n");
@@ -724,7 +769,7 @@ void BaseApplication::CommandVsync(const char* in_params)
 void BaseApplication::CommandBackground(const char* in_params)
 {
 	std::string params(in_params);
-	if(params.empty() || params == "0" || params == "off")
+	if (params.empty() || params == "0" || params == "off")
 	{
 		DisableBackgroundAnimation();
 		ConsolePrint("Disabled background animation\n");

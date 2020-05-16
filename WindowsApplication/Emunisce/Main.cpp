@@ -41,7 +41,7 @@ INT WINAPI WinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/, LPSTR /
 	g_phoenix = new EmunisceApplication();
 
 	HANDLE emulationThreadHandle = CreateThread(nullptr, 0, ConsoleThread, nullptr, 0, nullptr);
-	
+
 	g_phoenix->RunWindow();	///<Blocks until shutdown is requested
 
 	WaitForSingleObject(emulationThreadHandle, 1000);

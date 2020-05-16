@@ -26,52 +26,52 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class ISerializer;
+	class ISerializer;
 
-namespace ArchiveMode
-{
-	typedef int Type;
-
-	enum
+	namespace ArchiveMode
 	{
-		Saving = 0,
-		Loading,
+		typedef int Type;
 
-		NumArchiveModes
+		enum
+		{
+			Saving = 0,
+			Loading,
+
+			NumArchiveModes
+		};
+	}
+
+	class Archive
+	{
+	public:
+
+		Archive(ISerializer* serializer, ArchiveMode::Type archiveMode);
+		void Close();
+
+		ISerializer* GetSerializer();
+		ArchiveMode::Type GetArchiveMode();
+
+		void SerializeBuffer(unsigned char* buffer, unsigned int bytes);
+
+		Archive& operator&(u8& data);
+		Archive& operator&(u16& data);
+		Archive& operator&(u32& data);
+		Archive& operator&(u64& data);
+
+		Archive& operator&(s8& data);
+		Archive& operator&(s16& data);
+		Archive& operator&(s32& data);
+		Archive& operator&(s64& data);
+
+		Archive& operator&(bool& data);
+		Archive& operator&(float& data);
+		Archive& operator&(double& data);
+
+	protected:
+
+		ISerializer* m_serializer;
+		ArchiveMode::Type m_archiveMode;
 	};
-}
-
-class Archive
-{
-public:
-
-	Archive(ISerializer* serializer, ArchiveMode::Type archiveMode);
-	void Close();
-
-	ISerializer* GetSerializer();
-	ArchiveMode::Type GetArchiveMode();
-
-	void SerializeBuffer(unsigned char* buffer, unsigned int bytes);
-
-	Archive& operator&(u8& data);
-	Archive& operator&(u16& data);
-	Archive& operator&(u32& data);
-	Archive& operator&(u64& data);
-
-	Archive& operator&(s8& data);
-	Archive& operator&(s16& data);
-	Archive& operator&(s32& data);
-	Archive& operator&(s64& data);
-
-	Archive& operator&(bool& data);
-	Archive& operator&(float& data);
-	Archive& operator&(double& data);
-
-protected:
-
-	ISerializer* m_serializer;
-	ArchiveMode::Type m_archiveMode;
-};
 
 }	//namespace Emunisce
 

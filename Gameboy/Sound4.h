@@ -29,69 +29,69 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class Gameboy;
+	class Gameboy;
 
 
-class Sound4 : public SoundGenerator
-{
-public:
+	class Sound4 : public SoundGenerator
+	{
+	public:
 
-	Sound4();
-	virtual ~Sound4();
-
-
-	//Sound component
-
-	void Initialize(ChannelController* channelController) override;
-	void SetMachine(Gameboy* machine) override;
-
-	void Serialize(Archive& archive) override;
+		Sound4();
+		virtual ~Sound4();
 
 
-	//Sound generation
+		//Sound component
 
-	void PowerOff() override;
-	void PowerOn() override;
+		void Initialize(ChannelController* channelController) override;
+		void SetMachine(Gameboy* machine) override;
 
-	void Run(int ticks) override;
-
-	void TickEnvelope();
-
-	float GetSample() override;
+		void Serialize(Archive& archive) override;
 
 
-	//Registers
+		//Sound generation
 
-	void SetNR41(u8 value);
-	void SetNR42(u8 value);
-	void SetNR43(u8 value);
-	void SetNR44(u8 value);
+		void PowerOff() override;
+		void PowerOn() override;
 
+		void Run(int ticks) override;
 
-private:
+		void TickEnvelope();
 
-	void Trigger() override;
-
-
-	//Sound generation
-
-	u16 m_lfsr;
-	int m_lfsrTapBit;
-	int m_lfsrFeedbackBit;
-	float m_lfsrOut;
-
-	int m_timerPeriod;
-	int m_timerValue;
+		float GetSample() override;
 
 
-	//Registers
+		//Registers
 
-	u8 m_nr40;	///<ff1f
-	u8 m_nr41;	///<ff20
-	u8 m_nr42;	///<ff21
-	u8 m_nr43;	///<ff22
-	u8 m_nr44;	///<ff23
-};
+		void SetNR41(u8 value);
+		void SetNR42(u8 value);
+		void SetNR43(u8 value);
+		void SetNR44(u8 value);
+
+
+	private:
+
+		void Trigger() override;
+
+
+		//Sound generation
+
+		u16 m_lfsr;
+		int m_lfsrTapBit;
+		int m_lfsrFeedbackBit;
+		float m_lfsrOut;
+
+		int m_timerPeriod;
+		int m_timerValue;
+
+
+		//Registers
+
+		u8 m_nr40;	///<ff1f
+		u8 m_nr41;	///<ff20
+		u8 m_nr42;	///<ff21
+		u8 m_nr43;	///<ff22
+		u8 m_nr44;	///<ff23
+	};
 
 }	//namespace Emunisce
 

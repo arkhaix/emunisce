@@ -27,21 +27,21 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-void SerializeBuffer(Archive& archive, unsigned char* buffer, unsigned int bytes);
+	void SerializeBuffer(Archive& archive, unsigned char* buffer, unsigned int bytes);
 
-void SerializeItem(Archive& archive, u8& data);
-void SerializeItem(Archive& archive, u16& data);
-void SerializeItem(Archive& archive, u32& data);
-void SerializeItem(Archive& archive, u64& data);
+	void SerializeItem(Archive& archive, u8& data);
+	void SerializeItem(Archive& archive, u16& data);
+	void SerializeItem(Archive& archive, u32& data);
+	void SerializeItem(Archive& archive, u64& data);
 
-void SerializeItem(Archive& archive, s8& data);
-void SerializeItem(Archive& archive, s16& data);
-void SerializeItem(Archive& archive, s32& data);
-void SerializeItem(Archive& archive, s64& data);
+	void SerializeItem(Archive& archive, s8& data);
+	void SerializeItem(Archive& archive, s16& data);
+	void SerializeItem(Archive& archive, s32& data);
+	void SerializeItem(Archive& archive, s64& data);
 
-void SerializeItem(Archive& archive, bool& data);
-void SerializeItem(Archive& archive, float& data);
-void SerializeItem(Archive& archive, double& data);
+	void SerializeItem(Archive& archive, bool& data);
+	void SerializeItem(Archive& archive, float& data);
+	void SerializeItem(Archive& archive, double& data);
 
 }	//namespace Emunisce
 

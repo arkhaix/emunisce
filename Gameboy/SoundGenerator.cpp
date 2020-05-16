@@ -61,8 +61,9 @@ void SoundGenerator::Serialize(Archive& archive)
 
 	m_lengthUnit->Serialize(archive);
 
-	if(m_envelopeUnit != nullptr)
+	if (m_envelopeUnit != nullptr) {
 		m_envelopeUnit->Serialize(archive);
+	}
 }
 
 
@@ -96,7 +97,7 @@ float SoundGenerator::GetSample()
 
 void SoundGenerator::Trigger()
 {
-	if(m_dacEnabled == true)
+	if (m_dacEnabled == true)
 	{
 		m_channelController->EnableChannel();
 	}
@@ -106,11 +107,14 @@ void SoundGenerator::Trigger()
 
 void SoundGenerator::WriteTriggerRegister(u8 value)
 {
-	if(value & 0x40)
+	if (value & 0x40) {
 		m_lengthUnit->Enable();
-	else
+	}
+	else {
 		m_lengthUnit->Disable();
+	}
 
-	if(value & 0x80)
+	if (value & 0x80) {
 		Trigger();
+	}
 }

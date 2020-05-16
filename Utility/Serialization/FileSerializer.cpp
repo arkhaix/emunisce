@@ -48,7 +48,7 @@ void FileSerializer::SetFile(const char* filename)
 
 void FileSerializer::CloseFile()
 {
-	if(m_fileStream != nullptr)
+	if (m_fileStream != nullptr)
 	{
 		m_fileStream->close();
 		delete m_fileStream;
@@ -62,8 +62,9 @@ void FileSerializer::CloseFile()
 
 void FileSerializer::SetArchive(Archive* archive)
 {
-	if(archive == nullptr)
+	if (archive == nullptr) {
 		return;
+	}
 
 	m_archiveMode = (int)archive->GetArchiveMode();
 	OpenStream();
@@ -71,16 +72,18 @@ void FileSerializer::SetArchive(Archive* archive)
 
 void FileSerializer::Save(unsigned char* data, unsigned int bytes)
 {
-	if(m_fileStream == nullptr || m_fileStream->fail())
+	if (m_fileStream == nullptr || m_fileStream->fail()) {
 		return;
+	}
 
 	m_fileStream->write((const char*)data, bytes);
 }
 
 void FileSerializer::Restore(unsigned char* buffer, unsigned int bytes)
 {
-	if(m_fileStream == nullptr || m_fileStream->fail())
+	if (m_fileStream == nullptr || m_fileStream->fail()) {
 		return;
+	}
 
 	m_fileStream->read((char*)buffer, bytes);
 }
@@ -94,32 +97,35 @@ void FileSerializer::Close()
 
 void FileSerializer::OpenStream()
 {
-	if(m_fileStream != nullptr)
+	if (m_fileStream != nullptr) {
 		return;
+	}
 
-	if(m_filename.length() == 0)
+	if (m_filename.length() == 0) {
 		return;
+	}
 
-	if(m_archiveMode < 0 || m_archiveMode >= ArchiveMode::NumArchiveModes)
+	if (m_archiveMode < 0 || m_archiveMode >= ArchiveMode::NumArchiveModes) {
 		return;
+	}
 
-	if(m_archiveMode == ArchiveMode::Saving)
+	if (m_archiveMode == ArchiveMode::Saving)
 	{
 		m_fileStream = new std::fstream();
 		m_fileStream->open(m_filename.c_str(), std::ios::out | std::ios::binary);
 
-		if(m_fileStream->fail())
+		if (m_fileStream->fail())
 		{
 			delete m_fileStream;
 			m_fileStream = nullptr;
 		}
 	}
-	else if(m_archiveMode == ArchiveMode::Loading)
+	else if (m_archiveMode == ArchiveMode::Loading)
 	{
 		m_fileStream = new std::fstream();
 		m_fileStream->open(m_filename.c_str(), std::ios::in | std::ios::binary);
 
-		if(m_fileStream->fail())
+		if (m_fileStream->fail())
 		{
 			delete m_fileStream;
 			m_fileStream = nullptr;

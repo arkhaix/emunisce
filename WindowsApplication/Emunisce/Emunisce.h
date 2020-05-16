@@ -36,120 +36,120 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-class ConsoleDebugger;
+	class ConsoleDebugger;
 
-class GdiPlusRenderer;
-class WaveOutSound;
-
-
-class EmunisceApplication : public BaseApplication, public IWindowMessageListener
-{
-public:
-
-	EmunisceApplication();
-	~EmunisceApplication();
-
-	void RunWindow();	///<Pumps messages on the window until shutdown is requested.  Blocks until shutdown.
-
-	Window* GetWindow();
-
-	ConsoleDebugger* GetDebugger();
-	WaveOutSound* GetSound();
+	class GdiPlusRenderer;
+	class WaveOutSound;
 
 
-	// BaseApplication overrides
+	class EmunisceApplication : public BaseApplication, public IWindowMessageListener
+	{
+	public:
 
-	virtual void NotifyMachineChanged(IEmulatedMachine* newMachine);
-	virtual void RequestShutdown();
+		EmunisceApplication();
+		~EmunisceApplication();
 
+		void RunWindow();	///<Pumps messages on the window until shutdown is requested.  Blocks until shutdown.
 
-	// BaseApplication interface
+		Window* GetWindow();
 
-	virtual void SetVsync(bool enabled);
-
-	virtual void DisplayStatusMessage(const char* message);
-	virtual void DisplayImportantMessage(MessageType::Type messageType, const char* message);
-	virtual PromptResult::Type DisplayPrompt(PromptType::Type promptType, const char* title, const char* message, void** extraResult);
-
-	virtual bool SelectFile(char** result, const char* fileMask);
-
-	void ConsolePrint(const char* text) override;
-
-	virtual unsigned int GetRomDataSize(const char* title);
+		ConsoleDebugger* GetDebugger();
+		WaveOutSound* GetSound();
 
 
-	// IWindowMessageListener
+		// BaseApplication overrides
 
-	virtual void Closed();
-
-	virtual void Draw();
-
-	virtual void Resize(int newWidth, int newHeight);
-
-	virtual void KeyDown(int key);
-	virtual void KeyUp(int key);
+		virtual void NotifyMachineChanged(IEmulatedMachine* newMachine);
+		virtual void RequestShutdown();
 
 
-private:
+		// BaseApplication interface
 
-	void AdjustWindowSize();
-	void HandlePendingMachineChange();
+		virtual void SetVsync(bool enabled);
 
-	Archive* OpenFileArchive(const char* fileName, bool saving);
-	void ReleaseArchive(Archive* archive);
+		virtual void DisplayStatusMessage(const char* message);
+		virtual void DisplayImportantMessage(MessageType::Type messageType, const char* message);
+		virtual PromptResult::Type DisplayPrompt(PromptType::Type promptType, const char* title, const char* message, void** extraResult);
 
+		virtual bool SelectFile(char** result, const char* fileMask);
 
-	// BaseApplication interface
+		void ConsolePrint(const char* text) override;
 
-	virtual Archive* OpenRomData(const char* name, bool saving);
-	virtual void CloseRomData(Archive* archive);
-
-	virtual Archive* OpenSavestate(const char* name, bool saving);
-	virtual void CloseSavestate(Archive* archive);
-
-	virtual Archive* OpenMovie(const char* name, bool saving);
-	virtual void CloseMovie(Archive* archive);
-
-	virtual Archive* OpenMacro(const char* name, bool saving);
-	virtual void CloseMacro(Archive* archive);
+		virtual unsigned int GetRomDataSize(const char* title);
 
 
-	// Persistence
+		// IWindowMessageListener
 
-	std::string GetDataFolder();
+		virtual void Closed();
 
-	std::string GetBaseSaveStateFolder();
-	std::string GetCurrentSaveStateFolder();
-	std::string GetCurrentSaveStateFile(const char* id);
+		virtual void Draw();
 
-	std::string GetBaseRomDataFolder();
-	std::string GetCurrentRomDataFolder();
-	std::string GetCurrentRomDataFile(const char* name);
+		virtual void Resize(int newWidth, int newHeight);
 
-	std::string GetBaseMovieFolder();
-	std::string GetCurrentMovieFolder();
-	std::string GetCurrentMovieFile(const char* name);
-
-	std::string GetBaseMacroFolder();
-	std::string GetCurrentMacroFolder();
-	std::string GetCurrentMacroFile(const char* name);
+		virtual void KeyDown(int key);
+		virtual void KeyUp(int key);
 
 
-	// Input
+	private:
 
-	void MapDefaultKeys();
+		void AdjustWindowSize();
+		void HandlePendingMachineChange();
+
+		Archive* OpenFileArchive(const char* fileName, bool saving);
+		void ReleaseArchive(Archive* archive);
 
 
-	Window* m_window;
+		// BaseApplication interface
 
-	IEmulatedMachine* m_pendingMachine;
+		virtual Archive* OpenRomData(const char* name, bool saving);
+		virtual void CloseRomData(Archive* archive);
 
-	ConsoleDebugger* m_debugger;
+		virtual Archive* OpenSavestate(const char* name, bool saving);
+		virtual void CloseSavestate(Archive* archive);
 
-	//GdiPlusRenderer* m_renderer;
-	OpenGLRenderer* m_renderer;
-	WaveOutSound* m_sound;
-};
+		virtual Archive* OpenMovie(const char* name, bool saving);
+		virtual void CloseMovie(Archive* archive);
+
+		virtual Archive* OpenMacro(const char* name, bool saving);
+		virtual void CloseMacro(Archive* archive);
+
+
+		// Persistence
+
+		std::string GetDataFolder();
+
+		std::string GetBaseSaveStateFolder();
+		std::string GetCurrentSaveStateFolder();
+		std::string GetCurrentSaveStateFile(const char* id);
+
+		std::string GetBaseRomDataFolder();
+		std::string GetCurrentRomDataFolder();
+		std::string GetCurrentRomDataFile(const char* name);
+
+		std::string GetBaseMovieFolder();
+		std::string GetCurrentMovieFolder();
+		std::string GetCurrentMovieFile(const char* name);
+
+		std::string GetBaseMacroFolder();
+		std::string GetCurrentMacroFolder();
+		std::string GetCurrentMacroFile(const char* name);
+
+
+		// Input
+
+		void MapDefaultKeys();
+
+
+		Window* m_window;
+
+		IEmulatedMachine* m_pendingMachine;
+
+		ConsoleDebugger* m_debugger;
+
+		//GdiPlusRenderer* m_renderer;
+		OpenGLRenderer* m_renderer;
+		WaveOutSound* m_sound;
+	};
 
 }	//namespace Emunisce
 

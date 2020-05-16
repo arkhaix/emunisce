@@ -29,101 +29,101 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce
 {
 
-namespace GameboyButtons
-{
-	typedef int Type;
-
-	enum
+	namespace GameboyButtons
 	{
-		Right = 0,
-		Left,
-		Up,
-		Down,
+		typedef int Type;
 
-		A,
-		B,
-		Select,
-		Start,
+		enum
+		{
+			Right = 0,
+			Left,
+			Up,
+			Down,
 
-		NumGameboyButtons
-	};
+			A,
+			B,
+			Select,
+			Start,
+
+			NumGameboyButtons
+		};
 
 #ifdef GameboyButtons_ToString
-	static const char* ToString[] =
-	{
-		"Right",
-		"Left",
-		"Up",
-		"Down",
+		static const char* ToString[] =
+		{
+			"Right",
+			"Left",
+			"Up",
+			"Down",
 
-		"A",
-		"B",
-		"Select",
-		"Start",
+			"A",
+			"B",
+			"Select",
+			"Start",
 
-		"NumGameboyButtons"
-	};
+			"NumGameboyButtons"
+		};
 #endif
 
-}	//namespace Buttons
+	}	//namespace Buttons
 
-namespace RegisterMode
-{
-	typedef int Type;
-
-	enum
+	namespace RegisterMode
 	{
-		MachineType = 0,
-		P14,
-		P15,
+		typedef int Type;
 
-		NumModes
+		enum
+		{
+			MachineType = 0,
+			P14,
+			P15,
+
+			NumModes
+		};
+	}	//namespace RegisterMode
+
+	class Input : public IEmulatedInput
+	{
+	public:
+
+		Input();
+		virtual ~Input() = default;
+
+
+		// IEmulatedInput
+
+		unsigned int NumButtons() override;
+		const char* GetButtonName(unsigned int index) override;
+
+		void ButtonDown(unsigned int index) override;
+		void ButtonUp(unsigned int index) override;
+
+		bool IsButtonDown(unsigned int index) override;
+
+
+		// Input
+
+		//Component
+		void SetMachine(Gameboy* machine);
+		void Initialize();
+
+		virtual void Serialize(Archive& archive);
+
+		//Registers
+		void SetJoypadMode(u8 value);
+
+	private:
+
+		void UpdateRegister();
+		void UpdateInterruptFlag();
+
+		Gameboy* m_machine;
+
+		RegisterMode::Type m_currentMode;
+
+		u8 m_buttonStates;
+
+		u8 m_joypadRegister;
 	};
-}	//namespace RegisterMode
-
-class Input : public IEmulatedInput
-{
-public:
-
-	Input();
-	virtual ~Input() = default;
-
-
-	// IEmulatedInput
-
-	unsigned int NumButtons() override;
-	const char* GetButtonName(unsigned int index) override;
-
-	void ButtonDown(unsigned int index) override;
-	void ButtonUp(unsigned int index) override;
-
-	bool IsButtonDown(unsigned int index) override;
-
-
-	// Input
-
-	//Component
-	void SetMachine(Gameboy* machine);
-	void Initialize();
-
-	virtual void Serialize(Archive& archive);
-
-	//Registers
-	void SetJoypadMode(u8 value);
-
-private:
-
-	void UpdateRegister();
-	void UpdateInterruptFlag();
-
-	Gameboy* m_machine;
-
-	RegisterMode::Type m_currentMode;
-
-	u8 m_buttonStates;
-
-	u8 m_joypadRegister;
-};
 
 }	//namespace Emunisce
 
