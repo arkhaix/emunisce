@@ -1,5 +1,5 @@
 cc_library(
-    name = "windows_platform",
+    name = "win32_common",
     visibility = ["//visibility:public"],
 
     srcs = glob(["*.cpp"]),

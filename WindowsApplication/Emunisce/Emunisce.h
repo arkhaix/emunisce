@@ -28,7 +28,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "../GdiPlusRenderer/GdiPlusRenderer.h"
 #include "../WaveOutSound/WaveOutSound.h"
 
-#include "../WindowsPlatform/Window.h"
+#include "../Win32Common/Window.h"
 
 #include <string>
 

@@ -12,6 +12,7 @@ cc_library(
 
         "@win32//:winmm",
         
+        "//WindowsApplication/Win32Common:win32_common",
         "//WindowsApplication/Emunisce:application_headers",
         "//WindowsApplication/GdiPlusRenderer:gdi_plus_renderer_headers",
     ],
