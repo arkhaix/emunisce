@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Machine Features">
+      <UniqueIdentifier>{3574e9fc-a2ec-406d-9231-8a61c0b65dd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Machine Features\Gui">
+      <UniqueIdentifier>{45d85381-2aa9-4277-82ac-74f6716dc673}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Machine Features\Input Recorder">
+      <UniqueIdentifier>{5c00dde1-49c4-4951-bdcf-3bbb2910ce0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Machine Features\Rewinder">
+      <UniqueIdentifier>{b103f982-315b-4438-8c2a-9e8557635694}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BaseApplication.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MachineFeature.h">
+      <Filter>Machine Features</Filter>
+    </ClInclude>
+    <ClInclude Include="Gui.h">
+      <Filter>Machine Features\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="KingsDream.h">
+      <Filter>Machine Features\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="InputRecording.h">
+      <Filter>Machine Features\Input Recorder</Filter>
+    </ClInclude>
+    <ClInclude Include="Rewinder.h">
+      <Filter>Machine Features\Rewinder</Filter>
+    </ClInclude>
+    <ClInclude Include="IUserInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MachineRunner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandTrie.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BaseApplication.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MachineFeature.cpp">
+      <Filter>Machine Features</Filter>
+    </ClCompile>
+    <ClCompile Include="Gui.cpp">
+      <Filter>Machine Features\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="KingsDream.cpp">
+      <Filter>Machine Features\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="InputRecording.cpp">
+      <Filter>Machine Features\Input Recorder</Filter>
+    </ClCompile>
+    <ClCompile Include="Rewinder.cpp">
+      <Filter>Machine Features\Rewinder</Filter>
+    </ClCompile>
+    <ClCompile Include="MachineRunner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandTrie.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
