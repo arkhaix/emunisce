@@ -22,15 +22,10 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "PlatformTypes.h"
 
+namespace Emunisce {
 
-
-namespace Emunisce
-{
-
-class ChannelController
-{
+class ChannelController {
 public:
-
 	ChannelController(u8& nr52, int channelBit);
 
 	void EnableChannel();
@@ -38,11 +33,10 @@ public:
 	bool IsChannelEnabled();
 
 private:
-
 	u8& m_nr52;
 	int m_channelBit;
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

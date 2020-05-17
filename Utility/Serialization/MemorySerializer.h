@@ -22,13 +22,10 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "ISerializer.h"
 
-namespace Emunisce
-{
+namespace Emunisce {
 
-class MemorySerializer : public ISerializer
-{
+class MemorySerializer : public ISerializer {
 public:
-
 	// MemorySerializer
 
 	MemorySerializer();
@@ -36,10 +33,13 @@ public:
 
 	virtual unsigned char* GetBuffer();
 	virtual unsigned int GetBufferSize();
-	virtual void TransferBuffer(unsigned char** buffer, unsigned int* size);	///<Similar to calling GetBuffer and GetBufferSize, but releases ownership of the buffer to the caller.  MemorySerializer will no longer delete the buffer or reference it in any way after this is called.
+	virtual void TransferBuffer(
+		unsigned char** buffer,
+		unsigned int* size);  ///< Similar to calling GetBuffer and GetBufferSize, but releases ownership of the buffer
+							  ///< to the caller.  MemorySerializer will no longer delete the buffer or reference it in
+							  ///< any way after this is called.
 
 	virtual void SetBuffer(unsigned char* buffer, unsigned int size);
-
 
 	// ISerializer
 
@@ -50,9 +50,7 @@ public:
 
 	void Close() override;
 
-
 protected:
-
 	unsigned char* m_buffer;
 
 	unsigned int m_usedSize;
@@ -62,6 +60,6 @@ protected:
 	unsigned int m_restorePosition;
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

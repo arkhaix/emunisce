@@ -22,40 +22,33 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <mutex>
 
-#include "PlatformIncludes.h"
-
-#include "MachineIncludes.h"
 #include "GameboyTypes.h"
-
+#include "MachineIncludes.h"
+#include "PlatformIncludes.h"
 #include "stdlib.h"
 
 #define PIXEL_NOT_CACHED (DisplayPixelFromRGBA((u8)254, (u8)0, (u8)254, (u8)255))
 #define PIXEL_TRANSPARENT (DisplayPixelFromRGBA((u8)255, (u8)0, (u8)255, (u8)255))
 
-
-namespace Emunisce
-{
+namespace Emunisce {
 
 typedef TScreenBuffer<160, 144> GameboyScreenBuffer;
 
-class Display : public IEmulatedDisplay
-{
+class Display : public IEmulatedDisplay {
 public:
-
 	Display();
 	virtual ~Display();
-
 
 	// IEmulatedDisplay
 
 	ScreenResolution GetScreenResolution() override;
 	ScreenBuffer* GetStableScreenBuffer() override;
-	int GetScreenBufferCount() override;	///<Returns the id of the current screen buffer.  Not guaranteed to be unique or sequential, so use != when polling for changes.
-
+	int GetScreenBufferCount() override;  ///< Returns the id of the current screen buffer.  Not guaranteed to be unique
+										  ///< or sequential, so use != when polling for changes.
 
 	// Display
 
-	//Component
+	// Component
 	void SetMachine(Gameboy* machine);
 	void Initialize();
 
@@ -63,13 +56,11 @@ public:
 
 	virtual void Serialize(Archive& archive);
 
-
-	//Notifications
+	// Notifications
 	void WriteVram(int bank, u16 address, u8 value);
 	void WriteOam(u16 address, u8 value);
 
-
-	//Gameboy registers
+	// Gameboy registers
 
 	void SetLcdControl(u8 value);
 	void SetLcdStatus(u8 value);
@@ -82,20 +73,12 @@ public:
 	void SetCgbSpritePaletteTarget(u8 value);
 	void SetCgbSpritePaletteData(u8 value);
 
-
 private:
-
-	struct DisplayState	///<Can't declare a namespace inside a class, so I'm cheating.
+	struct DisplayState  ///< Can't declare a namespace inside a class, so I'm cheating.
 	{
 		typedef int Type;
 
-		enum
-		{
-			HBlank = 0,
-			VBlank,
-			SpritesLocked,
-			VideoRamLocked
-		};
+		enum { HBlank = 0, VBlank, SpritesLocked, VideoRamLocked };
 	};
 
 	void Begin_HBlank();
@@ -121,7 +104,6 @@ private:
 
 	void CheckCoincidence();
 
-
 	Gameboy* m_machine;
 	EmulatedMachine::Type m_machineType;
 
@@ -129,48 +111,44 @@ private:
 
 	GameboyScreenBuffer m_screenBuffer;
 	GameboyScreenBuffer m_screenBuffer2;
-	GameboyScreenBuffer* m_activeScreenBuffer;	///<The screen buffer currently being rendered to by the gameboy
-	GameboyScreenBuffer* m_stableScreenBuffer;	///<The screen buffer ready to be displayed on the pc
+	GameboyScreenBuffer* m_activeScreenBuffer;  ///< The screen buffer currently being rendered to by the gameboy
+	GameboyScreenBuffer* m_stableScreenBuffer;  ///< The screen buffer ready to be displayed on the pc
 	int m_screenBufferCount;
 
 	GameboyScreenBuffer m_screenBufferCopy;
 	int m_screenBufferCopyId;
 	std::mutex m_screenBufferLock;
 
-	DisplayPixel m_displayPalette[4];	///<Maps 2-bit pixel values to DisplayPixel values
+	DisplayPixel m_displayPalette[4];  ///< Maps 2-bit pixel values to DisplayPixel values
 
-	int m_nextPixelToRenderX;	///<X-position of the last pixel rendered during this scanline
-	int m_ticksSpentThisScanline;	///<How many ticks have passed during this scanline.  So we know how many pixels to render.
-	bool m_spriteHasPriority[160];	///<Sprites are rendered before the background and window, so we need to keep track of whether they should be on top.
-
+	int m_nextPixelToRenderX;       ///< X-position of the last pixel rendered during this scanline
+	int m_ticksSpentThisScanline;   ///< How many ticks have passed during this scanline.  So we know how many pixels to
+									///< render.
+	bool m_spriteHasPriority[160];  ///< Sprites are rendered before the background and window, so we need to keep track
+									///< of whether they should be on top.
 
 	// Caches
 
 	u16 m_vramOffset;
 	u16 m_oamOffset;
 
-
 	// Background data
 
 	GameboyScreenBuffer m_frameBackgroundData;
-
 
 	// Window data
 
 	GameboyScreenBuffer m_frameWindowData;
 
-
 	// Sprite data
 
 	GameboyScreenBuffer m_frameSpriteData;
-
 
 	// Tile data
 
 	void UpdateTileData(int bank, u16 address, u8 value);
 
-	u8 m_tileData[2][(8*8) * (0x1800/16)];	///<0x8000 - 0x97ff
-
+	u8 m_tileData[2][(8 * 8) * (0x1800 / 16)];  ///< 0x8000 - 0x97ff
 
 	// Registers
 
@@ -190,22 +168,21 @@ private:
 	u8 m_windowX;
 	u8 m_windowY;
 
-	u16 m_cgbBackgroundPaletteColor[8 * 4];	///<8 palettes, 4 colors per palette
+	u16 m_cgbBackgroundPaletteColor[8 * 4];  ///< 8 palettes, 4 colors per palette
 	u8 m_cgbBackgroundPaletteIndex;
 	u8 m_cgbBackgroundPaletteData;
-	DisplayPixel m_cgbBackgroundDisplayColor[8 * 4];	///<cgb->rgb converted version of backgroundPaletteColor
+	DisplayPixel m_cgbBackgroundDisplayColor[8 * 4];  ///< cgb->rgb converted version of backgroundPaletteColor
 
-	u16 m_cgbSpritePaletteColor[8 * 4];	///<8 palettes, 4 colors per palette
+	u16 m_cgbSpritePaletteColor[8 * 4];  ///< 8 palettes, 4 colors per palette
 	u8 m_cgbSpritePaletteIndex;
 	u8 m_cgbSpritePaletteData;
-	DisplayPixel m_cgbSpriteDisplayColor[8 * 4];	///<cgb->rgb converted version of spritePaletteColor
-
+	DisplayPixel m_cgbSpriteDisplayColor[8 * 4];  ///< cgb->rgb converted version of spritePaletteColor
 
 	// Properties from registers
 
 	bool m_lcdEnabled;
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

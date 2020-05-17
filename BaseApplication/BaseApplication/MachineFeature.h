@@ -22,31 +22,30 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "MachineIncludes.h"
 
-
-namespace Emunisce
-{
+namespace Emunisce {
 
 class BaseApplication;
 
-class IExecutableFeature
-{
+class IExecutableFeature {
 public:
-
-	//Machine info
+	// Machine info
 	virtual unsigned int GetFrameCount() = 0;
 	virtual unsigned int GetTickCount() = 0;
 	virtual unsigned int GetTicksPerSecond() = 0;
 	virtual unsigned int GetTicksUntilNextFrame() = 0;
 
-	//Execution
+	// Execution
 	virtual void Step() = 0;
 	virtual void RunToNextFrame() = 0;
 };
 
-class MachineFeature : public IEmulatedMachine, public IEmulatedDisplay, public IEmulatedInput, public IEmulatedMemory, public IEmulatedProcessor, public IEmulatedSound
-{
+class MachineFeature : public IEmulatedMachine,
+					   public IEmulatedDisplay,
+					   public IEmulatedInput,
+					   public IEmulatedMemory,
+					   public IEmulatedProcessor,
+					   public IEmulatedSound {
 public:
-
 	// MachineFeature
 
 	MachineFeature();
@@ -59,50 +58,47 @@ public:
 
 	virtual void SetFocus(bool hasFocus);
 
-
 	// IEmulatedMachine
 
-	//Machine type
+	// Machine type
 	EmulatedMachine::Type GetType() override;
 	const char* GetRomTitle() override;
-	
-	//Application interface
+
+	// Application interface
 	void SetApplicationInterface(IMachineToApplication* applicationInterface) override;
 	void AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount /*= true*/) override;
 	void RemoveApplicationEvent(unsigned int eventId) override;
 
-	//Component access
+	// Component access
 	IEmulatedDisplay* GetDisplay() override;
 	IEmulatedInput* GetInput() override;
 	IEmulatedMemory* GetMemory() override;
 	IEmulatedProcessor* GetProcessor() override;
 	IEmulatedSound* GetSound() override;
 
-	//Machine info
+	// Machine info
 	unsigned int GetFrameCount() override;
 	unsigned int GetTickCount() override;
 	unsigned int GetTicksPerSecond() override;
 	unsigned int GetTicksUntilNextFrame() override;
 
-	//Execution
+	// Execution
 	void Step() override;
 	void RunToNextFrame() override;
 
-	//Persistence
+	// Persistence
 	void SaveState(Archive& archive) override;
 	void LoadState(Archive& archive) override;
 
-	//Debugging
+	// Debugging
 	void EnableBreakpoint(int address) override;
 	void DisableBreakpoint(int address) override;
-
 
 	// IEmulatedDisplay
 
 	ScreenResolution GetScreenResolution() override;
 	ScreenBuffer* GetStableScreenBuffer() override;
 	int GetScreenBufferCount() override;
-
 
 	// IEmulatedInput
 
@@ -113,7 +109,6 @@ public:
 	void ButtonUp(unsigned int index) override;
 
 	bool IsButtonDown(unsigned int index) override;
-
 
 	// IEmulatedMemory
 
@@ -126,9 +121,7 @@ public:
 
 	void SetSquareSynthesisMethod(SquareSynthesisMethod::Type method) override;
 
-
 protected:
-
 	BaseApplication* m_application;
 
 	bool m_hasFocus;
@@ -155,6 +148,6 @@ protected:
 	AudioBuffer m_defaultAudioBuffer;
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

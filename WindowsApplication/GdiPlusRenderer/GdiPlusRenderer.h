@@ -20,19 +20,15 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef GDIPLUSRENDERER_H
 #define GDIPLUSRENDERER_H
 
-#include "windows.h"	///<HWND
+#include "windows.h"  ///<HWND
 
-
-namespace Emunisce
-{
+namespace Emunisce {
 
 class EmunisceApplication;
 class IEmulatedMachine;
 
-class GdiPlusRenderer
-{
+class GdiPlusRenderer {
 public:
-
 	void Initialize(EmunisceApplication* phoenix, HWND windowHandle);
 	void Shutdown();
 
@@ -42,17 +38,14 @@ public:
 
 	void SetVsync(bool enabled);
 
-
 	// Window events
 
 	void Draw();
 
-
 private:
-
 	class GdiPlusRenderer_Private* m_private;
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

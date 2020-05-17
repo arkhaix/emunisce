@@ -17,19 +17,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "../Cpu/Cpu.h"
 #include "gtest/gtest.h"
 
-#include "../Cpu/Cpu.h"
-
-class CPUTest : public ::testing::Test
-{
-protected:
-
+class CPUTest : public ::testing::Test {
+   protected:
 	Cpu cpu;
 };
 
-TEST_F(CPUTest, RegisterMapping)
-{
+TEST_F(CPUTest, RegisterMapping) {
 	cpu.af = 0x0102;
 	cpu.bc = 0x0304;
 	cpu.de = 0x0506;
@@ -45,8 +41,7 @@ TEST_F(CPUTest, RegisterMapping)
 	EXPECT_EQ(0x08, cpu.l);
 }
 
-TEST_F(CPUTest, InitialValues)
-{
+TEST_F(CPUTest, InitialValues) {
 	EXPECT_EQ(0x0100, cpu.pc);
 	EXPECT_EQ(0xfffe, cpu.sp);
 	EXPECT_EQ(0x01b0, cpu.af);

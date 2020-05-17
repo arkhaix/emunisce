@@ -18,14 +18,12 @@ You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//This is a convenience header for pulling in all the Gameboy types
-
-#include "GameboyTypes.h"
-
-#include "Gameboy.h"
+// This is a convenience header for pulling in all the Gameboy types
 
 #include "Cpu.h"
 #include "Display.h"
+#include "Gameboy.h"
+#include "GameboyTypes.h"
 #include "Input.h"
 #include "Memory.h"
 #include "Sound.h"

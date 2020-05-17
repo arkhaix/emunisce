@@ -20,32 +20,26 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef WindowMain_H
 #define WindowMain_H
 
-#include "wx/wx.h"
 #include "wx/glcanvas.h"
+#include "wx/wx.h"
 
-namespace Emunisce
-{
+namespace Emunisce {
 
 class Application;
 
-class WindowMain : public wxGLCanvas
-{
-    //Emunsice stuff
+class WindowMain : public wxGLCanvas {
+	// Emunsice stuff
 
 public:
-
-    void SetApplication(Application* application);
-
-private:
-
-    Application* m_application;
-
-
-    //wx stuff
+	void SetApplication(Application* application);
 
 private:
+	Application* m_application;
 
-    wxGLContext*	m_context;
+	// wx stuff
+
+private:
+	wxGLContext* m_context;
 
 public:
 	WindowMain(wxFrame* parent, int* args);
@@ -65,6 +59,6 @@ public:
 	DECLARE_EVENT_TABLE()
 };
 
-}   //namespace Emunisce
+}  // namespace Emunisce
 
-#endif // WindowMain_H
+#endif  // WindowMain_H

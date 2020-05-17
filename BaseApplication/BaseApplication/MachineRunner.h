@@ -20,40 +20,32 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MACHINERUNNER_H
 #define MACHINERUNNER_H
 
-#include "PlatformIncludes.h"
-
 #include <chrono>
 #include <condition_variable>
 #include <mutex>
 #include <thread>
 
+#include "PlatformIncludes.h"
 
-namespace Emunisce
-{
+namespace Emunisce {
 
 class IEmulatedMachine;
 
-namespace StepMode
-{
-	typedef int Type;
+namespace StepMode {
+typedef int Type;
 
-	enum
-	{
-		Instruction = 0,
-		Frame,
+enum {
+	Instruction = 0,
+	Frame,
 
-		NumStepModes
-	};
-}
+	NumStepModes
+};
+}  // namespace StepMode
 
-
-class MachineRunner
-{
+class MachineRunner {
 public:
-
 	MachineRunner();
 	virtual ~MachineRunner() = default;
-
 
 	// Application component
 
@@ -62,22 +54,20 @@ public:
 
 	void SetMachine(IEmulatedMachine* machine);
 
-
 	// Machine runner
 
 	virtual float GetEmulationSpeed();
-	virtual void SetEmulationSpeed(float speed);	///<1.0 = normal, 0.5 = half normal, 2.0 = twice normal, any value less than or equal to 0 = no throttle (max speed)
+	virtual void SetEmulationSpeed(float speed);  ///< 1.0 = normal, 0.5 = half normal, 2.0 = twice normal, any value
+												  ///< less than or equal to 0 = no throttle (max speed)
 
-	virtual void Run();	///<Runs the machine at the speed defined by SetEmulationSpeed.
-	virtual void Pause();	///<Pauses the machine.  Preserves the SetEmulationSpeed setting.
+	virtual void Run();    ///< Runs the machine at the speed defined by SetEmulationSpeed.
+	virtual void Pause();  ///< Pauses the machine.  Preserves the SetEmulationSpeed setting.
 	virtual bool IsPaused();
 
-	virtual void StepInstruction();	///<Pauses if necessary, then steps forward one cpu instruction.
-	virtual void StepFrame();	///<Pauses if necessary, then steps forward 1/60th of a second.
-
+	virtual void StepInstruction();  ///< Pauses if necessary, then steps forward one cpu instruction.
+	virtual void StepFrame();        ///< Pauses if necessary, then steps forward 1/60th of a second.
 
 protected:
-
 	IEmulatedMachine* m_machine;
 
 	std::thread m_runnerThread;
@@ -98,8 +88,7 @@ protected:
 	float m_emulationSpeed;
 
 	typedef std::chrono::steady_clock clock;
-	struct SynchronizationInfo
-	{
+	struct SynchronizationInfo {
 		float MillisecondsPerFrame;
 
 		clock::time_point RunStartTime;
@@ -114,6 +103,6 @@ protected:
 	SynchronizationInfo m_syncState;
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

@@ -20,92 +20,77 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "LengthUnit.h"
 using namespace Emunisce;
 
-#include "GameboyIncludes.h"
-
-#include "Serialization/SerializationIncludes.h"
-
 #include "ChannelController.h"
-#include "SoundGenerator.h"
+#include "GameboyIncludes.h"
+#include "Serialization/SerializationIncludes.h"
 #include "Sound.h"
+#include "SoundGenerator.h"
 
-
-LengthUnit::LengthUnit(SoundGenerator* soundGenerator)
-{
+LengthUnit::LengthUnit(SoundGenerator* soundGenerator) {
 	m_soundGenerator = soundGenerator;
 }
 
-
-void LengthUnit::Serialize(Archive& archive)
-{
+void LengthUnit::Serialize(Archive& archive) {
 	SerializeItem(archive, m_enabled);
 
 	SerializeItem(archive, m_value);
 	SerializeItem(archive, m_maxValue);
 }
 
-
-void LengthUnit::SetMaxValue(int maxValue)
-{
+void LengthUnit::SetMaxValue(int maxValue) {
 	m_maxValue = maxValue;
 }
 
-void LengthUnit::Tick()
-{
-	if(m_enabled == false)
+void LengthUnit::Tick() {
+	if (m_enabled == false) {
 		return;
+	}
 
-	if(m_value > 0)
-	{
+	if (m_value > 0) {
 		m_value--;
 
-		if(m_value == 0)
+		if (m_value == 0) {
 			m_soundGenerator->m_channelController->DisableChannel();
+		}
 	}
 }
 
-void LengthUnit::Trigger()
-{
-	if(m_value == 0)
+void LengthUnit::Trigger() {
+	if (m_value == 0) {
 		m_value = m_maxValue;
+	}
 
 	int frameSequencerPosition = m_soundGenerator->m_machine->GetGbSound()->GetFrameSequencerPosition();
 
-	if(frameSequencerPosition == 0 || frameSequencerPosition == 2 ||
-		frameSequencerPosition == 4 || frameSequencerPosition == 6)
-	{
-		if(m_enabled == true && m_value == m_maxValue)
-		{
+	if (frameSequencerPosition == 0 || frameSequencerPosition == 2 || frameSequencerPosition == 4 ||
+		frameSequencerPosition == 6) {
+		if (m_enabled == true && m_value == m_maxValue) {
 			m_value--;
 		}
 	}
 }
 
-
-void LengthUnit::Enable()
-{
+void LengthUnit::Enable() {
 	int frameSequencerPosition = m_soundGenerator->m_machine->GetGbSound()->GetFrameSequencerPosition();
 
-	if(frameSequencerPosition == 0 || frameSequencerPosition == 2 ||
-		frameSequencerPosition == 4 || frameSequencerPosition == 6)
-	{
-		if(m_enabled == false && m_value > 0)
-		{
+	if (frameSequencerPosition == 0 || frameSequencerPosition == 2 || frameSequencerPosition == 4 ||
+		frameSequencerPosition == 6) {
+		if (m_enabled == false && m_value > 0) {
 			m_value--;
 
-			if(m_value == 0)
+			if (m_value == 0) {
 				m_soundGenerator->m_channelController->DisableChannel();
+			}
 		}
 	}
 
 	m_enabled = true;
 }
 
-void LengthUnit::Disable()
-{
+void LengthUnit::Disable() {
 	m_enabled = false;
 }
 
-void LengthUnit::WriteLengthRegister(u8 value)
-{
+void LengthUnit::WriteLengthRegister(u8 value) {
 	m_value = m_maxValue - value;
 }

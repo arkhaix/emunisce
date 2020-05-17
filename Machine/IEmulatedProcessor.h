@@ -20,14 +20,10 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef IEMULATEDPROCESSOR_H
 #define IEMULATEDPROCESSOR_H
 
+namespace Emunisce {
 
-namespace Emunisce
-{
+class IEmulatedProcessor {};
 
-class IEmulatedProcessor
-{
-};
-
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

@@ -20,74 +20,61 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef INPUT_H
 #define INPUT_H
 
+#include "GameboyTypes.h"
+#include "MachineIncludes.h"
 #include "PlatformTypes.h"
 
-#include "MachineIncludes.h"
-#include "GameboyTypes.h"
+namespace Emunisce {
 
+namespace GameboyButtons {
+typedef int Type;
 
-namespace Emunisce
-{
+enum {
+	Right = 0,
+	Left,
+	Up,
+	Down,
 
-namespace GameboyButtons
-{
-	typedef int Type;
+	A,
+	B,
+	Select,
+	Start,
 
-	enum
-	{
-		Right = 0,
-		Left,
-		Up,
-		Down,
-
-		A,
-		B,
-		Select,
-		Start,
-
-		NumGameboyButtons
-	};
+	NumGameboyButtons
+};
 
 #ifdef GameboyButtons_ToString
-	static const char* ToString[] =
-	{
-		"Right",
-		"Left",
-		"Up",
-		"Down",
+static const char* ToString[] = {"Right",
+								 "Left",
+								 "Up",
+								 "Down",
 
-		"A",
-		"B",
-		"Select",
-		"Start",
+								 "A",
+								 "B",
+								 "Select",
+								 "Start",
 
-		"NumGameboyButtons"
-	};
+								 "NumGameboyButtons"};
 #endif
 
-}	//namespace Buttons
+}  // namespace GameboyButtons
 
-namespace RegisterMode
-{
-	typedef int Type;
+namespace RegisterMode {
+typedef int Type;
 
-	enum
-	{
-		MachineType = 0,
-		P14,
-		P15,
+enum {
+	MachineType = 0,
+	P14,
+	P15,
 
-		NumModes
-	};
-}	//namespace RegisterMode
+	NumModes
+};
+}  // namespace RegisterMode
 
-class Input : public IEmulatedInput
-{
+class Input : public IEmulatedInput {
 public:
-
 	Input();
 	virtual ~Input() = default;
-
 
 	// IEmulatedInput
 
@@ -99,20 +86,18 @@ public:
 
 	bool IsButtonDown(unsigned int index) override;
 
-
 	// Input
 
-	//Component
+	// Component
 	void SetMachine(Gameboy* machine);
 	void Initialize();
 
 	virtual void Serialize(Archive& archive);
 
-	//Registers
+	// Registers
 	void SetJoypadMode(u8 value);
 
 private:
-
 	void UpdateRegister();
 	void UpdateInterruptFlag();
 
@@ -125,6 +110,6 @@ private:
 	u8 m_joypadRegister;
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

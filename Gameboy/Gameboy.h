@@ -20,92 +20,86 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef GAMEBOY_H
 #define GAMEBOY_H
 
-#include "PlatformIncludes.h"
-
-#include "MachineIncludes.h"
-#include "GameboyTypes.h"
-
 #include <algorithm>
 #include <list>
 #include <mutex>
 
+#include "GameboyTypes.h"
+#include "MachineIncludes.h"
+#include "PlatformIncludes.h"
 
-namespace Emunisce
-{
+namespace Emunisce {
 
-class Gameboy : public IEmulatedMachine
-{
+class Gameboy : public IEmulatedMachine {
 public:
-
 	// IEmulatedMachine
 
-	//Machine type
+	// Machine type
 	EmulatedMachine::Type GetType() override;
 	const char* GetRomTitle() override;
 
-	//Application interface
+	// Application interface
 	void SetApplicationInterface(IMachineToApplication* applicationInterface) override;
 	void AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount) override;
 	void RemoveApplicationEvent(unsigned int eventId) override;
 
-	//Component access
+	// Component access
 	IEmulatedDisplay* GetDisplay() override;
 	IEmulatedInput* GetInput() override;
 	IEmulatedMemory* GetMemory() override;
 	IEmulatedProcessor* GetProcessor() override;
 	IEmulatedSound* GetSound() override;
 
-	//Machine info
+	// Machine info
 	unsigned int GetFrameCount() override;
 	unsigned int GetTickCount() override;
 	unsigned int GetTicksPerSecond() override;
 	unsigned int GetTicksUntilNextFrame() override;
 
-	//Execution
+	// Execution
 	void Step() override;
 	void RunToNextFrame() override;
 	virtual void Run();
 	virtual void Stop();
 
-	//Persistence
+	// Persistence
 	void SaveState(Archive& archive) override;
 	void LoadState(Archive& archive) override;
 
-	//Debugging
+	// Debugging
 	void EnableBreakpoint(int address) override;
 	void DisableBreakpoint(int address) override;
 
-
 	// Gameboy
 
-	//Creation
+	// Creation
 	static Gameboy* Create(const char* filename, EmulatedMachine::Type machineType);
 	static void Release(Gameboy* machine);
 
-	//Application interface
+	// Application interface
 	IMachineToApplication* GetApplicationInterface();
 
-	//Gameboy Components (non-virtual functions, direct concrete types)
+	// Gameboy Components (non-virtual functions, direct concrete types)
 	Cpu* GetGbCpu();
 	Memory* GetGbMemory();
 	Display* GetGbDisplay();
 	Input* GetGbInput();
 	Sound* GetGbSound();
 
-	//Execution
-	void RunDuringInstruction(unsigned int ticks);	///<Should only be called by the CPU.  Won't do anything if called externally.
+	// Execution
+	void RunDuringInstruction(
+		unsigned int ticks);  ///< Should only be called by the CPU.  Won't do anything if called externally.
 
-	//Double-speed mode (CGB only)
+	// Double-speed mode (CGB only)
 	bool IsDoubleSpeed();
 	void SetDoubleSpeed(bool doubleSpeed);
 
 protected:
-
 	Gameboy(Memory* memory, EmulatedMachine::Type machineType);
 	virtual ~Gameboy();
 	void Initialize();
 
-	void InternalStep();	///<Non-virtual Step.
+	void InternalStep();  ///< Non-virtual Step.
 
 	virtual void Serialize(Archive& archive);
 
@@ -128,7 +122,7 @@ protected:
 	int m_frameTicksRemaining;
 
 	bool m_executingInstruction;
-	unsigned int m_subInstructionTicksSpent;	///<Tracks how many ticks were used during instruction execution
+	unsigned int m_subInstructionTicksSpent;  ///< Tracks how many ticks were used during instruction execution
 
 	bool m_doubleSpeed;
 
@@ -138,6 +132,6 @@ protected:
 	bool m_applicationEventsPending;
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

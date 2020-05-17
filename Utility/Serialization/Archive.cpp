@@ -22,150 +22,151 @@ using namespace Emunisce;
 
 #include "ISerializer.h"
 
-
-Archive::Archive(ISerializer* serializer, ArchiveMode::Type archiveMode)
-{
+Archive::Archive(ISerializer* serializer, ArchiveMode::Type archiveMode) {
 	m_serializer = serializer;
 	m_archiveMode = archiveMode;
 
 	m_serializer->SetArchive(this);
 }
 
-void Archive::Close()
-{
+void Archive::Close() {
 	m_serializer->Close();
 }
 
-
-ISerializer* Archive::GetSerializer()
-{
+ISerializer* Archive::GetSerializer() {
 	return m_serializer;
 }
 
-ArchiveMode::Type Archive::GetArchiveMode()
-{
+ArchiveMode::Type Archive::GetArchiveMode() {
 	return m_archiveMode;
 }
 
-
-void Archive::SerializeBuffer(unsigned char* buffer, unsigned int bytes)
-{
-	if(m_archiveMode == ArchiveMode::Saving)
+void Archive::SerializeBuffer(unsigned char* buffer, unsigned int bytes) {
+	if (m_archiveMode == ArchiveMode::Saving) {
 		m_serializer->Save(buffer, bytes);
-	else
+	}
+	else {
 		m_serializer->Restore(buffer, bytes);
+	}
 }
 
-
-Archive& Archive::operator&(u8& data)
-{
-	if(m_archiveMode == ArchiveMode::Saving)
+Archive& Archive::operator&(u8& data) {
+	if (m_archiveMode == ArchiveMode::Saving) {
 		m_serializer->Save((unsigned char*)&data, sizeof(data));
-	else
+	}
+	else {
 		m_serializer->Restore((unsigned char*)&data, sizeof(data));
+	}
 
 	return *this;
 }
 
-Archive& Archive::operator&(u16& data)
-{
-	if(m_archiveMode == ArchiveMode::Saving)
+Archive& Archive::operator&(u16& data) {
+	if (m_archiveMode == ArchiveMode::Saving) {
 		m_serializer->Save((unsigned char*)&data, sizeof(data));
-	else
+	}
+	else {
 		m_serializer->Restore((unsigned char*)&data, sizeof(data));
+	}
 
 	return *this;
 }
 
-Archive& Archive::operator&(u32& data)
-{
-	if(m_archiveMode == ArchiveMode::Saving)
+Archive& Archive::operator&(u32& data) {
+	if (m_archiveMode == ArchiveMode::Saving) {
 		m_serializer->Save((unsigned char*)&data, sizeof(data));
-	else
+	}
+	else {
 		m_serializer->Restore((unsigned char*)&data, sizeof(data));
+	}
 
 	return *this;
 }
 
-Archive& Archive::operator&(u64& data)
-{
-	if(m_archiveMode == ArchiveMode::Saving)
+Archive& Archive::operator&(u64& data) {
+	if (m_archiveMode == ArchiveMode::Saving) {
 		m_serializer->Save((unsigned char*)&data, sizeof(data));
-	else
+	}
+	else {
 		m_serializer->Restore((unsigned char*)&data, sizeof(data));
+	}
 
 	return *this;
 }
 
-
-Archive& Archive::operator&(s8& data)
-{
-	if(m_archiveMode == ArchiveMode::Saving)
+Archive& Archive::operator&(s8& data) {
+	if (m_archiveMode == ArchiveMode::Saving) {
 		m_serializer->Save((unsigned char*)&data, sizeof(data));
-	else
+	}
+	else {
 		m_serializer->Restore((unsigned char*)&data, sizeof(data));
+	}
 
 	return *this;
 }
 
-Archive& Archive::operator&(s16& data)
-{
-	if(m_archiveMode == ArchiveMode::Saving)
+Archive& Archive::operator&(s16& data) {
+	if (m_archiveMode == ArchiveMode::Saving) {
 		m_serializer->Save((unsigned char*)&data, sizeof(data));
-	else
+	}
+	else {
 		m_serializer->Restore((unsigned char*)&data, sizeof(data));
+	}
 
 	return *this;
 }
 
-Archive& Archive::operator&(s32& data)
-{
-	if(m_archiveMode == ArchiveMode::Saving)
+Archive& Archive::operator&(s32& data) {
+	if (m_archiveMode == ArchiveMode::Saving) {
 		m_serializer->Save((unsigned char*)&data, sizeof(data));
-	else
+	}
+	else {
 		m_serializer->Restore((unsigned char*)&data, sizeof(data));
+	}
 
 	return *this;
 }
 
-Archive& Archive::operator&(s64& data)
-{
-	if(m_archiveMode == ArchiveMode::Saving)
+Archive& Archive::operator&(s64& data) {
+	if (m_archiveMode == ArchiveMode::Saving) {
 		m_serializer->Save((unsigned char*)&data, sizeof(data));
-	else
+	}
+	else {
 		m_serializer->Restore((unsigned char*)&data, sizeof(data));
+	}
 
 	return *this;
 }
 
-
-Archive& Archive::operator&(bool& data)
-{
-	if(m_archiveMode == ArchiveMode::Saving)
+Archive& Archive::operator&(bool& data) {
+	if (m_archiveMode == ArchiveMode::Saving) {
 		m_serializer->Save((unsigned char*)&data, sizeof(data));
-	else
+	}
+	else {
 		m_serializer->Restore((unsigned char*)&data, sizeof(data));
+	}
 
 	return *this;
 }
 
-Archive& Archive::operator&(float& data)
-{
-	if(m_archiveMode == ArchiveMode::Saving)
+Archive& Archive::operator&(float& data) {
+	if (m_archiveMode == ArchiveMode::Saving) {
 		m_serializer->Save((unsigned char*)&data, sizeof(data));
-	else
+	}
+	else {
 		m_serializer->Restore((unsigned char*)&data, sizeof(data));
+	}
 
 	return *this;
 }
 
-Archive& Archive::operator&(double& data)
-{
-	if(m_archiveMode == ArchiveMode::Saving)
+Archive& Archive::operator&(double& data) {
+	if (m_archiveMode == ArchiveMode::Saving) {
 		m_serializer->Save((unsigned char*)&data, sizeof(data));
-	else
+	}
+	else {
 		m_serializer->Restore((unsigned char*)&data, sizeof(data));
+	}
 
 	return *this;
 }
-

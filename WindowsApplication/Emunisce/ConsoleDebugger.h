@@ -20,27 +20,20 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONSOLEDEBUGGER_H
 #define CONSOLEDEBUGGER_H
 
-#include "windows.h"
-
 #include <set>
 #include <string>
 #include <vector>
 
+#include "BaseApplication/IUserInterface.h"  ///<For DisplayFilter
 #include "MachineIncludes.h"
+#include "windows.h"
 
-#include "BaseApplication/IUserInterface.h"	///<For DisplayFilter
-
-
-namespace Emunisce
-{
+namespace Emunisce {
 
 class EmunisceApplication;
 
-
-class ConsoleDebugger
-{
+class ConsoleDebugger {
 public:
-
 	ConsoleDebugger();
 
 	void Initialize(EmunisceApplication* phoenix);
@@ -53,7 +46,6 @@ public:
 	void Print(const char* text);
 
 private:
-
 	void Help();
 
 	void SetupConsole();
@@ -64,8 +56,7 @@ private:
 
 	std::vector<std::string> SplitCommand(std::string command);
 
-
-	//Commands
+	// Commands
 
 	void LoadROM(const char* filename);
 	void Reset();
@@ -111,8 +102,7 @@ private:
 
 	void PrintMachineType();
 
-
-	//Properties
+	// Properties
 
 	EmunisceApplication* m_phoenix;
 	IUserInterface* m_userInterface;
@@ -137,6 +127,6 @@ private:
 	bool m_playingInput;
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

@@ -22,33 +22,28 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "GdiPlusRenderer.h"
 using namespace Emunisce;
 
-//Windows
+// Windows
 #include "windows.h"
 
-//GdiPlus
+// GdiPlus
 #include "gdiplus.h"
 using namespace Gdiplus;
 
 #include "stdio.h"
 
-//Platform
+// Platform
 #include "PlatformIncludes.h"
 
-//Machine
+// Machine
 #include "MachineIncludes.h"
 
-//Application
-#include "../Emunisce/Emunisce.h"	///<todo: this is just here for requesting shutdown.  Refactor this.
+// Application
+#include "../Emunisce/Emunisce.h"  ///<todo: this is just here for requesting shutdown.  Refactor this.
 
+namespace Emunisce {
 
-
-namespace Emunisce
-{
-
-class GdiPlusRenderer_Private
-{
+class GdiPlusRenderer_Private {
 public:
-
 	EmunisceApplication* _Phoenix;
 
 	HWND _WindowHandle;
@@ -62,8 +57,7 @@ public:
 
 	IEmulatedMachine* _Machine;
 
-	GdiPlusRenderer_Private()
-	{
+	GdiPlusRenderer_Private() {
 		_Phoenix = nullptr;
 		_WindowHandle = nullptr;
 		_Bitmap = nullptr;
@@ -73,50 +67,45 @@ public:
 		_Machine = nullptr;
 	}
 
-	~GdiPlusRenderer_Private()
-	{
+	~GdiPlusRenderer_Private() {
 	}
 
-	void InitializeGdiPlus()
-	{
+	void InitializeGdiPlus() {
 		GdiplusStartup(&_GdiplusToken, &_GdiplusStartupInput, nullptr);
 
 		_Bitmap = nullptr;
 	}
 
-	void ShutdownGdiPlus()
-	{
+	void ShutdownGdiPlus() {
 		delete _Bitmap;
 
 		GdiplusShutdown(_GdiplusToken);
 	}
 
+	void OnPaint() {
+		// Check conditions
 
-	void OnPaint()
-	{
-		//Check conditions
-
-		if(_Machine == nullptr)
+		if (_Machine == nullptr) {
 			return;
+		}
 
-		if(_LastFrameRendered == _Machine->GetDisplay()->GetScreenBufferCount())
+		if (_LastFrameRendered == _Machine->GetDisplay()->GetScreenBufferCount()) {
 			return;
+		}
 
-
-		//Render the frame
+		// Render the frame
 
 		Render();
 
-
-		//Paint the rendered frame to the window
+		// Paint the rendered frame to the window
 
 		PAINTSTRUCT paintStruct;
 		HDC hdc = BeginPaint(_WindowHandle, &paintStruct);
 
 		Graphics graphics(hdc);
-		graphics.SetInterpolationMode(InterpolationModeNearestNeighbor);	///<Disable antialiasing
-		graphics.SetSmoothingMode(SmoothingModeHighSpeed);	///<Dunno if this does anything useful
-		graphics.SetPixelOffsetMode(PixelOffsetModeHighSpeed);	///<Dunno if this does anything useful
+		graphics.SetInterpolationMode(InterpolationModeNearestNeighbor);  ///< Disable antialiasing
+		graphics.SetSmoothingMode(SmoothingModeHighSpeed);                ///< Dunno if this does anything useful
+		graphics.SetPixelOffsetMode(PixelOffsetModeHighSpeed);            ///< Dunno if this does anything useful
 
 		RECT clientRect;
 		GetClientRect(_WindowHandle, &clientRect);
@@ -125,28 +114,29 @@ public:
 		EndPaint(_WindowHandle, &paintStruct);
 	}
 
-	void Render()
-	{
-		if(_Machine == nullptr || _Machine->GetDisplay() == nullptr)
+	void Render() {
+		if (_Machine == nullptr || _Machine->GetDisplay() == nullptr) {
 			return;
+		}
 
 		IEmulatedDisplay* display = _Machine->GetDisplay();
 
-		if(_LastFrameRendered == display->GetScreenBufferCount())
+		if (_LastFrameRendered == display->GetScreenBufferCount()) {
 			return;
+		}
 
 		_LastFrameRendered = display->GetScreenBufferCount();
-
 
 		ScreenBuffer* screen = display->GetStableScreenBuffer();
 
 		int screenWidth = screen->GetWidth();
 		int screenHeight = screen->GetHeight();
 
-		if(_Bitmap == nullptr || (int)_Bitmap->GetWidth() != screenWidth || (int)_Bitmap->GetHeight() != screenHeight)
-		{
-			if(_Bitmap != nullptr)
+		if (_Bitmap == nullptr || (int)_Bitmap->GetWidth() != screenWidth ||
+			(int)_Bitmap->GetHeight() != screenHeight) {
+			if (_Bitmap != nullptr) {
 				delete _Bitmap;
+			}
 
 			_Bitmap = new Bitmap(screenWidth, screenHeight, PixelFormat32bppARGB);
 		}
@@ -154,16 +144,15 @@ public:
 		BitmapData bitmapData;
 		Gdiplus::Rect bitmapRect(0, 0, screenWidth, screenHeight);
 		Status lockResult = _Bitmap->LockBits(&bitmapRect, ImageLockModeWrite, PixelFormat32bppARGB, &bitmapData);
-		if(lockResult != Ok)
+		if (lockResult != Ok) {
 			return;
+		}
 
-		for(int y=0;y<screenHeight;y++)
-		{
+		for (int y = 0; y < screenHeight; y++) {
 			u32* pixel = (u32*)bitmapData.Scan0;
 			pixel += bitmapData.Stride * y / 4;
 
-			for(int x=0;x<screenWidth;x++)
-			{
+			for (int x = 0; x < screenWidth; x++) {
 				DisplayPixel screenPixel = screen->GetPixels()[y * screenWidth + x];
 
 				*pixel = (u32)screenPixel;
@@ -176,10 +165,9 @@ public:
 	}
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
-void GdiPlusRenderer::Initialize(EmunisceApplication* phoenix, HWND windowHandle)
-{
+void GdiPlusRenderer::Initialize(EmunisceApplication* phoenix, HWND windowHandle) {
 	m_private = new GdiPlusRenderer_Private();
 	m_private->_Phoenix = phoenix;
 
@@ -188,33 +176,25 @@ void GdiPlusRenderer::Initialize(EmunisceApplication* phoenix, HWND windowHandle
 	m_private->InitializeGdiPlus();
 }
 
-void GdiPlusRenderer::Shutdown()
-{
+void GdiPlusRenderer::Shutdown() {
 	m_private->ShutdownGdiPlus();
 
 	delete m_private;
 }
 
-void GdiPlusRenderer::SetMachine(IEmulatedMachine* machine)
-{
-	//todo: lock things to prevent crashing
+void GdiPlusRenderer::SetMachine(IEmulatedMachine* machine) {
+	// todo: lock things to prevent crashing
 	m_private->_Machine = machine;
 }
 
-
-int GdiPlusRenderer::GetLastFrameRendered()
-{
+int GdiPlusRenderer::GetLastFrameRendered() {
 	return m_private->_LastFrameRendered;
 }
 
-
-void GdiPlusRenderer::SetVsync(bool enabled)
-{
-	//No option for this in GDI+
+void GdiPlusRenderer::SetVsync(bool enabled) {
+	// No option for this in GDI+
 }
 
-
-void GdiPlusRenderer::Draw()
-{
+void GdiPlusRenderer::Draw() {
 	m_private->OnPaint();
 }

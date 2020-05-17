@@ -20,56 +20,50 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CPU_H
 #define CPU_H
 
+#include "GameboyTypes.h"
+#include "MachineIncludes.h"
 #include "PlatformTypes.h"
 
-#include "MachineIncludes.h"
-#include "GameboyTypes.h"
+namespace Emunisce {
 
-
-namespace Emunisce
-{
-
-//Flag positions
+// Flag positions
 #define BIT_Z (7)
 #define BIT_N (6)
 #define BIT_H (5)
 #define BIT_C (4)
 
-//Set flag
+// Set flag
 #define SET_Z (f |= 0x80)
 #define SET_N (f |= 0x40)
 #define SET_H (f |= 0x20)
 #define SET_C (f |= 0x10)
 
-//Reset flag
+// Reset flag
 #define RES_Z (f &= ~0x80)
 #define RES_N (f &= ~0x40)
 #define RES_H (f &= ~0x20)
 #define RES_C (f &= ~0x10)
 
-//Return flag value if set, 0 otherwise
+// Return flag value if set, 0 otherwise
 #define VAL_Z ((u8)(f & 0x80))
 #define VAL_N ((u8)(f & 0x40))
 #define VAL_H ((u8)(f & 0x20))
 #define VAL_C ((u8)(f & 0x10))
 
-//Return 1 if flag is set, 0 otherwise
+// Return 1 if flag is set, 0 otherwise
 #define TST_Z ((u8)(VAL_Z >> BIT_Z))
 #define TST_N ((u8)(VAL_N >> BIT_N))
 #define TST_H ((u8)(VAL_H >> BIT_H))
 #define TST_C ((u8)(VAL_C >> BIT_C))
 
-//Invert flag
-#define INV_Z (f ^= (1<<BIT_Z))
-#define INV_N (f ^= (1<<BIT_N))
-#define INV_H (f ^= (1<<BIT_H))
-#define INV_C (f ^= (1<<BIT_C))
+// Invert flag
+#define INV_Z (f ^= (1 << BIT_Z))
+#define INV_N (f ^= (1 << BIT_N))
+#define INV_H (f ^= (1 << BIT_H))
+#define INV_C (f ^= (1 << BIT_C))
 
-
-class Cpu : public IEmulatedProcessor
-{
+class Cpu : public IEmulatedProcessor {
 public:
-
 	u16 pc;
 	u16 sp;
 
@@ -87,66 +81,64 @@ public:
 	u8& h;
 	u8& l;
 
-	
 	Cpu();
 	virtual ~Cpu() = default;
 
-	//Component
+	// Component
 	void SetMachine(Gameboy* machine);
 	void Initialize();
 
-	//External
+	// External
 	int Step();
 	void RunTimer(int ticks);
 
 	bool IsStopped();
 
 	virtual void Serialize(Archive& archive);
-	
-	//Registers
+
+	// Registers
 	void SetTimerDivider(u8 value);
 	void SetTimerControl(u8 value);
 
 	void SetCgbSpeedSwitch(u8 value);
 
 private:
-
 	Gameboy* m_machine;
 	EmulatedMachine::Type m_machineType;
 
 	Memory* m_memory;
 
-	bool m_masterInterruptsEnabled;	///<Interrupt master enable flag (IME)
-	bool m_delayNextInterrupt;	///<Interrupts are not enabled until one instruction after EI completes.
+	bool m_masterInterruptsEnabled;  ///< Interrupt master enable flag (IME)
+	bool m_delayNextInterrupt;       ///< Interrupts are not enabled until one instruction after EI completes.
 
 	bool m_halted;
 	bool m_stopped;
 	bool m_haltBug;
 
-	//Registers
-	u8 m_interruptsEnabled;		///<0xffff - Interrupt Enable.  Which interrupts are currently enabled.  Slaves to the IME flag.
-	u8 m_interruptFlags;		///<0xff0f - Interrupt Flag.  Which interrupts are currently set.
+	// Registers
+	u8 m_interruptsEnabled;  ///< 0xffff - Interrupt Enable.  Which interrupts are currently enabled.  Slaves to the IME
+							 ///< flag.
+	u8 m_interruptFlags;     ///< 0xff0f - Interrupt Flag.  Which interrupts are currently set.
 
-	u8 m_timerDivider;	///<0xff04 - Timer Divider.
-	int m_ticksPerDividerIncrement;	///<The timer divider increments once every 256 ticks.
-	int m_ticksUntilDividerIncrement;	///<The timer divider increments once every 256 ticks.
+	u8 m_timerDivider;                 ///< 0xff04 - Timer Divider.
+	int m_ticksPerDividerIncrement;    ///< The timer divider increments once every 256 ticks.
+	int m_ticksUntilDividerIncrement;  ///< The timer divider increments once every 256 ticks.
 
-	u8 m_timerModulo;	///<0xff06 - Timer Modulo.  This value gets loaded into the timer counter when it overflows.
+	u8 m_timerModulo;  ///< 0xff06 - Timer Modulo.  This value gets loaded into the timer counter when it overflows.
 
-	u8 m_timerCounter;	///<0xff05 - Timer Counter.
+	u8 m_timerCounter;  ///< 0xff05 - Timer Counter.
 	int m_ticksPerCounterIncrement;
 	int m_ticksUntilCounterIncrement;
 
-	u8 m_timerControl;	///<0xff07 - Timer Control.
+	u8 m_timerControl;  ///< 0xff07 - Timer Control.
 	bool m_timerEnabled;
 
-	u8 m_cgbSpeedSwitch;	///<0xff4d - Speed switch and flag (Key1).
-
+	u8 m_cgbSpeedSwitch;  ///< 0xff4d - Speed switch and flag (Key1).
 
 	u8 ReadNext8();
 	u16 ReadNext16();
 
-	int	ExecuteCB();
+	int ExecuteCB();
 
 	void ExecADC(u8* target, u8 value);
 	void ExecADC(u16* target, u16 value);
@@ -240,7 +232,6 @@ private:
 	void ExecXOR(u8 value);
 };
 
-}	//namespace Emunisce
-
+}  // namespace Emunisce
 
 #endif

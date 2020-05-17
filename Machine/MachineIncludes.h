@@ -18,22 +18,18 @@ You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//This is a convenience header for pulling in all Machine types
-// This only includes the abstract types.  
+// This is a convenience header for pulling in all Machine types
+// This only includes the abstract types.
 // Include the specific system for concrete types.
 
-#include "MachineTypes.h"
-
-#include "MachineFactory.h"
-#include "MachineSerialization.h"
-
-#include "IMachineToApplication.h"
-
-#include "IEmulatedMachine.h"
 #include "IEmulatedDisplay.h"
 #include "IEmulatedInput.h"
+#include "IEmulatedMachine.h"
 #include "IEmulatedMemory.h"
 #include "IEmulatedProcessor.h"
 #include "IEmulatedSound.h"
-
+#include "IMachineToApplication.h"
+#include "MachineFactory.h"
+#include "MachineSerialization.h"
+#include "MachineTypes.h"
 #include "ScreenBuffer.h"

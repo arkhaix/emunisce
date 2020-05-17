@@ -20,16 +20,12 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef DUTYUNIT_H
 #define DUTYUNIT_H
 
-#include "Sound.h"	///<for SquareSynthesisMethod
+#include "Sound.h"  ///<for SquareSynthesisMethod
 
+namespace Emunisce {
 
-namespace Emunisce
-{
-
-class DutyUnit
-{
+class DutyUnit {
 public:
-
 	DutyUnit();
 
 	void Serialize(Archive& archive);
@@ -45,7 +41,6 @@ public:
 	void SetSynthesisMethod(SquareSynthesisMethod::Type method);
 
 private:
-
 	int m_timerPeriod;
 	int m_timerValue;
 
@@ -61,6 +56,6 @@ private:
 	int m_sumSinceLastSample;
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

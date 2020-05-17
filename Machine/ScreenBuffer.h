@@ -20,20 +20,16 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef SCREENBUFFER_H
 #define SCREENBUFFER_H
 
+#include <string.h>  ///<memcpy
+
 #include "MachineTypes.h"
 
-#include <string.h>	///<memcpy
-
-
-namespace Emunisce
-{
+namespace Emunisce {
 
 class Archive;
 
-class ScreenBuffer
-{
+class ScreenBuffer {
 public:
-
 	virtual ~ScreenBuffer();
 
 	virtual int GetWidth() = 0;
@@ -48,62 +44,51 @@ public:
 };
 
 template<int TWidth, int THeight>
-class TScreenBuffer : public ScreenBuffer
-{
+class TScreenBuffer : public ScreenBuffer {
 public:
-
 	DisplayPixel Pixels[TWidth * THeight];
 
-	inline DisplayPixel GetPixel(int x, int y)
-	{
-		if(x<0 || x>=TWidth || y<0 || y>=THeight)
+	inline DisplayPixel GetPixel(int x, int y) {
+		if (x < 0 || x >= TWidth || y < 0 || y >= THeight)
 			return (DisplayPixel)0;
 
-		return Pixels[y*TWidth + x];
+		return Pixels[y * TWidth + x];
 	}
 
-	inline void SetPixel(int x, int y, DisplayPixel value)
-	{
-		if(x<0 || x>=TWidth || y<0 || y>=THeight)
+	inline void SetPixel(int x, int y, DisplayPixel value) {
+		if (x < 0 || x >= TWidth || y < 0 || y >= THeight)
 			return;
 
-		Pixels[y*TWidth+x] = value;
+		Pixels[y * TWidth + x] = value;
 	}
 
-	int GetWidth() override
-	{
+	int GetWidth() override {
 		return TWidth;
 	}
 
-	int GetHeight() override
-	{
+	int GetHeight() override {
 		return THeight;
 	}
 
-	DisplayPixel* GetPixels() override
-	{
+	DisplayPixel* GetPixels() override {
 		return &Pixels[0];
 	}
 
-	void Clear(DisplayPixel clearColor) override
-	{
+	void Clear(DisplayPixel clearColor) override {
 		int numPixels = THeight * TWidth;
-		for(int i=0;i<numPixels;i++)
+		for (int i = 0; i < numPixels; i++)
 			Pixels[i] = clearColor;
 	}
 
-	ScreenBuffer* Clone() override
-	{
+	ScreenBuffer* Clone() override {
 		TScreenBuffer<TWidth, THeight>* result = new TScreenBuffer<TWidth, THeight>();
 		memcpy(&result->Pixels[0], &Pixels[0], TWidth * THeight * sizeof(DisplayPixel));
 		return result;
 	}
 };
 
-class DynamicScreenBuffer : public ScreenBuffer
-{
+class DynamicScreenBuffer : public ScreenBuffer {
 public:
-
 	DisplayPixel* Pixels;
 	int Width;
 	int Height;
@@ -120,7 +105,6 @@ public:
 	ScreenBuffer* Clone() override;
 };
 
-}	//namespace Emunisce
-
+}  // namespace Emunisce
 
 #endif

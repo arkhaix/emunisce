@@ -1,14 +1,11 @@
 #ifndef IMACHINETOAPPLICATION_H
 #define IMACHINETOAPPLICATION_H
 
-namespace Emunisce
-{
+namespace Emunisce {
 
-class IMachineToApplication
-{
+class IMachineToApplication {
 public:
-
-	virtual void HandleApplicationEvent(unsigned int eventId) = 0;	///<For application-requested mid-frame interrupts
+	virtual void HandleApplicationEvent(unsigned int eventId) = 0;  ///< For application-requested mid-frame interrupts
 
 	virtual void SaveRomData(const char* title, unsigned char* buffer, unsigned int bytes) = 0;
 
@@ -16,6 +13,6 @@ public:
 	virtual void LoadRomData(const char* title, unsigned char* buffer, unsigned int bytes) = 0;
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

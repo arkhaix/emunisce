@@ -20,33 +20,26 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include "wx/wx.h"
+#include <string>
 
 #include "BaseApplication/BaseApplication.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
+#include "wx/wx.h"
 
-#include <string>
-
-
-namespace Emunisce
-{
+namespace Emunisce {
 
 class WindowMain;
 class ConsoleWindow;
 
-class Application : public wxApp, public BaseApplication
-{
+class Application : public wxApp, public BaseApplication {
 public:
+	Application();
+	~Application();
 
-    Application();
-    ~Application();
-
-
-    // BaseApplication overrides
+	// BaseApplication overrides
 
 	virtual void NotifyMachineChanged(IEmulatedMachine* newMachine);
 	virtual void RequestShutdown();
-
 
 	// BaseApplication interface
 
@@ -54,14 +47,14 @@ public:
 
 	virtual void DisplayStatusMessage(const char* message);
 	virtual void DisplayImportantMessage(MessageType::Type messageType, const char* message);
-	virtual PromptResult::Type DisplayPrompt(PromptType::Type promptType, const char* title, const char* message, void** extraResult);
+	virtual PromptResult::Type DisplayPrompt(PromptType::Type promptType, const char* title, const char* message,
+											 void** extraResult);
 
 	virtual bool SelectFile(char** result, const char* fileMask);
 
-    virtual void ConsolePrint(const char* text);
+	virtual void ConsolePrint(const char* text);
 
 	virtual unsigned int GetRomDataSize(const char* title);
-
 
 	// IWindowMessageListener
 
@@ -74,18 +67,15 @@ public:
 	virtual void KeyDown(int key);
 	virtual void KeyUp(int key);
 
+	// wxApplication
 
-    // wxApplication
+	void ShowConsoleWindow();
+	void ShowGameWindow();
 
-    void ShowConsoleWindow();
-    void ShowGameWindow();
-
-    virtual bool ExecuteConsoleCommand(const char* command); ///< Move to public for use from ConsoleWindow
-
+	virtual bool ExecuteConsoleCommand(const char* command);  ///< Move to public for use from ConsoleWindow
 
 protected:
-
-    // BaseApplication interface
+	// BaseApplication interface
 
 	virtual Archive* OpenRomData(const char* name, bool saving);
 	virtual void CloseRomData(Archive* archive);
@@ -99,10 +89,9 @@ protected:
 	virtual Archive* OpenMacro(const char* name, bool saving);
 	virtual void CloseMacro(Archive* archive);
 
+	// Persistence
 
-    // Persistence
-
-    Archive* OpenFileArchive(const char* filename, bool saving);
+	Archive* OpenFileArchive(const char* filename, bool saving);
 	void ReleaseArchive(Archive* archive);
 
 	std::string GetDataFolder();
@@ -112,26 +101,23 @@ protected:
 	std::string GetMovieFile(const char* name);
 	std::string GetMacroFile(const char* name);
 
-
 	// Input
 
 	void MapDefaultKeys();
-
 
 	// Application properties
 
 	OpenGLRenderer* m_renderer;
 
-
 	// wxApp
 
-    virtual bool OnInit();
+	virtual bool OnInit();
 
-    wxFrame* m_frame;
-    WindowMain* m_windowMain;
-    ConsoleWindow* m_consoleWindow;
+	wxFrame* m_frame;
+	WindowMain* m_windowMain;
+	ConsoleWindow* m_consoleWindow;
 };
 
-}   //namespace Emunisce
+}  // namespace Emunisce
 
-#endif // APPLICATION_H
+#endif  // APPLICATION_H

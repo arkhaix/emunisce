@@ -24,14 +24,10 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "Memory.h"
 
+namespace Emunisce {
 
-namespace Emunisce
-{
-
-class Mbc1 : public Memory
-{
+class Mbc1 : public Memory {
 public:
-
 	Mbc1();
 	~Mbc1() override;
 
@@ -42,7 +38,6 @@ public:
 	void Write8(u16 address, u8 value) override;
 
 protected:
-
 	bool LoadFile(const char* filename) override;
 
 	void SwitchROM();
@@ -66,17 +61,18 @@ protected:
 	u8 m_ramBanks[0x10][0x2000];
 
 	u8 m_pendingSramWrite[0x10][0x2000];
-	unsigned int m_pendingSramGeneration;	///<Incremented each time SaveRAM is called.
-	unsigned int m_lastPersistedGeneration;	///<The generation we last persisted.
-	unsigned int m_lastPersistedFrameCount;	///<The frame count the last time we persisted the sram data.
+	unsigned int m_pendingSramGeneration;    ///< Incremented each time SaveRAM is called.
+	unsigned int m_lastPersistedGeneration;  ///< The generation we last persisted.
+	unsigned int m_lastPersistedFrameCount;  ///< The frame count the last time we persisted the sram data.
 
 	int m_selectedRomBank;
 	int m_selectedRamBank;
-	int m_modeSelect;	///<0 = ROM banking, 1 = RAM banking
+	int m_modeSelect;  ///< 0 = ROM banking, 1 = RAM banking
 
-	bool m_fiveBitBankCheck;	///<Always true for MBC1.  Disables loading into banks 0x20, 0x40, and 0x60 during LoadFile.
+	bool m_fiveBitBankCheck;  ///< Always true for MBC1.  Disables loading into banks 0x20, 0x40, and 0x60 during
+							  ///< LoadFile.
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

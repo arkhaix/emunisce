@@ -21,27 +21,20 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #define SOUND1_H
 
 #include "PlatformTypes.h"
-
-#include "Sound.h"	///<for SquareSynthesisMethod
+#include "Sound.h"  ///<for SquareSynthesisMethod
 #include "SoundGenerator.h"
 
-
-namespace Emunisce
-{
+namespace Emunisce {
 
 class Gameboy;
 class DutyUnit;
 
-
-class Sound1 : public SoundGenerator
-{
+class Sound1 : public SoundGenerator {
 public:
-
 	Sound1();
 	virtual ~Sound1();
 
-
-	//Sound component
+	// Sound component
 
 	void Initialize(ChannelController* channelController) override;
 	void SetMachine(Gameboy* machine) override;
@@ -50,8 +43,7 @@ public:
 
 	void SetSynthesisMethod(SquareSynthesisMethod::Type method);
 
-
-	//Sound generation
+	// Sound generation
 
 	void PowerOff() override;
 	void PowerOn() override;
@@ -63,8 +55,7 @@ public:
 
 	float GetSample() override;
 
-
-	//Registers
+	// Registers
 
 	void SetNR10(u8 value);
 	void SetNR11(u8 value);
@@ -72,16 +63,12 @@ public:
 	void SetNR13(u8 value);
 	void SetNR14(u8 value);
 
-
 private:
-
-
-	//Sound generation
+	// Sound generation
 
 	DutyUnit* m_dutyUnit;
 
-	int m_frequency;	///<11-bit frequency
-
+	int m_frequency;  ///< 11-bit frequency
 
 	void Trigger() override;
 	void TriggerSweep();
@@ -98,17 +85,15 @@ private:
 	int m_sweepTimerPeriod;
 	bool m_hasPerformedDecreasingCalculation;
 
+	// Registers
 
-
-	//Registers
-
-	u8 m_nr10;	///<ff10
-	u8 m_nr11;	///<ff11
-	u8 m_nr12;	///<ff12
-	u8 m_nr13;	///<ff13
-	u8 m_nr14;	///<ff14
+	u8 m_nr10;  ///< ff10
+	u8 m_nr11;  ///< ff11
+	u8 m_nr12;  ///< ff12
+	u8 m_nr13;  ///< ff13
+	u8 m_nr14;  ///< ff14
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

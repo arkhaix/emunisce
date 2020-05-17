@@ -20,16 +20,14 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef ISERIALIZER_H
 #define ISERIALIZER_H
 
-namespace Emunisce
-{
+namespace Emunisce {
 
 class Archive;
 
-class ISerializer
-{
+class ISerializer {
 public:
-
-	virtual ~ISerializer() {}
+	virtual ~ISerializer() {
+	}
 
 	virtual void SetArchive(Archive* archive) = 0;
 
@@ -39,6 +37,6 @@ public:
 	virtual void Close() = 0;
 };
 
-}
+}  // namespace Emunisce
 
 #endif

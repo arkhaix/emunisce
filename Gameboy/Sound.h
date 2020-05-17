@@ -20,14 +20,11 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef SOUND_H
 #define SOUND_H
 
+#include "GameboyTypes.h"
+#include "MachineIncludes.h"
 #include "PlatformTypes.h"
 
-#include "MachineIncludes.h"
-#include "GameboyTypes.h"
-
-
-namespace Emunisce
-{
+namespace Emunisce {
 
 class SoundGenerator;
 class Sound1;
@@ -37,15 +34,10 @@ class Sound4;
 
 class ChannelController;
 
-
-
-class Sound : public IEmulatedSound
-{
+class Sound : public IEmulatedSound {
 public:
-
 	Sound();
 	virtual ~Sound();
-
 
 	// IEmulatedSound
 
@@ -54,10 +46,9 @@ public:
 
 	void SetSquareSynthesisMethod(SquareSynthesisMethod::Type method) override;
 
-
 	// Sound
 
-	//Component
+	// Component
 	void SetMachine(Gameboy* machine);
 	void Initialize();
 
@@ -65,10 +56,10 @@ public:
 
 	virtual void Serialize(Archive& archive);
 
-	//Internal (for the sound generators)
+	// Internal (for the sound generators)
 	int GetFrameSequencerPosition();
 
-	//Registers
+	// Registers
 
 	void SetNR10(u8 value);
 	void SetNR11(u8 value);
@@ -97,18 +88,14 @@ public:
 	void SetNR52(u8 value);
 
 private:
-	
-
 	void MixSamples(float inSamples[4], float (&outSamples)[2]);
 
-
-	//Component
+	// Component
 
 	Gameboy* m_machine;
 	Memory* m_memory;
 
-	
-	//Audio
+	// Audio
 
 	AudioBuffer m_audioBuffer[2];
 	AudioBuffer* m_activeAudioBuffer;
@@ -120,42 +107,36 @@ private:
 
 	unsigned int m_nextSampleIndex;
 
+	// Frame sequencer
 
-	//Frame sequencer
-
-	int m_frameSequencerTimer;	///<Ticks remaining until the timer clocks.
+	int m_frameSequencerTimer;  ///< Ticks remaining until the timer clocks.
 	int m_frameSequencerPeriod;
-	int m_frameSequencerPosition;	///<Controls the tick rates for the components (length/envelope/sweep)
+	int m_frameSequencerPosition;  ///< Controls the tick rates for the components (length/envelope/sweep)
 
-
-	//Sound master
+	// Sound master
 
 	bool m_hasPower;
-	bool m_terminalOutputs[2][4];	///<2 output channels (stereo left/right), 4 component channels (Sound1,2,3,4)
+	bool m_terminalOutputs[2][4];  ///< 2 output channels (stereo left/right), 4 component channels (Sound1,2,3,4)
 
-
-	//Sound generators
+	// Sound generators
 
 	Sound1* m_sound1;
 	Sound2* m_sound2;
 	Sound3* m_sound3;
 	Sound4* m_sound4;
 
-	SoundGenerator* m_soundGenerator[4];		///<Convenience alias for iterating over m_sound1-4
+	SoundGenerator* m_soundGenerator[4];  ///< Convenience alias for iterating over m_sound1-4
 	ChannelController* m_channelController[4];
 
+	// Registers
 
-	//Registers
+	u8 m_inaccessible;  ///< For registers like the unused memory before wave ram.
 
-	u8 m_inaccessible;	///<For registers like the unused memory before wave ram.
-
-	u8 m_nr50;	///<ff24
-	u8 m_nr51;	///<ff25
-	u8 m_nr52;	///<ff26
+	u8 m_nr50;  ///< ff24
+	u8 m_nr51;  ///< ff25
+	u8 m_nr52;  ///< ff26
 };
 
-}	//namespace Emunisce
-
-
+}  // namespace Emunisce
 
 #endif

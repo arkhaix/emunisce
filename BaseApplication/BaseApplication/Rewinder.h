@@ -20,24 +20,19 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef REWINDER_H
 #define REWINDER_H
 
-#include "MachineFeature.h"
-
-#include "PlatformIncludes.h"
-
-#include <mutex>
 #include <list>
+#include <mutex>
 #include <vector>
 
+#include "MachineFeature.h"
+#include "PlatformIncludes.h"
 
-namespace Emunisce
-{
+namespace Emunisce {
 
 class InputRecording;
 
-class Rewinder : public MachineFeature
-{
+class Rewinder : public MachineFeature {
 public:
-
 	// Rewinder
 
 	Rewinder();
@@ -48,7 +43,7 @@ public:
 
 	virtual void ApplicationEvent(unsigned int eventId);
 
-	//Used by Segment to call into MachineFeature
+	// Used by Segment to call into MachineFeature
 	virtual void Internal_RunMachineToNextFrame();
 	virtual unsigned int Internal_GetFrameCount();
 	virtual ScreenBuffer* Internal_GetStableScreenBuffer();
@@ -56,50 +51,44 @@ public:
 	virtual AudioBuffer Internal_GetStableAudioBuffer();
 	virtual int Internal_GetAudioBufferCount();
 
-
 	// MachineFeature
 
 	void SetApplication(BaseApplication* application) override;
 
-	void SetComponentMachine(IEmulatedMachine* componentMachine) override;	///<Overridden because this component wraps its own InputRecording (m_recorder)
-	void SetEmulatedMachine(IEmulatedMachine* emulatedMachine) override;	///<Overridden because this component wraps its own InputRecording (m_recorder)
-
+	void SetComponentMachine(IEmulatedMachine* componentMachine)
+		override;  ///< Overridden because this component wraps its own InputRecording (m_recorder)
+	void SetEmulatedMachine(IEmulatedMachine* emulatedMachine)
+		override;  ///< Overridden because this component wraps its own InputRecording (m_recorder)
 
 	// IEmulatedMachine
 
 	unsigned int GetFrameCount() override;
 	void RunToNextFrame() override;
 
-
 	// IEmulatedDisplay
 
 	ScreenBuffer* GetStableScreenBuffer() override;
 	int GetScreenBufferCount() override;
-
 
 	// IEmulatedSound
 
 	AudioBuffer GetStableAudioBuffer() override;
 	int GetAudioBufferCount() override;
 
-
 protected:
-
 	bool m_isRewinding;
-	InputRecording* m_recorder;	///<Private recorder so it doesn't conflict with user movies/macros.
+	InputRecording* m_recorder;  ///< Private recorder so it doesn't conflict with user movies/macros.
 
-	struct CachedFrame
-	{
-		unsigned int MachineFrameId;	///<From Machine::GetFrameCount
+	struct CachedFrame {
+		unsigned int MachineFrameId;  ///< From Machine::GetFrameCount
 
-		unsigned int ScreenBufferId;	///<From IEmulatedDisplay::GetScreenBufferCount
+		unsigned int ScreenBufferId;  ///< From IEmulatedDisplay::GetScreenBufferCount
 		ScreenBuffer* Screen;
 
 		unsigned int AudioBufferId;
 		AudioBuffer Audio;
 
-		CachedFrame()
-		{
+		CachedFrame() {
 			MachineFrameId = (unsigned int)-1;
 
 			ScreenBufferId = (unsigned int)-1;
@@ -109,21 +98,19 @@ protected:
 		}
 	};
 
-	class Segment
-	{
+	class Segment {
 	public:
-
 		static const unsigned int FramesPerSegment = 60;
 
 		Segment(Rewinder* rewinder, InputRecording* recorder);
 		~Segment();
 
 		void RecordFrame();
-		unsigned int NumFramesRecorded();	///<The number of frames currently recorded by this segment
+		unsigned int NumFramesRecorded();  ///< The number of frames currently recorded by this segment
 		bool CanRecordMoreFrames();
 
 		void CacheFrame();
-		unsigned int NumFramesCached();	///<The number of frames cached and ready for playback
+		unsigned int NumFramesCached();  ///< The number of frames cached and ready for playback
 		bool CanCacheMoreFrames();
 
 		CachedFrame GetCachedFrame(unsigned int index);
@@ -132,11 +119,10 @@ protected:
 
 		void RestoreState();
 
-		void LockAtFrame(unsigned int frameId);	///<Disables all history within this segment newer than the specified frame.
-
+		void LockAtFrame(
+			unsigned int frameId);  ///< Disables all history within this segment newer than the specified frame.
 
 	private:
-
 		Rewinder* m_rewinder;
 		InputRecording* m_recorder;
 
@@ -151,7 +137,7 @@ protected:
 		bool m_locked;
 	};
 
-	static const unsigned int m_maxSegments = 60;	///<Keep 60 seconds of rewind history
+	static const unsigned int m_maxSegments = 60;  ///< Keep 60 seconds of rewind history
 	std::vector<Segment*> m_segments;
 	unsigned int m_playingSegment;
 
@@ -160,16 +146,12 @@ protected:
 	static const unsigned int m_maxFrameHistorySize = Segment::FramesPerSegment;
 	std::mutex m_frameHistoryLock;
 
-
-	class InputHandler : public IEmulatedInput
-	{
+	class InputHandler : public IEmulatedInput {
 	public:
-
 		InputHandler(Rewinder* rewinder);
 		virtual ~InputHandler() = default;
 
-
-		//IEmulatedInput
+		// IEmulatedInput
 
 		unsigned int NumButtons() override;
 		const char* GetButtonName(unsigned int index) override;
@@ -179,15 +161,13 @@ protected:
 
 		bool IsButtonDown(unsigned int index) override;
 
-
 	private:
-
 		Rewinder* m_rewinder;
 	};
 
 	InputHandler* m_inputHandler;
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

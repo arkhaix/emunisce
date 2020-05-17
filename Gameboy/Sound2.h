@@ -21,28 +21,20 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #define SOUND2_H
 
 #include "PlatformTypes.h"
-
-#include "Sound.h"	///<for SquareSynthesisMethod
+#include "Sound.h"  ///<for SquareSynthesisMethod
 #include "SoundGenerator.h"
 
-
-
-namespace Emunisce
-{
+namespace Emunisce {
 
 class Gameboy;
 class DutyUnit;
 
-
-class Sound2 : public SoundGenerator
-{
+class Sound2 : public SoundGenerator {
 public:
-
 	Sound2();
 	virtual ~Sound2();
 
-
-	//Sound component
+	// Sound component
 
 	void Initialize(ChannelController* channelController) override;
 	void SetMachine(Gameboy* machine) override;
@@ -51,8 +43,7 @@ public:
 
 	void SetSynthesisMethod(SquareSynthesisMethod::Type method);
 
-
-	//Sound generation
+	// Sound generation
 
 	void PowerOff() override;
 	void PowerOn() override;
@@ -63,35 +54,30 @@ public:
 
 	float GetSample() override;
 
-
-	//Registers
+	// Registers
 
 	void SetNR21(u8 value);
 	void SetNR22(u8 value);
 	void SetNR23(u8 value);
 	void SetNR24(u8 value);
 
-
 private:
-
 	void Trigger() override;
 
-
-	//Sound generation
+	// Sound generation
 
 	DutyUnit* m_dutyUnit;
 	int m_frequency;
 
+	// Registers
 
-	//Registers
-
-	u8 m_nr20;	///<ff15
-	u8 m_nr21;	///<ff16
-	u8 m_nr22;	///<ff17
-	u8 m_nr23;	///<ff18
-	u8 m_nr24;	///<ff19
+	u8 m_nr20;  ///< ff15
+	u8 m_nr21;  ///< ff16
+	u8 m_nr22;  ///< ff17
+	u8 m_nr23;  ///< ff18
+	u8 m_nr24;  ///< ff19
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

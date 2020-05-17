@@ -20,24 +20,18 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "WaveOutSound.h"
 using namespace Emunisce;
 
-#include "windows.h"
-
-#include "BaseApplication/MachineRunner.h"
-#include "../Emunisce/Emunisce.h"	///<todo: this is just here for requesting shutdown?  refactor this.
-
-#include "MachineIncludes.h"
-
 #include <iostream>
 #include <queue>
 
+#include "../Emunisce/Emunisce.h"  ///<todo: this is just here for requesting shutdown?  refactor this.
+#include "BaseApplication/MachineRunner.h"
+#include "MachineIncludes.h"
+#include "windows.h"
 
-namespace Emunisce
-{
+namespace Emunisce {
 
-class WaveOutSound_Private
-{
+class WaveOutSound_Private {
 public:
-
 	EmunisceApplication* _Phoenix;
 
 	IEmulatedMachine* _Machine;
@@ -46,7 +40,7 @@ public:
 	bool _Mute;
 
 	static const int _NumOutputBuffers = 3;
-	static const int _NumOutputChannels = 2;	///< Mono/Stereo output
+	static const int _NumOutputChannels = 2;  ///< Mono/Stereo output
 
 	HWAVEOUT _WaveOut;
 	WAVEHDR _WaveHeader[_NumOutputBuffers];
@@ -65,8 +59,7 @@ public:
 	CRITICAL_SECTION _PendingBufferQueueLock;
 	HANDLE _MonitorThreadHandle;
 
-	WaveOutSound_Private()
-	{
+	WaveOutSound_Private() {
 		_Phoenix = nullptr;
 		_Machine = nullptr;
 
@@ -74,15 +67,13 @@ public:
 
 		_Mute = false;
 
-		for(unsigned int i=0;i<AudioBuffer::BufferSizeSamples;i++)
-		{
+		for (unsigned int i = 0; i < AudioBuffer::BufferSizeSamples; i++) {
 			_Silence.Samples[0][i] = SilentSample;
 			_Silence.Samples[1][i] = SilentSample;
 		}
 	}
 
-	void Initialize()
-	{
+	void Initialize() {
 		InitializeCriticalSection(&_PendingBufferQueueLock);
 
 		InitializeWaveOut();
@@ -91,8 +82,7 @@ public:
 		_PlaybackThreadHandle = CreateThread(nullptr, 0, StaticPlaybackThread, (LPVOID)this, 0, nullptr);
 	}
 
-	void InitializeWaveOut()
-	{
+	void InitializeWaveOut() {
 		_BufferFinishedEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
 
 		WAVEFORMATEX waveFormat;
@@ -109,8 +99,7 @@ public:
 		waveOutOpen(&_WaveOut, WAVE_MAPPER, &waveFormat, (DWORD_PTR)_BufferFinishedEvent, 0, CALLBACK_EVENT);
 	}
 
-	void Shutdown()
-	{
+	void Shutdown() {
 		_Phoenix->RequestShutdown();
 		WaitForSingleObject(_PlaybackThreadHandle, 1000);
 		WaitForSingleObject(_MonitorThreadHandle, 1000);
@@ -120,51 +109,47 @@ public:
 		DeleteCriticalSection(&_PendingBufferQueueLock);
 	}
 
-	void ShutdownWaveOut()
-	{
+	void ShutdownWaveOut() {
 		waveOutClose(_WaveOut);
 	}
 
-	DWORD MonitorThread()
-	{
-		while(_Machine == nullptr && _Phoenix->ShutdownRequested() == false)
+	DWORD MonitorThread() {
+		while (_Machine == nullptr && _Phoenix->ShutdownRequested() == false) {
 			Sleep(100);
+		}
 
-		if(_Phoenix->ShutdownRequested())
+		if (_Phoenix->ShutdownRequested()) {
 			return 0;
+		}
 
-		while(_Phoenix->ShutdownRequested() == false)
-		{
-			if(_Mute == false && _Machine != nullptr && _Machine->GetSound()->GetAudioBufferCount() != (int)_LastFrameQueued)
-			{
+		while (_Phoenix->ShutdownRequested() == false) {
+			if (_Mute == false && _Machine != nullptr &&
+				_Machine->GetSound()->GetAudioBufferCount() != (int)_LastFrameQueued) {
 				AudioBuffer buffer = _Machine->GetSound()->GetStableAudioBuffer();
 
 				EnterCriticalSection(&_PendingBufferQueueLock);
-					_PendingBufferQueue.push(buffer);
-					_PendingBufferIsOverflow.push(false);
+				_PendingBufferQueue.push(buffer);
+				_PendingBufferIsOverflow.push(false);
 
-					while(_PendingBufferIsOverflow.empty() == false && _PendingBufferIsOverflow.front() == true)
-					{
-						_PendingBufferIsOverflow.pop();
+				while (_PendingBufferIsOverflow.empty() == false && _PendingBufferIsOverflow.front() == true) {
+					_PendingBufferIsOverflow.pop();
+					_PendingBufferQueue.pop();
+				}
+
+				// Only keep the 3 most recent buffers.  This keeps sound from lagging too far behind (and staying that
+				// way).
+				float emulationSpeed = _Phoenix->GetMachineRunner()->GetEmulationSpeed();
+				if (emulationSpeed <= (0.0 + 1e-5) || emulationSpeed >= (1.0 - 1e-5)) {
+					while (_PendingBufferQueue.size() > 3) {
 						_PendingBufferQueue.pop();
+						_PendingBufferIsOverflow.pop();
 					}
-
-					//Only keep the 3 most recent buffers.  This keeps sound from lagging too far behind (and staying that way).
-					float emulationSpeed = _Phoenix->GetMachineRunner()->GetEmulationSpeed();
-					if(emulationSpeed <= (0.0 + 1e-5) || emulationSpeed >= (1.0 - 1e-5))
-					{
-						while(_PendingBufferQueue.size() > 3)
-						{
-							_PendingBufferQueue.pop();
-							_PendingBufferIsOverflow.pop();
-						}
-					}
+				}
 				LeaveCriticalSection(&_PendingBufferQueueLock);
 
 				_LastFrameQueued = _Machine->GetSound()->GetAudioBufferCount();
 			}
-			else
-			{
+			else {
 				Sleep(1);
 			}
 		}
@@ -172,90 +157,89 @@ public:
 		return 0;
 	}
 
-	static DWORD WINAPI StaticMonitorThread(LPVOID param)
-	{
+	static DWORD WINAPI StaticMonitorThread(LPVOID param) {
 		WaveOutSound_Private* instance = (WaveOutSound_Private*)param;
-		if(instance == nullptr)
+		if (instance == nullptr) {
 			return 1;
+		}
 
 		return instance->MonitorThread();
 	}
 
-	DWORD PlaybackThread()
-	{
-		while(_Machine == nullptr && _Phoenix->ShutdownRequested() == false)
+	DWORD PlaybackThread() {
+		while (_Machine == nullptr && _Phoenix->ShutdownRequested() == false) {
 			Sleep(100);
-
-		if(_Phoenix->ShutdownRequested())
-			return 0;
-
-
-		int numPendingBuffers = 0;
-		while(numPendingBuffers == 0 && _Phoenix->ShutdownRequested() == false)
-		{
-			EnterCriticalSection(&_PendingBufferQueueLock);
-				numPendingBuffers = (int)_PendingBufferQueue.size();
-			LeaveCriticalSection(&_PendingBufferQueueLock);
-
-			if(numPendingBuffers == 0)
-				Sleep(1);
 		}
 
-		if(_Phoenix->ShutdownRequested())
+		if (_Phoenix->ShutdownRequested()) {
 			return 0;
+		}
 
+		int numPendingBuffers = 0;
+		while (numPendingBuffers == 0 && _Phoenix->ShutdownRequested() == false) {
+			EnterCriticalSection(&_PendingBufferQueueLock);
+			numPendingBuffers = (int)_PendingBufferQueue.size();
+			LeaveCriticalSection(&_PendingBufferQueueLock);
 
-		//Initialize the playback variables
+			if (numPendingBuffers == 0) {
+				Sleep(1);
+			}
+		}
 
-		SetEvent(_BufferFinishedEvent);	///<No playback has occurred yet, so waveOutWrite hasn't set the event on its own yet, and we don't want to get stuck on WaitForSingleObject the first time through
+		if (_Phoenix->ShutdownRequested()) {
+			return 0;
+		}
 
-		for(int i=0;i<_NumOutputBuffers;i++)
-			_WaveHeader[i].dwFlags |= WHDR_DONE;	///<No playback has occurred yet, so this flag hasn't been set yet for any of the headers, but they're all really available.
+		// Initialize the playback variables
 
+		SetEvent(_BufferFinishedEvent);  ///< No playback has occurred yet, so waveOutWrite hasn't set the event on its
+										 ///< own yet, and we don't want to get stuck on WaitForSingleObject the first
+										 ///< time through
 
-		//The juice is here
+		for (int i = 0; i < _NumOutputBuffers; i++) {
+			_WaveHeader[i].dwFlags |= WHDR_DONE;  ///< No playback has occurred yet, so this flag hasn't been set yet
+		}
+		///< for any of the headers, but they're all really available.
 
-		while(_Phoenix->ShutdownRequested() == false)
-		{
+		// The juice is here
+
+		while (_Phoenix->ShutdownRequested() == false) {
 			DWORD waitResult = WaitForSingleObject(_BufferFinishedEvent, 1000);
-			if(waitResult == WAIT_ABANDONED)
+			if (waitResult == WAIT_ABANDONED) {
 				continue;
-
-			int numPendingBuffers = 0;
-			while(numPendingBuffers == 0 && _Phoenix->ShutdownRequested() == false)
-			{
-				EnterCriticalSection(&_PendingBufferQueueLock);
-					numPendingBuffers = (int)_PendingBufferQueue.size();
-				LeaveCriticalSection(&_PendingBufferQueueLock);
-
-				if(numPendingBuffers == 0)
-					Sleep(1);
 			}
 
+			int numPendingBuffers = 0;
+			while (numPendingBuffers == 0 && _Phoenix->ShutdownRequested() == false) {
+				EnterCriticalSection(&_PendingBufferQueueLock);
+				numPendingBuffers = (int)_PendingBufferQueue.size();
+				LeaveCriticalSection(&_PendingBufferQueueLock);
 
-			for(int i=0;i<numPendingBuffers;i++)
-			{
-				for(int j=0;j<_NumOutputBuffers;j++)
-				{
-					if(_WaveHeader[j].dwFlags & WHDR_DONE)
-					{
+				if (numPendingBuffers == 0) {
+					Sleep(1);
+				}
+			}
+
+			for (int i = 0; i < numPendingBuffers; i++) {
+				for (int j = 0; j < _NumOutputBuffers; j++) {
+					if (_WaveHeader[j].dwFlags & WHDR_DONE) {
 						waveOutUnprepareHeader(_WaveOut, &_WaveHeader[j], sizeof(WAVEHDR));
 
 						bool pendingBufferQueueEmpty = false;
 
 						EnterCriticalSection(&_PendingBufferQueueLock);
-							_AudioBuffer[j] = _PendingBufferQueue.front();
-							_PendingBufferQueue.pop();
+						_AudioBuffer[j] = _PendingBufferQueue.front();
+						_PendingBufferQueue.pop();
 
-							bool isOverflow = _PendingBufferIsOverflow.front();
-							_PendingBufferIsOverflow.pop();
+						bool isOverflow = _PendingBufferIsOverflow.front();
+						_PendingBufferIsOverflow.pop();
 
-							pendingBufferQueueEmpty = _PendingBufferQueue.empty();
+						pendingBufferQueueEmpty = _PendingBufferQueue.empty();
 						LeaveCriticalSection(&_PendingBufferQueueLock);
 
 						float emulationSpeed = _Phoenix->GetMachineRunner()->GetEmulationSpeed();
-						if(emulationSpeed > 0.f && emulationSpeed < 1.f && pendingBufferQueueEmpty == true && isOverflow == false)
-						{
+						if (emulationSpeed > 0.f && emulationSpeed < 1.f && pendingBufferQueueEmpty == true &&
+							isOverflow == false) {
 							AudioBuffer overflowBuffer;
 							overflowBuffer.NumSamples = 0;
 
@@ -267,8 +251,7 @@ public:
 
 							EnterCriticalSection(&_PendingBufferQueueLock);
 
-							while(oldSampleIndex < _AudioBuffer[j].NumSamples)
-							{
+							while (oldSampleIndex < _AudioBuffer[j].NumSamples) {
 								overflowBuffer.Samples[0][newSampleIndex] = _AudioBuffer[j].Samples[0][oldSampleIndex];
 								overflowBuffer.Samples[1][newSampleIndex] = _AudioBuffer[j].Samples[1][oldSampleIndex];
 
@@ -276,8 +259,7 @@ public:
 								oldSampleIndex = (int)fOldSampleIndex;
 								newSampleIndex++;
 
-								if(newSampleIndex >= AudioBuffer::BufferSizeSamples)
-								{
+								if (newSampleIndex >= AudioBuffer::BufferSizeSamples) {
 									overflowBuffer.NumSamples = AudioBuffer::BufferSizeSamples;
 									_PendingBufferQueue.push(overflowBuffer);
 									_PendingBufferIsOverflow.push(true);
@@ -285,8 +267,7 @@ public:
 								}
 							}
 
-							if(newSampleIndex > 0)
-							{
+							if (newSampleIndex > 0) {
 								overflowBuffer.NumSamples = newSampleIndex;
 								_PendingBufferQueue.push(overflowBuffer);
 								_PendingBufferIsOverflow.push(true);
@@ -296,8 +277,7 @@ public:
 
 							SetEvent(_BufferFinishedEvent);
 						}
-						else
-						{
+						else {
 							InterleaveAudioBuffer(j);
 							PlayAudioBuffer(j);
 						}
@@ -311,37 +291,32 @@ public:
 		return 0;
 	}
 
-	static DWORD WINAPI StaticPlaybackThread(LPVOID param)
-	{
+	static DWORD WINAPI StaticPlaybackThread(LPVOID param) {
 		WaveOutSound_Private* instance = (WaveOutSound_Private*)param;
-		if(instance != nullptr)
+		if (instance != nullptr) {
 			return instance->PlaybackThread();
+		}
 
 		return 1;
 	}
 
-	void InterleaveAudioBuffer(int index)
-	{
-		for(unsigned int i=0;i<_AudioBuffer[index].NumSamples;i++)
-		{
-			if(_NumOutputChannels == 1)
-			{
+	void InterleaveAudioBuffer(int index) {
+		for (unsigned int i = 0; i < _AudioBuffer[index].NumSamples; i++) {
+			if (_NumOutputChannels == 1) {
 				int sample = _AudioBuffer[index].Samples[0][i];
-				//sample += _AudioBuffer[index].Samples[1][i];
-				//sample /= 2;
+				// sample += _AudioBuffer[index].Samples[1][i];
+				// sample /= 2;
 
 				_InterleavedBuffer[index][i] = (SampleType)sample;
 			}
-			else if(_NumOutputChannels == 2)
-			{
-				_InterleavedBuffer[index][ (i*2) + 0 ] = _AudioBuffer[index].Samples[0][i];
-				_InterleavedBuffer[index][ (i*2) + 1 ] = _AudioBuffer[index].Samples[1][i];
+			else if (_NumOutputChannels == 2) {
+				_InterleavedBuffer[index][(i * 2) + 0] = _AudioBuffer[index].Samples[0][i];
+				_InterleavedBuffer[index][(i * 2) + 1] = _AudioBuffer[index].Samples[1][i];
 			}
 		}
 	}
 
-	void PlayAudioBuffer(int index)
-	{
+	void PlayAudioBuffer(int index) {
 		WAVEHDR* header = &_WaveHeader[index];
 		ZeroMemory(header, sizeof(WAVEHDR));
 		header->dwBufferLength = BytesPerSample * _AudioBuffer[index].NumSamples * _NumOutputChannels;
@@ -352,38 +327,30 @@ public:
 	}
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
-
-WaveOutSound::WaveOutSound()
-{
+WaveOutSound::WaveOutSound() {
 	m_private = new WaveOutSound_Private();
 }
 
-WaveOutSound::~WaveOutSound()
-{
+WaveOutSound::~WaveOutSound() {
 	delete m_private;
 }
 
-void WaveOutSound::Initialize(EmunisceApplication* phoenix)
-{
+void WaveOutSound::Initialize(EmunisceApplication* phoenix) {
 	m_private->_Phoenix = phoenix;
 
 	m_private->Initialize();
 }
 
-void WaveOutSound::Shutdown()
-{
+void WaveOutSound::Shutdown() {
 	m_private->Shutdown();
 }
 
-void WaveOutSound::SetMachine(IEmulatedMachine* machine)
-{
+void WaveOutSound::SetMachine(IEmulatedMachine* machine) {
 	m_private->_Machine = machine;
 }
 
-void WaveOutSound::SetMute(bool mute)
-{
+void WaveOutSound::SetMute(bool mute) {
 	m_private->_Mute = mute;
 }
-

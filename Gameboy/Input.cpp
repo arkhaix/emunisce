@@ -23,133 +23,122 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 using namespace Emunisce;
 
 #include "GameboyIncludes.h"
-
 #include "Serialization/SerializationIncludes.h"
 
-
-Input::Input()
-{
+Input::Input() {
 }
 
-//Component
-void Input::SetMachine(Gameboy* machine)
-{
+// Component
+void Input::SetMachine(Gameboy* machine) {
 	m_machine = machine;
 	machine->GetGbMemory()->SetRegisterLocation(0x00, &m_joypadRegister, false);
 }
 
-void Input::Initialize()
-{
+void Input::Initialize() {
 	m_buttonStates = 0xff;
 
 	m_currentMode = RegisterMode::MachineType;
 	m_joypadRegister = 0xff;
 }
 
-void Input::Serialize(Archive& archive)
-{
+void Input::Serialize(Archive& archive) {
 	SerializeItem(archive, m_currentMode);
 	SerializeItem(archive, m_buttonStates);
 	SerializeItem(archive, m_joypadRegister);
 }
 
+// External
 
-//External
-
-unsigned int Input::NumButtons()
-{
+unsigned int Input::NumButtons() {
 	return GameboyButtons::NumGameboyButtons;
 }
 
-const char* Input::GetButtonName(unsigned int index)
-{
-	if(index >= GameboyButtons::NumGameboyButtons)
+const char* Input::GetButtonName(unsigned int index) {
+	if (index >= GameboyButtons::NumGameboyButtons) {
 		return nullptr;
+	}
 
-	return GameboyButtons::ToString[ index ];
+	return GameboyButtons::ToString[index];
 }
 
-void Input::ButtonDown(unsigned int index)
-{
+void Input::ButtonDown(unsigned int index) {
 	u8 oldButtonStates = m_buttonStates;
 
-	m_buttonStates &= ~(1<<index);
+	m_buttonStates &= ~(1 << index);
 
-	if(m_buttonStates == oldButtonStates)
+	if (m_buttonStates == oldButtonStates) {
 		return;
+	}
 
-	if(m_currentMode == RegisterMode::P14 || m_currentMode == RegisterMode::P15)
+	if (m_currentMode == RegisterMode::P14 || m_currentMode == RegisterMode::P15) {
 		UpdateRegister();
+	}
 
 	UpdateInterruptFlag();
 }
 
-void Input::ButtonUp(unsigned int index)
-{
+void Input::ButtonUp(unsigned int index) {
 	u8 oldButtonStates = m_buttonStates;
 
-	m_buttonStates |= 1<<index;
+	m_buttonStates |= 1 << index;
 
-	if(m_buttonStates == oldButtonStates)
+	if (m_buttonStates == oldButtonStates) {
 		return;
+	}
 
-	if(m_currentMode == RegisterMode::P14 || m_currentMode == RegisterMode::P15)
+	if (m_currentMode == RegisterMode::P14 || m_currentMode == RegisterMode::P15) {
 		UpdateRegister();
+	}
 
 	UpdateInterruptFlag();
 }
 
-bool Input::IsButtonDown(unsigned int index)
-{
-	if(m_buttonStates & (1<<index))
+bool Input::IsButtonDown(unsigned int index) {
+	if (m_buttonStates & (1 << index)) {
 		return false;
+	}
 
 	return true;
 }
 
-
-//Registers
-void Input::SetJoypadMode(u8 value)
-{
-	if( (value & 0x10) == 0)
+// Registers
+void Input::SetJoypadMode(u8 value) {
+	if ((value & 0x10) == 0) {
 		m_currentMode = RegisterMode::P14;
-	else if( (value & 0x20) == 0)
+	}
+	else if ((value & 0x20) == 0) {
 		m_currentMode = RegisterMode::P15;
-	else
+	}
+	else {
 		m_currentMode = RegisterMode::MachineType;
+	}
 
 	UpdateRegister();
 }
 
-void Input::UpdateRegister()
-{
-	if(m_currentMode == RegisterMode::P14)
-	{
+void Input::UpdateRegister() {
+	if (m_currentMode == RegisterMode::P14) {
 		m_joypadRegister = m_buttonStates & 0x0f;
 	}
-	else if(m_currentMode == RegisterMode::P15)
-	{
+	else if (m_currentMode == RegisterMode::P15) {
 		m_joypadRegister = (m_buttonStates >> 4) & 0x0f;
 	}
-	else //(m_currentMode == RegisterMode::MachineType)
+	else  //(m_currentMode == RegisterMode::MachineType)
 	{
 		m_joypadRegister = 0xff;
 	}
 }
 
-void Input::UpdateInterruptFlag()
-{
-	//Nothing pressed, so clear the interrupt flag
-	if(m_buttonStates == 0xff)
-	{
+void Input::UpdateInterruptFlag() {
+	// Nothing pressed, so clear the interrupt flag
+	if (m_buttonStates == 0xff) {
 		u8 interrupts = m_machine->GetGbMemory()->Read8(REG_IF);
 		interrupts &= ~(IF_INPUT);
 		m_machine->GetGbMemory()->Write8(REG_IF, interrupts);
 	}
 
-	//Something's pressed, so set the interrupt flag
-	else
-	{
+	// Something's pressed, so set the interrupt flag
+	else {
 		u8 interrupts = m_machine->GetGbMemory()->Read8(REG_IF);
 		interrupts |= IF_INPUT;
 		m_machine->GetGbMemory()->Write8(REG_IF, interrupts);

@@ -20,14 +20,10 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef IEMULATEDMEMORY_H
 #define IEMULATEDMEMORY_H
 
+namespace Emunisce {
 
-namespace Emunisce
-{
+class IEmulatedMemory {};
 
-class IEmulatedMemory
-{
-};
-
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

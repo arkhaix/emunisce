@@ -20,64 +20,58 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MEMORY_H
 #define MEMORY_H
 
+#include "GameboyTypes.h"
+#include "MachineIncludes.h"
 #include "PlatformTypes.h"
 
-#include "MachineIncludes.h"
-#include "GameboyTypes.h"
+namespace Emunisce {
 
+namespace WaveRamLock {
+typedef int Type;
 
-namespace Emunisce
-{
+enum {
+	Normal = 0,   ///< Wave RAM can be written and read normally
+	SingleValue,  ///< Wave RAM can be written normally, but reads only return one value
+	NoAccess,     ///< Wave RAM writes are ignored, and reads return 0xff
 
-namespace WaveRamLock
-{
-	typedef int Type;
+	NumWaveRamLockModes
+};
+}  // namespace WaveRamLock
 
-	enum
-	{
-		Normal = 0,	///<Wave RAM can be written and read normally
-		SingleValue,///<Wave RAM can be written normally, but reads only return one value
-		NoAccess,	///<Wave RAM writes are ignored, and reads return 0xff
+namespace DmaMode {
+typedef int Type;
 
-		NumWaveRamLockModes
-	};
-}
+enum {
+	None = 0,  ///< No DMA currently active
+	Classic,   ///< DMG DMA
+	General,   ///< General purpose DMA (instant xfer)
+	HBlank,    ///< H-Blank DMA (0x10 byte blocks during each hblank)
 
-namespace DmaMode
-{
-	typedef int Type;
+	NumDmaModes
+};
+}  // namespace DmaMode
 
-	enum
-	{
-		None = 0,	///<No DMA currently active
-		Classic,	///<DMG DMA
-		General,	///<General purpose DMA (instant xfer)
-		HBlank,		///<H-Blank DMA (0x10 byte blocks during each hblank)
-
-		NumDmaModes
-	};
-}
-
-class Memory : public IEmulatedMemory
-{
+class Memory : public IEmulatedMemory {
 public:
-
 	virtual ~Memory();
 
 	virtual void SetMachine(Gameboy* machine);
-	virtual void Initialize();	///<Be sure to call the super if you override this
+	virtual void Initialize();  ///< Be sure to call the super if you override this
 
 	virtual void Run(int ticks);
 
 	virtual void Serialize(Archive& archive);
 
-	void SetRegisterLocation(u8 registerOffset, u8* pRegister, bool writeable=false);	///<registerOffset is the offset from 0xff00 (so register = 0x7e is address 0xff7e).
+	void SetRegisterLocation(
+		u8 registerOffset, u8* pRegister,
+		bool writeable = false);  ///< registerOffset is the offset from 0xff00 (so register = 0x7e is address 0xff7e).
 
-	u8* GetVram(int bank=-1);	///<Returns raw pointer to vram space.  Used by Display to avoid a bunch of Read8 calls.  bank = -1 returns the currently selected vram bank.
-	u8* GetOam();	///<Returns raw pointer to oam space.  Used by Display to avoid a bunch of Read8 calls.
+	u8* GetVram(int bank = -1);  ///< Returns raw pointer to vram space.  Used by Display to avoid a bunch of Read8
+								 ///< calls.  bank = -1 returns the currently selected vram bank.
+	u8* GetOam();  ///< Returns raw pointer to oam space.  Used by Display to avoid a bunch of Read8 calls.
 
-	void BeginHBlank();	///<Called from Display to facilitate HBlank DMA.
-	void EndHBlank();	///<Called from Display to facilitate HBlank DMA.
+	void BeginHBlank();  ///< Called from Display to facilitate HBlank DMA.
+	void EndHBlank();    ///< Called from Display to facilitate HBlank DMA.
 
 	u8 Read8(u16 address);
 	u16 Read16(u16 address);
@@ -92,7 +86,8 @@ public:
 
 	void SetVramLock(bool locked);
 	void SetOamLock(bool locked);
-	void SetWaveRamLock(WaveRamLock::Type lockType, u8 readValue=0xff);	///<readValue is only necessary when locked=false.
+	void SetWaveRamLock(WaveRamLock::Type lockType,
+						u8 readValue = 0xff);  ///< readValue is only necessary when locked=false.
 
 	void SetCgbDmaSourceHigh(u8 value);
 	void SetCgbDmaSourceLow(u8 value);
@@ -103,16 +98,14 @@ public:
 	static Memory* CreateFromFile(const char* filename);
 
 protected:
-
 	Memory();
 
-	virtual void LoadBootRom(const char* filename = "dmg_rom.bin");	///<Automatically called by Initialize
+	virtual void LoadBootRom(const char* filename = "dmg_rom.bin");  ///< Automatically called by Initialize
 	virtual bool LoadFile(const char* filename) = 0;
 
 	void WriteRegister(u16 address, u8 value);
 
-
-	//Component pointers for handling registers.
+	// Component pointers for handling registers.
 
 	Gameboy* m_machine;
 	EmulatedMachine::Type m_machineType;
@@ -122,14 +115,12 @@ protected:
 	Input* m_input;
 	Sound* m_sound;
 
-
-	//Boot ROM
+	// Boot ROM
 
 	u8 m_bootRom[0x100];
 	bool m_bootRomEnabled;
 
-
-	//Memory
+	// Memory
 
 	u8 m_memoryData[0x10000];
 
@@ -139,15 +130,13 @@ protected:
 	u8 m_cgbVramBanks[2][0x2000];
 	int m_selectedCgbVramBank;
 
-
-	//Registers
+	// Registers
 
 	u8* m_registerLocation[0x100];
 	bool m_registerWriteable[0x100];
 	bool m_callWriteRegister[0x100];
 
-
-	//DMA
+	// DMA
 
 	u16 m_cgbDmaSource;
 	u16 m_cgbDmaDestination;
@@ -157,19 +146,17 @@ protected:
 	bool m_inHBlank;
 	bool m_hblankDoneThisLine;
 
-
-	//Display features
+	// Display features
 
 	bool m_vramLocked;
 	bool m_oamLocked;
 
-
-	//Sound features
+	// Sound features
 
 	WaveRamLock::Type m_waveRamLockMode;
 	u8 m_waveRamReadValue;
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

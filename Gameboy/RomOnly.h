@@ -22,19 +22,14 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "Memory.h"
 
+namespace Emunisce {
 
-namespace Emunisce
-{
-
-class RomOnly : public Memory
-{
+class RomOnly : public Memory {
 public:
-
 protected:
-
 	bool LoadFile(const char* filename) override;
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

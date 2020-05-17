@@ -22,9 +22,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "PlatformTypes.h"
 
-
-namespace Emunisce
-{
+namespace Emunisce {
 
 class Archive;
 
@@ -33,11 +31,8 @@ class ChannelController;
 class EnvelopeUnit;
 class LengthUnit;
 
-
-class SoundGenerator
-{
+class SoundGenerator {
 public:
-
 	SoundGenerator();
 	~SoundGenerator();
 
@@ -56,7 +51,6 @@ public:
 	virtual float GetSample();
 
 protected:
-
 	virtual void Trigger();
 	virtual void WriteTriggerRegister(u8 value);
 
@@ -65,25 +59,23 @@ protected:
 	bool m_dacEnabled;
 	ChannelController* m_channelController;
 
-
-	//Length counter
+	// Length counter
 
 	friend class LengthUnit;
 	LengthUnit* m_lengthUnit;
 
+	// Sweep
 
-	//Sweep
+	// Duty
 
-	//Duty
-
-	//Envelope
+	// Envelope
 
 	friend class EnvelopeUnit;
 	EnvelopeUnit* m_envelopeUnit;
 
-	//Noise
+	// Noise
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

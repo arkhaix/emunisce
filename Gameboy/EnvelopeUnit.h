@@ -22,17 +22,13 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "PlatformTypes.h"
 
-
-namespace Emunisce
-{
+namespace Emunisce {
 
 class Archive;
 class SoundGenerator;
 
-class EnvelopeUnit
-{
+class EnvelopeUnit {
 public:
-
 	EnvelopeUnit(SoundGenerator* soundGenerator);
 
 	void Serialize(Archive& archive);
@@ -44,9 +40,7 @@ public:
 
 	float GetCurrentVolume();
 
-
 private:
-
 	SoundGenerator* m_soundGenerator;
 
 	bool m_enabled;
@@ -54,11 +48,11 @@ private:
 	bool m_volumeIncreasing;
 	int m_initialVolume;
 	int m_currentVolume;
-	
+
 	int m_timerValue;
 	int m_timerPeriod;
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

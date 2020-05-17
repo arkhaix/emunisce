@@ -23,11 +23,9 @@ using namespace Emunisce;
 #include <memory.h>
 #include <stdlib.h>
 
-
 // MemorySerializer
 
-MemorySerializer::MemorySerializer()
-{
+MemorySerializer::MemorySerializer() {
 	m_usedSize = 0;
 	m_reservedSize = 1024;
 	m_reserveMultiplier = 1.25f;
@@ -35,27 +33,24 @@ MemorySerializer::MemorySerializer()
 	m_buffer = (unsigned char*)malloc(m_reservedSize);
 }
 
-MemorySerializer::~MemorySerializer()
-{
-	if(m_buffer != nullptr)
+MemorySerializer::~MemorySerializer() {
+	if (m_buffer != nullptr) {
 		free(m_buffer);
+	}
 }
 
-
-unsigned char* MemorySerializer::GetBuffer()
-{
+unsigned char* MemorySerializer::GetBuffer() {
 	return m_buffer;
 }
 
-unsigned int MemorySerializer::GetBufferSize()
-{
+unsigned int MemorySerializer::GetBufferSize() {
 	return m_usedSize;
 }
 
-void MemorySerializer::TransferBuffer(unsigned char** buffer, unsigned int* size)
-{
-	if(buffer == nullptr || size == nullptr)
+void MemorySerializer::TransferBuffer(unsigned char** buffer, unsigned int* size) {
+	if (buffer == nullptr || size == nullptr) {
 		return;
+	}
 
 	*buffer = m_buffer;
 	*size = m_usedSize;
@@ -64,12 +59,10 @@ void MemorySerializer::TransferBuffer(unsigned char** buffer, unsigned int* size
 	m_usedSize = 0;
 	m_reservedSize = 0;
 
-	//todo: re-initialize buffer?
+	// todo: re-initialize buffer?
 }
 
-
-void MemorySerializer::SetBuffer(unsigned char* buffer, unsigned int size)
-{
+void MemorySerializer::SetBuffer(unsigned char* buffer, unsigned int size) {
 	free(m_buffer);
 	m_reservedSize = size;
 	m_usedSize = 0;
@@ -77,18 +70,13 @@ void MemorySerializer::SetBuffer(unsigned char* buffer, unsigned int size)
 	memcpy(m_buffer, buffer, size);
 }
 
-
-
 // ISerializer
 
-void MemorySerializer::SetArchive(Archive* archive)
-{
+void MemorySerializer::SetArchive(Archive* archive) {
 }
 
-void MemorySerializer::Save(unsigned char* data, unsigned int bytes)
-{
-	if(m_usedSize + bytes >= m_reservedSize)
-	{
+void MemorySerializer::Save(unsigned char* data, unsigned int bytes) {
+	if (m_usedSize + bytes >= m_reservedSize) {
 		float fNewSize = (float)(m_reservedSize + bytes) * m_reserveMultiplier;
 		unsigned int newSize = (unsigned int)fNewSize;
 
@@ -96,29 +84,27 @@ void MemorySerializer::Save(unsigned char* data, unsigned int bytes)
 
 		memcpy((void*)newBuffer, m_buffer, m_usedSize);
 
-		if(m_buffer != nullptr)
+		if (m_buffer != nullptr) {
 			free(m_buffer);
+		}
 
 		m_buffer = newBuffer;
 		m_reservedSize = newSize;
 	}
 
-	memcpy((void*)(m_buffer+ m_usedSize), (void*)data, bytes);
+	memcpy((void*)(m_buffer + m_usedSize), (void*)data, bytes);
 	m_usedSize += bytes;
 }
 
-void MemorySerializer::Restore(unsigned char* buffer, unsigned int bytes)
-{
-	if(m_buffer == nullptr || buffer == nullptr)
+void MemorySerializer::Restore(unsigned char* buffer, unsigned int bytes) {
+	if (m_buffer == nullptr || buffer == nullptr) {
 		return;
+	}
 
 	memcpy((void*)buffer, (void*)(m_buffer + m_usedSize), bytes);
 	m_usedSize += bytes;
 }
 
-
-void MemorySerializer::Close()
-{
-	//Nothing to do here.  The destructor cleans up the memory when necessary.
+void MemorySerializer::Close() {
+	// Nothing to do here.  The destructor cleans up the memory when necessary.
 }
-

@@ -20,23 +20,18 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef INPUTMANAGER_H
 #define INPUTMANAGER_H
 
-
 #include <map>
 #include <string>
 
-
-namespace Emunisce
-{
+namespace Emunisce {
 
 class BaseApplication;
 
 class IEmulatedInput;
 class IEmulatedMachine;
 
-class InputManager
-{
+class InputManager {
 public:
-
 	InputManager();
 
 	void Initialize(BaseApplication* application);
@@ -46,27 +41,25 @@ public:
 	void KeyDown(int key);
 	void KeyUp(int key);
 
-	void MapKey(const char* name, int keyCode); ///<name is the string provided by IEmulatedInput::GetButtonName.  keyCode is the value that will be passed into KeyDown/KeyUp.  todo: separate providers with identical keycodes.
-	//todo: UnmapKey
-
+	void MapKey(
+		const char* name,
+		int keyCode);  ///< name is the string provided by IEmulatedInput::GetButtonName.  keyCode is the value that
+					   ///< will be passed into KeyDown/KeyUp.  todo: separate providers with identical keycodes.
+					   // todo: UnmapKey
 
 private:
+	void GenerateKeymap();
 
-    void GenerateKeymap();
-
-    BaseApplication* m_application;
+	BaseApplication* m_application;
 
 	IEmulatedMachine* m_machine;
 	IEmulatedInput* m_input;
 
 	std::multimap<std::string, int> m_nameKeyMap;
-	std::map<int, unsigned int> m_keyMap;		///<Built from _NameKeyMap
+	std::map<int, unsigned int> m_keyMap;  ///< Built from _NameKeyMap
 	std::map<int, bool> m_keyStates;
 };
 
-}	//namespace Emunisce
-
-
-
+}  // namespace Emunisce
 
 #endif

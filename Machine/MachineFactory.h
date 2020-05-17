@@ -22,18 +22,15 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "IEmulatedMachine.h"
 
+namespace Emunisce {
 
-namespace Emunisce
-{
-
-class MachineFactory
-{
+class MachineFactory {
 public:
-
-	static IEmulatedMachine* CreateMachine(const char* romFilename, EmulatedMachine::Type machineType = EmulatedMachine::AutoSelect);
+	static IEmulatedMachine* CreateMachine(const char* romFilename,
+										   EmulatedMachine::Type machineType = EmulatedMachine::AutoSelect);
 	static void ReleaseMachine(IEmulatedMachine* machine);
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

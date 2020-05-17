@@ -22,29 +22,23 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "PlatformTypes.h"
 
-
-namespace Emunisce
-{
+namespace Emunisce {
 
 class ISerializer;
 
-namespace ArchiveMode
-{
-	typedef int Type;
+namespace ArchiveMode {
+typedef int Type;
 
-	enum
-	{
-		Saving = 0,
-		Loading,
+enum {
+	Saving = 0,
+	Loading,
 
-		NumArchiveModes
-	};
-}
+	NumArchiveModes
+};
+}  // namespace ArchiveMode
 
-class Archive
-{
+class Archive {
 public:
-
 	Archive(ISerializer* serializer, ArchiveMode::Type archiveMode);
 	void Close();
 
@@ -68,11 +62,10 @@ public:
 	Archive& operator&(double& data);
 
 protected:
-
 	ISerializer* m_serializer;
 	ArchiveMode::Type m_archiveMode;
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif

@@ -22,19 +22,15 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "Mbc1.h"
 
+namespace Emunisce {
 
-namespace Emunisce
-{
-
-class Mbc5 : public Mbc1
-{
+class Mbc5 : public Mbc1 {
 public:
-
 	Mbc5();
 
 	void Write8(u16 address, u8 value) override;
 };
 
-}	//namespace Emunisce
+}  // namespace Emunisce
 
 #endif
