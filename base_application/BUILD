@@ -3,8 +3,8 @@ cc_library(
     visibility = ["//visibility:public"],
 
     deps = [
-        "//BaseApplication/BaseApplication:base_application",
-        "//BaseApplication/OpenGLRenderer:opengl_renderer",
+        "//base_application/base_application:base_application",
+        "//base_application/opengl_renderer:opengl_renderer",
     ],
     includes = ["."],
 )

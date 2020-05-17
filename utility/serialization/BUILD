@@ -5,5 +5,5 @@ cc_library(
     srcs = glob(["*.cpp"]),
     hdrs = glob(["*.h"]),
 
-    deps = ["//Platform:platform"],
+    deps = ["//platform:platform"],
 )

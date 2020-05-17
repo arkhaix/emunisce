@@ -3,6 +3,6 @@ cc_library(
     visibility = ["//visibility:public"],
 
     deps = [
-        "//WindowsApplication/Emunisce:application_lib",
+        "//windows_application/emunisce:application_lib",
     ],
 )

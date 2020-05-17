@@ -6,7 +6,7 @@ cc_library(
     hdrs = glob(["*.h", "*.hpp"]),
 
     deps = [
-        "//Platform:platform",
+        "//platform:platform",
         "//Utility:utility",
         "//Gameboy:gameboy",
     ],

@@ -6,15 +6,15 @@ cc_library(
     hdrs = glob(["*.h"]),
 
     deps = [
-        "//Platform:platform",
-        "//Machine:machine",
-        "//BaseApplication:base_application",
+        "//platform:platform",
+        "//machine:machine",
+        "//base_application:base_application",
 
         "@win32//:gdiplus",
 
-        "//WindowsApplication/Win32Common:win32_common",
-        "//WindowsApplication/Emunisce:application_headers",
-        "//WindowsApplication/WaveOutSound:wave_out_sound_headers",
+        "//windows_application/win32_common:win32_common",
+        "//windows_application/emunisce:application_headers",
+        "//windows_application/wave_out_sound:wave_out_sound_headers",
     ],
 )
 

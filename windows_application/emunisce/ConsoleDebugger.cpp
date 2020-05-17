@@ -45,9 +45,9 @@ using namespace Emunisce;
 #include "MachineIncludes.h"
 
 // Application
-#include "../WaveOutSound/WaveOutSound.h"
-#include "BaseApplication/IUserInterface.h"
+#include "../wave_out_sound/WaveOutSound.h"
 #include "Emunisce.h"
+#include "base_application/IUserInterface.h"
 
 ConsoleDebugger::ConsoleDebugger() {
 	m_machine = nullptr;

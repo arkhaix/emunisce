@@ -17,8 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "../GdiPlusRenderer/GdiPlusRenderer.h"
-#include "../Win32Common/Window.h"
+#include "../gdi_plus_renderer/GdiPlusRenderer.h"
+#include "../win32_common/Window.h"
 #include "ConsoleDebugger.h"
 #include "Emunisce.h"
 #include "windows.h"

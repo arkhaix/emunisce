@@ -11,21 +11,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platform Layer", "Platform 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utility Layer", "Utility Layer", "{A9590955-5A94-443E-B859-4460174C8CB2}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Gameboy", "Gameboy\Gameboy.vcxproj", "{9D59F9E7-2668-4089-9AAB-E609DF7D6CAD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Gameboy", "gameboy\Gameboy.vcxproj", "{9D59F9E7-2668-4089-9AAB-E609DF7D6CAD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Machine", "Machine\Machine.vcxproj", "{6A47E539-4CFD-423B-B93A-B7CB5B1CE7D1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Machine", "machine\Machine.vcxproj", "{6A47E539-4CFD-423B-B93A-B7CB5B1CE7D1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Win32Application", "Win32Application", "{C1C79913-B103-4165-A63A-09B538EE04B6}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GdiPlusRenderer", "WindowsApplication\GdiPlusRenderer\GdiPlusRenderer.vcxproj", "{EC091F82-1E1C-4B24-A41E-899CF6458295}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GdiPlusRenderer", "windows_application\gdi_plus_renderer\GdiPlusRenderer.vcxproj", "{EC091F82-1E1C-4B24-A41E-899CF6458295}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WaveOutSound", "WindowsApplication\WaveOutSound\WaveOutSound.vcxproj", "{B47D9786-8300-4349-AB06-5FCE239DA5C5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WaveOutSound", "windows_application\wave_out_sound\WaveOutSound.vcxproj", "{B47D9786-8300-4349-AB06-5FCE239DA5C5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HqNx", "Utility\HqNx\HqNx.vcxproj", "{F80EC023-B987-4B57-B756-95DC6A8447BD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HqNx", "utility\HqNx\HqNx.vcxproj", "{F80EC023-B987-4B57-B756-95DC6A8447BD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Serialization", "Utility\Serialization\Serialization.vcxproj", "{7DA30EA8-57A1-46F1-AF7A-C9DDEA094396}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Serialization", "utility\serialization\Serialization.vcxproj", "{7DA30EA8-57A1-46F1-AF7A-C9DDEA094396}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Emunisce", "WindowsApplication\Emunisce\Emunisce.vcxproj", "{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Emunisce", "windows_application\emunisce\Emunisce.vcxproj", "{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "wxWidgetsApplication", "wxWidgetsApplication", "{51D9B364-87E8-40CA-BEB1-19495969E022}"
 EndProject
@@ -33,11 +33,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxApplication", "wxApplicat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BaseApplication", "BaseApplication", "{BB1BC8A6-CC11-4E1C-8E83-A105B5AB538C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Platform", "Platform\Platform.vcxproj", "{D7E7C4F1-5404-450C-AD82-BD9883635D1C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Platform", "platform\Platform.vcxproj", "{D7E7C4F1-5404-450C-AD82-BD9883635D1C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BaseApplication", "BaseApplication\BaseApplication\BaseApplication.vcxproj", "{CF7183BB-C90F-4C19-B0C1-9932AD2ABE58}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BaseApplication", "base_application\base_application\BaseApplication.vcxproj", "{CF7183BB-C90F-4C19-B0C1-9932AD2ABE58}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGLRenderer", "BaseApplication\OpenGLRenderer\OpenGLRenderer.vcxproj", "{4913CBB4-2D7D-4D39-B3C2-1440EBFF3953}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGLRenderer", "base_application\opengl_renderer\OpenGLRenderer.vcxproj", "{4913CBB4-2D7D-4D39-B3C2-1440EBFF3953}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bazel Builds", "Bazel Builds", "{91EFE501-ADA9-439A-8DCF-43E71B95CBA5}"
 EndProject
@@ -50,7 +50,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32Common", "WindowsApplication\Win32Common\Win32Common.vcxproj", "{179A002E-8F22-4252-987E-2653363DAA7F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32Common", "windows_application\win32_common\Win32Common.vcxproj", "{179A002E-8F22-4252-987E-2653363DAA7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

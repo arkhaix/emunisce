@@ -48,7 +48,7 @@ cc_binary(
     visibility = ["//visibility:public"],
 
     deps = [
-        "//wxApplication:application_lib",
+        "//wx_application:application_lib",
     ],
 
     linkopts = [
@@ -61,7 +61,7 @@ cc_binary(
     visibility = ["//visibility:public"],
 
     deps = [
-        "//WindowsApplication:application_lib",
+        "//windows_application:application_lib",
     ],
 
     linkopts = [

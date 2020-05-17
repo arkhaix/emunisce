@@ -23,9 +23,9 @@ using namespace Emunisce;
 #include <iostream>
 #include <queue>
 
-#include "../Emunisce/Emunisce.h"  ///<todo: this is just here for requesting shutdown?  refactor this.
-#include "BaseApplication/MachineRunner.h"
+#include "../emunisce/Emunisce.h"  ///<todo: this is just here for requesting shutdown?  refactor this.
 #include "MachineIncludes.h"
+#include "base_application/MachineRunner.h"
 #include "windows.h"
 
 namespace Emunisce {

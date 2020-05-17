@@ -21,15 +21,15 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #define EMUNISCE_H
 
 // BaseApplication
-#include "BaseApplication/BaseApplication.h"
-#include "OpenGLRenderer/OpenGLRenderer.h"
+#include "base_application/BaseApplication.h"
+#include "opengl_renderer/OpenGLRenderer.h"
 
 // WindowsApplication
 #include <string>
 
-#include "../GdiPlusRenderer/GdiPlusRenderer.h"
-#include "../WaveOutSound/WaveOutSound.h"
-#include "../Win32Common/Window.h"
+#include "../gdi_plus_renderer/GdiPlusRenderer.h"
+#include "../wave_out_sound/WaveOutSound.h"
+#include "../win32_common/Window.h"
 
 namespace Emunisce {
 

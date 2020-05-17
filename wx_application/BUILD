@@ -6,9 +6,9 @@ cc_library(
     hdrs = glob(["*.h"]),
 
     deps = [
-        "//Platform:platform",
-        "//Machine:machine",
-        "//BaseApplication:base_application",
+        "//platform:platform",
+        "//machine:machine",
+        "//base_application:base_application",
 
         "//:wx",
     ],

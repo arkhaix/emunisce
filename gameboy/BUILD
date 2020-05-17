@@ -6,8 +6,8 @@ cc_library(
     hdrs = glob(["*.h"]),
 
     deps = [
-        "//Machine:machine_interfaces",
-        "//Platform:platform",
+        "//machine:machine_interfaces",
+        "//platform:platform",
         "//Utility:utility",
     ],
     includes = ["."],
