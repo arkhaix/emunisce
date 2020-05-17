@@ -67,7 +67,8 @@ class GdiPlusRenderer_Private {
 		_Machine = nullptr;
 	}
 
-	~GdiPlusRenderer_Private() {}
+	~GdiPlusRenderer_Private() {
+	}
 
 	void InitializeGdiPlus() {
 		GdiplusStartup(&_GdiplusToken, &_GdiplusStartupInput, nullptr);

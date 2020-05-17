@@ -73,7 +73,8 @@ void ConsoleDebugger::Initialize(EmunisceApplication* phoenix) {
 	phoenix->GetSound()->SetMute(m_muteSound);
 }
 
-void ConsoleDebugger::Shutdown() {}
+void ConsoleDebugger::Shutdown() {
+}
 
 void ConsoleDebugger::SetMachine(IEmulatedMachine* machine) {
 	m_machine = machine;

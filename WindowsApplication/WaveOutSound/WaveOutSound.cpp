@@ -109,7 +109,9 @@ class WaveOutSound_Private {
 		DeleteCriticalSection(&_PendingBufferQueueLock);
 	}
 
-	void ShutdownWaveOut() { waveOutClose(_WaveOut); }
+	void ShutdownWaveOut() {
+		waveOutClose(_WaveOut);
+	}
 
 	DWORD MonitorThread() {
 		while (_Machine == nullptr && _Phoenix->ShutdownRequested() == false) {

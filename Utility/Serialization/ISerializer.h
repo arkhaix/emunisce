@@ -26,7 +26,8 @@ class Archive;
 
 class ISerializer {
    public:
-	virtual ~ISerializer() {}
+	virtual ~ISerializer() {
+	}
 
 	virtual void SetArchive(Archive* archive) = 0;
 

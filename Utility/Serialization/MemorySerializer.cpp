@@ -72,7 +72,8 @@ void MemorySerializer::SetBuffer(unsigned char* buffer, unsigned int size) {
 
 // ISerializer
 
-void MemorySerializer::SetArchive(Archive* archive) {}
+void MemorySerializer::SetArchive(Archive* archive) {
+}
 
 void MemorySerializer::Save(unsigned char* data, unsigned int bytes) {
 	if (m_usedSize + bytes >= m_reservedSize) {
