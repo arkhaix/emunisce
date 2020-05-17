@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "MemorySerializer.h"
 using namespace Emunisce;
 
-#include <Memory.h>
+#include <memory.h>
 #include <stdlib.h>
 
 // MemorySerializer
