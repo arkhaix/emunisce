@@ -42,7 +42,8 @@ Mbc1::Mbc1() {
 	m_lastPersistedFrameCount = 0;
 }
 
-Mbc1::~Mbc1() {}
+Mbc1::~Mbc1() {
+}
 
 void Mbc1::Run(int ticks) {
 	Memory::Run(ticks);
@@ -72,7 +73,8 @@ void Mbc1::Write8(u16 address, u8 value) {
 	if (address < 0x2000) {
 		if ((value & 0x0a) != 0x0a) {
 			SaveRAM();
-		} else if (m_sramLoaded == false) {
+		}
+		else if (m_sramLoaded == false) {
 			LoadRAM();
 		}
 
@@ -172,24 +174,31 @@ bool Mbc1::LoadFile(const char* filename) {
 	u8 romSize = m_memoryData[0x0148];
 	if (romSize == 0) {
 		m_numRomBanks = 0;
-	} else if (romSize < 8) {
+	}
+	else if (romSize < 8) {
 		m_numRomBanks = 2 << romSize;
-	} else if (romSize == 0x52) {
+	}
+	else if (romSize == 0x52) {
 		m_numRomBanks = 72;
-	} else if (romSize == 0x53) {
+	}
+	else if (romSize == 0x53) {
 		m_numRomBanks = 80;
-	} else if (romSize == 0x54) {
+	}
+	else if (romSize == 0x54) {
 		m_numRomBanks = 96;
-	} else {
+	}
+	else {
 		m_numRomBanks = 0;
 	}
 
 	u8 ramSize = m_memoryData[0x0149];
 	if (ramSize <= 1) {
 		m_numRamBanks = 0;
-	} else if (ramSize == 2) {
+	}
+	else if (ramSize == 2) {
 		m_numRamBanks = 4;
-	} else if (ramSize == 3) {
+	}
+	else if (ramSize == 3) {
 		m_numRamBanks = 16;
 	}
 

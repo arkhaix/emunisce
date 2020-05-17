@@ -31,7 +31,7 @@ class IEmulatedInput;
 class IEmulatedMachine;
 
 class InputManager {
-   public:
+public:
 	InputManager();
 
 	void Initialize(BaseApplication* application);
@@ -47,7 +47,7 @@ class InputManager {
 					   ///< will be passed into KeyDown/KeyUp.  todo: separate providers with identical keycodes.
 					   // todo: UnmapKey
 
-   private:
+private:
 	void GenerateKeymap();
 
 	BaseApplication* m_application;

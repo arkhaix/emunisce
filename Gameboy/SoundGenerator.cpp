@@ -64,7 +64,8 @@ void SoundGenerator::PowerOn() {
 	m_hasPower = true;
 }
 
-void SoundGenerator::Run(int ticks) {}
+void SoundGenerator::Run(int ticks) {
+}
 
 void SoundGenerator::TickLength() {
 	m_lengthUnit->Tick();
@@ -85,7 +86,8 @@ void SoundGenerator::Trigger() {
 void SoundGenerator::WriteTriggerRegister(u8 value) {
 	if (value & 0x40) {
 		m_lengthUnit->Enable();
-	} else {
+	}
+	else {
 		m_lengthUnit->Disable();
 	}
 

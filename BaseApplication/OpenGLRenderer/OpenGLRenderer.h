@@ -25,7 +25,7 @@ namespace Emunisce {
 class IEmulatedMachine;
 
 class OpenGLRenderer {
-   public:
+public:
 	OpenGLRenderer();
 	~OpenGLRenderer();
 
@@ -43,7 +43,7 @@ class OpenGLRenderer {
 	void Draw();
 	void Resize(int newWidth, int newHeight);
 
-   private:
+private:
 	class OpenGLRenderer_Private* m_private;
 };
 

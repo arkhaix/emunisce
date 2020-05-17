@@ -42,7 +42,7 @@ class MachineRunner;
 class CommandTrie;
 
 class BaseApplication : public IUserInterface, public IMachineToApplication {
-   public:
+public:
 	// BaseApplication
 
 	BaseApplication();
@@ -144,7 +144,7 @@ class BaseApplication : public IUserInterface, public IMachineToApplication {
 	virtual unsigned int NumPossibleCommands(const char* prefix);
 	virtual const char* GetPossibleCommand(const char* prefix, unsigned int index);
 
-   protected:
+protected:
 	virtual Archive* OpenRomData(const char* name, bool saving) = 0;
 	virtual void CloseRomData(Archive* archive) = 0;
 

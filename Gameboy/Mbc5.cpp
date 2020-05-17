@@ -29,7 +29,8 @@ void Mbc5::Write8(u16 address, u8 value) {
 	if (address < 0x2000) {
 		if ((value & 0x0a) != 0x0a) {
 			SaveRAM();
-		} else if (m_sramLoaded == false) {
+		}
+		else if (m_sramLoaded == false) {
 			LoadRAM();
 		}
 

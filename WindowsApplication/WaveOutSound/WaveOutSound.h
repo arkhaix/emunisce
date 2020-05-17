@@ -26,7 +26,7 @@ class EmunisceApplication;
 class IEmulatedMachine;
 
 class WaveOutSound {
-   public:
+public:
 	WaveOutSound();
 	~WaveOutSound();
 
@@ -37,7 +37,7 @@ class WaveOutSound {
 
 	void SetMute(bool mute);
 
-   private:
+private:
 	class WaveOutSound_Private* m_private;
 };
 

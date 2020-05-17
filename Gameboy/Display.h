@@ -35,7 +35,7 @@ namespace Emunisce {
 typedef TScreenBuffer<160, 144> GameboyScreenBuffer;
 
 class Display : public IEmulatedDisplay {
-   public:
+public:
 	Display();
 	virtual ~Display();
 
@@ -73,7 +73,7 @@ class Display : public IEmulatedDisplay {
 	void SetCgbSpritePaletteTarget(u8 value);
 	void SetCgbSpritePaletteData(u8 value);
 
-   private:
+private:
 	struct DisplayState  ///< Can't declare a namespace inside a class, so I'm cheating.
 	{
 		typedef int Type;

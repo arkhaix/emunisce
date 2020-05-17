@@ -30,7 +30,7 @@ struct ScreenResolution {
 };
 
 class IEmulatedDisplay {
-   public:
+public:
 	virtual ScreenResolution
 	GetScreenResolution() = 0;  ///< Returns the native resolution of the screen.  Should be static per machine.
 	virtual ScreenBuffer*

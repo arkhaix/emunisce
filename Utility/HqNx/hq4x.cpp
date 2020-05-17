@@ -249,12 +249,14 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 	for (j = 0; j < Yres; j++) {
 		if (j > 0) {
 			prevline = -Xres * 2;
-		} else {
+		}
+		else {
 			prevline = 0;
 		}
 		if (j < Yres - 1) {
 			nextline = Xres * 2;
-		} else {
+		}
+		else {
 			nextline = 0;
 		}
 
@@ -267,7 +269,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				w[1] = *((unsigned short*)(pIn + prevline - 2));
 				w[4] = *((unsigned short*)(pIn - 2));
 				w[7] = *((unsigned short*)(pIn + nextline - 2));
-			} else {
+			}
+			else {
 				w[1] = w[2];
 				w[4] = w[5];
 				w[7] = w[8];
@@ -277,7 +280,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				w[3] = *((unsigned short*)(pIn + prevline + 2));
 				w[6] = *((unsigned short*)(pIn + 2));
 				w[9] = *((unsigned short*)(pIn + nextline + 2));
-			} else {
+			}
+			else {
 				w[3] = w[2];
 				w[6] = w[5];
 				w[9] = w[8];
@@ -615,7 +619,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL03_80
 						PIXEL12_30
 						PIXEL13_10
-					} else {
+					}
+					else {
 						PIXEL02_50
 						PIXEL03_50
 						PIXEL12_0
@@ -650,7 +655,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_10
 						PIXEL32_10
 						PIXEL33_80
-					} else {
+					}
+					else {
 						PIXEL22_0
 						PIXEL23_50
 						PIXEL32_50
@@ -675,7 +681,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL21_30
 						PIXEL30_80
 						PIXEL31_10
-					} else {
+					}
+					else {
 						PIXEL20_50
 						PIXEL21_0
 						PIXEL30_50
@@ -694,7 +701,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_10
 						PIXEL10_10
 						PIXEL11_30
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_50
 						PIXEL10_50
@@ -844,7 +852,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL02_0
 						PIXEL03_0
 						PIXEL13_0
-					} else {
+					}
+					else {
 						PIXEL02_50
 						PIXEL03_50
 						PIXEL13_50
@@ -879,7 +888,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_0
 						PIXEL32_0
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL23_50
 						PIXEL32_50
 						PIXEL33_50
@@ -902,7 +912,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_0
 						PIXEL30_0
 						PIXEL31_0
-					} else {
+					}
+					else {
 						PIXEL20_50
 						PIXEL30_50
 						PIXEL31_50
@@ -920,7 +931,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_0
 						PIXEL01_0
 						PIXEL10_0
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_50
 						PIXEL10_50
@@ -949,7 +961,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL03_80
 						PIXEL12_30
 						PIXEL13_10
-					} else {
+					}
+					else {
 						PIXEL00_12
 						PIXEL01_14
 						PIXEL02_83
@@ -980,7 +993,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL13_10
 						PIXEL23_32
 						PIXEL33_82
-					} else {
+					}
+					else {
 						PIXEL02_21
 						PIXEL03_50
 						PIXEL12_70
@@ -1010,7 +1024,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_10
 						PIXEL32_10
 						PIXEL33_80
-					} else {
+					}
+					else {
 						PIXEL03_12
 						PIXEL13_14
 						PIXEL22_70
@@ -1046,7 +1061,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL31_32
 						PIXEL32_10
 						PIXEL33_80
-					} else {
+					}
+					else {
 						PIXEL22_70
 						PIXEL23_21
 						PIXEL30_11
@@ -1073,7 +1089,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL31_10
 						PIXEL32_31
 						PIXEL33_81
-					} else {
+					}
+					else {
 						PIXEL20_21
 						PIXEL21_70
 						PIXEL30_50
@@ -1094,7 +1111,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL21_30
 						PIXEL30_80
 						PIXEL31_10
-					} else {
+					}
+					else {
 						PIXEL00_11
 						PIXEL10_13
 						PIXEL20_83
@@ -1123,7 +1141,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL11_30
 						PIXEL20_31
 						PIXEL30_81
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_21
 						PIXEL10_83
@@ -1152,7 +1171,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL03_82
 						PIXEL10_10
 						PIXEL11_30
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_83
 						PIXEL02_13
@@ -1330,7 +1350,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_0
 						PIXEL01_0
 						PIXEL10_0
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_50
 						PIXEL10_50
@@ -1339,7 +1360,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL02_0
 						PIXEL03_0
 						PIXEL13_0
-					} else {
+					}
+					else {
 						PIXEL02_50
 						PIXEL03_50
 						PIXEL13_50
@@ -1364,7 +1386,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL02_0
 						PIXEL03_0
 						PIXEL13_0
-					} else {
+					}
+					else {
 						PIXEL02_50
 						PIXEL03_50
 						PIXEL13_50
@@ -1379,7 +1402,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_0
 						PIXEL32_0
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL23_50
 						PIXEL32_50
 						PIXEL33_50
@@ -1402,7 +1426,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_0
 						PIXEL30_0
 						PIXEL31_0
-					} else {
+					}
+					else {
 						PIXEL20_50
 						PIXEL30_50
 						PIXEL31_50
@@ -1413,7 +1438,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_0
 						PIXEL32_0
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL23_50
 						PIXEL32_50
 						PIXEL33_50
@@ -1426,7 +1452,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_0
 						PIXEL01_0
 						PIXEL10_0
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_50
 						PIXEL10_50
@@ -1440,7 +1467,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_0
 						PIXEL30_0
 						PIXEL31_0
-					} else {
+					}
+					else {
 						PIXEL20_50
 						PIXEL30_50
 						PIXEL31_50
@@ -1457,7 +1485,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_0
 						PIXEL01_0
 						PIXEL10_0
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_50
 						PIXEL10_50
@@ -1484,7 +1513,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL02_0
 						PIXEL03_0
 						PIXEL13_0
-					} else {
+					}
+					else {
 						PIXEL02_50
 						PIXEL03_50
 						PIXEL13_50
@@ -1518,7 +1548,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_0
 						PIXEL32_0
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL23_50
 						PIXEL32_50
 						PIXEL33_50
@@ -1540,7 +1571,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_0
 						PIXEL30_0
 						PIXEL31_0
-					} else {
+					}
+					else {
 						PIXEL20_50
 						PIXEL30_50
 						PIXEL31_50
@@ -1559,7 +1591,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL02_0
 						PIXEL03_0
 						PIXEL13_0
-					} else {
+					}
+					else {
 						PIXEL02_50
 						PIXEL03_50
 						PIXEL13_50
@@ -1593,7 +1626,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_0
 						PIXEL32_0
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL23_50
 						PIXEL32_50
 						PIXEL33_50
@@ -1615,7 +1649,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_0
 						PIXEL30_0
 						PIXEL31_0
-					} else {
+					}
+					else {
 						PIXEL20_50
 						PIXEL30_50
 						PIXEL31_50
@@ -1632,7 +1667,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_0
 						PIXEL01_0
 						PIXEL10_0
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_50
 						PIXEL10_50
@@ -1886,7 +1922,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_10
 						PIXEL10_10
 						PIXEL11_30
-					} else {
+					}
+					else {
 						PIXEL00_20
 						PIXEL01_12
 						PIXEL10_11
@@ -1897,7 +1934,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL03_80
 						PIXEL12_30
 						PIXEL13_10
-					} else {
+					}
+					else {
 						PIXEL02_11
 						PIXEL03_20
 						PIXEL12_0
@@ -1921,7 +1959,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL03_80
 						PIXEL12_30
 						PIXEL13_10
-					} else {
+					}
+					else {
 						PIXEL02_11
 						PIXEL03_20
 						PIXEL12_0
@@ -1936,7 +1975,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_10
 						PIXEL32_10
 						PIXEL33_80
-					} else {
+					}
+					else {
 						PIXEL22_0
 						PIXEL23_11
 						PIXEL32_12
@@ -1960,7 +2000,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL21_30
 						PIXEL30_80
 						PIXEL31_10
-					} else {
+					}
+					else {
 						PIXEL20_12
 						PIXEL21_0
 						PIXEL30_20
@@ -1971,7 +2012,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_10
 						PIXEL32_10
 						PIXEL33_80
-					} else {
+					}
+					else {
 						PIXEL22_0
 						PIXEL23_11
 						PIXEL32_12
@@ -1985,7 +2027,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_10
 						PIXEL10_10
 						PIXEL11_30
-					} else {
+					}
+					else {
 						PIXEL00_20
 						PIXEL01_12
 						PIXEL10_11
@@ -2000,7 +2043,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL21_30
 						PIXEL30_80
 						PIXEL31_10
-					} else {
+					}
+					else {
 						PIXEL20_12
 						PIXEL21_0
 						PIXEL30_20
@@ -2018,7 +2062,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_10
 						PIXEL10_10
 						PIXEL11_30
-					} else {
+					}
+					else {
 						PIXEL00_20
 						PIXEL01_12
 						PIXEL10_11
@@ -2033,7 +2078,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL21_30
 						PIXEL30_80
 						PIXEL31_10
-					} else {
+					}
+					else {
 						PIXEL20_12
 						PIXEL21_0
 						PIXEL30_20
@@ -2051,7 +2097,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_10
 						PIXEL10_10
 						PIXEL11_30
-					} else {
+					}
+					else {
 						PIXEL00_20
 						PIXEL01_12
 						PIXEL10_11
@@ -2062,7 +2109,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL03_80
 						PIXEL12_30
 						PIXEL13_10
-					} else {
+					}
+					else {
 						PIXEL02_11
 						PIXEL03_20
 						PIXEL12_0
@@ -2086,7 +2134,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL03_80
 						PIXEL12_30
 						PIXEL13_10
-					} else {
+					}
+					else {
 						PIXEL02_11
 						PIXEL03_20
 						PIXEL12_0
@@ -2101,7 +2150,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_10
 						PIXEL32_10
 						PIXEL33_80
-					} else {
+					}
+					else {
 						PIXEL22_0
 						PIXEL23_11
 						PIXEL32_12
@@ -2125,7 +2175,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL21_30
 						PIXEL30_80
 						PIXEL31_10
-					} else {
+					}
+					else {
 						PIXEL20_12
 						PIXEL21_0
 						PIXEL30_20
@@ -2136,7 +2187,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_10
 						PIXEL32_10
 						PIXEL33_80
-					} else {
+					}
+					else {
 						PIXEL22_0
 						PIXEL23_11
 						PIXEL32_12
@@ -2150,7 +2202,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_10
 						PIXEL10_10
 						PIXEL11_30
-					} else {
+					}
+					else {
 						PIXEL00_20
 						PIXEL01_12
 						PIXEL10_11
@@ -2161,7 +2214,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL03_80
 						PIXEL12_30
 						PIXEL13_10
-					} else {
+					}
+					else {
 						PIXEL02_11
 						PIXEL03_20
 						PIXEL12_0
@@ -2172,7 +2226,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL21_30
 						PIXEL30_80
 						PIXEL31_10
-					} else {
+					}
+					else {
 						PIXEL20_12
 						PIXEL21_0
 						PIXEL30_20
@@ -2183,7 +2238,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_10
 						PIXEL32_10
 						PIXEL33_80
-					} else {
+					}
+					else {
 						PIXEL22_0
 						PIXEL23_11
 						PIXEL32_12
@@ -2200,7 +2256,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL03_0
 						PIXEL12_0
 						PIXEL13_0
-					} else {
+					}
+					else {
 						PIXEL00_12
 						PIXEL01_14
 						PIXEL02_83
@@ -2231,7 +2288,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL13_0
 						PIXEL23_32
 						PIXEL33_82
-					} else {
+					}
+					else {
 						PIXEL02_21
 						PIXEL03_50
 						PIXEL12_70
@@ -2261,7 +2319,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_0
 						PIXEL32_0
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL03_12
 						PIXEL13_14
 						PIXEL22_70
@@ -2297,7 +2356,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL31_32
 						PIXEL32_0
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL22_70
 						PIXEL23_21
 						PIXEL30_11
@@ -2324,7 +2384,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL31_0
 						PIXEL32_31
 						PIXEL33_81
-					} else {
+					}
+					else {
 						PIXEL20_21
 						PIXEL21_70
 						PIXEL30_50
@@ -2345,7 +2406,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL21_0
 						PIXEL30_0
 						PIXEL31_0
-					} else {
+					}
+					else {
 						PIXEL00_11
 						PIXEL10_13
 						PIXEL20_83
@@ -2374,7 +2436,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL11_0
 						PIXEL20_31
 						PIXEL30_81
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_21
 						PIXEL10_83
@@ -2403,7 +2466,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL03_82
 						PIXEL10_0
 						PIXEL11_0
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_83
 						PIXEL02_13
@@ -2436,7 +2500,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_0
 						PIXEL30_0
 						PIXEL31_0
-					} else {
+					}
+					else {
 						PIXEL20_50
 						PIXEL30_50
 						PIXEL31_50
@@ -2453,7 +2518,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_0
 						PIXEL01_0
 						PIXEL10_0
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_50
 						PIXEL10_50
@@ -2480,7 +2546,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL02_0
 						PIXEL03_0
 						PIXEL13_0
-					} else {
+					}
+					else {
 						PIXEL02_50
 						PIXEL03_50
 						PIXEL13_50
@@ -2514,7 +2581,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_0
 						PIXEL32_0
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL23_50
 						PIXEL32_50
 						PIXEL33_50
@@ -2530,7 +2598,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL02_0
 						PIXEL03_0
 						PIXEL13_0
-					} else {
+					}
+					else {
 						PIXEL02_50
 						PIXEL03_50
 						PIXEL13_50
@@ -2564,7 +2633,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_0
 						PIXEL32_0
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL23_50
 						PIXEL32_50
 						PIXEL33_50
@@ -2586,7 +2656,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_0
 						PIXEL30_0
 						PIXEL31_0
-					} else {
+					}
+					else {
 						PIXEL20_50
 						PIXEL30_50
 						PIXEL31_50
@@ -2603,7 +2674,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_0
 						PIXEL01_0
 						PIXEL10_0
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_50
 						PIXEL10_50
@@ -2789,7 +2861,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL21_30
 						PIXEL30_80
 						PIXEL31_10
-					} else {
+					}
+					else {
 						PIXEL20_12
 						PIXEL21_0
 						PIXEL30_20
@@ -2800,7 +2873,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_0
 						PIXEL32_0
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL23_50
 						PIXEL32_50
 						PIXEL33_50
@@ -2813,7 +2887,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_10
 						PIXEL10_10
 						PIXEL11_30
-					} else {
+					}
+					else {
 						PIXEL00_20
 						PIXEL01_12
 						PIXEL10_11
@@ -2823,7 +2898,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL02_0
 						PIXEL03_0
 						PIXEL13_0
-					} else {
+					}
+					else {
 						PIXEL02_50
 						PIXEL03_50
 						PIXEL13_50
@@ -2845,7 +2921,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_10
 						PIXEL10_10
 						PIXEL11_30
-					} else {
+					}
+					else {
 						PIXEL00_20
 						PIXEL01_12
 						PIXEL10_11
@@ -2859,7 +2936,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_0
 						PIXEL30_0
 						PIXEL31_0
-					} else {
+					}
+					else {
 						PIXEL20_50
 						PIXEL30_50
 						PIXEL31_50
@@ -2879,7 +2957,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL03_80
 						PIXEL12_30
 						PIXEL13_10
-					} else {
+					}
+					else {
 						PIXEL02_11
 						PIXEL03_20
 						PIXEL12_0
@@ -2894,7 +2973,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_0
 						PIXEL32_0
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL23_50
 						PIXEL32_50
 						PIXEL33_50
@@ -2908,7 +2988,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_0
 						PIXEL01_0
 						PIXEL10_0
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_50
 						PIXEL10_50
@@ -2918,7 +2999,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL03_80
 						PIXEL12_30
 						PIXEL13_10
-					} else {
+					}
+					else {
 						PIXEL02_11
 						PIXEL03_20
 						PIXEL12_0
@@ -2948,7 +3030,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_0
 						PIXEL30_0
 						PIXEL31_0
-					} else {
+					}
+					else {
 						PIXEL20_50
 						PIXEL30_50
 						PIXEL31_50
@@ -2959,7 +3042,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_10
 						PIXEL32_10
 						PIXEL33_80
-					} else {
+					}
+					else {
 						PIXEL22_0
 						PIXEL23_11
 						PIXEL32_12
@@ -2974,7 +3058,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL02_0
 						PIXEL03_0
 						PIXEL13_0
-					} else {
+					}
+					else {
 						PIXEL02_50
 						PIXEL03_50
 						PIXEL13_50
@@ -2989,7 +3074,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_10
 						PIXEL32_10
 						PIXEL33_80
-					} else {
+					}
+					else {
 						PIXEL22_0
 						PIXEL23_11
 						PIXEL32_12
@@ -3004,7 +3090,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_0
 						PIXEL01_0
 						PIXEL10_0
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_50
 						PIXEL10_50
@@ -3019,7 +3106,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL21_30
 						PIXEL30_80
 						PIXEL31_10
-					} else {
+					}
+					else {
 						PIXEL20_12
 						PIXEL21_0
 						PIXEL30_20
@@ -3037,7 +3125,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_10
 						PIXEL10_10
 						PIXEL11_30
-					} else {
+					}
+					else {
 						PIXEL00_20
 						PIXEL01_12
 						PIXEL10_11
@@ -3048,7 +3137,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL03_80
 						PIXEL12_30
 						PIXEL13_10
-					} else {
+					}
+					else {
 						PIXEL02_11
 						PIXEL03_20
 						PIXEL12_0
@@ -3058,7 +3148,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_0
 						PIXEL30_0
 						PIXEL31_0
-					} else {
+					}
+					else {
 						PIXEL20_50
 						PIXEL30_50
 						PIXEL31_50
@@ -3069,7 +3160,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_10
 						PIXEL32_10
 						PIXEL33_80
-					} else {
+					}
+					else {
 						PIXEL22_0
 						PIXEL23_11
 						PIXEL32_12
@@ -3083,7 +3175,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_10
 						PIXEL10_10
 						PIXEL11_30
-					} else {
+					}
+					else {
 						PIXEL00_20
 						PIXEL01_12
 						PIXEL10_11
@@ -3093,7 +3186,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL02_0
 						PIXEL03_0
 						PIXEL13_0
-					} else {
+					}
+					else {
 						PIXEL02_50
 						PIXEL03_50
 						PIXEL13_50
@@ -3104,7 +3198,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL21_30
 						PIXEL30_80
 						PIXEL31_10
-					} else {
+					}
+					else {
 						PIXEL20_12
 						PIXEL21_0
 						PIXEL30_20
@@ -3115,7 +3210,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_10
 						PIXEL32_10
 						PIXEL33_80
-					} else {
+					}
+					else {
 						PIXEL22_0
 						PIXEL23_11
 						PIXEL32_12
@@ -3129,7 +3225,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_10
 						PIXEL10_10
 						PIXEL11_30
-					} else {
+					}
+					else {
 						PIXEL00_20
 						PIXEL01_12
 						PIXEL10_11
@@ -3140,7 +3237,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL03_80
 						PIXEL12_30
 						PIXEL13_10
-					} else {
+					}
+					else {
 						PIXEL02_11
 						PIXEL03_20
 						PIXEL12_0
@@ -3151,7 +3249,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL21_30
 						PIXEL30_80
 						PIXEL31_10
-					} else {
+					}
+					else {
 						PIXEL20_12
 						PIXEL21_0
 						PIXEL30_20
@@ -3162,7 +3261,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_0
 						PIXEL32_0
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL23_50
 						PIXEL32_50
 						PIXEL33_50
@@ -3174,7 +3274,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_0
 						PIXEL01_0
 						PIXEL10_0
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_50
 						PIXEL10_50
@@ -3184,7 +3285,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL03_80
 						PIXEL12_30
 						PIXEL13_10
-					} else {
+					}
+					else {
 						PIXEL02_11
 						PIXEL03_20
 						PIXEL12_0
@@ -3196,7 +3298,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL21_30
 						PIXEL30_80
 						PIXEL31_10
-					} else {
+					}
+					else {
 						PIXEL20_12
 						PIXEL21_0
 						PIXEL30_20
@@ -3207,7 +3310,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_10
 						PIXEL32_10
 						PIXEL33_80
-					} else {
+					}
+					else {
 						PIXEL22_0
 						PIXEL23_11
 						PIXEL32_12
@@ -3297,7 +3401,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_10
 						PIXEL10_10
 						PIXEL11_30
-					} else {
+					}
+					else {
 						PIXEL00_20
 						PIXEL01_12
 						PIXEL10_11
@@ -3308,7 +3413,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL03_80
 						PIXEL12_30
 						PIXEL13_10
-					} else {
+					}
+					else {
 						PIXEL02_11
 						PIXEL03_20
 						PIXEL12_0
@@ -3332,7 +3438,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL03_80
 						PIXEL12_30
 						PIXEL13_10
-					} else {
+					}
+					else {
 						PIXEL02_11
 						PIXEL03_20
 						PIXEL12_0
@@ -3347,7 +3454,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_10
 						PIXEL32_10
 						PIXEL33_80
-					} else {
+					}
+					else {
 						PIXEL22_0
 						PIXEL23_11
 						PIXEL32_12
@@ -3371,7 +3479,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL21_30
 						PIXEL30_80
 						PIXEL31_10
-					} else {
+					}
+					else {
 						PIXEL20_12
 						PIXEL21_0
 						PIXEL30_20
@@ -3382,7 +3491,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_10
 						PIXEL32_10
 						PIXEL33_80
-					} else {
+					}
+					else {
 						PIXEL22_0
 						PIXEL23_11
 						PIXEL32_12
@@ -3396,7 +3506,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_10
 						PIXEL10_10
 						PIXEL11_30
-					} else {
+					}
+					else {
 						PIXEL00_20
 						PIXEL01_12
 						PIXEL10_11
@@ -3411,7 +3522,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL21_30
 						PIXEL30_80
 						PIXEL31_10
-					} else {
+					}
+					else {
 						PIXEL20_12
 						PIXEL21_0
 						PIXEL30_20
@@ -3438,7 +3550,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL21_30
 						PIXEL30_80
 						PIXEL31_10
-					} else {
+					}
+					else {
 						PIXEL20_12
 						PIXEL21_0
 						PIXEL30_20
@@ -3457,7 +3570,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_10
 						PIXEL10_10
 						PIXEL11_30
-					} else {
+					}
+					else {
 						PIXEL00_20
 						PIXEL01_12
 						PIXEL10_11
@@ -3486,7 +3600,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL03_80
 						PIXEL12_30
 						PIXEL13_10
-					} else {
+					}
+					else {
 						PIXEL02_11
 						PIXEL03_20
 						PIXEL12_0
@@ -3521,7 +3636,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_10
 						PIXEL32_10
 						PIXEL33_80
-					} else {
+					}
+					else {
 						PIXEL22_0
 						PIXEL23_11
 						PIXEL32_12
@@ -3576,7 +3692,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL02_0
 						PIXEL03_0
 						PIXEL13_0
-					} else {
+					}
+					else {
 						PIXEL02_50
 						PIXEL03_50
 						PIXEL13_50
@@ -3588,7 +3705,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_0
 						PIXEL30_0
 						PIXEL31_0
-					} else {
+					}
+					else {
 						PIXEL20_50
 						PIXEL30_50
 						PIXEL31_50
@@ -3605,7 +3723,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_0
 						PIXEL01_0
 						PIXEL10_0
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_50
 						PIXEL10_50
@@ -3622,7 +3741,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_0
 						PIXEL32_0
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL23_50
 						PIXEL32_50
 						PIXEL33_50
@@ -3639,7 +3759,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL21_0
 						PIXEL30_0
 						PIXEL31_0
-					} else {
+					}
+					else {
 						PIXEL00_11
 						PIXEL10_13
 						PIXEL20_83
@@ -3670,7 +3791,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_0
 						PIXEL32_0
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL03_12
 						PIXEL13_14
 						PIXEL22_70
@@ -3695,7 +3817,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL03_82
 						PIXEL10_0
 						PIXEL11_0
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_83
 						PIXEL02_13
@@ -3731,7 +3854,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL31_0
 						PIXEL32_31
 						PIXEL33_81
-					} else {
+					}
+					else {
 						PIXEL20_21
 						PIXEL21_70
 						PIXEL30_50
@@ -3753,7 +3877,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL13_0
 						PIXEL23_32
 						PIXEL33_82
-					} else {
+					}
+					else {
 						PIXEL02_21
 						PIXEL03_50
 						PIXEL12_70
@@ -3779,7 +3904,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL11_0
 						PIXEL20_31
 						PIXEL30_81
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_21
 						PIXEL10_83
@@ -3817,7 +3943,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL31_32
 						PIXEL32_0
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL22_70
 						PIXEL23_21
 						PIXEL30_11
@@ -3835,7 +3962,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL03_0
 						PIXEL12_0
 						PIXEL13_0
-					} else {
+					}
+					else {
 						PIXEL00_12
 						PIXEL01_14
 						PIXEL02_83
@@ -3871,7 +3999,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL23_81
 					if (Diff(w[8], w[4])) {
 						PIXEL30_0
-					} else {
+					}
+					else {
 						PIXEL30_20
 					}
 					PIXEL31_0
@@ -3883,7 +4012,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 47: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_0
-					} else {
+					}
+					else {
 						PIXEL00_20
 					}
 					PIXEL01_0
@@ -3910,7 +4040,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL02_0
 					if (Diff(w[2], w[6])) {
 						PIXEL03_0
-					} else {
+					}
+					else {
 						PIXEL03_20
 					}
 					PIXEL10_81
@@ -3946,7 +4077,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL32_0
 					if (Diff(w[6], w[8])) {
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL33_20
 					}
 					break;
@@ -3964,7 +4096,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_0
 						PIXEL30_0
 						PIXEL31_0
-					} else {
+					}
+					else {
 						PIXEL20_50
 						PIXEL30_50
 						PIXEL31_50
@@ -3975,7 +4108,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_0
 						PIXEL32_0
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL23_50
 						PIXEL32_50
 						PIXEL33_50
@@ -3987,7 +4121,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_0
 						PIXEL01_0
 						PIXEL10_0
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_50
 						PIXEL10_50
@@ -4001,7 +4136,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_0
 						PIXEL30_0
 						PIXEL31_0
-					} else {
+					}
+					else {
 						PIXEL20_50
 						PIXEL30_50
 						PIXEL31_50
@@ -4018,7 +4154,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_0
 						PIXEL01_0
 						PIXEL10_0
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_50
 						PIXEL10_50
@@ -4027,7 +4164,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL02_0
 						PIXEL03_0
 						PIXEL13_0
-					} else {
+					}
+					else {
 						PIXEL02_50
 						PIXEL03_50
 						PIXEL13_50
@@ -4051,7 +4189,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL02_0
 						PIXEL03_0
 						PIXEL13_0
-					} else {
+					}
+					else {
 						PIXEL02_50
 						PIXEL03_50
 						PIXEL13_50
@@ -4066,7 +4205,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_0
 						PIXEL32_0
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL23_50
 						PIXEL32_50
 						PIXEL33_50
@@ -4088,7 +4228,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_0
 						PIXEL30_0
 						PIXEL31_0
-					} else {
+					}
+					else {
 						PIXEL20_50
 						PIXEL30_50
 						PIXEL31_50
@@ -4099,7 +4240,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL32_0
 					if (Diff(w[6], w[8])) {
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL33_20
 					}
 					break;
@@ -4120,14 +4262,16 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_0
 						PIXEL32_0
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL23_50
 						PIXEL32_50
 						PIXEL33_50
 					}
 					if (Diff(w[8], w[4])) {
 						PIXEL30_0
-					} else {
+					}
+					else {
 						PIXEL30_20
 					}
 					PIXEL31_0
@@ -4138,7 +4282,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_0
 						PIXEL01_0
 						PIXEL10_0
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_50
 						PIXEL10_50
@@ -4154,7 +4299,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL23_81
 					if (Diff(w[8], w[4])) {
 						PIXEL30_0
-					} else {
+					}
+					else {
 						PIXEL30_20
 					}
 					PIXEL31_0
@@ -4165,7 +4311,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 111: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_0
-					} else {
+					}
+					else {
 						PIXEL00_20
 					}
 					PIXEL01_0
@@ -4179,7 +4326,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_0
 						PIXEL30_0
 						PIXEL31_0
-					} else {
+					}
+					else {
 						PIXEL20_50
 						PIXEL30_50
 						PIXEL31_50
@@ -4194,7 +4342,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 63: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_0
-					} else {
+					}
+					else {
 						PIXEL00_20
 					}
 					PIXEL01_0
@@ -4202,7 +4351,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL02_0
 						PIXEL03_0
 						PIXEL13_0
-					} else {
+					}
+					else {
 						PIXEL02_50
 						PIXEL03_50
 						PIXEL13_50
@@ -4225,7 +4375,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_0
 						PIXEL01_0
 						PIXEL10_0
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_50
 						PIXEL10_50
@@ -4233,7 +4384,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL02_0
 					if (Diff(w[2], w[6])) {
 						PIXEL03_0
-					} else {
+					}
+					else {
 						PIXEL03_20
 					}
 					PIXEL11_0
@@ -4255,7 +4407,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL02_0
 					if (Diff(w[2], w[6])) {
 						PIXEL03_0
-					} else {
+					}
+					else {
 						PIXEL03_20
 					}
 					PIXEL10_81
@@ -4269,7 +4422,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_0
 						PIXEL32_0
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL23_50
 						PIXEL32_50
 						PIXEL33_50
@@ -4285,7 +4439,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL02_0
 						PIXEL03_0
 						PIXEL13_0
-					} else {
+					}
+					else {
 						PIXEL02_50
 						PIXEL03_50
 						PIXEL13_50
@@ -4302,7 +4457,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL32_0
 					if (Diff(w[6], w[8])) {
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL33_20
 					}
 					break;
@@ -4314,7 +4470,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL02_0
 						PIXEL03_0
 						PIXEL13_0
-					} else {
+					}
+					else {
 						PIXEL02_50
 						PIXEL03_50
 						PIXEL13_50
@@ -4326,7 +4483,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_0
 						PIXEL30_0
 						PIXEL31_0
-					} else {
+					}
+					else {
 						PIXEL20_50
 						PIXEL30_50
 						PIXEL31_50
@@ -4337,7 +4495,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL32_0
 					if (Diff(w[6], w[8])) {
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL33_20
 					}
 					break;
@@ -4357,14 +4516,16 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL23_0
 					if (Diff(w[8], w[4])) {
 						PIXEL30_0
-					} else {
+					}
+					else {
 						PIXEL30_20
 					}
 					PIXEL31_0
 					PIXEL32_0
 					if (Diff(w[6], w[8])) {
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL33_20
 					}
 					break;
@@ -4374,7 +4535,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_0
 						PIXEL01_0
 						PIXEL10_0
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_50
 						PIXEL10_50
@@ -4391,14 +4553,16 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_0
 						PIXEL32_0
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL23_50
 						PIXEL32_50
 						PIXEL33_50
 					}
 					if (Diff(w[8], w[4])) {
 						PIXEL30_0
-					} else {
+					}
+					else {
 						PIXEL30_20
 					}
 					PIXEL31_0
@@ -4407,7 +4571,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 239: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_0
-					} else {
+					}
+					else {
 						PIXEL00_20
 					}
 					PIXEL01_0
@@ -4423,7 +4588,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL23_81
 					if (Diff(w[8], w[4])) {
 						PIXEL30_0
-					} else {
+					}
+					else {
 						PIXEL30_20
 					}
 					PIXEL31_0
@@ -4434,7 +4600,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 127: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_0
-					} else {
+					}
+					else {
 						PIXEL00_20
 					}
 					PIXEL01_0
@@ -4442,7 +4609,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL02_0
 						PIXEL03_0
 						PIXEL13_0
-					} else {
+					}
+					else {
 						PIXEL02_50
 						PIXEL03_50
 						PIXEL13_50
@@ -4454,7 +4622,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_0
 						PIXEL30_0
 						PIXEL31_0
-					} else {
+					}
+					else {
 						PIXEL20_50
 						PIXEL30_50
 						PIXEL31_50
@@ -4469,14 +4638,16 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 191: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_0
-					} else {
+					}
+					else {
 						PIXEL00_20
 					}
 					PIXEL01_0
 					PIXEL02_0
 					if (Diff(w[2], w[6])) {
 						PIXEL03_0
-					} else {
+					}
+					else {
 						PIXEL03_20
 					}
 					PIXEL10_0
@@ -4498,7 +4669,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_0
 						PIXEL01_0
 						PIXEL10_0
-					} else {
+					}
+					else {
 						PIXEL00_50
 						PIXEL01_50
 						PIXEL10_50
@@ -4506,7 +4678,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL02_0
 					if (Diff(w[2], w[6])) {
 						PIXEL03_0
-					} else {
+					}
+					else {
 						PIXEL03_20
 					}
 					PIXEL11_0
@@ -4519,7 +4692,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL23_0
 						PIXEL32_0
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL23_50
 						PIXEL32_50
 						PIXEL33_50
@@ -4534,7 +4708,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL02_0
 					if (Diff(w[2], w[6])) {
 						PIXEL03_0
-					} else {
+					}
+					else {
 						PIXEL03_20
 					}
 					PIXEL10_81
@@ -4550,7 +4725,8 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL32_0
 					if (Diff(w[6], w[8])) {
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL33_20
 					}
 					break;
@@ -4558,14 +4734,16 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 255: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_0
-					} else {
+					}
+					else {
 						PIXEL00_20
 					}
 					PIXEL01_0
 					PIXEL02_0
 					if (Diff(w[2], w[6])) {
 						PIXEL03_0
-					} else {
+					}
+					else {
 						PIXEL03_20
 					}
 					PIXEL10_0
@@ -4578,14 +4756,16 @@ void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL23_0
 					if (Diff(w[8], w[4])) {
 						PIXEL30_0
-					} else {
+					}
+					else {
 						PIXEL30_20
 					}
 					PIXEL31_0
 					PIXEL32_0
 					if (Diff(w[6], w[8])) {
 						PIXEL33_0
-					} else {
+					}
+					else {
 						PIXEL33_20
 					}
 					break;

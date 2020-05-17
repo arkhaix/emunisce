@@ -26,7 +26,8 @@ using namespace Emunisce;
 
 // ScreenBuffer
 
-ScreenBuffer::~ScreenBuffer() {}
+ScreenBuffer::~ScreenBuffer() {
+}
 
 void ScreenBuffer::Serialize(Archive& archive) {
 	int width = GetWidth();

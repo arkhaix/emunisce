@@ -4,7 +4,7 @@
 namespace Emunisce {
 
 class CommandTrie {
-   public:
+public:
 	CommandTrie(CommandTrie* parent = nullptr);
 	~CommandTrie();
 
@@ -18,7 +18,7 @@ class CommandTrie {
 
 	CommandTrie* GetNode(const char* prefix, unsigned int position = 0);
 
-   private:
+private:
 	void RegisterLeaf(CommandTrie* leaf);
 
 	class CommandTrie_Private* m_private;

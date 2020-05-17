@@ -43,7 +43,7 @@ enum {
 }  // namespace StepMode
 
 class MachineRunner {
-   public:
+public:
 	MachineRunner();
 	virtual ~MachineRunner() = default;
 
@@ -67,7 +67,7 @@ class MachineRunner {
 	virtual void StepInstruction();  ///< Pauses if necessary, then steps forward one cpu instruction.
 	virtual void StepFrame();        ///< Pauses if necessary, then steps forward 1/60th of a second.
 
-   protected:
+protected:
 	IEmulatedMachine* m_machine;
 
 	std::thread m_runnerThread;

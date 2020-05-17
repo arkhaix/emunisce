@@ -28,7 +28,7 @@ class Archive;
 class SoundGenerator;
 
 class EnvelopeUnit {
-   public:
+public:
 	EnvelopeUnit(SoundGenerator* soundGenerator);
 
 	void Serialize(Archive& archive);
@@ -40,7 +40,7 @@ class EnvelopeUnit {
 
 	float GetCurrentVolume();
 
-   private:
+private:
 	SoundGenerator* m_soundGenerator;
 
 	bool m_enabled;

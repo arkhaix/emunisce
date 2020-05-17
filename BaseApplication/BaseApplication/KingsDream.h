@@ -35,7 +35,7 @@ namespace Emunisce {
 class ScreenBuffer;
 
 class KingsDream {
-   public:
+public:
 	KingsDream();
 
 	void UpdateAnimation();  ///< Applies one point to the frame.  Expects PointsPerFrame calls per frame.
@@ -66,7 +66,7 @@ class KingsDream {
 	void SetBlendFrames(unsigned int numFrames);  ///< Number of frames to blend together.  Default is 5.  Max is 10.
 	unsigned int GetBlendFrames();
 
-   private:
+private:
 	void ResizeScreenBuffers(unsigned int width, unsigned int height);
 
 	void IncrementGenerator();

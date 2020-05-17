@@ -101,7 +101,8 @@ void FileSerializer::OpenStream() {
 			delete m_fileStream;
 			m_fileStream = nullptr;
 		}
-	} else if (m_archiveMode == ArchiveMode::Loading) {
+	}
+	else if (m_archiveMode == ArchiveMode::Loading) {
 		m_fileStream = new std::fstream();
 		m_fileStream->open(m_filename.c_str(), std::ios::in | std::ios::binary);
 

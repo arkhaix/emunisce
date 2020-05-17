@@ -31,7 +31,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce {
 
 class Gameboy : public IEmulatedMachine {
-   public:
+public:
 	// IEmulatedMachine
 
 	// Machine type
@@ -94,7 +94,7 @@ class Gameboy : public IEmulatedMachine {
 	bool IsDoubleSpeed();
 	void SetDoubleSpeed(bool doubleSpeed);
 
-   protected:
+protected:
 	Gameboy(Memory* memory, EmulatedMachine::Type machineType);
 	virtual ~Gameboy();
 	void Initialize();

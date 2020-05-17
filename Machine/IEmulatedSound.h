@@ -42,7 +42,9 @@ struct AudioBuffer {
 	SampleType Samples[2][BufferSizeSamples];  ///< 2 channels
 	unsigned int NumSamples;
 
-	AudioBuffer() { NumSamples = BufferSizeSamples; }
+	AudioBuffer() {
+		NumSamples = BufferSizeSamples;
+	}
 };
 
 namespace SquareSynthesisMethod {
@@ -57,7 +59,7 @@ enum {
 }  // namespace SquareSynthesisMethod
 
 class IEmulatedSound {
-   public:
+public:
 	virtual AudioBuffer GetStableAudioBuffer() = 0;
 	virtual int GetAudioBufferCount() = 0;
 

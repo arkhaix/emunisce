@@ -33,7 +33,7 @@ namespace Emunisce {
 class EmunisceApplication;
 
 class ConsoleDebugger {
-   public:
+public:
 	ConsoleDebugger();
 
 	void Initialize(EmunisceApplication* phoenix);
@@ -45,7 +45,7 @@ class ConsoleDebugger {
 
 	void Print(const char* text);
 
-   private:
+private:
 	void Help();
 
 	void SetupConsole();

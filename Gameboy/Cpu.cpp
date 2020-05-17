@@ -148,11 +148,14 @@ void Cpu::SetTimerControl(u8 value) {
 
 	if (clockSelect == 0) {
 		m_ticksPerCounterIncrement = 1024;  ///< 4096 Hz
-	} else if (clockSelect == 1) {
+	}
+	else if (clockSelect == 1) {
 		m_ticksPerCounterIncrement = 16;  ///< 262144 Hz
-	} else if (clockSelect == 2) {
-		m_ticksPerCounterIncrement = 64;   ///< 65536 Hz
-	} else {                               //(clockSelect == 3)
+	}
+	else if (clockSelect == 2) {
+		m_ticksPerCounterIncrement = 64;  ///< 65536 Hz
+	}
+	else {                                 //(clockSelect == 3)
 		m_ticksPerCounterIncrement = 256;  ///< 16384 Hz
 	}
 
@@ -227,7 +230,8 @@ void Cpu::ExecADC(u8* target, u8 value) {
 	// Z
 	if ((res & 0xff) == 0) {
 		SET_Z;
-	} else {
+	}
+	else {
 		RES_Z;
 	}
 
@@ -237,14 +241,16 @@ void Cpu::ExecADC(u8* target, u8 value) {
 	// H
 	if ((*target ^ value ^ res) & 0x10) {
 		SET_H;
-	} else {
+	}
+	else {
 		RES_H;
 	}
 
 	// C
 	if (res & 0x100) {
 		SET_C;
-	} else {
+	}
+	else {
 		RES_C;
 	}
 
@@ -257,7 +263,8 @@ void Cpu::ExecADC(u16* target, u16 value) {
 	// Z
 	if ((res & 0xffff) == 0) {
 		SET_Z;
-	} else {
+	}
+	else {
 		RES_Z;
 	}
 
@@ -267,14 +274,16 @@ void Cpu::ExecADC(u16* target, u16 value) {
 	// H
 	if ((*target ^ value ^ res) & 0x1000) {
 		SET_H;
-	} else {
+	}
+	else {
 		RES_H;
 	}
 
 	// C
 	if (res & 0x10000) {
 		SET_C;
-	} else {
+	}
+	else {
 		RES_C;
 	}
 
@@ -287,7 +296,8 @@ void Cpu::ExecADD(u8* target, u8 value) {
 	// Z
 	if ((res & 0xff) == 0) {
 		SET_Z;
-	} else {
+	}
+	else {
 		RES_Z;
 	}
 
@@ -297,14 +307,16 @@ void Cpu::ExecADD(u8* target, u8 value) {
 	// H
 	if ((*target ^ value ^ res) & 0x10) {
 		SET_H;
-	} else {
+	}
+	else {
 		RES_H;
 	}
 
 	// C
 	if (res & 0x100) {
 		SET_C;
-	} else {
+	}
+	else {
 		RES_C;
 	}
 
@@ -322,14 +334,16 @@ void Cpu::ExecADD(u16* target, u16 value) {
 	// H
 	if ((*target ^ value ^ res) & 0x1000) {
 		SET_H;
-	} else {
+	}
+	else {
 		RES_H;
 	}
 
 	// C
 	if (res & 0x10000) {
 		SET_C;
-	} else {
+	}
+	else {
 		RES_C;
 	}
 
@@ -359,7 +373,8 @@ void Cpu::ExecAND(u8 value) {
 	// Z
 	if (a == 0) {
 		SET_Z;
-	} else {
+	}
+	else {
 		RES_Z;
 	}
 
@@ -377,7 +392,8 @@ void Cpu::ExecBIT(u8 value, int n) {
 	// Z
 	if (value & (1 << n)) {
 		RES_Z;
-	} else {
+	}
+	else {
 		SET_Z;
 	}
 
@@ -430,7 +446,8 @@ void Cpu::ExecCP(u8 value) {
 	// Z
 	if (res == 0) {
 		SET_Z;
-	} else {
+	}
+	else {
 		RES_Z;
 	}
 
@@ -441,7 +458,8 @@ void Cpu::ExecCP(u8 value) {
 	//???
 	if ((a ^ value ^ res) & 0x10) {
 		SET_H;
-	} else {
+	}
+	else {
 		RES_H;
 	}
 
@@ -449,7 +467,8 @@ void Cpu::ExecCP(u8 value) {
 	//???
 	if (res < 0) {
 		SET_C;
-	} else {
+	}
+	else {
 		RES_C;
 	}
 }
@@ -472,12 +491,15 @@ void Cpu::ExecDAA() {
 	if (TST_N) {
 		if (TST_C && TST_H) {
 			a += 0x9a;
-		} else if (TST_C) {
+		}
+		else if (TST_C) {
 			a += 0xa0;
-		} else if (TST_H) {
+		}
+		else if (TST_H) {
 			a += 0xfa;
 		}
-	} else {
+	}
+	else {
 		if (a >= 0x9a) {
 			a += 0x60;
 			SET_C;
@@ -485,7 +507,8 @@ void Cpu::ExecDAA() {
 			if (TST_H || ((a & 0x0f) >= 0x0a)) {
 				a += 0x06;
 			}
-		} else {
+		}
+		else {
 			if (TST_C) {
 				a += 0x60;
 			}
@@ -498,7 +521,8 @@ void Cpu::ExecDAA() {
 	// Z
 	if (a == 0) {
 		SET_Z;
-	} else {
+	}
+	else {
 		RES_Z;
 	}
 
@@ -516,7 +540,8 @@ void Cpu::ExecDEC(u8* target) {
 	// Z
 	if (res == 0) {
 		SET_Z;
-	} else {
+	}
+	else {
 		RES_Z;
 	}
 
@@ -526,7 +551,8 @@ void Cpu::ExecDEC(u8* target) {
 	// H
 	if ((*target & 0x0f) == 0) {
 		SET_H;
-	} else {
+	}
+	else {
 		RES_H;
 	}
 
@@ -607,7 +633,8 @@ void Cpu::ExecINC(u8* target) {
 	// Z
 	if (res == 0) {
 		SET_Z;
-	} else {
+	}
+	else {
 		RES_Z;
 	}
 
@@ -617,7 +644,8 @@ void Cpu::ExecINC(u8* target) {
 	// H
 	if ((*target & 0x0f) == 0x0f) {
 		SET_H;
-	} else {
+	}
+	else {
 		RES_H;
 	}
 
@@ -705,7 +733,8 @@ void Cpu::ExecOR(u8* target) {
 	// Z
 	if (a == 0) {
 		SET_Z;
-	} else {
+	}
+	else {
 		RES_Z;
 	}
 
@@ -725,7 +754,8 @@ void Cpu::ExecOR(u8 value) {
 	// Z
 	if (a == 0) {
 		SET_Z;
-	} else {
+	}
+	else {
 		RES_Z;
 	}
 
@@ -812,7 +842,8 @@ void Cpu::ExecRL(u8* target) {
 
 	if (*target & 0x80) {
 		SET_C;
-	} else {
+	}
+	else {
 		RES_C;
 	}
 
@@ -822,7 +853,8 @@ void Cpu::ExecRL(u8* target) {
 	// Z
 	if (*target == 0) {
 		SET_Z;
-	} else {
+	}
+	else {
 		RES_Z;
 	}
 
@@ -840,7 +872,8 @@ void Cpu::ExecRLA() {
 
 	if (a & 0x80) {
 		SET_C;
-	} else {
+	}
+	else {
 		RES_C;
 	}
 
@@ -862,7 +895,8 @@ void Cpu::ExecRLA() {
 void Cpu::ExecRLC(u8* target) {
 	if (*target & 0x80) {
 		SET_C;
-	} else {
+	}
+	else {
 		RES_C;
 	}
 
@@ -872,7 +906,8 @@ void Cpu::ExecRLC(u8* target) {
 	// Z
 	if (*target == 0) {
 		SET_Z;
-	} else {
+	}
+	else {
 		RES_Z;
 	}
 
@@ -888,7 +923,8 @@ void Cpu::ExecRLC(u8* target) {
 void Cpu::ExecRLCA() {
 	if (a & 0x80) {
 		SET_C;
-	} else {
+	}
+	else {
 		RES_C;
 	}
 
@@ -912,7 +948,8 @@ void Cpu::ExecRR(u8* target) {
 
 	if (*target & 0x01) {
 		SET_C;
-	} else {
+	}
+	else {
 		RES_C;
 	}
 
@@ -922,7 +959,8 @@ void Cpu::ExecRR(u8* target) {
 	// Z
 	if (*target == 0) {
 		SET_Z;
-	} else {
+	}
+	else {
 		RES_Z;
 	}
 
@@ -940,7 +978,8 @@ void Cpu::ExecRRA() {
 
 	if (a & 0x01) {
 		SET_C;
-	} else {
+	}
+	else {
 		RES_C;
 	}
 
@@ -962,7 +1001,8 @@ void Cpu::ExecRRA() {
 void Cpu::ExecRRC(u8* target) {
 	if (*target & 0x01) {
 		SET_C;
-	} else {
+	}
+	else {
 		RES_C;
 	}
 
@@ -972,7 +1012,8 @@ void Cpu::ExecRRC(u8* target) {
 	// Z
 	if (*target == 0) {
 		SET_Z;
-	} else {
+	}
+	else {
 		RES_Z;
 	}
 
@@ -988,7 +1029,8 @@ void Cpu::ExecRRC(u8* target) {
 void Cpu::ExecRRCA() {
 	if (a & 0x01) {
 		SET_C;
-	} else {
+	}
+	else {
 		RES_C;
 	}
 
@@ -1017,7 +1059,8 @@ void Cpu::ExecSBC(u8 value) {
 	// Z
 	if ((res & 0xff) == 0) {
 		SET_Z;
-	} else {
+	}
+	else {
 		RES_Z;
 	}
 
@@ -1027,14 +1070,16 @@ void Cpu::ExecSBC(u8 value) {
 	// H
 	if ((a ^ value ^ res) & 0x10) {
 		SET_H;
-	} else {
+	}
+	else {
 		RES_H;
 	}
 
 	// C
 	if (res < 0) {
 		SET_C;
-	} else {
+	}
+	else {
 		RES_C;
 	}
 
@@ -1069,7 +1114,8 @@ void Cpu::ExecSET(u8* target, int n) {
 void Cpu::ExecSLA(u8* target) {
 	if (*target & 0x80) {
 		SET_C;
-	} else {
+	}
+	else {
 		RES_C;
 	}
 
@@ -1078,7 +1124,8 @@ void Cpu::ExecSLA(u8* target) {
 	// Z
 	if (*target == 0) {
 		SET_Z;
-	} else {
+	}
+	else {
 		RES_Z;
 	}
 
@@ -1096,7 +1143,8 @@ void Cpu::ExecSRA(u8* target) {
 
 	if (*target & 0x01) {
 		SET_C;
-	} else {
+	}
+	else {
 		RES_C;
 	}
 
@@ -1106,7 +1154,8 @@ void Cpu::ExecSRA(u8* target) {
 	// Z
 	if (*target == 0) {
 		SET_Z;
-	} else {
+	}
+	else {
 		RES_Z;
 	}
 
@@ -1122,7 +1171,8 @@ void Cpu::ExecSRA(u8* target) {
 void Cpu::ExecSRL(u8* target) {
 	if (*target & 0x01) {
 		SET_C;
-	} else {
+	}
+	else {
 		RES_C;
 	}
 
@@ -1131,7 +1181,8 @@ void Cpu::ExecSRL(u8* target) {
 	// Z
 	if (*target == 0) {
 		SET_Z;
-	} else {
+	}
+	else {
 		RES_Z;
 	}
 
@@ -1150,7 +1201,8 @@ void Cpu::ExecSUB(u8 value) {
 	// Z
 	if (res == 0) {
 		SET_Z;
-	} else {
+	}
+	else {
 		RES_Z;
 	}
 
@@ -1160,14 +1212,16 @@ void Cpu::ExecSUB(u8 value) {
 	// H
 	if ((a ^ value ^ res) & 0x10) {
 		SET_H;
-	} else {
+	}
+	else {
 		RES_H;
 	}
 
 	// C
 	if (res < 0) {
 		SET_C;
-	} else {
+	}
+	else {
 		RES_C;
 	}
 
@@ -1182,7 +1236,8 @@ void Cpu::ExecSWAP(u8* target) {
 	// Z
 	if (*target == 0) {
 		SET_Z;
-	} else {
+	}
+	else {
 		RES_Z;
 	}
 
@@ -1202,7 +1257,8 @@ void Cpu::ExecXOR(u8 value) {
 	// Z
 	if (a == 0) {
 		SET_Z;
-	} else {
+	}
+	else {
 		RES_Z;
 	}
 

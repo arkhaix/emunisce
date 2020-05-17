@@ -102,7 +102,8 @@ void EmunisceApplication::RunWindow() {
 				GetWindow()->PumpMessages();
 				Sleep(15);
 			}
-		} else {
+		}
+		else {
 			GetWindow()->PumpMessages();
 			Sleep(100);
 		}
@@ -151,9 +152,11 @@ void EmunisceApplication::DisplayImportantMessage(MessageType::Type messageType,
 	int iconType = 0;
 	if (messageType == MessageType::Information) {
 		iconType = MB_ICONINFORMATION;
-	} else if (messageType == MessageType::Warning) {
+	}
+	else if (messageType == MessageType::Warning) {
 		iconType = MB_ICONWARNING;
-	} else if (messageType == MessageType::Error) {
+	}
+	else if (messageType == MessageType::Error) {
 		iconType = MB_ICONERROR;
 	}
 
@@ -165,9 +168,11 @@ PromptResult::Type EmunisceApplication::DisplayPrompt(PromptType::Type promptTyp
 	int windowsPromptType = MB_OK;
 	if (promptType == PromptType::OkCancel) {
 		windowsPromptType = MB_OKCANCEL;
-	} else if (promptType == PromptType::YesNo) {
+	}
+	else if (promptType == PromptType::YesNo) {
 		windowsPromptType = MB_YESNO;
-	} else if (promptType == PromptType::YesNoCancel) {
+	}
+	else if (promptType == PromptType::YesNoCancel) {
 		windowsPromptType = MB_YESNOCANCEL;
 	}
 
@@ -176,11 +181,14 @@ PromptResult::Type EmunisceApplication::DisplayPrompt(PromptType::Type promptTyp
 	PromptResult::Type result = PromptResult::Cancel;
 	if (windowsResult == IDOK) {
 		result = PromptResult::Ok;
-	} else if (windowsResult == IDCANCEL) {
+	}
+	else if (windowsResult == IDCANCEL) {
 		result = PromptResult::Cancel;
-	} else if (windowsResult == IDYES) {
+	}
+	else if (windowsResult == IDYES) {
 		result = PromptResult::Yes;
-	} else if (windowsResult == IDNO) {
+	}
+	else if (windowsResult == IDNO) {
 		result = PromptResult::No;
 	}
 
@@ -295,10 +303,12 @@ void EmunisceApplication::AdjustWindowSize() {
 		int newWidth = clientWidth;
 		if (clientWidth < nativeWidth) {  ///< Only support 1x scale or greater for now
 			newWidth = nativeWidth;
-		} else if (clientWidth % nativeWidth < 80) {
+		}
+		else if (clientWidth % nativeWidth < 80) {
 			newWidth =
 				clientWidth - (clientWidth % nativeWidth);  ///< Nearest multiple is smaller than the current width
-		} else {
+		}
+		else {
 			newWidth =
 				clientWidth +
 				(nativeWidth - (clientWidth % nativeWidth));  ///< Nearest multiple is larger than the current width
@@ -366,7 +376,8 @@ Archive* EmunisceApplication::OpenFileArchive(const char* filename, bool saving)
 	ArchiveMode::Type mode;
 	if (saving == true) {
 		mode = ArchiveMode::Saving;
-	} else {
+	}
+	else {
 		mode = ArchiveMode::Loading;
 	}
 

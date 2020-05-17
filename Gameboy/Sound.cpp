@@ -393,13 +393,15 @@ void Sound::SetNR51(u8 value) {
 	for (int i = 0; i < 4; i++) {
 		if (value & (1 << i)) {
 			m_terminalOutputs[0][i] = true;
-		} else {
+		}
+		else {
 			m_terminalOutputs[0][i] = false;
 		}
 
 		if (value & (1 << (4 + i))) {
 			m_terminalOutputs[1][i] = true;
-		} else {
+		}
+		else {
 			m_terminalOutputs[1][i] = false;
 		}
 	}
@@ -419,7 +421,8 @@ void Sound::SetNR52(u8 value) {
 			m_sound3->PowerOn();
 			m_sound4->PowerOn();
 		}
-	} else {
+	}
+	else {
 		if (m_hasPower == true) {
 			m_sound1->PowerOff();
 			m_sound2->PowerOff();

@@ -27,7 +27,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce {
 
 class Mbc1 : public Memory {
-   public:
+public:
 	Mbc1();
 	~Mbc1() override;
 
@@ -37,7 +37,7 @@ class Mbc1 : public Memory {
 
 	void Write8(u16 address, u8 value) override;
 
-   protected:
+protected:
 	bool LoadFile(const char* filename) override;
 
 	void SwitchROM();

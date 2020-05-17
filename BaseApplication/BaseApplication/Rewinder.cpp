@@ -491,7 +491,8 @@ void Rewinder::RunToNextFrame() {
 		}
 
 		m_segments[lastSegmentIndex]->RecordFrame();
-	} else {
+	}
+	else {
 		// Rewinding.  Advance (backward) one step in the frame history.
 		// Segment::CacheFrame runs the machine (playing an input movie "in the past"), generating new frames to cache.
 
@@ -565,7 +566,8 @@ ScreenBuffer* Rewinder::GetStableScreenBuffer() {
 	if (m_isRewinding == false || m_frameHistory.empty() || m_playbackFrame == m_frameHistory.end()) {
 		// Not rewinding.  Just pass through.
 		return MachineFeature::GetStableScreenBuffer();
-	} else {
+	}
+	else {
 		// Rewinding.  Return our current history frame.
 		return m_playbackFrame->Screen;
 	}
@@ -577,7 +579,8 @@ int Rewinder::GetScreenBufferCount() {
 	if (m_isRewinding == false || m_frameHistory.empty() || m_playbackFrame == m_frameHistory.end()) {
 		// Not rewinding.  Just pass through.
 		return MachineFeature::GetScreenBufferCount();
-	} else {
+	}
+	else {
 		// Rewinding.  Return our current history frame's id.
 		return m_playbackFrame->ScreenBufferId;
 	}
@@ -591,7 +594,8 @@ AudioBuffer Rewinder::GetStableAudioBuffer() {
 	if (m_isRewinding == false || m_frameHistory.empty() || m_playbackFrame == m_frameHistory.end()) {
 		// Not rewinding.  Just pass through.
 		return MachineFeature::GetStableAudioBuffer();
-	} else {
+	}
+	else {
 		// Rewinding.  Return our current history frame.
 		return m_playbackFrame->Audio;
 	}
@@ -603,7 +607,8 @@ int Rewinder::GetAudioBufferCount() {
 	if (m_isRewinding == false || m_frameHistory.empty() || m_playbackFrame == m_frameHistory.end()) {
 		// Not rewinding.  Just pass through.
 		return MachineFeature::GetAudioBufferCount();
-	} else {
+	}
+	else {
 		// Rewinding.  Return our current history frame's id.
 		return m_playbackFrame->AudioBufferId;
 	}

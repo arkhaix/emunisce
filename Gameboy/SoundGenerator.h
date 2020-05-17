@@ -32,7 +32,7 @@ class EnvelopeUnit;
 class LengthUnit;
 
 class SoundGenerator {
-   public:
+public:
 	SoundGenerator();
 	~SoundGenerator();
 
@@ -50,7 +50,7 @@ class SoundGenerator {
 
 	virtual float GetSample();
 
-   protected:
+protected:
 	virtual void Trigger();
 	virtual void WriteTriggerRegister(u8 value);
 

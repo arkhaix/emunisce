@@ -63,7 +63,7 @@ namespace Emunisce {
 #define INV_C (f ^= (1 << BIT_C))
 
 class Cpu : public IEmulatedProcessor {
-   public:
+public:
 	u16 pc;
 	u16 sp;
 
@@ -102,7 +102,7 @@ class Cpu : public IEmulatedProcessor {
 
 	void SetCgbSpeedSwitch(u8 value);
 
-   private:
+private:
 	Gameboy* m_machine;
 	EmulatedMachine::Type m_machineType;
 

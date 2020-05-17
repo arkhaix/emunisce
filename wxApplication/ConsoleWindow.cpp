@@ -24,7 +24,7 @@ using namespace Emunisce;
 #include "Application.h"
 
 class ConsoleTextCtrl : public wxTextCtrl {
-   public:
+public:
 	ConsoleTextCtrl(ConsoleWindow* console, wxWindow* parent, wxWindowID id, const wxString& value = wxEmptyString,
 					const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0L,
 					const wxValidator& validator = wxDefaultValidator, const wxString& name = wxTextCtrlNameStr)
@@ -38,22 +38,32 @@ class ConsoleTextCtrl : public wxTextCtrl {
 		m_console = console;
 	}
 
-	void OnKeyDown(wxKeyEvent& event) { m_console->OnKeyDown(event); }
+	void OnKeyDown(wxKeyEvent& event) {
+		m_console->OnKeyDown(event);
+	}
 
-	void OnKeyUp(wxKeyEvent& event) { m_console->OnKeyUp(event); }
+	void OnKeyUp(wxKeyEvent& event) {
+		m_console->OnKeyUp(event);
+	}
 
-	void OnText(wxCommandEvent& event) { m_console->OnText(event); }
+	void OnText(wxCommandEvent& event) {
+		m_console->OnText(event);
+	}
 
-	void OnTextEnter(wxCommandEvent& event) { m_console->OnTextEnter(event); }
+	void OnTextEnter(wxCommandEvent& event) {
+		m_console->OnTextEnter(event);
+	}
 
-	void OnSetFocus(wxFocusEvent& event) { m_console->OnSetFocus(event); }
+	void OnSetFocus(wxFocusEvent& event) {
+		m_console->OnSetFocus(event);
+	}
 
-   private:
+private:
 	ConsoleWindow* m_console;
 };
 
 class ConsoleFrame : public wxFrame {
-   public:
+public:
 	ConsoleFrame(ConsoleWindow* consoleWindow, wxFrame* parent, wxString& title, wxPoint& position, wxSize& size)
 		: wxFrame(parent, wxID_ANY, title, position, size) {
 		m_consoleWindow = consoleWindow;
@@ -66,7 +76,7 @@ class ConsoleFrame : public wxFrame {
 		event.Skip(true);
 	}
 
-   private:
+private:
 	ConsoleWindow* m_consoleWindow;
 };
 

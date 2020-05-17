@@ -75,7 +75,8 @@ void InputRecording::SerializeHistory(Archive& archive) {
 
 			m_inputHistory.push_back(inputEvent);
 		}
-	} else  // archive.GetArchiveMode() == ArchiveMode::Saving
+	}
+	else  // archive.GetArchiveMode() == ArchiveMode::Saving
 	{
 		for (auto& inputEvent : m_inputHistory) {
 			inputEvent.Serialize(archive);
@@ -196,7 +197,8 @@ void InputRecording::ApplicationEvent(unsigned int eventId) {
 		InputEvent& inputEvent = m_inputHistory[eventId];
 		if (inputEvent.keyDown == true) {
 			m_wrappedInput->ButtonDown(inputEvent.keyIndex);
-		} else  // inputEvent.keyDown == false (keyUp)
+		}
+		else  // inputEvent.keyDown == false (keyUp)
 		{
 			m_wrappedInput->ButtonUp(inputEvent.keyIndex);
 		}
@@ -220,7 +222,8 @@ void InputRecording::RunToNextFrame() {
 
 			if (inputEvent.keyDown == true) {
 				MachineFeature::ButtonDown(inputEvent.keyIndex);
-			} else {
+			}
+			else {
 				MachineFeature::ButtonUp(inputEvent.keyIndex);
 			}
 
@@ -251,7 +254,8 @@ void InputRecording::ButtonDown(unsigned int index) {
 		inputEvent.keyIndex = index;
 
 		m_pendingEvents.push(inputEvent);
-	} else {
+	}
+	else {
 		MachineFeature::ButtonDown(index);
 	}
 }
@@ -271,7 +275,8 @@ void InputRecording::ButtonUp(unsigned int index) {
 		inputEvent.keyIndex = index;
 
 		m_pendingEvents.push(inputEvent);
-	} else {
+	}
+	else {
 		MachineFeature::ButtonUp(index);
 	}
 }

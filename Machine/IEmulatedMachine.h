@@ -64,7 +64,7 @@ struct ApplicationEvent {
 };
 
 class IEmulatedMachine {
-   public:
+public:
 	// Machine type
 	virtual EmulatedMachine::Type GetType() = 0;
 	virtual const char* GetRomTitle() = 0;

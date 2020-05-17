@@ -57,7 +57,8 @@ int Cpu::Step() {
 			ExecCALL(0x0040);
 			instructionTime += 16;
 			return instructionTime;
-		} else if ((maskedInterruptFlags & IF_LCDC) && !m_stopped) {
+		}
+		else if ((maskedInterruptFlags & IF_LCDC) && !m_stopped) {
 			m_masterInterruptsEnabled = false;
 
 			interruptFlags &= ~(IF_LCDC);
@@ -66,7 +67,8 @@ int Cpu::Step() {
 			ExecCALL(0x0048);
 			instructionTime += 16;
 			return instructionTime;
-		} else if ((maskedInterruptFlags & IF_TIMER) && !m_stopped) {
+		}
+		else if ((maskedInterruptFlags & IF_TIMER) && !m_stopped) {
 			m_masterInterruptsEnabled = false;
 
 			interruptFlags &= ~(IF_TIMER);
@@ -75,7 +77,8 @@ int Cpu::Step() {
 			ExecCALL(0x0050);
 			instructionTime += 16;
 			return instructionTime;
-		} else if ((maskedInterruptFlags & IF_SERIAL) && !m_stopped) {
+		}
+		else if ((maskedInterruptFlags & IF_SERIAL) && !m_stopped) {
 			m_masterInterruptsEnabled = false;
 
 			interruptFlags &= ~(IF_SERIAL);
@@ -84,7 +87,8 @@ int Cpu::Step() {
 			ExecCALL(0x0058);
 			instructionTime += 16;
 			return instructionTime;
-		} else if (maskedInterruptFlags & IF_INPUT) {
+		}
+		else if (maskedInterruptFlags & IF_INPUT) {
 			m_masterInterruptsEnabled = false;
 			m_stopped = false;
 
@@ -104,16 +108,19 @@ int Cpu::Step() {
 
 	if (m_halted || m_stopped) {
 		opcode = 0x00;  // When halted, we just execute NOPs until an interrupt
-	} else {
+	}
+	else {
 		opcode = m_memory->Read8(pc);
 
 		if (m_machineType == EmulatedMachine::GameboyColor) {
 			// Apparently (demotronic demo), CGB has no halt bug?
 			pc++;
-		} else {
+		}
+		else {
 			if (m_haltBug == false) {
 				pc++;
-			} else {
+			}
+			else {
 				m_haltBug = false;  ///< Skips incrementing the pc once
 			}
 		}
@@ -239,11 +246,13 @@ int Cpu::Step() {
 				if (enteringDoubleSpeed == true) {
 					m_machine->SetDoubleSpeed(true);
 					m_cgbSpeedSwitch |= 0x80;
-				} else {
+				}
+				else {
 					m_machine->SetDoubleSpeed(false);
 					m_cgbSpeedSwitch &= ~(0x80);
 				}
-			} else {
+			}
+			else {
 				// m_stopped = true;
 			}
 
@@ -356,7 +365,8 @@ int Cpu::Step() {
 			n = ReadNext8();
 			if (TST_Z) {
 				instructionTime += 8;
-			} else {
+			}
+			else {
 				ExecJR((s8)n);
 				instructionTime += 12;
 			}
@@ -416,7 +426,8 @@ int Cpu::Step() {
 			if (TST_Z) {
 				ExecJR((s8)n);
 				instructionTime += 12;
-			} else {
+			}
+			else {
 				instructionTime += 8;
 			}
 			break;
@@ -474,7 +485,8 @@ int Cpu::Step() {
 			n = ReadNext8();
 			if (TST_C) {
 				instructionTime += 8;
-			} else {
+			}
+			else {
 				ExecJR((s8)n);
 				instructionTime += 12;
 			}
@@ -543,7 +555,8 @@ int Cpu::Step() {
 			if (TST_C) {
 				ExecJR((s8)n);
 				instructionTime += 12;
-			} else {
+			}
+			else {
 				instructionTime += 8;
 			}
 			break;
@@ -1431,7 +1444,8 @@ int Cpu::Step() {
 			// C0		RET NZ			11/5	3/1	1/1	(met/not met)
 			if (TST_Z) {
 				instructionTime += 8;
-			} else {
+			}
+			else {
 				ExecRET();
 				instructionTime += 20;
 			}
@@ -1448,7 +1462,8 @@ int Cpu::Step() {
 			nn = ReadNext16();
 			if (TST_Z) {
 				instructionTime += 12;
-			} else {
+			}
+			else {
 				ExecJP(nn);
 				instructionTime += 16;
 			}
@@ -1466,7 +1481,8 @@ int Cpu::Step() {
 			nn = ReadNext16();
 			if (TST_Z) {
 				instructionTime += 12;
-			} else {
+			}
+			else {
 				ExecCALL(nn);
 				instructionTime += 24;
 			}
@@ -1496,7 +1512,8 @@ int Cpu::Step() {
 			if (TST_Z) {
 				ExecRET();
 				instructionTime += 20;
-			} else {
+			}
+			else {
 				instructionTime += 8;
 			}
 			break;
@@ -1513,7 +1530,8 @@ int Cpu::Step() {
 			if (TST_Z) {
 				ExecJP(nn);
 				instructionTime += 16;
-			} else {
+			}
+			else {
 				instructionTime += 12;
 			}
 			break;
@@ -1528,7 +1546,8 @@ int Cpu::Step() {
 			if (TST_Z) {
 				ExecCALL(nn);
 				instructionTime += 24;
-			} else {
+			}
+			else {
 				instructionTime += 12;
 			}
 			break;
@@ -1559,7 +1578,8 @@ int Cpu::Step() {
 			// D0		RET NC			5	1	1
 			if (TST_C) {
 				instructionTime += 8;
-			} else {
+			}
+			else {
 				ExecRET();
 				instructionTime += 20;
 			}
@@ -1576,7 +1596,8 @@ int Cpu::Step() {
 			nn = ReadNext16();
 			if (TST_C) {
 				instructionTime += 12;
-			} else {
+			}
+			else {
 				ExecJP(nn);
 				instructionTime += 16;
 			}
@@ -1592,7 +1613,8 @@ int Cpu::Step() {
 			nn = ReadNext16();
 			if (TST_C) {
 				instructionTime += 12;
-			} else {
+			}
+			else {
 				ExecCALL(nn);
 				instructionTime += 24;
 			}
@@ -1622,7 +1644,8 @@ int Cpu::Step() {
 			if (TST_C) {
 				ExecRET();
 				instructionTime += 20;
-			} else {
+			}
+			else {
 				instructionTime += 8;
 			}
 			break;
@@ -1640,7 +1663,8 @@ int Cpu::Step() {
 			if (TST_C) {
 				ExecJP(nn);
 				instructionTime += 16;
-			} else {
+			}
+			else {
 				instructionTime += 12;
 			}
 			break;
@@ -1656,7 +1680,8 @@ int Cpu::Step() {
 			if (TST_C) {
 				ExecCALL(nn);
 				instructionTime += 24;
-			} else {
+			}
+			else {
 				instructionTime += 12;
 			}
 			break;

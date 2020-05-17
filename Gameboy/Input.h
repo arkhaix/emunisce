@@ -72,7 +72,7 @@ enum {
 }  // namespace RegisterMode
 
 class Input : public IEmulatedInput {
-   public:
+public:
 	Input();
 	virtual ~Input() = default;
 
@@ -97,7 +97,7 @@ class Input : public IEmulatedInput {
 	// Registers
 	void SetJoypadMode(u8 value);
 
-   private:
+private:
 	void UpdateRegister();
 	void UpdateInterruptFlag();
 

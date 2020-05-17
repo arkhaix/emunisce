@@ -61,7 +61,8 @@ Display::Display() {
 	}
 }
 
-Display::~Display() {}
+Display::~Display() {
+}
 
 ScreenResolution Display::GetScreenResolution() {
 	ScreenResolution resolution;
@@ -157,11 +158,14 @@ void Display::Run(int ticks) {
 	if (m_stateTicksRemaining <= 0) {
 		if (m_currentState == DisplayState::VBlank) {
 			Begin_SpritesLocked();
-		} else if (m_currentState == DisplayState::SpritesLocked) {
+		}
+		else if (m_currentState == DisplayState::SpritesLocked) {
 			Begin_VideoRamLocked();
-		} else if (m_currentState == DisplayState::VideoRamLocked) {
+		}
+		else if (m_currentState == DisplayState::VideoRamLocked) {
 			Begin_HBlank();
-		} else  // m_currentState == DisplayState::HBlank
+		}
+		else  // m_currentState == DisplayState::HBlank
 		{
 			m_memory->EndHBlank();
 			Begin_SpritesLocked();  ///< This will trigger VBlank when appropriate
@@ -250,7 +254,8 @@ void Display::WriteVram(int bank, u16 address, u8 value) {
 	}
 }
 
-void Display::WriteOam(u16 address, u8 value) {}
+void Display::WriteOam(u16 address, u8 value) {
+}
 
 void Display::SetLcdControl(u8 value) {
 	m_lcdControl = value;
@@ -265,7 +270,8 @@ void Display::SetLcdControl(u8 value) {
 
 		m_lcdEnabled = true;
 		// CheckCoincidence();	///<Enabling this breaks the prehistorik man title screen
-	} else {
+	}
+	else {
 		// Clear caches
 		for (int y = 0; y < 144; y++) {
 			for (int x = 0; x < 160; x++) {
@@ -335,7 +341,8 @@ void Display::SetCgbBackgroundPaletteTarget(u8 value) {
 
 	if (value & 0x01) {
 		m_cgbBackgroundPaletteData = (u8)(paletteData >> 8);
-	} else {
+	}
+	else {
 		m_cgbBackgroundPaletteData = (u8)paletteData;
 	}
 }
@@ -356,7 +363,8 @@ void Display::SetCgbBackgroundPaletteData(u8 value) {
 	if (highByte) {
 		paletteData &= 0x00ff;
 		paletteData |= (value << 8);
-	} else {
+	}
+	else {
 		paletteData &= 0xff00;
 		paletteData |= value;
 	}
@@ -386,7 +394,8 @@ void Display::SetCgbSpritePaletteTarget(u8 value) {
 
 	if (value & 0x01) {
 		m_cgbSpritePaletteData = (u8)(paletteData >> 8);
-	} else {
+	}
+	else {
 		m_cgbSpritePaletteData = (u8)paletteData;
 	}
 }
@@ -407,7 +416,8 @@ void Display::SetCgbSpritePaletteData(u8 value) {
 	if (highByte) {
 		paletteData &= 0x00ff;
 		paletteData |= (value << 8);
-	} else {
+	}
+	else {
 		paletteData &= 0xff00;
 		paletteData |= value;
 	}
@@ -652,7 +662,8 @@ void Display::RenderBackgroundPixel(int screenX, int screenY) {
 			// CGB uses one of 8 background color palette registers
 			int paletteIndex = bgTileAttributes & 0x07;
 			finalValue = m_cgbBackgroundDisplayColor[(paletteIndex * 4) + bgPixelValue];  ///< 4 colors per palette
-		} else {
+		}
+		else {
 			// DMG uses the background palette register
 			int bgPixelPaletteShift = bgPixelValue * 2;  ///< 2 bits per entry
 			u8 bgPixelPaletteValue = (m_backgroundPalette & (0x03 << bgPixelPaletteShift)) >> bgPixelPaletteShift;
@@ -684,7 +695,8 @@ void Display::RenderSpritePixel(int screenX, int screenY) {
 			m_activeScreenBuffer->GetPixel(screenX, screenY) != m_displayPalette[0]) {
 			return;
 		}
-	} else /*GBC*/
+	}
+	else /*GBC*/
 	{
 		if (m_lcdControl & LCDC_Background)  ///< LCDC_Background in CGB mode is a master priority flag.  If 0, then
 											 ///< sprites have priority.
@@ -792,7 +804,8 @@ void Display::RenderWindowPixel(int screenX, int screenY) {
 			// CGB uses one of 8 background color palette registers
 			int paletteIndex = tileAttributes & 0x07;
 			finalValue = m_cgbBackgroundDisplayColor[(paletteIndex * 4) + pixelValue];  ///< 4 colors per palette
-		} else {
+		}
+		else {
 			// DMG uses the background palette register
 			int PixelPaletteShift = pixelValue * 2;  ///< 2 bits per entry
 			u8 PixelPaletteValue = (m_backgroundPalette & (0x03 << PixelPaletteShift)) >> PixelPaletteShift;
@@ -914,7 +927,8 @@ void Display::RenderSprites(int screenY) {
 			// Transparent?
 			if (pixelValue == 0) {
 				m_frameSpriteData.SetPixel(cacheScreenX, cacheScreenY, PIXEL_TRANSPARENT);
-			} else {
+			}
+			else {
 				// Look it up in the palette
 				DisplayPixel finalValue = m_displayPalette[0];  ///< value is overwritten after the palette lookup
 
@@ -923,7 +937,8 @@ void Display::RenderSprites(int screenY) {
 					// CGB uses one of 8 background color palette registers
 					int paletteIndex = spriteFlags & 0x07;
 					finalValue = m_cgbSpriteDisplayColor[(paletteIndex * 4) + pixelValue];  ///< 4 colors per palette
-				} else {
+				}
+				else {
 					// DMG uses one of 2 sprite palette registers
 					u8 pixelPaletteShift = pixelValue * 2;  ///< 2 bits per palette entry
 					u8 pixelPaletteValue = (m_spritePalette0 & (0x03 << pixelPaletteShift)) >> pixelPaletteShift;
@@ -940,7 +955,8 @@ void Display::RenderSprites(int screenY) {
 				// Save the priority
 				if (spriteFlags & (1 << 7)) {  ///< Lower priority if set, higher priority otherwise
 					m_spriteHasPriority[cacheScreenX] = false;
-				} else {
+				}
+				else {
 					m_spriteHasPriority[cacheScreenX] = true;
 				}
 			}
@@ -1009,7 +1025,8 @@ void Display::CheckCoincidence() {
 			interrupts |= IF_LCDC;
 			m_memory->Write8(REG_IF, interrupts);
 		}
-	} else {
+	}
+	else {
 		// LYC=LY flag
 		m_lcdStatus &= ~(STAT_Coincidence);
 	}

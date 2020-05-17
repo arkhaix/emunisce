@@ -28,7 +28,7 @@ namespace Emunisce {
 class Gameboy;
 
 class Sound4 : public SoundGenerator {
-   public:
+public:
 	Sound4();
 	virtual ~Sound4();
 
@@ -57,7 +57,7 @@ class Sound4 : public SoundGenerator {
 	void SetNR43(u8 value);
 	void SetNR44(u8 value);
 
-   private:
+private:
 	void Trigger() override;
 
 	// Sound generation

@@ -32,7 +32,7 @@ namespace Emunisce {
 class InputRecording;
 
 class Rewinder : public MachineFeature {
-   public:
+public:
 	// Rewinder
 
 	Rewinder();
@@ -75,7 +75,7 @@ class Rewinder : public MachineFeature {
 	AudioBuffer GetStableAudioBuffer() override;
 	int GetAudioBufferCount() override;
 
-   protected:
+protected:
 	bool m_isRewinding;
 	InputRecording* m_recorder;  ///< Private recorder so it doesn't conflict with user movies/macros.
 
@@ -99,7 +99,7 @@ class Rewinder : public MachineFeature {
 	};
 
 	class Segment {
-	   public:
+	public:
 		static const unsigned int FramesPerSegment = 60;
 
 		Segment(Rewinder* rewinder, InputRecording* recorder);
@@ -122,7 +122,7 @@ class Rewinder : public MachineFeature {
 		void LockAtFrame(
 			unsigned int frameId);  ///< Disables all history within this segment newer than the specified frame.
 
-	   private:
+	private:
 		Rewinder* m_rewinder;
 		InputRecording* m_recorder;
 
@@ -147,7 +147,7 @@ class Rewinder : public MachineFeature {
 	std::mutex m_frameHistoryLock;
 
 	class InputHandler : public IEmulatedInput {
-	   public:
+	public:
 		InputHandler(Rewinder* rewinder);
 		virtual ~InputHandler() = default;
 
@@ -161,7 +161,7 @@ class Rewinder : public MachineFeature {
 
 		bool IsButtonDown(unsigned int index) override;
 
-	   private:
+	private:
 		Rewinder* m_rewinder;
 	};
 

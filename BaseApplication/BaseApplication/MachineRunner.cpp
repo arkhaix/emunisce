@@ -40,7 +40,9 @@ MachineRunner::MachineRunner() {
 // Application component
 
 void MachineRunner::Initialize() {
-	m_runnerThread = std::thread([this] { this->RunnerThread(); });
+	m_runnerThread = std::thread([this] {
+		this->RunnerThread();
+	});
 }
 
 void MachineRunner::Shutdown() {
@@ -147,7 +149,8 @@ int MachineRunner::RunnerThread() {
 
 		if (m_stepMode == StepMode::Instruction) {
 			m_machine->Step();
-		} else if (m_stepMode == StepMode::Frame) {
+		}
+		else if (m_stepMode == StepMode::Frame) {
 			m_machine->RunToNextFrame();
 			Synchronize();
 		}

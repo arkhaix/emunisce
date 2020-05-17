@@ -38,7 +38,7 @@ enum {
 }  // namespace ArchiveMode
 
 class Archive {
-   public:
+public:
 	Archive(ISerializer* serializer, ArchiveMode::Type archiveMode);
 	void Close();
 
@@ -61,7 +61,7 @@ class Archive {
 	Archive& operator&(float& data);
 	Archive& operator&(double& data);
 
-   protected:
+protected:
 	ISerializer* m_serializer;
 	ArchiveMode::Type m_archiveMode;
 };

@@ -96,7 +96,7 @@ struct OpenGLScreenBuffer {
 };
 
 class OpenGLRenderer_Private {
-   public:
+public:
 	IEmulatedMachine* _Machine;
 	IEmulatedDisplay* _Display;
 

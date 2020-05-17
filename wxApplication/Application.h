@@ -32,7 +32,7 @@ class WindowMain;
 class ConsoleWindow;
 
 class Application : public wxApp, public BaseApplication {
-   public:
+public:
 	Application();
 	~Application();
 
@@ -74,7 +74,7 @@ class Application : public wxApp, public BaseApplication {
 
 	virtual bool ExecuteConsoleCommand(const char* command);  ///< Move to public for use from ConsoleWindow
 
-   protected:
+protected:
 	// BaseApplication interface
 
 	virtual Archive* OpenRomData(const char* name, bool saving);

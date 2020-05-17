@@ -31,7 +31,7 @@ namespace Emunisce {
 class Archive;
 
 class InputRecording : public MachineFeature {
-   public:
+public:
 	// InputRecording
 
 	InputRecording();
@@ -62,7 +62,7 @@ class InputRecording : public MachineFeature {
 
 	bool IsButtonDown(unsigned int index) override;
 
-   private:
+private:
 	bool m_recording;
 	bool m_playing;
 

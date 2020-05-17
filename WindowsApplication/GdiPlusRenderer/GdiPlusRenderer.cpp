@@ -43,7 +43,7 @@ using namespace Gdiplus;
 namespace Emunisce {
 
 class GdiPlusRenderer_Private {
-   public:
+public:
 	EmunisceApplication* _Phoenix;
 
 	HWND _WindowHandle;

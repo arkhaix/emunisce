@@ -136,7 +136,8 @@ void Sound1::TickSweep() {
 
 	if (m_sweepTimerPeriod == 0) {
 		m_sweepTimerValue += 8;
-	} else {
+	}
+	else {
 		m_sweepTimerValue += m_sweepTimerPeriod;
 	}
 
@@ -261,7 +262,8 @@ void Sound1::TriggerSweep() {
 
 	if (m_sweepTimerPeriod == 0 && m_sweepShift == 0) {
 		m_sweepEnabled = false;
-	} else {
+	}
+	else {
 		m_sweepEnabled = true;
 	}
 
@@ -282,7 +284,8 @@ void Sound1::WriteSweepRegister(u8 value) {
 
 	if (value & 0x08) {
 		m_sweepIncreasing = false;
-	} else {
+	}
+	else {
 		m_sweepIncreasing = true;
 
 		if (m_hasPerformedDecreasingCalculation) {
@@ -300,7 +303,8 @@ int Sound1::CalculateFrequency() {
 
 	if (m_sweepIncreasing == true) {
 		result += delta;
-	} else {
+	}
+	else {
 		result -= delta;
 	}
 

@@ -41,7 +41,7 @@ static const char* ToString[] = {"NumGuiButtons"};
 typedef TScreenBuffer<320, 240> GuiScreenBuffer;
 
 class Gui : public MachineFeature {
-   public:
+public:
 	// Gui
 
 	Gui();
@@ -56,7 +56,7 @@ class Gui : public MachineFeature {
 
 	ScreenBuffer* GetStableScreenBuffer() override;
 
-   protected:
+protected:
 	// Gui properties
 
 	DynamicScreenBuffer* m_screenBufferCopy;
@@ -70,7 +70,7 @@ class Gui : public MachineFeature {
 	// GuiFeature
 
 	class GuiFeature : public IExecutableFeature, public IEmulatedDisplay, public IEmulatedInput {
-	   public:
+	public:
 		// GuiFeature
 
 		GuiFeature();
@@ -105,7 +105,7 @@ class Gui : public MachineFeature {
 
 		bool IsButtonDown(unsigned int index) override;
 
-	   protected:
+	protected:
 		GuiScreenBuffer m_screenBuffer;
 
 		int m_ticksThisFrame;

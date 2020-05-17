@@ -30,7 +30,7 @@ class Gameboy;
 class DutyUnit;
 
 class Sound2 : public SoundGenerator {
-   public:
+public:
 	Sound2();
 	virtual ~Sound2();
 
@@ -61,7 +61,7 @@ class Sound2 : public SoundGenerator {
 	void SetNR23(u8 value);
 	void SetNR24(u8 value);
 
-   private:
+private:
 	void Trigger() override;
 
 	// Sound generation

@@ -28,7 +28,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce {
 
 class FileSerializer : public ISerializer {
-   public:
+public:
 	// FileSerializer
 
 	FileSerializer();
@@ -46,7 +46,7 @@ class FileSerializer : public ISerializer {
 
 	void Close() override;
 
-   protected:
+protected:
 	void OpenStream();
 
 	std::fstream* m_fileStream;

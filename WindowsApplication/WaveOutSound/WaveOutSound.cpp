@@ -31,7 +31,7 @@ using namespace Emunisce;
 namespace Emunisce {
 
 class WaveOutSound_Private {
-   public:
+public:
 	EmunisceApplication* _Phoenix;
 
 	IEmulatedMachine* _Machine;
@@ -148,7 +148,8 @@ class WaveOutSound_Private {
 				LeaveCriticalSection(&_PendingBufferQueueLock);
 
 				_LastFrameQueued = _Machine->GetSound()->GetAudioBufferCount();
-			} else {
+			}
+			else {
 				Sleep(1);
 			}
 		}
@@ -275,7 +276,8 @@ class WaveOutSound_Private {
 							LeaveCriticalSection(&_PendingBufferQueueLock);
 
 							SetEvent(_BufferFinishedEvent);
-						} else {
+						}
+						else {
 							InterleaveAudioBuffer(j);
 							PlayAudioBuffer(j);
 						}
@@ -306,7 +308,8 @@ class WaveOutSound_Private {
 				// sample /= 2;
 
 				_InterleavedBuffer[index][i] = (SampleType)sample;
-			} else if (_NumOutputChannels == 2) {
+			}
+			else if (_NumOutputChannels == 2) {
 				_InterleavedBuffer[index][(i * 2) + 0] = _AudioBuffer[index].Samples[0][i];
 				_InterleavedBuffer[index][(i * 2) + 1] = _AudioBuffer[index].Samples[1][i];
 			}

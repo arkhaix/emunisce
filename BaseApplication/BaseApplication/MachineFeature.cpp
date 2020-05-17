@@ -60,7 +60,8 @@ MachineFeature::MachineFeature() {
 	}
 }
 
-MachineFeature::~MachineFeature() {}
+MachineFeature::~MachineFeature() {
+}
 
 void MachineFeature::SetApplication(BaseApplication* application) {
 	m_application = application;
@@ -76,7 +77,8 @@ void MachineFeature::SetComponentMachine(IEmulatedMachine* componentMachine) {
 		m_wrappedMemory = componentMachine->GetMemory();
 		m_wrappedProcessor = componentMachine->GetProcessor();
 		m_wrappedSound = componentMachine->GetSound();
-	} else {
+	}
+	else {
 		m_wrappedDisplay = nullptr;
 		m_wrappedInput = nullptr;
 		m_wrappedMemory = nullptr;
@@ -104,7 +106,8 @@ void MachineFeature::SetEmulatedMachine(IEmulatedMachine* wrappedMachine) {
 		m_wrappedMemory = wrappedMachine->GetMemory();
 		m_wrappedProcessor = wrappedMachine->GetProcessor();
 		m_wrappedSound = wrappedMachine->GetSound();
-	} else {
+	}
+	else {
 		m_wrappedDisplay = nullptr;
 		m_wrappedInput = nullptr;
 		m_wrappedMemory = nullptr;
@@ -186,8 +189,8 @@ IEmulatedSound* MachineFeature::GetSound() {
 unsigned int MachineFeature::GetFrameCount() {
 	if ((m_hasFocus || m_wrappedMachine == nullptr) && m_featureExecution != nullptr) {
 		return m_featureExecution->GetFrameCount();
-
-	} else if (m_wrappedMachine != nullptr) {
+	}
+	else if (m_wrappedMachine != nullptr) {
 		return m_wrappedMachine->GetFrameCount();
 	}
 
@@ -197,8 +200,8 @@ unsigned int MachineFeature::GetFrameCount() {
 unsigned int MachineFeature::GetTickCount() {
 	if ((m_hasFocus || m_wrappedMachine == nullptr) && m_featureExecution != nullptr) {
 		return m_featureExecution->GetTickCount();
-
-	} else if (m_wrappedMachine != nullptr) {
+	}
+	else if (m_wrappedMachine != nullptr) {
 		return m_wrappedMachine->GetTickCount();
 	}
 
@@ -208,8 +211,8 @@ unsigned int MachineFeature::GetTickCount() {
 unsigned int MachineFeature::GetTicksPerSecond() {
 	if ((m_hasFocus || m_wrappedMachine == nullptr) && m_featureExecution != nullptr) {
 		return m_featureExecution->GetTicksPerSecond();
-
-	} else if (m_wrappedMachine != nullptr) {
+	}
+	else if (m_wrappedMachine != nullptr) {
 		return m_wrappedMachine->GetTicksPerSecond();
 	}
 
@@ -219,8 +222,8 @@ unsigned int MachineFeature::GetTicksPerSecond() {
 unsigned int MachineFeature::GetTicksUntilNextFrame() {
 	if ((m_hasFocus || m_wrappedMachine == nullptr) && m_featureExecution != nullptr) {
 		return m_featureExecution->GetTicksUntilNextFrame();
-
-	} else if (m_wrappedMachine != nullptr) {
+	}
+	else if (m_wrappedMachine != nullptr) {
 		return m_wrappedMachine->GetTicksUntilNextFrame();
 	}
 
@@ -231,8 +234,8 @@ unsigned int MachineFeature::GetTicksUntilNextFrame() {
 void MachineFeature::Step() {
 	if ((m_hasFocus || m_wrappedMachine == nullptr) && m_featureExecution != nullptr) {
 		m_featureExecution->Step();
-
-	} else if (m_wrappedMachine != nullptr) {
+	}
+	else if (m_wrappedMachine != nullptr) {
 		m_wrappedMachine->Step();
 	}
 }
@@ -240,8 +243,8 @@ void MachineFeature::Step() {
 void MachineFeature::RunToNextFrame() {
 	if ((m_hasFocus || m_wrappedMachine == nullptr) && m_featureExecution != nullptr) {
 		m_featureExecution->RunToNextFrame();
-
-	} else if (m_wrappedMachine != nullptr) {
+	}
+	else if (m_wrappedMachine != nullptr) {
 		m_wrappedMachine->RunToNextFrame();
 	}
 }

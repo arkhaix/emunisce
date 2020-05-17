@@ -170,7 +170,8 @@ void ConsoleDebugger::FetchCommand() {
 		SetConsoleCursorPosition(hStdOut, inputCursorPos);
 		SetConsoleTextAttribute(hStdOut, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
 		WriteConsole(hStdOut, commandText.c_str(), (DWORD)commandText.length(), NULL, NULL);
-	} else {
+	}
+	else {
 		printf("Unrecognized command.  Use 'help' for a list of valid commands.\n");
 		GetConsoleScreenBufferInfo(hStdOut, &consoleInfo);
 		newCursorPos = consoleInfo.dwCursorPosition;
@@ -422,11 +423,13 @@ std::string ConsoleDebugger::FetchLine() {
 					SetConsoleCursorPosition(hStdOut, cursorStartPos);
 					printf("%s", result.c_str());
 				}
-			} else if (keyCode == VK_RETURN) {
+			}
+			else if (keyCode == VK_RETURN) {
 				printf("\n");
 				keepReading = false;
 				autoCompleteMode = false;
-			} else if (keyCode == VK_BACK) {
+			}
+			else if (keyCode == VK_BACK) {
 				if (!result.empty()) {
 					result = result.substr(0, result.length() - 1);
 					printf("%c", c);
@@ -434,13 +437,15 @@ std::string ConsoleDebugger::FetchLine() {
 					printf("%c", c);
 					autoCompleteMode = false;
 				}
-			} else if (keyCode == VK_SPACE) {
+			}
+			else if (keyCode == VK_SPACE) {
 				if (!result.empty()) {
 					result += c;
 					printf("%c", c);
 					autoCompleteMode = false;
 				}
-			} else {
+			}
+			else {
 				result += c;
 				printf("%c", c);
 				autoCompleteMode = false;
@@ -547,14 +552,16 @@ void ConsoleDebugger::ToggleBreakpoint(int address) {
 	if (iter == m_breakpoints.end()) {
 		m_breakpoints.insert(gbAddress);
 		printf("Enabled a breakpoint at: %04X\n", gbAddress);
-	} else {
+	}
+	else {
 		m_breakpoints.erase(iter);
 		printf("Removed a breakpoint at: %04X\n", gbAddress);
 	}
 
 	if (m_breakpoints.empty() == false) {
 		m_breakpointsEnabled = true;
-	} else {
+	}
+	else {
 		m_breakpointsEnabled = false;
 	}
 
@@ -626,8 +633,8 @@ void ConsoleDebugger::SetSquareSynthesisMethod(const char* strMethod) {
 	if (_stricmp(strMethod, "linear") == 0 || _stricmp(strMethod, "interpolation") == 0 ||
 		_stricmp(strMethod, "interp") == 0 || _stricmp(strMethod, "1") == 0) {
 		method = SquareSynthesisMethod::LinearInterpolation;
-	} else if (_stricmp(strMethod, "naive") == 0 || _stricmp(strMethod, "simple") == 0 ||
-			   _stricmp(strMethod, "0") == 0) {
+	}
+	else if (_stricmp(strMethod, "naive") == 0 || _stricmp(strMethod, "simple") == 0 || _stricmp(strMethod, "0") == 0) {
 		method = SquareSynthesisMethod::Naive;
 	}
 
@@ -640,7 +647,8 @@ void ConsoleDebugger::SetBackgroundAnimation(const char* state) {
 
 	if (state == nullptr || strlen(state) == 0 || _stricmp(state, "0") == 0 || _stricmp(state, "off") == 0) {
 		m_userInterface->DisableBackgroundAnimation();
-	} else {
+	}
+	else {
 		m_userInterface->EnableBackgroundAnimation();
 	}
 }
@@ -656,14 +664,14 @@ void ConsoleDebugger::SetDisplayFilter(const char* strFilter) {
 
 	if (_stricmp(strFilter, "none") == 0 || _stricmp(strFilter, "0") == 0 || _stricmp(strFilter, "1") == 0) {
 		filter = DisplayFilter::NoFilter;
-
-	} else if (_stricmp(strFilter, "hq2x") == 0 || _stricmp(strFilter, "2x") == 0 || _stricmp(strFilter, "2") == 0) {
+	}
+	else if (_stricmp(strFilter, "hq2x") == 0 || _stricmp(strFilter, "2x") == 0 || _stricmp(strFilter, "2") == 0) {
 		filter = DisplayFilter::Hq2x;
-
-	} else if (_stricmp(strFilter, "hq3x") == 0 || _stricmp(strFilter, "3x") == 0 || _stricmp(strFilter, "3") == 0) {
+	}
+	else if (_stricmp(strFilter, "hq3x") == 0 || _stricmp(strFilter, "3x") == 0 || _stricmp(strFilter, "3") == 0) {
 		filter = DisplayFilter::Hq3x;
-
-	} else if (_stricmp(strFilter, "hq4x") == 0 || _stricmp(strFilter, "4x") == 0 || _stricmp(strFilter, "4") == 0) {
+	}
+	else if (_stricmp(strFilter, "hq4x") == 0 || _stricmp(strFilter, "4x") == 0 || _stricmp(strFilter, "4") == 0) {
 		filter = DisplayFilter::Hq4x;
 	}
 
@@ -676,7 +684,8 @@ void ConsoleDebugger::SetVsync(const char* strMode) {
 
 	if (_stricmp(strMode, "0") == 0 || _stricmp(strMode, "off") == 0) {
 		m_userInterface->SetVsync(false);
-	} else {
+	}
+	else {
 		m_userInterface->SetVsync(true);
 	}
 }
@@ -686,7 +695,8 @@ void ConsoleDebugger::ToggleRecording() {
 
 	if (m_recordingInput == true) {
 		m_userInterface->StopRecordingInput();
-	} else {
+	}
+	else {
 		m_userInterface->StartRecordingInput();
 	}
 
@@ -698,7 +708,8 @@ void ConsoleDebugger::TogglePlayMovie() {
 
 	if (m_playingInput == true) {
 		m_userInterface->StopMovie();
-	} else {
+	}
+	else {
 		m_userInterface->PlayMovie();
 	}
 
@@ -715,7 +726,8 @@ void ConsoleDebugger::TogglePlayMacro(const char* loop) {
 
 	if (m_playingInput == true) {
 		m_userInterface->StopMacro();
-	} else {
+	}
+	else {
 		m_userInterface->PlayMacro(loopMacro);
 	}
 

@@ -59,7 +59,8 @@ Memory::Memory() {
 	m_bootRomEnabled = false;
 }
 
-Memory::~Memory() {}
+Memory::~Memory() {
+}
 
 void Memory::SetMachine(Gameboy* machine) {
 	m_machine = machine;
@@ -193,7 +194,8 @@ void Memory::Run(int ticks) {
 		if ((m_cgbDmaLength & 0x7f) == 0) {
 			m_cgbDmaLength = 0;  ///< Clears 0x80: the DMA-is-active flag
 			m_dmaMode = DmaMode::None;
-		} else {
+		}
+		else {
 			m_cgbDmaLength--;
 		}
 
@@ -252,7 +254,8 @@ void Memory::Serialize(Archive& archive) {
 			for (int address = 0x8000; address < 0xa000; address++) {
 				m_display->WriteVram(0, address, m_memoryData[address]);
 			}
-		} else if (m_machineType == EmulatedMachine::GameboyColor) {
+		}
+		else if (m_machineType == EmulatedMachine::GameboyColor) {
 			for (int bank = 0; bank < 2; bank++) {
 				for (int address = 0x8000; address < 0xa000; address++) {
 					m_display->WriteVram(bank, address, m_cgbVramBanks[bank][address - 0x8000]);
@@ -310,18 +313,23 @@ u8 Memory::Read8(u16 address) {
 			if (m_waveRamLockMode == WaveRamLock::NoAccess) {
 				// printf("Read(%04X):NoAccess: %02X\n", address, 0xff);
 				return 0xff;
-			} else if (m_waveRamLockMode == WaveRamLock::SingleValue) {
+			}
+			else if (m_waveRamLockMode == WaveRamLock::SingleValue) {
 				// printf("Read(%04X):SingleValue: %02X\n", address, m_waveRamReadValue);
 				return m_waveRamReadValue;
-			} else {
+			}
+			else {
 				// printf("Read(%04X):Normal: %02X\n", address, m_memoryData[address]);
 			}
 		}
-	} else if (address >= 0x8000 && address < 0xa000 && m_vramLocked) {
+	}
+	else if (address >= 0x8000 && address < 0xa000 && m_vramLocked) {
 		return 0xff;
-	} else if (address >= 0xfe00 && address < 0xfea0 && m_oamLocked) {
+	}
+	else if (address >= 0xfe00 && address < 0xfea0 && m_oamLocked) {
 		return 0xff;
-	} else if (address < 0x0100 && m_bootRomEnabled == true) {
+	}
+	else if (address < 0x0100 && m_bootRomEnabled == true) {
 		return m_bootRom[address];
 	}
 
@@ -512,13 +520,15 @@ void Memory::CgbDmaTrigger(u8 value) {
 
 	if (value & 0x80) {
 		m_dmaMode = DmaMode::HBlank;
-	} else {
+	}
+	else {
 		// Writing 0 to bit 7 while HBlank DMA is active cancels that DMA
 		if (m_dmaMode == DmaMode::HBlank) {
 			m_dmaMode = DmaMode::None;
 
 			// If HBlank DMA is not active, then writing 0 to bit 7 begins a general DMA
-		} else {
+		}
+		else {
 			m_dmaMode = DmaMode::General;
 		}
 	}
@@ -546,20 +556,24 @@ Memory* Memory::CreateFromFile(const char* filename) {
 	if (cartType == 0 || cartType == 8 || cartType == 9) {
 		memoryController = new RomOnly();
 		printf("Memory controller: RomOnly\n");
-	} else if (cartType >= 1 && cartType <= 3) {
+	}
+	else if (cartType >= 1 && cartType <= 3) {
 		memoryController = new Mbc1();
 		printf("Memory controller: MBC1\n");
-	} else if (cartType >= 0x0f && cartType <= 0x13) {
+	}
+	else if (cartType >= 0x0f && cartType <= 0x13) {
 		memoryController = new Mbc3();
 		printf("Memory controller: MBC3\n");
-	} else if (cartType >= 0x19 && cartType <= 0x1e) {
+	}
+	else if (cartType >= 0x19 && cartType <= 0x1e) {
 		memoryController = new Mbc5();
 		printf("Memory controller: MBC5\n");
 	}
 
 	if (memoryController != nullptr) {
 		printf("Cartridge type ok: %d (0x%02X)\n", cartType, cartType);
-	} else {
+	}
+	else {
 		printf("Unsupported cartridge type: %d (0x%02X)\n", cartType, cartType);
 	}
 

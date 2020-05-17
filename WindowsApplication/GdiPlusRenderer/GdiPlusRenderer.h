@@ -28,7 +28,7 @@ class EmunisceApplication;
 class IEmulatedMachine;
 
 class GdiPlusRenderer {
-   public:
+public:
 	void Initialize(EmunisceApplication* phoenix, HWND windowHandle);
 	void Shutdown();
 
@@ -42,7 +42,7 @@ class GdiPlusRenderer {
 
 	void Draw();
 
-   private:
+private:
 	class GdiPlusRenderer_Private* m_private;
 };
 

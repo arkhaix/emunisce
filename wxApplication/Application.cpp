@@ -55,7 +55,8 @@ Application::Application() {
 	MapDefaultKeys();
 }
 
-Application::~Application() {}
+Application::~Application() {
+}
 
 // BaseApplication overrides
 
@@ -77,7 +78,8 @@ void Application::SetVsync(bool enabled) {
 		m_renderer->SetVsync(enabled);
 }
 
-void Application::DisplayStatusMessage(const char* message) {}
+void Application::DisplayStatusMessage(const char* message) {
+}
 
 void Application::DisplayImportantMessage(MessageType::Type messageType, const char* message) {
 	long iconType = wxICON_INFORMATION;
@@ -148,7 +150,8 @@ unsigned int Application::GetRomDataSize(const char* title) {
 
 // IWindowMessageListener
 
-void Application::Closed() {}
+void Application::Closed() {
+}
 
 void Application::Draw() {
 	if (m_renderer != nullptr)

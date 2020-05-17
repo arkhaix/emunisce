@@ -155,7 +155,8 @@ void Sound3::Run(int ticks) {
 		if (m_sampleReadTimerValue <= 0) {
 			m_machine->GetGbMemory()->SetWaveRamLock(WaveRamLock::NoAccess);
 		}
-	} else if (m_sampleReadTimerValue <= 0) {
+	}
+	else if (m_sampleReadTimerValue <= 0) {
 		m_machine->GetGbMemory()->SetWaveRamLock(WaveRamLock::NoAccess);
 	}
 }
@@ -166,7 +167,8 @@ float Sound3::GetSample() {
 	// Samples at even positions are in the high nibble, samples at odd positions are in the low nibble
 	if (m_waveSamplePosition & 1) {
 		waveSampleValue &= 0x0f;
-	} else {
+	}
+	else {
 		waveSampleValue = (waveSampleValue & 0xf0) >> 4;
 	}
 
@@ -195,7 +197,8 @@ void Sound3::SetNR30(u8 value) {
 		m_channelController->DisableChannel();
 		m_dacEnabled = false;
 		m_machine->GetGbMemory()->SetWaveRamLock(WaveRamLock::Normal);
-	} else {
+	}
+	else {
 		m_dacEnabled = true;
 		m_machine->GetGbMemory()->SetWaveRamLock(WaveRamLock::NoAccess);
 		m_waveTimerValue = m_waveTimerPeriod;
@@ -222,7 +225,8 @@ void Sound3::SetNR32(u8 value) {
 	m_outputLevelShift = (value & 0x60) >> 5;
 	if (m_outputLevelShift == 0) {
 		m_outputLevelShift = 4;
-	} else {
+	}
+	else {
 		m_outputLevelShift -= 1;
 	}
 

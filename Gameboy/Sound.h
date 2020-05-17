@@ -35,7 +35,7 @@ class Sound4;
 class ChannelController;
 
 class Sound : public IEmulatedSound {
-   public:
+public:
 	Sound();
 	virtual ~Sound();
 
@@ -87,7 +87,7 @@ class Sound : public IEmulatedSound {
 	void SetNR51(u8 value);
 	void SetNR52(u8 value);
 
-   private:
+private:
 	void MixSamples(float inSamples[4], float (&outSamples)[2]);
 
 	// Component

@@ -146,12 +146,14 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 	for (j = 0; j < Yres; j++) {
 		if (j > 0) {
 			prevline = -Xres * 2;
-		} else {
+		}
+		else {
 			prevline = 0;
 		}
 		if (j < Yres - 1) {
 			nextline = Xres * 2;
-		} else {
+		}
+		else {
 			nextline = 0;
 		}
 
@@ -164,7 +166,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				w[1] = *((unsigned short*)(pIn + prevline - 2));
 				w[4] = *((unsigned short*)(pIn - 2));
 				w[7] = *((unsigned short*)(pIn + nextline - 2));
-			} else {
+			}
+			else {
 				w[1] = w[2];
 				w[4] = w[5];
 				w[7] = w[8];
@@ -174,7 +177,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				w[3] = *((unsigned short*)(pIn + prevline + 2));
 				w[6] = *((unsigned short*)(pIn + 2));
 				w[9] = *((unsigned short*)(pIn + nextline + 2));
-			} else {
+			}
+			else {
 				w[3] = w[2];
 				w[6] = w[5];
 				w[9] = w[8];
@@ -419,7 +423,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_C
 						PIXEL02_1M
 						PIXEL12_C
-					} else {
+					}
+					else {
 						PIXEL01_3
 						PIXEL02_4
 						PIXEL12_3
@@ -443,7 +448,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL12_C
 						PIXEL21_C
 						PIXEL22_1M
-					} else {
+					}
+					else {
 						PIXEL12_3
 						PIXEL21_3
 						PIXEL22_4
@@ -461,7 +467,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL10_C
 						PIXEL20_1M
 						PIXEL21_C
-					} else {
+					}
+					else {
 						PIXEL10_3
 						PIXEL20_4
 						PIXEL21_3
@@ -475,7 +482,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_1M
 						PIXEL01_C
 						PIXEL10_C
-					} else {
+					}
+					else {
 						PIXEL00_4
 						PIXEL01_3
 						PIXEL10_3
@@ -575,7 +583,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_C
 						PIXEL02_C
 						PIXEL12_C
-					} else {
+					}
+					else {
 						PIXEL01_3
 						PIXEL02_4
 						PIXEL12_3
@@ -599,7 +608,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL12_C
 						PIXEL21_C
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL12_3
 						PIXEL21_3
 						PIXEL22_4
@@ -617,7 +627,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL10_C
 						PIXEL20_C
 						PIXEL21_C
-					} else {
+					}
+					else {
 						PIXEL10_3
 						PIXEL20_4
 						PIXEL21_3
@@ -631,7 +642,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_C
 						PIXEL01_C
 						PIXEL10_C
-					} else {
+					}
+					else {
 						PIXEL00_4
 						PIXEL01_3
 						PIXEL10_3
@@ -651,7 +663,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_C
 						PIXEL02_1M
 						PIXEL12_C
-					} else {
+					}
+					else {
 						PIXEL00_2
 						PIXEL01_6
 						PIXEL02_5
@@ -671,7 +684,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL02_1M
 						PIXEL12_C
 						PIXEL22_1D
-					} else {
+					}
+					else {
 						PIXEL01_1
 						PIXEL02_5
 						PIXEL12_6
@@ -691,7 +705,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL12_C
 						PIXEL21_C
 						PIXEL22_1M
-					} else {
+					}
+					else {
 						PIXEL02_2
 						PIXEL12_6
 						PIXEL21_1
@@ -711,7 +726,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_1L
 						PIXEL21_C
 						PIXEL22_1M
-					} else {
+					}
+					else {
 						PIXEL12_1
 						PIXEL20_2
 						PIXEL21_6
@@ -731,7 +747,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_1M
 						PIXEL21_C
 						PIXEL22_1R
-					} else {
+					}
+					else {
 						PIXEL10_1
 						PIXEL20_5
 						PIXEL21_6
@@ -751,7 +768,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL10_C
 						PIXEL20_1M
 						PIXEL21_C
-					} else {
+					}
+					else {
 						PIXEL00_2
 						PIXEL10_6
 						PIXEL20_5
@@ -771,7 +789,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_C
 						PIXEL10_C
 						PIXEL20_1D
-					} else {
+					}
+					else {
 						PIXEL00_5
 						PIXEL01_1
 						PIXEL10_6
@@ -791,7 +810,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_C
 						PIXEL02_1R
 						PIXEL10_C
-					} else {
+					}
+					else {
 						PIXEL00_5
 						PIXEL01_6
 						PIXEL02_2
@@ -905,7 +925,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[4], w[2])) {
 						PIXEL00_C
 						PIXEL10_C
-					} else {
+					}
+					else {
 						PIXEL00_4
 						PIXEL10_3
 					}
@@ -913,7 +934,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[2], w[6])) {
 						PIXEL02_C
 						PIXEL12_C
-					} else {
+					}
+					else {
 						PIXEL02_4
 						PIXEL12_3
 					}
@@ -929,7 +951,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[2], w[6])) {
 						PIXEL01_C
 						PIXEL02_C
-					} else {
+					}
+					else {
 						PIXEL01_3
 						PIXEL02_4
 					}
@@ -940,7 +963,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[6], w[8])) {
 						PIXEL21_C
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL21_3
 						PIXEL22_4
 					}
@@ -955,7 +979,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[8], w[4])) {
 						PIXEL10_C
 						PIXEL20_C
-					} else {
+					}
+					else {
 						PIXEL10_3
 						PIXEL20_4
 					}
@@ -963,7 +988,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[6], w[8])) {
 						PIXEL12_C
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL12_3
 						PIXEL22_4
 					}
@@ -974,7 +1000,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[4], w[2])) {
 						PIXEL00_C
 						PIXEL01_C
-					} else {
+					}
+					else {
 						PIXEL00_4
 						PIXEL01_3
 					}
@@ -985,7 +1012,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[8], w[4])) {
 						PIXEL20_C
 						PIXEL21_C
-					} else {
+					}
+					else {
 						PIXEL20_4
 						PIXEL21_3
 					}
@@ -997,7 +1025,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_C
 						PIXEL01_C
 						PIXEL10_C
-					} else {
+					}
+					else {
 						PIXEL00_4
 						PIXEL01_3
 						PIXEL10_3
@@ -1016,7 +1045,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_C
 						PIXEL02_C
 						PIXEL12_C
-					} else {
+					}
+					else {
 						PIXEL01_3
 						PIXEL02_4
 						PIXEL12_3
@@ -1039,7 +1069,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL12_C
 						PIXEL21_C
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL12_3
 						PIXEL21_3
 						PIXEL22_4
@@ -1056,7 +1087,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL10_C
 						PIXEL20_C
 						PIXEL21_C
-					} else {
+					}
+					else {
 						PIXEL10_3
 						PIXEL20_4
 						PIXEL21_3
@@ -1070,7 +1102,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_C
 						PIXEL02_C
 						PIXEL12_C
-					} else {
+					}
+					else {
 						PIXEL01_3
 						PIXEL02_4
 						PIXEL12_3
@@ -1093,7 +1126,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL12_C
 						PIXEL21_C
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL12_3
 						PIXEL21_3
 						PIXEL22_4
@@ -1110,7 +1144,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL10_C
 						PIXEL20_C
 						PIXEL21_C
-					} else {
+					}
+					else {
 						PIXEL10_3
 						PIXEL20_4
 						PIXEL21_3
@@ -1123,7 +1158,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_C
 						PIXEL01_C
 						PIXEL10_C
-					} else {
+					}
+					else {
 						PIXEL00_4
 						PIXEL01_3
 						PIXEL10_3
@@ -1283,13 +1319,15 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 58: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_1M
-					} else {
+					}
+					else {
 						PIXEL00_2
 					}
 					PIXEL01_C
 					if (Diff(w[2], w[6])) {
 						PIXEL02_1M
-					} else {
+					}
+					else {
 						PIXEL02_2
 					}
 					PIXEL10_C
@@ -1305,7 +1343,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL01_C
 					if (Diff(w[2], w[6])) {
 						PIXEL02_1M
-					} else {
+					}
+					else {
 						PIXEL02_2
 					}
 					PIXEL10_1
@@ -1315,7 +1354,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL21_C
 					if (Diff(w[6], w[8])) {
 						PIXEL22_1M
-					} else {
+					}
+					else {
 						PIXEL22_2
 					}
 					break;
@@ -1329,13 +1369,15 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL12_C
 					if (Diff(w[8], w[4])) {
 						PIXEL20_1M
-					} else {
+					}
+					else {
 						PIXEL20_2
 					}
 					PIXEL21_C
 					if (Diff(w[6], w[8])) {
 						PIXEL22_1M
-					} else {
+					}
+					else {
 						PIXEL22_2
 					}
 					break;
@@ -1343,7 +1385,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 202: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_1M
-					} else {
+					}
+					else {
 						PIXEL00_2
 					}
 					PIXEL01_C
@@ -1353,7 +1396,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL12_1
 					if (Diff(w[8], w[4])) {
 						PIXEL20_1M
-					} else {
+					}
+					else {
 						PIXEL20_2
 					}
 					PIXEL21_C
@@ -1363,7 +1407,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 78: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_1M
-					} else {
+					}
+					else {
 						PIXEL00_2
 					}
 					PIXEL01_C
@@ -1373,7 +1418,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL12_1
 					if (Diff(w[8], w[4])) {
 						PIXEL20_1M
-					} else {
+					}
+					else {
 						PIXEL20_2
 					}
 					PIXEL21_C
@@ -1383,13 +1429,15 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 154: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_1M
-					} else {
+					}
+					else {
 						PIXEL00_2
 					}
 					PIXEL01_C
 					if (Diff(w[2], w[6])) {
 						PIXEL02_1M
-					} else {
+					}
+					else {
 						PIXEL02_2
 					}
 					PIXEL10_C
@@ -1405,7 +1453,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL01_C
 					if (Diff(w[2], w[6])) {
 						PIXEL02_1M
-					} else {
+					}
+					else {
 						PIXEL02_2
 					}
 					PIXEL10_1
@@ -1415,7 +1464,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL21_C
 					if (Diff(w[6], w[8])) {
 						PIXEL22_1M
-					} else {
+					}
+					else {
 						PIXEL22_2
 					}
 					break;
@@ -1429,13 +1479,15 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL12_C
 					if (Diff(w[8], w[4])) {
 						PIXEL20_1M
-					} else {
+					}
+					else {
 						PIXEL20_2
 					}
 					PIXEL21_C
 					if (Diff(w[6], w[8])) {
 						PIXEL22_1M
-					} else {
+					}
+					else {
 						PIXEL22_2
 					}
 					break;
@@ -1443,13 +1495,15 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 90: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_1M
-					} else {
+					}
+					else {
 						PIXEL00_2
 					}
 					PIXEL01_C
 					if (Diff(w[2], w[6])) {
 						PIXEL02_1M
-					} else {
+					}
+					else {
 						PIXEL02_2
 					}
 					PIXEL10_C
@@ -1457,13 +1511,15 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL12_C
 					if (Diff(w[8], w[4])) {
 						PIXEL20_1M
-					} else {
+					}
+					else {
 						PIXEL20_2
 					}
 					PIXEL21_C
 					if (Diff(w[6], w[8])) {
 						PIXEL22_1M
-					} else {
+					}
+					else {
 						PIXEL22_2
 					}
 					break;
@@ -1475,7 +1531,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_C
 						PIXEL02_C
 						PIXEL12_C
-					} else {
+					}
+					else {
 						PIXEL00_2
 						PIXEL01_6
 						PIXEL02_5
@@ -1495,7 +1552,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL02_C
 						PIXEL12_C
 						PIXEL22_1D
-					} else {
+					}
+					else {
 						PIXEL01_1
 						PIXEL02_5
 						PIXEL12_6
@@ -1515,7 +1573,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL12_C
 						PIXEL21_C
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL02_2
 						PIXEL12_6
 						PIXEL21_1
@@ -1535,7 +1594,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_1L
 						PIXEL21_C
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL12_1
 						PIXEL20_2
 						PIXEL21_6
@@ -1555,7 +1615,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_C
 						PIXEL21_C
 						PIXEL22_1R
-					} else {
+					}
+					else {
 						PIXEL10_1
 						PIXEL20_5
 						PIXEL21_6
@@ -1575,7 +1636,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL10_C
 						PIXEL20_C
 						PIXEL21_C
-					} else {
+					}
+					else {
 						PIXEL00_2
 						PIXEL10_6
 						PIXEL20_5
@@ -1595,7 +1657,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_C
 						PIXEL10_C
 						PIXEL20_1D
-					} else {
+					}
+					else {
 						PIXEL00_5
 						PIXEL01_1
 						PIXEL10_6
@@ -1615,7 +1678,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_C
 						PIXEL02_1R
 						PIXEL10_C
-					} else {
+					}
+					else {
 						PIXEL00_5
 						PIXEL01_6
 						PIXEL02_2
@@ -1638,7 +1702,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL10_C
 						PIXEL20_C
 						PIXEL21_C
-					} else {
+					}
+					else {
 						PIXEL10_3
 						PIXEL20_4
 						PIXEL21_3
@@ -1651,7 +1716,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_C
 						PIXEL01_C
 						PIXEL10_C
-					} else {
+					}
+					else {
 						PIXEL00_4
 						PIXEL01_3
 						PIXEL10_3
@@ -1670,7 +1736,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_C
 						PIXEL02_C
 						PIXEL12_C
-					} else {
+					}
+					else {
 						PIXEL01_3
 						PIXEL02_4
 						PIXEL12_3
@@ -1693,7 +1760,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL12_C
 						PIXEL21_C
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL12_3
 						PIXEL21_3
 						PIXEL22_4
@@ -1706,7 +1774,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_C
 						PIXEL02_C
 						PIXEL12_C
-					} else {
+					}
+					else {
 						PIXEL01_3
 						PIXEL02_4
 						PIXEL12_3
@@ -1729,7 +1798,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL12_C
 						PIXEL21_C
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL12_3
 						PIXEL21_3
 						PIXEL22_4
@@ -1746,7 +1816,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL10_C
 						PIXEL20_C
 						PIXEL21_C
-					} else {
+					}
+					else {
 						PIXEL10_3
 						PIXEL20_4
 						PIXEL21_3
@@ -1759,7 +1830,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_C
 						PIXEL01_C
 						PIXEL10_C
-					} else {
+					}
+					else {
 						PIXEL00_4
 						PIXEL01_3
 						PIXEL10_3
@@ -1876,14 +1948,16 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL11
 					if (Diff(w[8], w[4])) {
 						PIXEL20_1M
-					} else {
+					}
+					else {
 						PIXEL20_2
 					}
 					if (Diff(w[6], w[8])) {
 						PIXEL12_C
 						PIXEL21_C
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL12_3
 						PIXEL21_3
 						PIXEL22_4
@@ -1893,14 +1967,16 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 158: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_1M
-					} else {
+					}
+					else {
 						PIXEL00_2
 					}
 					if (Diff(w[2], w[6])) {
 						PIXEL01_C
 						PIXEL02_C
 						PIXEL12_C
-					} else {
+					}
+					else {
 						PIXEL01_3
 						PIXEL02_4
 						PIXEL12_3
@@ -1915,7 +1991,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 234: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_1M
-					} else {
+					}
+					else {
 						PIXEL00_2
 					}
 					PIXEL01_C
@@ -1926,7 +2003,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL10_C
 						PIXEL20_C
 						PIXEL21_C
-					} else {
+					}
+					else {
 						PIXEL10_3
 						PIXEL20_4
 						PIXEL21_3
@@ -1939,7 +2017,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL01_C
 					if (Diff(w[2], w[6])) {
 						PIXEL02_1M
-					} else {
+					}
+					else {
 						PIXEL02_2
 					}
 					PIXEL10_1
@@ -1949,7 +2028,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL12_C
 						PIXEL21_C
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL12_3
 						PIXEL21_3
 						PIXEL22_4
@@ -1961,14 +2041,16 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_C
 						PIXEL01_C
 						PIXEL10_C
-					} else {
+					}
+					else {
 						PIXEL00_4
 						PIXEL01_3
 						PIXEL10_3
 					}
 					if (Diff(w[2], w[6])) {
 						PIXEL02_1M
-					} else {
+					}
+					else {
 						PIXEL02_2
 					}
 					PIXEL11
@@ -1988,14 +2070,16 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL10_C
 						PIXEL20_C
 						PIXEL21_C
-					} else {
+					}
+					else {
 						PIXEL10_3
 						PIXEL20_4
 						PIXEL21_3
 					}
 					if (Diff(w[6], w[8])) {
 						PIXEL22_1M
-					} else {
+					}
+					else {
 						PIXEL22_2
 					}
 					break;
@@ -2006,7 +2090,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_C
 						PIXEL02_C
 						PIXEL12_C
-					} else {
+					}
+					else {
 						PIXEL01_3
 						PIXEL02_4
 						PIXEL12_3
@@ -2017,7 +2102,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL21_C
 					if (Diff(w[6], w[8])) {
 						PIXEL22_1M
-					} else {
+					}
+					else {
 						PIXEL22_2
 					}
 					break;
@@ -2027,7 +2113,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_C
 						PIXEL01_C
 						PIXEL10_C
-					} else {
+					}
+					else {
 						PIXEL00_4
 						PIXEL01_3
 						PIXEL10_3
@@ -2037,7 +2124,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL12_1
 					if (Diff(w[8], w[4])) {
 						PIXEL20_1M
-					} else {
+					}
+					else {
 						PIXEL20_2
 					}
 					PIXEL21_C
@@ -2047,13 +2135,15 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 122: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_1M
-					} else {
+					}
+					else {
 						PIXEL00_2
 					}
 					PIXEL01_C
 					if (Diff(w[2], w[6])) {
 						PIXEL02_1M
-					} else {
+					}
+					else {
 						PIXEL02_2
 					}
 					PIXEL11
@@ -2062,14 +2152,16 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL10_C
 						PIXEL20_C
 						PIXEL21_C
-					} else {
+					}
+					else {
 						PIXEL10_3
 						PIXEL20_4
 						PIXEL21_3
 					}
 					if (Diff(w[6], w[8])) {
 						PIXEL22_1M
-					} else {
+					}
+					else {
 						PIXEL22_2
 					}
 					break;
@@ -2077,14 +2169,16 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 94: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_1M
-					} else {
+					}
+					else {
 						PIXEL00_2
 					}
 					if (Diff(w[2], w[6])) {
 						PIXEL01_C
 						PIXEL02_C
 						PIXEL12_C
-					} else {
+					}
+					else {
 						PIXEL01_3
 						PIXEL02_4
 						PIXEL12_3
@@ -2093,13 +2187,15 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL11
 					if (Diff(w[8], w[4])) {
 						PIXEL20_1M
-					} else {
+					}
+					else {
 						PIXEL20_2
 					}
 					PIXEL21_C
 					if (Diff(w[6], w[8])) {
 						PIXEL22_1M
-					} else {
+					}
+					else {
 						PIXEL22_2
 					}
 					break;
@@ -2107,27 +2203,31 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 218: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_1M
-					} else {
+					}
+					else {
 						PIXEL00_2
 					}
 					PIXEL01_C
 					if (Diff(w[2], w[6])) {
 						PIXEL02_1M
-					} else {
+					}
+					else {
 						PIXEL02_2
 					}
 					PIXEL10_C
 					PIXEL11
 					if (Diff(w[8], w[4])) {
 						PIXEL20_1M
-					} else {
+					}
+					else {
 						PIXEL20_2
 					}
 					if (Diff(w[6], w[8])) {
 						PIXEL12_C
 						PIXEL21_C
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL12_3
 						PIXEL21_3
 						PIXEL22_4
@@ -2139,27 +2239,31 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_C
 						PIXEL01_C
 						PIXEL10_C
-					} else {
+					}
+					else {
 						PIXEL00_4
 						PIXEL01_3
 						PIXEL10_3
 					}
 					if (Diff(w[2], w[6])) {
 						PIXEL02_1M
-					} else {
+					}
+					else {
 						PIXEL02_2
 					}
 					PIXEL11
 					PIXEL12_C
 					if (Diff(w[8], w[4])) {
 						PIXEL20_1M
-					} else {
+					}
+					else {
 						PIXEL20_2
 					}
 					PIXEL21_C
 					if (Diff(w[6], w[8])) {
 						PIXEL22_1M
-					} else {
+					}
+					else {
 						PIXEL22_2
 					}
 					break;
@@ -2215,13 +2319,15 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 186: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_1M
-					} else {
+					}
+					else {
 						PIXEL00_2
 					}
 					PIXEL01_C
 					if (Diff(w[2], w[6])) {
 						PIXEL02_1M
-					} else {
+					}
+					else {
 						PIXEL02_2
 					}
 					PIXEL10_C
@@ -2237,7 +2343,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL01_C
 					if (Diff(w[2], w[6])) {
 						PIXEL02_1M
-					} else {
+					}
+					else {
 						PIXEL02_2
 					}
 					PIXEL10_1
@@ -2247,7 +2354,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL21_C
 					if (Diff(w[6], w[8])) {
 						PIXEL22_1M
-					} else {
+					}
+					else {
 						PIXEL22_2
 					}
 					break;
@@ -2261,13 +2369,15 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL12_C
 					if (Diff(w[8], w[4])) {
 						PIXEL20_1M
-					} else {
+					}
+					else {
 						PIXEL20_2
 					}
 					PIXEL21_C
 					if (Diff(w[6], w[8])) {
 						PIXEL22_1M
-					} else {
+					}
+					else {
 						PIXEL22_2
 					}
 					break;
@@ -2275,7 +2385,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 206: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_1M
-					} else {
+					}
+					else {
 						PIXEL00_2
 					}
 					PIXEL01_C
@@ -2285,7 +2396,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL12_1
 					if (Diff(w[8], w[4])) {
 						PIXEL20_1M
-					} else {
+					}
+					else {
 						PIXEL20_2
 					}
 					PIXEL21_C
@@ -2302,7 +2414,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL12_1
 					if (Diff(w[8], w[4])) {
 						PIXEL20_1M
-					} else {
+					}
+					else {
 						PIXEL20_2
 					}
 					PIXEL21_C
@@ -2313,7 +2426,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 46: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_1M
-					} else {
+					}
+					else {
 						PIXEL00_2
 					}
 					PIXEL01_C
@@ -2332,7 +2446,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL01_C
 					if (Diff(w[2], w[6])) {
 						PIXEL02_1M
-					} else {
+					}
+					else {
 						PIXEL02_2
 					}
 					PIXEL10_1
@@ -2355,7 +2470,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL21_C
 					if (Diff(w[6], w[8])) {
 						PIXEL22_1M
-					} else {
+					}
+					else {
 						PIXEL22_2
 					}
 					break;
@@ -2390,7 +2506,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_C
 						PIXEL02_C
 						PIXEL12_C
-					} else {
+					}
+					else {
 						PIXEL01_3
 						PIXEL02_4
 						PIXEL12_3
@@ -2400,7 +2517,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL10_C
 						PIXEL20_C
 						PIXEL21_C
-					} else {
+					}
+					else {
 						PIXEL10_3
 						PIXEL20_4
 						PIXEL21_3
@@ -2413,7 +2531,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_C
 						PIXEL01_C
 						PIXEL10_C
-					} else {
+					}
+					else {
 						PIXEL00_4
 						PIXEL01_3
 						PIXEL10_3
@@ -2425,7 +2544,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL12_C
 						PIXEL21_C
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL12_3
 						PIXEL21_3
 						PIXEL22_4
@@ -2438,7 +2558,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL10_C
 						PIXEL20_C
 						PIXEL21_C
-					} else {
+					}
+					else {
 						PIXEL00_2
 						PIXEL10_6
 						PIXEL20_5
@@ -2457,7 +2578,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL12_C
 						PIXEL21_C
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL02_2
 						PIXEL12_6
 						PIXEL21_1
@@ -2476,7 +2598,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_C
 						PIXEL02_1R
 						PIXEL10_C
-					} else {
+					}
+					else {
 						PIXEL00_5
 						PIXEL01_6
 						PIXEL02_2
@@ -2495,7 +2618,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_C
 						PIXEL21_C
 						PIXEL22_1R
-					} else {
+					}
+					else {
 						PIXEL10_1
 						PIXEL20_5
 						PIXEL21_6
@@ -2514,7 +2638,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL02_C
 						PIXEL12_C
 						PIXEL22_1D
-					} else {
+					}
+					else {
 						PIXEL01_1
 						PIXEL02_5
 						PIXEL12_6
@@ -2533,7 +2658,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_C
 						PIXEL10_C
 						PIXEL20_1D
-					} else {
+					}
+					else {
 						PIXEL00_5
 						PIXEL01_1
 						PIXEL10_6
@@ -2552,7 +2678,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL20_1L
 						PIXEL21_C
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL12_1
 						PIXEL20_2
 						PIXEL21_6
@@ -2571,7 +2698,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_C
 						PIXEL02_C
 						PIXEL12_C
-					} else {
+					}
+					else {
 						PIXEL00_2
 						PIXEL01_6
 						PIXEL02_5
@@ -2594,7 +2722,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL12_1
 					if (Diff(w[8], w[4])) {
 						PIXEL20_C
-					} else {
+					}
+					else {
 						PIXEL20_2
 					}
 					PIXEL21_C
@@ -2605,7 +2734,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 47: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_C
-					} else {
+					}
+					else {
 						PIXEL00_2
 					}
 					PIXEL01_C
@@ -2624,7 +2754,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL01_C
 					if (Diff(w[2], w[6])) {
 						PIXEL02_C
-					} else {
+					}
+					else {
 						PIXEL02_2
 					}
 					PIXEL10_1
@@ -2647,7 +2778,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL21_C
 					if (Diff(w[6], w[8])) {
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL22_2
 					}
 					break;
@@ -2660,7 +2792,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[8], w[4])) {
 						PIXEL10_C
 						PIXEL20_C
-					} else {
+					}
+					else {
 						PIXEL10_3
 						PIXEL20_4
 					}
@@ -2668,7 +2801,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[6], w[8])) {
 						PIXEL12_C
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL12_3
 						PIXEL22_4
 					}
@@ -2678,7 +2812,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[4], w[2])) {
 						PIXEL00_C
 						PIXEL01_C
-					} else {
+					}
+					else {
 						PIXEL00_4
 						PIXEL01_3
 					}
@@ -2689,7 +2824,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[8], w[4])) {
 						PIXEL20_C
 						PIXEL21_C
-					} else {
+					}
+					else {
 						PIXEL20_4
 						PIXEL21_3
 					}
@@ -2700,7 +2836,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[4], w[2])) {
 						PIXEL00_C
 						PIXEL10_C
-					} else {
+					}
+					else {
 						PIXEL00_4
 						PIXEL10_3
 					}
@@ -2708,7 +2845,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[2], w[6])) {
 						PIXEL02_C
 						PIXEL12_C
-					} else {
+					}
+					else {
 						PIXEL02_4
 						PIXEL12_3
 					}
@@ -2723,7 +2861,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[2], w[6])) {
 						PIXEL01_C
 						PIXEL02_C
-					} else {
+					}
+					else {
 						PIXEL01_3
 						PIXEL02_4
 					}
@@ -2734,7 +2873,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[6], w[8])) {
 						PIXEL21_C
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL21_3
 						PIXEL22_4
 					}
@@ -2749,14 +2889,16 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[8], w[4])) {
 						PIXEL10_C
 						PIXEL20_C
-					} else {
+					}
+					else {
 						PIXEL10_3
 						PIXEL20_4
 					}
 					PIXEL21_C
 					if (Diff(w[6], w[8])) {
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL22_2
 					}
 					break;
@@ -2769,14 +2911,16 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL11
 					if (Diff(w[8], w[4])) {
 						PIXEL20_C
-					} else {
+					}
+					else {
 						PIXEL20_2
 					}
 					PIXEL21_C
 					if (Diff(w[6], w[8])) {
 						PIXEL12_C
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL12_3
 						PIXEL22_4
 					}
@@ -2786,7 +2930,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[4], w[2])) {
 						PIXEL00_C
 						PIXEL01_C
-					} else {
+					}
+					else {
 						PIXEL00_4
 						PIXEL01_3
 					}
@@ -2796,7 +2941,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL12_1
 					if (Diff(w[8], w[4])) {
 						PIXEL20_C
-					} else {
+					}
+					else {
 						PIXEL20_2
 					}
 					PIXEL21_C
@@ -2806,7 +2952,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 111: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_C
-					} else {
+					}
+					else {
 						PIXEL00_2
 					}
 					PIXEL01_C
@@ -2817,7 +2964,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[8], w[4])) {
 						PIXEL20_C
 						PIXEL21_C
-					} else {
+					}
+					else {
 						PIXEL20_4
 						PIXEL21_3
 					}
@@ -2827,14 +2975,16 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 63: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_C
-					} else {
+					}
+					else {
 						PIXEL00_2
 					}
 					PIXEL01_C
 					if (Diff(w[2], w[6])) {
 						PIXEL02_C
 						PIXEL12_C
-					} else {
+					}
+					else {
 						PIXEL02_4
 						PIXEL12_3
 					}
@@ -2849,14 +2999,16 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[4], w[2])) {
 						PIXEL00_C
 						PIXEL10_C
-					} else {
+					}
+					else {
 						PIXEL00_4
 						PIXEL10_3
 					}
 					PIXEL01_C
 					if (Diff(w[2], w[6])) {
 						PIXEL02_C
-					} else {
+					}
+					else {
 						PIXEL02_2
 					}
 					PIXEL11
@@ -2871,7 +3023,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL01_C
 					if (Diff(w[2], w[6])) {
 						PIXEL02_C
-					} else {
+					}
+					else {
 						PIXEL02_2
 					}
 					PIXEL10_1
@@ -2881,7 +3034,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[6], w[8])) {
 						PIXEL21_C
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL21_3
 						PIXEL22_4
 					}
@@ -2892,7 +3046,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[2], w[6])) {
 						PIXEL01_C
 						PIXEL02_C
-					} else {
+					}
+					else {
 						PIXEL01_3
 						PIXEL02_4
 					}
@@ -2903,7 +3058,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL21_C
 					if (Diff(w[6], w[8])) {
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL22_2
 					}
 					break;
@@ -2913,7 +3069,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[2], w[6])) {
 						PIXEL01_C
 						PIXEL02_C
-					} else {
+					}
+					else {
 						PIXEL01_3
 						PIXEL02_4
 					}
@@ -2921,7 +3078,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[8], w[4])) {
 						PIXEL10_C
 						PIXEL20_C
-					} else {
+					}
+					else {
 						PIXEL10_3
 						PIXEL20_4
 					}
@@ -2929,7 +3087,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL12_C
 						PIXEL21_C
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL12_3
 						PIXEL21_3
 						PIXEL22_2
@@ -2945,13 +3104,15 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL12_C
 					if (Diff(w[8], w[4])) {
 						PIXEL20_C
-					} else {
+					}
+					else {
 						PIXEL20_2
 					}
 					PIXEL21_C
 					if (Diff(w[6], w[8])) {
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL22_2
 					}
 					break;
@@ -2960,7 +3121,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[4], w[2])) {
 						PIXEL00_C
 						PIXEL01_C
-					} else {
+					}
+					else {
 						PIXEL00_4
 						PIXEL01_3
 					}
@@ -2970,7 +3132,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL10_C
 						PIXEL20_C
 						PIXEL21_C
-					} else {
+					}
+					else {
 						PIXEL10_3
 						PIXEL20_2
 						PIXEL21_3
@@ -2978,7 +3141,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[6], w[8])) {
 						PIXEL12_C
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL12_3
 						PIXEL22_4
 					}
@@ -2987,7 +3151,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 239: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_C
-					} else {
+					}
+					else {
 						PIXEL00_2
 					}
 					PIXEL01_C
@@ -2997,7 +3162,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL12_1
 					if (Diff(w[8], w[4])) {
 						PIXEL20_C
-					} else {
+					}
+					else {
 						PIXEL20_2
 					}
 					PIXEL21_C
@@ -3009,7 +3175,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL00_C
 						PIXEL01_C
 						PIXEL10_C
-					} else {
+					}
+					else {
 						PIXEL00_2
 						PIXEL01_3
 						PIXEL10_3
@@ -3017,7 +3184,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[2], w[6])) {
 						PIXEL02_C
 						PIXEL12_C
-					} else {
+					}
+					else {
 						PIXEL02_4
 						PIXEL12_3
 					}
@@ -3025,7 +3193,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[8], w[4])) {
 						PIXEL20_C
 						PIXEL21_C
-					} else {
+					}
+					else {
 						PIXEL20_4
 						PIXEL21_3
 					}
@@ -3035,13 +3204,15 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 191: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_C
-					} else {
+					}
+					else {
 						PIXEL00_2
 					}
 					PIXEL01_C
 					if (Diff(w[2], w[6])) {
 						PIXEL02_C
-					} else {
+					}
+					else {
 						PIXEL02_2
 					}
 					PIXEL10_C
@@ -3056,7 +3227,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[4], w[2])) {
 						PIXEL00_C
 						PIXEL10_C
-					} else {
+					}
+					else {
 						PIXEL00_4
 						PIXEL10_3
 					}
@@ -3064,7 +3236,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 						PIXEL01_C
 						PIXEL02_C
 						PIXEL12_C
-					} else {
+					}
+					else {
 						PIXEL01_3
 						PIXEL02_2
 						PIXEL12_3
@@ -3074,7 +3247,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					if (Diff(w[6], w[8])) {
 						PIXEL21_C
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL21_3
 						PIXEL22_4
 					}
@@ -3085,7 +3259,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL01_C
 					if (Diff(w[2], w[6])) {
 						PIXEL02_C
-					} else {
+					}
+					else {
 						PIXEL02_2
 					}
 					PIXEL10_1
@@ -3095,7 +3270,8 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL21_C
 					if (Diff(w[6], w[8])) {
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL22_2
 					}
 					break;
@@ -3103,13 +3279,15 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 				case 255: {
 					if (Diff(w[4], w[2])) {
 						PIXEL00_C
-					} else {
+					}
+					else {
 						PIXEL00_2
 					}
 					PIXEL01_C
 					if (Diff(w[2], w[6])) {
 						PIXEL02_C
-					} else {
+					}
+					else {
 						PIXEL02_2
 					}
 					PIXEL10_C
@@ -3117,13 +3295,15 @@ void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int Bp
 					PIXEL12_C
 					if (Diff(w[8], w[4])) {
 						PIXEL20_C
-					} else {
+					}
+					else {
 						PIXEL20_2
 					}
 					PIXEL21_C
 					if (Diff(w[6], w[8])) {
 						PIXEL22_C
-					} else {
+					}
+					else {
 						PIXEL22_2
 					}
 					break;

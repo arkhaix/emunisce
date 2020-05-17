@@ -25,7 +25,8 @@ using namespace Emunisce;
 #include "GameboyIncludes.h"
 #include "Serialization/SerializationIncludes.h"
 
-Input::Input() {}
+Input::Input() {
+}
 
 // Component
 void Input::SetMachine(Gameboy* machine) {
@@ -104,9 +105,11 @@ bool Input::IsButtonDown(unsigned int index) {
 void Input::SetJoypadMode(u8 value) {
 	if ((value & 0x10) == 0) {
 		m_currentMode = RegisterMode::P14;
-	} else if ((value & 0x20) == 0) {
+	}
+	else if ((value & 0x20) == 0) {
 		m_currentMode = RegisterMode::P15;
-	} else {
+	}
+	else {
 		m_currentMode = RegisterMode::MachineType;
 	}
 
@@ -116,9 +119,11 @@ void Input::SetJoypadMode(u8 value) {
 void Input::UpdateRegister() {
 	if (m_currentMode == RegisterMode::P14) {
 		m_joypadRegister = m_buttonStates & 0x0f;
-	} else if (m_currentMode == RegisterMode::P15) {
+	}
+	else if (m_currentMode == RegisterMode::P15) {
 		m_joypadRegister = (m_buttonStates >> 4) & 0x0f;
-	} else  //(m_currentMode == RegisterMode::MachineType)
+	}
+	else  //(m_currentMode == RegisterMode::MachineType)
 	{
 		m_joypadRegister = 0xff;
 	}

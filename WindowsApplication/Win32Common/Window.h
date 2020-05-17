@@ -31,7 +31,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce {
 
 class IWindowMessageListener {
-   public:
+public:
 	virtual void Closed() = 0;
 
 	virtual void Draw() = 0;
@@ -53,7 +53,7 @@ struct WindowPosition {
 };
 
 class Window {
-   public:
+public:
 	Window();
 	~Window();
 
@@ -77,7 +77,7 @@ class Window {
 	WindowPosition GetPosition();
 	void SetPosition(WindowPosition position);
 
-   private:
+private:
 	static LRESULT CALLBACK StaticWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	static std::map<HWND, Window*> m_hwndInstanceMap;
 	static std::mutex m_hwndInstanceMapLock;

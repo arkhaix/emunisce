@@ -29,7 +29,7 @@ namespace Emunisce {
 class Archive;
 
 class ScreenBuffer {
-   public:
+public:
 	virtual ~ScreenBuffer();
 
 	virtual int GetWidth() = 0;
@@ -43,9 +43,9 @@ class ScreenBuffer {
 	virtual void Serialize(Archive& archive);
 };
 
-template <int TWidth, int THeight>
+template<int TWidth, int THeight>
 class TScreenBuffer : public ScreenBuffer {
-   public:
+public:
 	DisplayPixel Pixels[TWidth * THeight];
 
 	inline DisplayPixel GetPixel(int x, int y) {
@@ -62,15 +62,22 @@ class TScreenBuffer : public ScreenBuffer {
 		Pixels[y * TWidth + x] = value;
 	}
 
-	int GetWidth() override { return TWidth; }
+	int GetWidth() override {
+		return TWidth;
+	}
 
-	int GetHeight() override { return THeight; }
+	int GetHeight() override {
+		return THeight;
+	}
 
-	DisplayPixel* GetPixels() override { return &Pixels[0]; }
+	DisplayPixel* GetPixels() override {
+		return &Pixels[0];
+	}
 
 	void Clear(DisplayPixel clearColor) override {
 		int numPixels = THeight * TWidth;
-		for (int i = 0; i < numPixels; i++) Pixels[i] = clearColor;
+		for (int i = 0; i < numPixels; i++)
+			Pixels[i] = clearColor;
 	}
 
 	ScreenBuffer* Clone() override {
@@ -81,7 +88,7 @@ class TScreenBuffer : public ScreenBuffer {
 };
 
 class DynamicScreenBuffer : public ScreenBuffer {
-   public:
+public:
 	DisplayPixel* Pixels;
 	int Width;
 	int Height;

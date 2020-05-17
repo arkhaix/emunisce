@@ -25,7 +25,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce {
 
 class MemorySerializer : public ISerializer {
-   public:
+public:
 	// MemorySerializer
 
 	MemorySerializer();
@@ -50,7 +50,7 @@ class MemorySerializer : public ISerializer {
 
 	void Close() override;
 
-   protected:
+protected:
 	unsigned char* m_buffer;
 
 	unsigned int m_usedSize;

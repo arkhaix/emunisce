@@ -27,7 +27,7 @@ namespace Emunisce {
 class BaseApplication;
 
 class IExecutableFeature {
-   public:
+public:
 	// Machine info
 	virtual unsigned int GetFrameCount() = 0;
 	virtual unsigned int GetTickCount() = 0;
@@ -45,7 +45,7 @@ class MachineFeature : public IEmulatedMachine,
 					   public IEmulatedMemory,
 					   public IEmulatedProcessor,
 					   public IEmulatedSound {
-   public:
+public:
 	// MachineFeature
 
 	MachineFeature();
@@ -121,7 +121,7 @@ class MachineFeature : public IEmulatedMachine,
 
 	void SetSquareSynthesisMethod(SquareSynthesisMethod::Type method) override;
 
-   protected:
+protected:
 	BaseApplication* m_application;
 
 	bool m_hasFocus;

@@ -86,9 +86,11 @@ ScreenBuffer* Gui::GetStableScreenBuffer() {
 
 	if (m_displayFilter == DisplayFilter::Hq2x) {
 		m_filteredScreenBuffer = HqNx::Hq2x(m_screenBufferCopy);
-	} else if (m_displayFilter == DisplayFilter::Hq3x) {
+	}
+	else if (m_displayFilter == DisplayFilter::Hq3x) {
 		m_filteredScreenBuffer = HqNx::Hq3x(m_screenBufferCopy);
-	} else if (m_displayFilter == DisplayFilter::Hq4x) {
+	}
+	else if (m_displayFilter == DisplayFilter::Hq4x) {
 		m_filteredScreenBuffer = HqNx::Hq4x(m_screenBufferCopy);
 	}
 

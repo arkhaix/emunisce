@@ -23,7 +23,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce {
 
 class IEmulatedInput {
-   public:
+public:
 	// Digital buttons
 
 	virtual unsigned int NumButtons() = 0;

@@ -25,7 +25,7 @@ namespace Emunisce {
 class Archive;
 
 class ISerializer {
-   public:
+public:
 	virtual ~ISerializer() {
 	}
 

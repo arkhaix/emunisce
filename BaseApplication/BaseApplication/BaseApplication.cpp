@@ -383,7 +383,8 @@ void BaseApplication::HandleApplicationEvent(unsigned int eventId) {
 		if (m_inputRecorder != nullptr) {
 			m_inputRecorder->ApplicationEvent(eventId);
 		}
-	} else if (eventId >= 0x02000000 && eventId < 0x03000000) {
+	}
+	else if (eventId >= 0x02000000 && eventId < 0x03000000) {
 		if (m_rewinder != nullptr) {
 			m_rewinder->ApplicationEvent(eventId);
 		}
@@ -422,8 +423,9 @@ void BaseApplication::AddConsoleCommand(const char* command, ConsoleCommandHandl
 	}
 
 	std::string lowercaseCommand = command;
-	transform(lowercaseCommand.begin(), lowercaseCommand.end(), lowercaseCommand.begin(),
-			  [](unsigned char c) -> char { return (char)::tolower(c); });
+	transform(lowercaseCommand.begin(), lowercaseCommand.end(), lowercaseCommand.begin(), [](unsigned char c) -> char {
+		return (char)::tolower(c);
+	});
 
 	m_consoleCommands[m_numConsoleCommands].command = lowercaseCommand;
 	m_consoleCommands[m_numConsoleCommands].helpText = helpText;
@@ -463,7 +465,9 @@ bool BaseApplication::ExecuteConsoleCommand(const char* command) {
 	const char* commandName = splitCommand[0].c_str();
 	std::string lowercaseCommandName = commandName;
 	transform(lowercaseCommandName.begin(), lowercaseCommandName.end(), lowercaseCommandName.begin(),
-			  [](unsigned char c) -> char { return (char)::tolower(c); });
+			  [](unsigned char c) -> char {
+				  return (char)::tolower(c);
+			  });
 	ConsolePrint(lowercaseCommandName.c_str());
 	ConsolePrint("\n");
 
@@ -567,7 +571,8 @@ void BaseApplication::CommandLoad(const char* /*params*/) {
 		bool result = LoadRom(fileSelected);
 		if (result == false) {
 			ConsolePrint("Failed to load the specified file\n");
-		} else {
+		}
+		else {
 			ConsolePrint("Loaded ");
 			ConsolePrint(fileSelected);
 			ConsolePrint("\n");
@@ -641,14 +646,14 @@ void BaseApplication::CommandDisplayFilter(const char* in_params) {
 
 	if (params == "none" || params == "0" || params == "1") {
 		filter = DisplayFilter::NoFilter;
-
-	} else if (params == "hq2x" || params == "2x" || params == "2") {
+	}
+	else if (params == "hq2x" || params == "2x" || params == "2") {
 		filter = DisplayFilter::Hq2x;
-
-	} else if (params == "hq3x" || params == "3x" || params == "3") {
+	}
+	else if (params == "hq3x" || params == "3x" || params == "3") {
 		filter = DisplayFilter::Hq3x;
-
-	} else if (params == "hq4x" || params == "4x" || params == "4") {
+	}
+	else if (params == "hq4x" || params == "4x" || params == "4") {
 		filter = DisplayFilter::Hq4x;
 	}
 
@@ -665,7 +670,8 @@ void BaseApplication::CommandVsync(const char* in_params) {
 	if (params.empty() || params == "0" || params == "off") {
 		SetVsync(false);
 		ConsolePrint("Vsync disabled\n");
-	} else {
+	}
+	else {
 		SetVsync(true);
 		ConsolePrint("Vsync enabled\n");
 	}
@@ -676,7 +682,8 @@ void BaseApplication::CommandBackground(const char* in_params) {
 	if (params.empty() || params == "0" || params == "off") {
 		DisableBackgroundAnimation();
 		ConsolePrint("Disabled background animation\n");
-	} else {
+	}
+	else {
 		EnableBackgroundAnimation();
 		ConsolePrint("Enabled background animation\n");
 	}

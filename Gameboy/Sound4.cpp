@@ -127,7 +127,8 @@ void Sound4::Run(int ticks) {
 		if (result) {
 			m_lfsr |= (1 << m_lfsrFeedbackBit);
 			m_lfsrOut = -1.f;
-		} else {
+		}
+		else {
 			m_lfsr &= ~(1 << m_lfsrFeedbackBit);
 			m_lfsrOut = 1.f;
 		}
@@ -175,7 +176,8 @@ void Sound4::SetNR43(u8 value) {
 	if (value & 0x08) {
 		m_lfsrFeedbackBit = 7;
 		m_lfsrTapBit = 1;  ///< 1 is most tone-like, 3 is most white-noise-like
-	} else {
+	}
+	else {
 		m_lfsrFeedbackBit = 15;
 		m_lfsrTapBit = 7;
 	}
@@ -183,7 +185,8 @@ void Sound4::SetNR43(u8 value) {
 	int divisor = (value & 0x07);
 	if (divisor == 0) {
 		divisor = 8;
-	} else {
+	}
+	else {
 		divisor = 16 * divisor;
 	}
 

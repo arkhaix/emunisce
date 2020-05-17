@@ -30,7 +30,7 @@ class Gameboy;
 class DutyUnit;
 
 class Sound1 : public SoundGenerator {
-   public:
+public:
 	Sound1();
 	virtual ~Sound1();
 
@@ -63,7 +63,7 @@ class Sound1 : public SoundGenerator {
 	void SetNR13(u8 value);
 	void SetNR14(u8 value);
 
-   private:
+private:
 	// Sound generation
 
 	DutyUnit* m_dutyUnit;

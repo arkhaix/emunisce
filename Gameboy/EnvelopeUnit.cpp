@@ -63,7 +63,8 @@ void EnvelopeUnit::Tick() {
 
 		if (m_volumeIncreasing == true) {
 			m_currentVolume++;
-		} else {
+		}
+		else {
 			m_currentVolume--;
 		}
 
@@ -86,13 +87,15 @@ void EnvelopeUnit::WriteEnvelopeRegister(u8 value) {
 
 	if (m_timerPeriod == 0) {
 		m_enabled = false;
-	} else {
+	}
+	else {
 		m_enabled = true;
 	}
 
 	if (value & 0x08) {
 		m_volumeIncreasing = true;
-	} else {
+	}
+	else {
 		m_volumeIncreasing = false;
 	}
 
@@ -102,7 +105,8 @@ void EnvelopeUnit::WriteEnvelopeRegister(u8 value) {
 	if (m_initialVolume == 0 && m_volumeIncreasing == false) {
 		m_soundGenerator->m_channelController->DisableChannel();
 		m_soundGenerator->m_dacEnabled = false;
-	} else {
+	}
+	else {
 		m_soundGenerator->m_dacEnabled = true;
 	}
 }

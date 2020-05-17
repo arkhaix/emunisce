@@ -8,8 +8,9 @@ using namespace Emunisce;
 namespace Emunisce {
 
 class CommandTrie_Private {
-   public:
-	CommandTrie_Private() {}
+public:
+	CommandTrie_Private() {
+	}
 
 	CommandTrie* owner;
 

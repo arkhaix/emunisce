@@ -39,7 +39,7 @@ class GdiPlusRenderer;
 class WaveOutSound;
 
 class EmunisceApplication : public BaseApplication, public IWindowMessageListener {
-   public:
+public:
 	EmunisceApplication();
 	~EmunisceApplication();
 
@@ -81,7 +81,7 @@ class EmunisceApplication : public BaseApplication, public IWindowMessageListene
 	virtual void KeyDown(int key);
 	virtual void KeyUp(int key);
 
-   private:
+private:
 	void AdjustWindowSize();
 	void HandlePendingMachineChange();
 

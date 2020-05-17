@@ -30,7 +30,7 @@ namespace Emunisce {
 class Application;
 
 class ConsoleWindow {
-   public:
+public:
 	ConsoleWindow(Application* application, wxFrame* mainFrame);
 	virtual ~ConsoleWindow();
 
@@ -48,7 +48,7 @@ class ConsoleWindow {
 
 	void OnFrameClosed(wxCloseEvent& event);
 
-   private:
+private:
 	void Initialize(Application* application, wxFrame* mainFrame);
 
 	Application* m_application;

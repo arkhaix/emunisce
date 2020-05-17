@@ -29,7 +29,7 @@ class Archive;
 class SoundGenerator;
 
 class LengthUnit {
-   public:
+public:
 	LengthUnit(SoundGenerator* soundGenerator);
 
 	void Serialize(Archive& archive);
@@ -43,7 +43,7 @@ class LengthUnit {
 	void Disable();
 	void WriteLengthRegister(u8 value);
 
-   private:
+private:
 	SoundGenerator* m_soundGenerator;
 
 	bool m_enabled;

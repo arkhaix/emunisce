@@ -49,7 +49,8 @@ void Gameboy::AddApplicationEvent(ApplicationEvent& applicationEvent, bool relat
 		ApplicationEvent eventCopy = applicationEvent;
 		eventCopy.frameCount += m_frameCount;
 		m_applicationEvents.push_back(eventCopy);
-	} else {
+	}
+	else {
 		m_applicationEvents.push_back(applicationEvent);
 	}
 
@@ -125,9 +126,11 @@ void Gameboy::RunToNextFrame() {
 	}
 }
 
-void Gameboy::Run() {}
+void Gameboy::Run() {
+}
 
-void Gameboy::Stop() {}
+void Gameboy::Stop() {
+}
 
 // Persistence
 void Gameboy::SaveState(Archive& ar) {
@@ -139,9 +142,11 @@ void Gameboy::LoadState(Archive& ar) {
 }
 
 // Debugging
-void Gameboy::EnableBreakpoint(int address) {}
+void Gameboy::EnableBreakpoint(int address) {
+}
 
-void Gameboy::DisableBreakpoint(int address) {}
+void Gameboy::DisableBreakpoint(int address) {
+}
 
 // Gameboy
 
@@ -157,7 +162,8 @@ Gameboy* Gameboy::Create(const char* filename, EmulatedMachine::Type machineType
 
 		if (cgbValue & 0x80) {
 			machineType = EmulatedMachine::GameboyColor;
-		} else {
+		}
+		else {
 			machineType = EmulatedMachine::Gameboy;
 		}
 	}
@@ -319,7 +325,8 @@ void Gameboy::Initialize() {
 		char ch = m_memory->Read8(0x0134 + i);
 		if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9') || (ch == ' ')) {
 			m_romTitle[i] = ch;
-		} else {
+		}
+		else {
 			m_romTitle[i] = 0;
 		}
 	}

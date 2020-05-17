@@ -25,7 +25,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce {
 
 class Mbc5 : public Mbc1 {
-   public:
+public:
 	Mbc5();
 
 	void Write8(u16 address, u8 value) override;

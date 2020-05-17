@@ -25,7 +25,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce {
 
 class DutyUnit {
-   public:
+public:
 	DutyUnit();
 
 	void Serialize(Archive& archive);
@@ -40,7 +40,7 @@ class DutyUnit {
 
 	void SetSynthesisMethod(SquareSynthesisMethod::Type method);
 
-   private:
+private:
 	int m_timerPeriod;
 	int m_timerValue;
 

@@ -30,7 +30,7 @@ extern void hq3x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres,
 extern void hq4x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int BpL);
 
 class HqHelper {
-   public:
+public:
 	static u16* ConvertToRgb15(ScreenBuffer* screen) {
 		int originalWidth = screen->GetWidth();
 		int originalHeight = screen->GetHeight();
@@ -77,10 +77,12 @@ class HqHelper {
 		if (scale == 2) {
 			hq2x_32((unsigned char*)rgb15Screen, (unsigned char*)result->GetPixels(), originalWidth, originalHeight,
 					newWidth * 4);
-		} else if (scale == 3) {
+		}
+		else if (scale == 3) {
 			hq3x_32((unsigned char*)rgb15Screen, (unsigned char*)result->GetPixels(), originalWidth, originalHeight,
 					newWidth * 4);
-		} else {  // scale == 4
+		}
+		else {  // scale == 4
 			hq4x_32((unsigned char*)rgb15Screen, (unsigned char*)result->GetPixels(), originalWidth, originalHeight,
 					newWidth * 4);
 		}

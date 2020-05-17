@@ -30,18 +30,18 @@ class Application;
 class WindowMain : public wxGLCanvas {
 	// Emunsice stuff
 
-   public:
+public:
 	void SetApplication(Application* application);
 
-   private:
+private:
 	Application* m_application;
 
 	// wx stuff
 
-   private:
+private:
 	wxGLContext* m_context;
 
-   public:
+public:
 	WindowMain(wxFrame* parent, int* args);
 	virtual ~WindowMain();
 

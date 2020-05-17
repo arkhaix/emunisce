@@ -52,7 +52,7 @@ enum {
 }  // namespace DmaMode
 
 class Memory : public IEmulatedMemory {
-   public:
+public:
 	virtual ~Memory();
 
 	virtual void SetMachine(Gameboy* machine);
@@ -97,7 +97,7 @@ class Memory : public IEmulatedMemory {
 
 	static Memory* CreateFromFile(const char* filename);
 
-   protected:
+protected:
 	Memory();
 
 	virtual void LoadBootRom(const char* filename = "dmg_rom.bin");  ///< Automatically called by Initialize

@@ -25,7 +25,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace Emunisce {
 
 class MachineFactory {
-   public:
+public:
 	static IEmulatedMachine* CreateMachine(const char* romFilename,
 										   EmulatedMachine::Type machineType = EmulatedMachine::AutoSelect);
 	static void ReleaseMachine(IEmulatedMachine* machine);

@@ -29,7 +29,7 @@ class Gameboy;
 class ChannelController;
 
 class Sound3 : public SoundGenerator {
-   public:
+public:
 	Sound3();
 	virtual ~Sound3() = default;
 
@@ -56,7 +56,7 @@ class Sound3 : public SoundGenerator {
 	void SetNR33(u8 value);
 	void SetNR34(u8 value);
 
-   private:
+private:
 	void Trigger() override;
 
 	// Sound generation

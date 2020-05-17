@@ -90,7 +90,7 @@ static const char* ToString[] = {"Cancel",
 }  // namespace PromptResult
 
 class IUserInterface {
-   public:
+public:
 	// User to application
 
 	// Rom
