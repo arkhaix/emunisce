@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "MachineSerialization.h"
 
 #include "MachineIncludes.h"
-#include "Serialization/SerializationIncludes.h"
+#include "serialization/SerializationIncludes.h"
 
 namespace Emunisce {
 

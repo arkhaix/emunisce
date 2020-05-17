@@ -7,8 +7,8 @@ cc_library(
 
     deps = [
         "//platform:platform",
-        "//Utility:utility",
-        "//Gameboy:gameboy",
+        "//utility:utility",
+        "//gameboy:gameboy",
     ],
     includes = ["."],
 )

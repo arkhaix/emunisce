@@ -38,7 +38,7 @@ using namespace Gdiplus;
 #include "MachineIncludes.h"
 
 // Application
-#include "../Emunisce/Emunisce.h"  ///<todo: this is just here for requesting shutdown.  Refactor this.
+#include "../emunisce/Emunisce.h"  ///<todo: this is just here for requesting shutdown.  Refactor this.
 
 namespace Emunisce {
 

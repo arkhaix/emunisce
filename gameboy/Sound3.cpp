@@ -23,7 +23,7 @@ using namespace Emunisce;
 #include "ChannelController.h"
 #include "GameboyIncludes.h"
 #include "LengthUnit.h"
-#include "Serialization/SerializationIncludes.h"
+#include "serialization/SerializationIncludes.h"
 
 Sound3::Sound3() {
 	m_machine = nullptr;

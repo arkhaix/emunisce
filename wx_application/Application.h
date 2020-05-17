@@ -22,8 +22,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <string>
 
-#include "BaseApplication/BaseApplication.h"
-#include "OpenGLRenderer/OpenGLRenderer.h"
+#include "base_application/BaseApplication.h"
+#include "opengl_renderer/OpenGLRenderer.h"
 #include "wx/wx.h"
 
 namespace Emunisce {

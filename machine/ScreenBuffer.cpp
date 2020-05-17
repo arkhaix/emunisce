@@ -22,7 +22,7 @@ using namespace Emunisce;
 
 #include <stdlib.h>  ///<malloc, free
 
-#include "Serialization/SerializationIncludes.h"
+#include "serialization/SerializationIncludes.h"
 
 // ScreenBuffer
 

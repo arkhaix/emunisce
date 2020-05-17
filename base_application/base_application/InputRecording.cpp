@@ -22,8 +22,8 @@ using namespace Emunisce;
 
 #include "BaseApplication.h"
 #include "MachineRunner.h"
-#include "Serialization/MemorySerializer.h"
-#include "Serialization/SerializationIncludes.h"
+#include "serialization/MemorySerializer.h"
+#include "serialization/SerializationIncludes.h"
 
 // InputEvent
 

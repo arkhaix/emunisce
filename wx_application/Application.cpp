@@ -40,12 +40,12 @@ using namespace Emunisce;
 #include "MachineIncludes.h"
 
 // BaseApplication
-#include "BaseApplication/InputManager.h"
-#include "BaseApplication/MachineFeature.h"
+#include "base_application/InputManager.h"
+#include "base_application/MachineFeature.h"
 
 // Serialization
-#include "Serialization/FileSerializer.h"
-#include "Serialization/SerializationIncludes.h"
+#include "serialization/FileSerializer.h"
+#include "serialization/SerializationIncludes.h"
 
 Application::Application() {
 	m_renderer = new OpenGLRenderer();

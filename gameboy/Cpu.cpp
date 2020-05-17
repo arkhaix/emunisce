@@ -21,7 +21,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 using namespace Emunisce;
 
 #include "GameboyIncludes.h"
-#include "Serialization/SerializationIncludes.h"
+#include "serialization/SerializationIncludes.h"
 
 Cpu::Cpu()
 	: a(*(((u8*)&af) + 1)),

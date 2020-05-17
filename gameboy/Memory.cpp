@@ -35,7 +35,7 @@ using namespace Emunisce;
 
 // Solution
 #include "GameboyIncludes.h"
-#include "Serialization/SerializationIncludes.h"
+#include "serialization/SerializationIncludes.h"
 
 Memory::Memory() {
 	srand((unsigned int)time(nullptr));

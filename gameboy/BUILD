@@ -8,7 +8,7 @@ cc_library(
     deps = [
         "//machine:machine_interfaces",
         "//platform:platform",
-        "//Utility:utility",
+        "//utility:utility",
     ],
     includes = ["."],
 )

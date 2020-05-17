@@ -24,7 +24,7 @@ using namespace Emunisce;
 #include "GameboyIncludes.h"
 
 // Serialization
-#include "Serialization/SerializationIncludes.h"
+#include "serialization/SerializationIncludes.h"
 
 // IEmulatedMachine
 
