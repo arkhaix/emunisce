@@ -19,7 +19,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 struct IUnknown;  // combaseapi.h isn't compliant with /permissive- with Windows 8.1 SDK.
 #include "Window.h"
-using namespace Emunisce;
+using namespace emunisce;
 
 #include <algorithm>  ///<std::find
 #include <cstdio>

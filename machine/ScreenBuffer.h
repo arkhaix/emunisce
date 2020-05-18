@@ -24,7 +24,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "MachineTypes.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class Archive;
 
@@ -105,6 +105,6 @@ public:
 	ScreenBuffer* Clone() override;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

@@ -22,7 +22,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "Sound.h"  ///<for SquareSynthesisMethod
 
-namespace Emunisce {
+namespace emunisce {
 
 class DutyUnit {
 public:
@@ -56,6 +56,6 @@ private:
 	int m_sumSinceLastSample;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

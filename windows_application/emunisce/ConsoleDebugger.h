@@ -28,7 +28,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "base_application/IUserInterface.h"  ///<For DisplayFilter
 #include "windows.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class EmunisceApplication;
 
@@ -127,6 +127,6 @@ private:
 	bool m_playingInput;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

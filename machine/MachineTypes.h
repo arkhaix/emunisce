@@ -22,7 +22,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "PlatformTypes.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 // Application interface
 class IMachineToApplication;
@@ -70,6 +70,6 @@ inline void DisplayPixelToRGBA(DisplayPixel pixel, float& r, float& g, float& b,
 	a = (float)a8 / 255.f;
 }
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

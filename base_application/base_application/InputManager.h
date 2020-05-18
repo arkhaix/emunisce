@@ -23,7 +23,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include <map>
 #include <string>
 
-namespace Emunisce {
+namespace emunisce {
 
 class BaseApplication;
 
@@ -60,6 +60,6 @@ private:
 	std::map<int, bool> m_keyStates;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

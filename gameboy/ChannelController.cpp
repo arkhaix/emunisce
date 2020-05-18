@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "ChannelController.h"
-using namespace Emunisce;
+using namespace emunisce;
 
 ChannelController::ChannelController(u8& nr52, int channelBit) : m_nr52(nr52), m_channelBit(channelBit) {
 }

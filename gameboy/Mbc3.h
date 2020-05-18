@@ -22,7 +22,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "Mbc1.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class Mbc3 : public Mbc1 {
 public:
@@ -33,6 +33,6 @@ public:
 protected:
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

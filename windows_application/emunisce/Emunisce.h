@@ -31,7 +31,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "../wave_out_sound/WaveOutSound.h"
 #include "../win32_common/Window.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class ConsoleDebugger;
 
@@ -137,6 +137,6 @@ private:
 	WaveOutSound* m_sound;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

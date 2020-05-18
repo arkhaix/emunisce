@@ -22,7 +22,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "windows.h"  ///<HWND
 
-namespace Emunisce {
+namespace emunisce {
 
 class EmunisceApplication;
 class IEmulatedMachine;
@@ -46,6 +46,6 @@ private:
 	class GdiPlusRenderer_Private* m_private;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

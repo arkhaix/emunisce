@@ -22,7 +22,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "PlatformTypes.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class Archive;
 class SoundGenerator;
@@ -53,6 +53,6 @@ private:
 	int m_timerPeriod;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

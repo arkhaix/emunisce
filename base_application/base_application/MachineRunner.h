@@ -27,7 +27,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "PlatformIncludes.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class IEmulatedMachine;
 
@@ -103,6 +103,6 @@ protected:
 	SynchronizationInfo m_syncState;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

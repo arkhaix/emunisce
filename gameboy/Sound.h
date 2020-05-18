@@ -24,7 +24,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "MachineIncludes.h"
 #include "PlatformTypes.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class SoundGenerator;
 class Sound1;
@@ -137,6 +137,6 @@ private:
 	u8 m_nr52;  ///< ff26
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

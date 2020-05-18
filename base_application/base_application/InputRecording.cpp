@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "InputRecording.h"
-using namespace Emunisce;
+using namespace emunisce;
 
 #include "BaseApplication.h"
 #include "MachineRunner.h"
@@ -154,7 +154,7 @@ void InputRecording::StartPlayback(bool absoluteFrames, bool restoreState, bool 
 
 		// Add all the recorded events
 		for (unsigned int i = 0; i < m_inputHistory.size(); i++) {
-			Emunisce::ApplicationEvent inputEvent;
+			emunisce::ApplicationEvent inputEvent;
 			inputEvent.eventId = m_eventIdOffset + i;
 			inputEvent.frameCount = m_inputHistory[i].frameId;
 			inputEvent.tickCount = m_inputHistory[i].tickId;

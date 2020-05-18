@@ -30,7 +30,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #define PIXEL_NOT_CACHED (DisplayPixelFromRGBA((u8)254, (u8)0, (u8)254, (u8)255))
 #define PIXEL_TRANSPARENT (DisplayPixelFromRGBA((u8)255, (u8)0, (u8)255, (u8)255))
 
-namespace Emunisce {
+namespace emunisce {
 
 typedef TScreenBuffer<160, 144> GameboyScreenBuffer;
 
@@ -183,6 +183,6 @@ private:
 	bool m_lcdEnabled;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

@@ -19,7 +19,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "ConsoleWindow.h"
-using namespace Emunisce;
+using namespace emunisce;
 
 #include "Application.h"
 

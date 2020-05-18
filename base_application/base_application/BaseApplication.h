@@ -25,7 +25,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "IMachineToApplication.h"
 #include "IUserInterface.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class Archive;
 
@@ -201,6 +201,6 @@ protected:
 	CommandTrie* m_commandTrie;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

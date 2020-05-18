@@ -18,11 +18,11 @@ You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "SerializeItem.h"
-using namespace Emunisce;
+using namespace emunisce;
 
 #include "Archive.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 void SerializeBuffer(Archive& archive, unsigned char* buffer, unsigned int bytes) {
 	archive.SerializeBuffer(buffer, bytes);
@@ -72,4 +72,4 @@ void SerializeItem(Archive& archive, double& data) {
 	archive& data;
 }
 
-}  // namespace Emunisce
+}  // namespace emunisce

@@ -24,7 +24,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "Memory.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class Mbc1 : public Memory {
 public:
@@ -73,6 +73,6 @@ protected:
 							  ///< LoadFile.
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

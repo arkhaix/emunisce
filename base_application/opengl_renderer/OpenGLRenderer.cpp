@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "OpenGLRenderer.h"
-using namespace Emunisce;
+using namespace emunisce;
 
 #include "PlatformDefines.h"
 
@@ -40,7 +40,7 @@ using namespace Emunisce;
 #include "MachineIncludes.h"
 #include "PlatformIncludes.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 union OpenGLPixel {
 	u32 RGBA32;
@@ -570,7 +570,7 @@ public:
 	}
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 OpenGLRenderer::OpenGLRenderer() {
 	m_private = new OpenGLRenderer_Private();

@@ -28,7 +28,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "MachineIncludes.h"
 #include "PlatformIncludes.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class Gameboy : public IEmulatedMachine {
 public:
@@ -132,6 +132,6 @@ protected:
 	bool m_applicationEventsPending;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

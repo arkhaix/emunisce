@@ -24,7 +24,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "Sound.h"  ///<for SquareSynthesisMethod
 #include "SoundGenerator.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class Gameboy;
 class DutyUnit;
@@ -78,6 +78,6 @@ private:
 	u8 m_nr24;  ///< ff19
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

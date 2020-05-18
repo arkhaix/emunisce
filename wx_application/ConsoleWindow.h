@@ -25,7 +25,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "wx/textctrl.h"
 #include "wx/wx.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class Application;
 
@@ -62,6 +62,6 @@ private:
 	wxBoxSizer* m_frameSizer;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif  // CONSOLEWINDOW_H

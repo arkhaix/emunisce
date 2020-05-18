@@ -24,7 +24,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "MachineIncludes.h"
 #include "PlatformTypes.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 namespace GameboyButtons {
 typedef int Type;
@@ -110,6 +110,6 @@ private:
 	u8 m_joypadRegister;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

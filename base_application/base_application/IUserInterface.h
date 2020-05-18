@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef IUSERINTERFACE_H
 #define IUSERINTERFACE_H
 
-namespace Emunisce {
+namespace emunisce {
 
 namespace DisplayFilter {
 typedef int Type;
@@ -164,6 +164,6 @@ public:
 	virtual void ConsolePrint(const char* text) = 0;  ///< Displays a message in the console.
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

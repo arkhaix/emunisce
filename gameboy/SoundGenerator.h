@@ -22,7 +22,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "PlatformTypes.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class Archive;
 
@@ -76,6 +76,6 @@ protected:
 	// Noise
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

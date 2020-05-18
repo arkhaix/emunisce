@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef ISERIALIZER_H
 #define ISERIALIZER_H
 
-namespace Emunisce {
+namespace emunisce {
 
 class Archive;
 
@@ -37,6 +37,6 @@ public:
 	virtual void Close() = 0;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

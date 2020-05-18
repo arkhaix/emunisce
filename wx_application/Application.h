@@ -26,7 +26,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "opengl_renderer/OpenGLRenderer.h"
 #include "wx/wx.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class WindowMain;
 class ConsoleWindow;
@@ -118,6 +118,6 @@ protected:
 	ConsoleWindow* m_consoleWindow;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif  // APPLICATION_H

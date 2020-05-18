@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Gameboy.h"
-using namespace Emunisce;
+using namespace emunisce;
 
 // Gameboy
 #include "GameboyIncludes.h"

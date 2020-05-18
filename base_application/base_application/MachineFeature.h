@@ -22,7 +22,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "MachineIncludes.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class BaseApplication;
 
@@ -148,6 +148,6 @@ protected:
 	AudioBuffer m_defaultAudioBuffer;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

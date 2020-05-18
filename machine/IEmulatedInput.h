@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef IEMULATEDINPUT_H
 #define IEMULATEDINPUT_H
 
-namespace Emunisce {
+namespace emunisce {
 
 class IEmulatedInput {
 public:
@@ -35,6 +35,6 @@ public:
 	virtual bool IsButtonDown(unsigned int index) = 0;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #define EmulatedMachine_ToString 1
 
 #include "Application.h"
-using namespace Emunisce;
+using namespace emunisce;
 
 // wx
 #include "ConsoleWindow.h"

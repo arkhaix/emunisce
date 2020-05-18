@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef HQ4X_H
 #define HQ4X_H
 
-namespace Emunisce {
+namespace emunisce {
 
 class ScreenBuffer;
 
@@ -33,6 +33,6 @@ public:
 	static void Release(ScreenBuffer* buffer);
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

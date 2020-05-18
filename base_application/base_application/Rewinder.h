@@ -27,7 +27,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "MachineFeature.h"
 #include "PlatformIncludes.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class InputRecording;
 
@@ -168,6 +168,6 @@ protected:
 	InputHandler* m_inputHandler;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

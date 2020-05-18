@@ -1,7 +1,7 @@
 #ifndef IMACHINETOAPPLICATION_H
 #define IMACHINETOAPPLICATION_H
 
-namespace Emunisce {
+namespace emunisce {
 
 class IMachineToApplication {
 public:
@@ -13,6 +13,6 @@ public:
 	virtual void LoadRomData(const char* title, unsigned char* buffer, unsigned int bytes) = 0;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

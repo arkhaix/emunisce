@@ -23,7 +23,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "PlatformTypes.h"
 #include "SoundGenerator.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class Gameboy;
 class ChannelController;
@@ -84,6 +84,6 @@ private:
 	u8 m_nr34;  ///< ff1e
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

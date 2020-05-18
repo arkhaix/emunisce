@@ -22,7 +22,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "MachineTypes.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 namespace EmulatedMachine {
 typedef int Type;
@@ -108,6 +108,6 @@ public:
 	virtual void DisableBreakpoint(int address) = 0;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

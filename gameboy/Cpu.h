@@ -24,7 +24,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "MachineIncludes.h"
 #include "PlatformTypes.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 // Flag positions
 #define BIT_Z (7)
@@ -232,6 +232,6 @@ private:
 	void ExecXOR(u8 value);
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

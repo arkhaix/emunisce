@@ -1,11 +1,11 @@
 #include "CommandTrie.h"
-using namespace Emunisce;
+using namespace emunisce;
 
 #include <cstring>  //strlen
 #include <string>
 #include <vector>
 
-namespace Emunisce {
+namespace emunisce {
 
 class CommandTrie_Private {
 public:
@@ -22,7 +22,7 @@ public:
 	std::vector<CommandTrie*> leaves;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 CommandTrie::CommandTrie(CommandTrie* parent) {
 	m_private = new CommandTrie_Private();

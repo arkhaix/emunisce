@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef OPENGLRENDERER_H
 #define OPENGLRENDERER_H
 
-namespace Emunisce {
+namespace emunisce {
 
 class IEmulatedMachine;
 
@@ -47,6 +47,6 @@ private:
 	class OpenGLRenderer_Private* m_private;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

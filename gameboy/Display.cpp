@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Display.h"
-using namespace Emunisce;
+using namespace emunisce;
 
 #include "GameboyIncludes.h"
 #include "serialization/SerializationIncludes.h"

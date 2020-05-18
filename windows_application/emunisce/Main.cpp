@@ -22,7 +22,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "ConsoleDebugger.h"
 #include "Emunisce.h"
 #include "windows.h"
-using namespace Emunisce;
+using namespace emunisce;
 
 EmunisceApplication* g_phoenix = nullptr;
 

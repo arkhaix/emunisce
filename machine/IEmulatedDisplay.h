@@ -22,7 +22,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "MachineTypes.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 struct ScreenResolution {
 	int width;
@@ -40,6 +40,6 @@ public:
 											 ///< unique or sequential, so use != when polling for changes.
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "WaveOutSound.h"
-using namespace Emunisce;
+using namespace emunisce;
 
 #include <iostream>
 #include <queue>
@@ -28,7 +28,7 @@ using namespace Emunisce;
 #include "base_application/MachineRunner.h"
 #include "windows.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class WaveOutSound_Private {
 public:
@@ -327,7 +327,7 @@ public:
 	}
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 WaveOutSound::WaveOutSound() {
 	m_private = new WaveOutSound_Private();

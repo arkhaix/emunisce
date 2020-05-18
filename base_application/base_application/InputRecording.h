@@ -26,7 +26,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "MachineFeature.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class Archive;
 
@@ -94,6 +94,6 @@ private:
 	std::queue<InputEvent> m_pendingEvents;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

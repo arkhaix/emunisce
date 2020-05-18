@@ -1,7 +1,7 @@
 #ifndef COMMANDTRIE_H
 #define COMMANDTRIE_H
 
-namespace Emunisce {
+namespace emunisce {
 
 class CommandTrie {
 public:
@@ -24,6 +24,6 @@ private:
 	class CommandTrie_Private* m_private;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

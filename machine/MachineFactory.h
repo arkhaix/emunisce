@@ -22,7 +22,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "IEmulatedMachine.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class MachineFactory {
 public:
@@ -31,6 +31,6 @@ public:
 	static void ReleaseMachine(IEmulatedMachine* machine);
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

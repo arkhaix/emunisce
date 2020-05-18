@@ -28,7 +28,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "Window.h"
 #include "windows.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class IWindowMessageListener {
 public:
@@ -96,6 +96,6 @@ private:
 	std::recursive_mutex m_listenersLock;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

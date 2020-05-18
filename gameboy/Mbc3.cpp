@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Mbc3.h"
-using namespace Emunisce;
+using namespace emunisce;
 
 Mbc3::Mbc3() {
 	m_fiveBitBankCheck = false;  ///< Tells parent to allow loading into banks 0x20, 0x40, 0x60 during LoadFile.

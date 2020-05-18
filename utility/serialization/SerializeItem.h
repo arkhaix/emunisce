@@ -22,7 +22,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "Archive.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 void SerializeBuffer(Archive& archive, unsigned char* buffer, unsigned int bytes);
 
@@ -40,6 +40,6 @@ void SerializeItem(Archive& archive, bool& data);
 void SerializeItem(Archive& archive, float& data);
 void SerializeItem(Archive& archive, double& data);
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

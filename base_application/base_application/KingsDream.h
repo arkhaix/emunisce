@@ -30,7 +30,7 @@ I don't know if he was the original creator.  No license was specified.
 #include <algorithm>
 #include <list>
 
-namespace Emunisce {
+namespace emunisce {
 
 class ScreenBuffer;
 
@@ -100,6 +100,6 @@ private:
 	std::list<std::pair<float, float> > m_skipRanges;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

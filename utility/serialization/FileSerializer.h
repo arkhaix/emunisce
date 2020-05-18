@@ -25,7 +25,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "ISerializer.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class FileSerializer : public ISerializer {
 public:
@@ -55,6 +55,6 @@ protected:
 	std::string m_filename;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

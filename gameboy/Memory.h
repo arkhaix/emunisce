@@ -24,7 +24,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "MachineIncludes.h"
 #include "PlatformTypes.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 namespace WaveRamLock {
 typedef int Type;
@@ -157,6 +157,6 @@ protected:
 	u8 m_waveRamReadValue;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

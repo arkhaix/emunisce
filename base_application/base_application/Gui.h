@@ -24,7 +24,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "MachineFeature.h"
 #include "MachineIncludes.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class KingsDream;
 
@@ -119,6 +119,6 @@ protected:
 	GuiFeature* m_guiFeature;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

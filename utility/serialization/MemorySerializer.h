@@ -22,7 +22,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "ISerializer.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class MemorySerializer : public ISerializer {
 public:
@@ -60,6 +60,6 @@ protected:
 	unsigned int m_restorePosition;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

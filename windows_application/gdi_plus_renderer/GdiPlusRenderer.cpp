@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #undef NOMINMAX
 
 #include "GdiPlusRenderer.h"
-using namespace Emunisce;
+using namespace emunisce;
 
 // Windows
 #include "windows.h"
@@ -40,7 +40,7 @@ using namespace Gdiplus;
 // Application
 #include "../emunisce/Emunisce.h"  ///<todo: this is just here for requesting shutdown.  Refactor this.
 
-namespace Emunisce {
+namespace emunisce {
 
 class GdiPlusRenderer_Private {
 public:
@@ -165,7 +165,7 @@ public:
 	}
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 void GdiPlusRenderer::Initialize(EmunisceApplication* phoenix, HWND windowHandle) {
 	m_private = new GdiPlusRenderer_Private();

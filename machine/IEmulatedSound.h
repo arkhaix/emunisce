@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef IEMULATEDSOUND_H
 #define IEMULATEDSOUND_H
 
-namespace Emunisce {
+namespace emunisce {
 
 static const unsigned int SamplesPerSecond = 44100;
 
@@ -66,6 +66,6 @@ public:
 	virtual void SetSquareSynthesisMethod(SquareSynthesisMethod::Type method) = 0;
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

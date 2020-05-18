@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #define GameboyButtons_ToString 1
 
 #include "Input.h"
-using namespace Emunisce;
+using namespace emunisce;
 
 #include "GameboyIncludes.h"
 #include "serialization/SerializationIncludes.h"

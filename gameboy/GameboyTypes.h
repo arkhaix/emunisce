@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef GAMEBOYTYPES_H
 #define GAMEBOYTYPES_H
 
-namespace Emunisce {
+namespace emunisce {
 
 // Component forward-declarations
 class Gameboy;
@@ -83,6 +83,6 @@ class Sound;
 #define Mode_SpriteLock (2)
 #define Mode_VideoRamLock (3)
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif

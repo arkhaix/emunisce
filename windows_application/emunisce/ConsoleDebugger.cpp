@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #define EmulatedMachine_ToString 1
 
 #include "ConsoleDebugger.h"
-using namespace Emunisce;
+using namespace emunisce;
 
 // Windows
 #include "windows.h"

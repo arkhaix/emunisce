@@ -23,7 +23,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "wx/glcanvas.h"
 #include "wx/wx.h"
 
-namespace Emunisce {
+namespace emunisce {
 
 class Application;
 
@@ -59,6 +59,6 @@ public:
 	DECLARE_EVENT_TABLE()
 };
 
-}  // namespace Emunisce
+}  // namespace emunisce
 
 #endif  // WindowMain_H
