@@ -1,4 +1,4 @@
-#include "CommandTrie.h"
+#include "command_trie.h"
 using namespace emunisce;
 
 #include <cstring>  //strlen

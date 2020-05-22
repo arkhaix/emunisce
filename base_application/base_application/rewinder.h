@@ -24,7 +24,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include <mutex>
 #include <vector>
 
-#include "MachineFeature.h"
+#include "machine_feature.h"
 #include "PlatformIncludes.h"
 
 namespace emunisce {

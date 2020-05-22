@@ -11,13 +11,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="OpenGLRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="OpenGLRenderer.cpp">
+    <ClCompile Include="opengl_renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="opengl_renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

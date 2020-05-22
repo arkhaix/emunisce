@@ -46,7 +46,7 @@ using namespace emunisce;
 
 // Application
 #include "../wave_out_sound/wave_out_sound.h"
-#include "base_application/IUserInterface.h"
+#include "base_application/user_interface.h"
 #include "emunisce.h"
 
 ConsoleDebugger::ConsoleDebugger() {

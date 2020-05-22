@@ -23,64 +23,64 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BaseApplication.h">
+    <ClInclude Include="base_application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MachineFeature.h">
+    <ClInclude Include="command_trie.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="input_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="machine_runner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="user_interface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="machine_feature.h">
       <Filter>Machine Features</Filter>
     </ClInclude>
-    <ClInclude Include="Gui.h">
+    <ClInclude Include="gui.h">
       <Filter>Machine Features\Gui</Filter>
     </ClInclude>
-    <ClInclude Include="KingsDream.h">
+    <ClInclude Include="kings_dream.h">
       <Filter>Machine Features\Gui</Filter>
     </ClInclude>
-    <ClInclude Include="InputRecording.h">
+    <ClInclude Include="input_recording.h">
       <Filter>Machine Features\Input Recorder</Filter>
     </ClInclude>
-    <ClInclude Include="Rewinder.h">
+    <ClInclude Include="rewinder.h">
       <Filter>Machine Features\Rewinder</Filter>
-    </ClInclude>
-    <ClInclude Include="IUserInterface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MachineRunner.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CommandTrie.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BaseApplication.cpp">
+    <ClCompile Include="base_application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MachineFeature.cpp">
+    <ClCompile Include="command_trie.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="input_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="machine_runner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="machine_feature.cpp">
       <Filter>Machine Features</Filter>
     </ClCompile>
-    <ClCompile Include="Gui.cpp">
+    <ClCompile Include="gui.cpp">
       <Filter>Machine Features\Gui</Filter>
     </ClCompile>
-    <ClCompile Include="KingsDream.cpp">
+    <ClCompile Include="kings_dream.cpp">
       <Filter>Machine Features\Gui</Filter>
     </ClCompile>
-    <ClCompile Include="InputRecording.cpp">
+    <ClCompile Include="input_recording.cpp">
       <Filter>Machine Features\Input Recorder</Filter>
     </ClCompile>
-    <ClCompile Include="Rewinder.cpp">
+    <ClCompile Include="rewinder.cpp">
       <Filter>Machine Features\Rewinder</Filter>
-    </ClCompile>
-    <ClCompile Include="MachineRunner.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CommandTrie.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

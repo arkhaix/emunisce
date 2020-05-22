@@ -19,12 +19,12 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 #define GuiButtons_ToString 1
 
-#include "Gui.h"
+#include "gui.h"
 using namespace emunisce;
 
 #include <Memory.h>
 
-#include "KingsDream.h"
+#include "kings_dream.h"
 #include "hqnx/HqNx.h"
 
 // Gui

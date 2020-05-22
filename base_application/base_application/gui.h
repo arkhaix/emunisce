@@ -20,8 +20,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef GUI_H
 #define GUI_H
 
-#include "IUserInterface.h"  ///<For DisplayFilter
-#include "MachineFeature.h"
+#include "user_interface.h"  ///<For DisplayFilter
+#include "machine_feature.h"
 #include "MachineIncludes.h"
 
 namespace emunisce {

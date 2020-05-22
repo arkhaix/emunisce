@@ -23,7 +23,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include <string>
 
 #include "IMachineToApplication.h"
-#include "IUserInterface.h"
+#include "user_interface.h"
 
 namespace emunisce {
 

@@ -21,8 +21,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #define EMUNISCE_H
 
 // BaseApplication
-#include "base_application/BaseApplication.h"
-#include "opengl_renderer/OpenGLRenderer.h"
+#include "base_application/base_application.h"
+#include "opengl_renderer/opengl_renderer.h"
 
 // WindowsApplication
 #include <string>

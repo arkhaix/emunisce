@@ -40,8 +40,8 @@ using namespace emunisce;
 #include "MachineIncludes.h"
 
 // BaseApplication
-#include "base_application/InputManager.h"
-#include "base_application/MachineFeature.h"
+#include "base_application/input_manager.h"
+#include "base_application/machine_feature.h"
 
 // Serialization
 #include "serialization/FileSerializer.h"

@@ -17,11 +17,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "InputRecording.h"
+#include "input_recording.h"
 using namespace emunisce;
 
-#include "BaseApplication.h"
-#include "MachineRunner.h"
+#include "base_application.h"
+#include "machine_runner.h"
 #include "serialization/MemorySerializer.h"
 #include "serialization/SerializationIncludes.h"
 

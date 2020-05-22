@@ -66,6 +66,12 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="opengl_renderer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="opengl_renderer.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4913CBB4-2D7D-4D39-B3C2-1440EBFF3953}</ProjectGuid>
     <RootNamespace>OpenGLRenderer</RootNamespace>
@@ -484,12 +490,6 @@
       <AdditionalDependencies>opengl32.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="OpenGLRenderer.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="OpenGLRenderer.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

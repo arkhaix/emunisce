@@ -597,27 +597,27 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BaseApplication.h" />
-    <ClInclude Include="CommandTrie.h" />
-    <ClInclude Include="Gui.h" />
-    <ClInclude Include="InputManager.h" />
-    <ClInclude Include="InputRecording.h" />
-    <ClInclude Include="IUserInterface.h" />
-    <ClInclude Include="KingsDream.h" />
-    <ClInclude Include="MachineFeature.h" />
-    <ClInclude Include="MachineRunner.h" />
-    <ClInclude Include="Rewinder.h" />
+    <ClInclude Include="base_application.h" />
+    <ClInclude Include="command_trie.h" />
+    <ClInclude Include="gui.h" />
+    <ClInclude Include="input_manager.h" />
+    <ClInclude Include="input_recording.h" />
+    <ClInclude Include="kings_dream.h" />
+    <ClInclude Include="machine_feature.h" />
+    <ClInclude Include="machine_runner.h" />
+    <ClInclude Include="rewinder.h" />
+    <ClInclude Include="user_interface.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BaseApplication.cpp" />
-    <ClCompile Include="CommandTrie.cpp" />
-    <ClCompile Include="Gui.cpp" />
-    <ClCompile Include="InputManager.cpp" />
-    <ClCompile Include="InputRecording.cpp" />
-    <ClCompile Include="KingsDream.cpp" />
-    <ClCompile Include="MachineFeature.cpp" />
-    <ClCompile Include="MachineRunner.cpp" />
-    <ClCompile Include="Rewinder.cpp" />
+    <ClCompile Include="base_application.cpp" />
+    <ClCompile Include="command_trie.cpp" />
+    <ClCompile Include="gui.cpp" />
+    <ClCompile Include="input_manager.cpp" />
+    <ClCompile Include="input_recording.cpp" />
+    <ClCompile Include="kings_dream.cpp" />
+    <ClCompile Include="machine_feature.cpp" />
+    <ClCompile Include="machine_runner.cpp" />
+    <ClCompile Include="rewinder.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

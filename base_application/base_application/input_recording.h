@@ -24,7 +24,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include <queue>
 #include <vector>
 
-#include "MachineFeature.h"
+#include "machine_feature.h"
 
 namespace emunisce {
 

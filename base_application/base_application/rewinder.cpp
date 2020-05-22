@@ -17,12 +17,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "Rewinder.h"
+#include "rewinder.h"
 using namespace emunisce;
 
-#include "BaseApplication.h"
-#include "InputRecording.h"
-#include "MachineRunner.h"
+#include "base_application.h"
+#include "input_recording.h"
+#include "machine_runner.h"
 #include "serialization/MemorySerializer.h"
 #include "serialization/SerializationIncludes.h"
 

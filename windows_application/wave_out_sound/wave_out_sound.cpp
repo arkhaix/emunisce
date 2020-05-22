@@ -25,7 +25,7 @@ using namespace emunisce;
 
 #include "../emunisce/emunisce.h"  ///<todo: this is just here for requesting shutdown?  refactor this.
 #include "MachineIncludes.h"
-#include "base_application/MachineRunner.h"
+#include "base_application/machine_runner.h"
 #include "windows.h"
 
 namespace emunisce {
