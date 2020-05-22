@@ -71,7 +71,7 @@ enum {
 };
 }  // namespace RegisterMode
 
-class Input : public IEmulatedInput {
+class Input : public EmulatedInput {
 public:
 	Input();
 	virtual ~Input() = default;

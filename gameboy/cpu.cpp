@@ -91,7 +91,7 @@ void Cpu::Initialize() {
 
 	pc = 0x0000;
 
-	if (m_machineType == EmulatedMachine::GameboyColor) {
+	if (m_machineType == Machine::GameboyColor) {
 		a = 0x11;
 	}
 }
@@ -171,7 +171,7 @@ void Cpu::SetTimerControl(u8 value) {
 }
 
 void Cpu::SetCgbSpeedSwitch(u8 value) {
-	if (m_machineType != EmulatedMachine::GameboyColor) {
+	if (m_machineType != Machine::GameboyColor) {
 		return;
 	}
 

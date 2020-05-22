@@ -22,7 +22,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace emunisce {
 
-class IEmulatedMachine;
+class EmulatedMachine;
 
 class OpenGLRenderer {
 public:
@@ -32,7 +32,7 @@ public:
 	void Initialize(void* windowHandle);
 	void Shutdown();
 
-	void SetMachine(IEmulatedMachine* machine);
+	void SetMachine(EmulatedMachine* machine);
 
 	int GetLastFrameRendered();
 

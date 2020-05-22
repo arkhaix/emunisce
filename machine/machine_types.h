@@ -25,15 +25,15 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 namespace emunisce {
 
 // Application interface
-class IMachineToApplication;
+class MachineToApplication;
 
 // Component forward-declarations
-class IEmulatedMachine;
-class IEmulatedDisplay;
-class IEmulatedInput;
-class IEmulatedMemory;
-class IEmulatedProcessor;
-class IEmulatedSound;
+class EmulatedMachine;
+class EmulatedDisplay;
+class EmulatedInput;
+class EmulatedMemory;
+class EmulatedProcessor;
+class EmulatedSound;
 
 // Display types
 class ScreenBuffer;

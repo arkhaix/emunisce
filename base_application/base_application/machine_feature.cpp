@@ -67,7 +67,7 @@ void MachineFeature::SetApplication(BaseApplication* application) {
 	m_application = application;
 }
 
-void MachineFeature::SetComponentMachine(IEmulatedMachine* componentMachine) {
+void MachineFeature::SetComponentMachine(EmulatedMachine* componentMachine) {
 	m_wrappedMachine = componentMachine;
 	m_isWrappingComponent = true;
 
@@ -87,7 +87,7 @@ void MachineFeature::SetComponentMachine(IEmulatedMachine* componentMachine) {
 	}
 }
 
-void MachineFeature::SetEmulatedMachine(IEmulatedMachine* wrappedMachine) {
+void MachineFeature::SetEmulatedMachine(EmulatedMachine* wrappedMachine) {
 	if (m_isWrappingComponent == true && m_wrappedMachine != nullptr) {
 		MachineFeature* componentMachine = dynamic_cast<MachineFeature*>(m_wrappedMachine);
 		if (componentMachine != nullptr) {
@@ -120,12 +120,12 @@ void MachineFeature::SetFocus(bool hasFocus) {
 	m_hasFocus = hasFocus;
 }
 
-// IEmulatedMachine
+// EmulatedMachine
 
 // Machine type
-EmulatedMachine::Type MachineFeature::GetType() {
+Machine::Type MachineFeature::GetType() {
 	if (m_wrappedMachine == nullptr) {
-		return EmulatedMachine::NoMachine;
+		return Machine::NoMachine;
 	}
 
 	return m_wrappedMachine->GetType();
@@ -140,7 +140,7 @@ const char* MachineFeature::GetRomTitle() {
 }
 
 // Application interface
-void MachineFeature::SetApplicationInterface(IMachineToApplication* applicationInterface) {
+void MachineFeature::SetApplicationInterface(MachineToApplication* applicationInterface) {
 	if (m_wrappedMachine == nullptr) {
 		return;
 	}
@@ -165,23 +165,23 @@ void MachineFeature::RemoveApplicationEvent(unsigned int eventId) {
 }
 
 // Component access
-IEmulatedDisplay* MachineFeature::GetDisplay() {
+EmulatedDisplay* MachineFeature::GetDisplay() {
 	return this;
 }
 
-IEmulatedInput* MachineFeature::GetInput() {
+EmulatedInput* MachineFeature::GetInput() {
 	return this;
 }
 
-IEmulatedMemory* MachineFeature::GetMemory() {
+EmulatedMemory* MachineFeature::GetMemory() {
 	return this;
 }
 
-IEmulatedProcessor* MachineFeature::GetProcessor() {
+EmulatedProcessor* MachineFeature::GetProcessor() {
 	return this;
 }
 
-IEmulatedSound* MachineFeature::GetSound() {
+EmulatedSound* MachineFeature::GetSound() {
 	return this;
 }
 

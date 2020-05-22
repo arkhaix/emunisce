@@ -86,7 +86,7 @@ void EmunisceApplication::RunWindow() {
 	while (ShutdownRequested() == false) {
 		HandlePendingMachineChange();
 
-		IEmulatedMachine* machine = GetMachine();
+		EmulatedMachine* machine = GetMachine();
 		if (machine) {
 			if (m_renderer->GetLastFrameRendered() != machine->GetDisplay()->GetScreenBufferCount() &&
 				ShutdownRequested() == false) {
@@ -124,7 +124,7 @@ WaveOutSound* EmunisceApplication::GetSound() {
 	return m_sound;
 }
 
-void EmunisceApplication::NotifyMachineChanged(IEmulatedMachine* newMachine) {
+void EmunisceApplication::NotifyMachineChanged(EmulatedMachine* newMachine) {
 	// RunWindow must handle machine changes (rendering things have to happen on that thread)
 	m_pendingMachine = newMachine;
 	while (m_pendingMachine != nullptr) {
@@ -342,7 +342,7 @@ void EmunisceApplication::HandlePendingMachineChange() {
 		return;
 	}
 
-	IEmulatedMachine* newMachine = m_pendingMachine;
+	EmulatedMachine* newMachine = m_pendingMachine;
 
 	BaseApplication::NotifyMachineChanged(newMachine);
 
@@ -463,7 +463,7 @@ std::string EmunisceApplication::GetCurrentSaveStateFolder() {
 	std::string basePath = GetBaseSaveStateFolder();
 	strcpy_s(path, MAX_PATH, basePath.c_str());
 
-	PathAppend(path, EmulatedMachine::ToString[m_machine->GetType()]);
+	PathAppend(path, Machine::ToString[m_machine->GetType()]);
 	PathAppend(path, m_machine->GetRomTitle());
 
 	SHCreateDirectoryEx(nullptr, path, nullptr);
@@ -497,7 +497,7 @@ std::string EmunisceApplication::GetCurrentRomDataFolder() {
 	std::string basePath = GetBaseRomDataFolder();
 	strcpy_s(path, MAX_PATH, basePath.c_str());
 
-	PathAppend(path, EmulatedMachine::ToString[m_machine->GetType()]);
+	PathAppend(path, Machine::ToString[m_machine->GetType()]);
 	PathAppend(path, m_machine->GetRomTitle());
 
 	SHCreateDirectoryEx(nullptr, path, nullptr);
@@ -536,7 +536,7 @@ std::string EmunisceApplication::GetCurrentMovieFolder() {
 	std::string basePath = GetBaseMovieFolder();
 	strcpy_s(path, MAX_PATH, basePath.c_str());
 
-	PathAppend(path, EmulatedMachine::ToString[m_machine->GetType()]);
+	PathAppend(path, Machine::ToString[m_machine->GetType()]);
 	PathAppend(path, m_machine->GetRomTitle());
 
 	SHCreateDirectoryEx(nullptr, path, nullptr);

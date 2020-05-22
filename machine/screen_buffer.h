@@ -22,7 +22,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <string.h>  ///<memcpy
 
-#include "MachineTypes.h"
+#include "machine_types.h"
 
 namespace emunisce {
 

@@ -76,7 +76,7 @@ void ConsoleDebugger::Initialize(EmunisceApplication* phoenix) {
 void ConsoleDebugger::Shutdown() {
 }
 
-void ConsoleDebugger::SetMachine(IEmulatedMachine* machine) {
+void ConsoleDebugger::SetMachine(EmulatedMachine* machine) {
 	m_machine = machine;
 
 	m_cpu = nullptr;  // machine->GetCpu();
@@ -761,7 +761,7 @@ void ConsoleDebugger::LoadMacro(const char* id) {
 void ConsoleDebugger::PrintButtons() {
 	printf("%s\n", __FUNCTION__);
 
-	IEmulatedInput* input = m_machine->GetInput();
+	EmulatedInput* input = m_machine->GetInput();
 	if (input == nullptr) {
 		printf("No input\n");
 		return;
@@ -779,5 +779,5 @@ void ConsoleDebugger::PrintButtons() {
 void ConsoleDebugger::PrintMachineType() {
 	printf("%s\n", __FUNCTION__);
 
-	printf("Machine type: %s\n", EmulatedMachine::ToString[m_machine->GetType()]);
+	printf("Machine type: %s\n", Machine::ToString[m_machine->GetType()]);
 }

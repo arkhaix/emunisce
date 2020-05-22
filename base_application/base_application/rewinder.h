@@ -55,12 +55,12 @@ public:
 
 	void SetApplication(BaseApplication* application) override;
 
-	void SetComponentMachine(IEmulatedMachine* componentMachine)
+	void SetComponentMachine(EmulatedMachine* componentMachine)
 		override;  ///< Overridden because this component wraps its own InputRecording (m_recorder)
-	void SetEmulatedMachine(IEmulatedMachine* emulatedMachine)
+	void SetEmulatedMachine(EmulatedMachine* emulatedMachine)
 		override;  ///< Overridden because this component wraps its own InputRecording (m_recorder)
 
-	// IEmulatedMachine
+	// EmulatedMachine
 
 	unsigned int GetFrameCount() override;
 	void RunToNextFrame() override;
@@ -146,7 +146,7 @@ protected:
 	static const unsigned int m_maxFrameHistorySize = Segment::FramesPerSegment;
 	std::mutex m_frameHistoryLock;
 
-	class InputHandler : public IEmulatedInput {
+	class InputHandler : public EmulatedInput {
 	public:
 		InputHandler(Rewinder* rewinder);
 		virtual ~InputHandler() = default;

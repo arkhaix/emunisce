@@ -434,17 +434,17 @@ void Rewinder::SetApplication(BaseApplication* application) {
 	m_recorder->SetApplication(application);
 }
 
-void Rewinder::SetComponentMachine(IEmulatedMachine* componentMachine) {
+void Rewinder::SetComponentMachine(EmulatedMachine* componentMachine) {
 	MachineFeature::SetComponentMachine(m_recorder);
 	m_recorder->SetComponentMachine(componentMachine);
 }
 
-void Rewinder::SetEmulatedMachine(IEmulatedMachine* emulatedMachine) {
+void Rewinder::SetEmulatedMachine(EmulatedMachine* emulatedMachine) {
 	MachineFeature::SetComponentMachine(m_recorder);  ///< Component, not emulated.
 	m_recorder->SetEmulatedMachine(emulatedMachine);
 }
 
-// IEmulatedMachine
+// EmulatedMachine
 
 unsigned int Rewinder::GetFrameCount() {
 	std::lock_guard<std::mutex> scopedLock(m_frameHistoryLock);

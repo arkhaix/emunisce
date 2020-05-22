@@ -60,7 +60,7 @@ Application::~Application() {
 
 // BaseApplication overrides
 
-void Application::NotifyMachineChanged(IEmulatedMachine* newMachine) {
+void Application::NotifyMachineChanged(EmulatedMachine* newMachine) {
 	BaseApplication::NotifyMachineChanged(newMachine);
 }
 
@@ -294,7 +294,7 @@ std::string Application::GetSaveStateFile(const char* name) {
 	result += std::string("/SaveStates");
 	mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-	result += std::string("/") + std::string(EmulatedMachine::ToString[m_machine->GetType()]);
+	result += std::string("/") + std::string(Machine::ToString[m_machine->GetType()]);
 	mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
 	result += std::string("/") + std::string(m_machine->GetRomTitle());
@@ -317,7 +317,7 @@ std::string Application::GetRomDataFile(const char* name) {
 	result += std::string("/RomData");
 	mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-	result += std::string("/") + std::string(EmulatedMachine::ToString[m_machine->GetType()]);
+	result += std::string("/") + std::string(Machine::ToString[m_machine->GetType()]);
 	mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
 	result += std::string("/") + std::string(m_machine->GetRomTitle());
@@ -340,7 +340,7 @@ std::string Application::GetMovieFile(const char* name) {
 	result += std::string("/Movies");
 	mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-	result += std::string("/") + std::string(EmulatedMachine::ToString[m_machine->GetType()]);
+	result += std::string("/") + std::string(Machine::ToString[m_machine->GetType()]);
 	mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
 	result += std::string("/") + std::string(m_machine->GetRomTitle());
@@ -363,7 +363,7 @@ std::string Application::GetMacroFile(const char* name) {
 	result += std::string("/Macros");
 	mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-	result += std::string("/") + std::string(EmulatedMachine::ToString[m_machine->GetType()]);
+	result += std::string("/") + std::string(Machine::ToString[m_machine->GetType()]);
 	mkdir(result.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
 	// no rom title folder for macros.  they're global to the machine.

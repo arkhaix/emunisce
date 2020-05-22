@@ -26,10 +26,10 @@ using namespace emunisce;
 // Serialization
 #include "serialization/SerializationIncludes.h"
 
-// IEmulatedMachine
+// EmulatedMachine
 
 // Machine type
-EmulatedMachine::Type Gameboy::GetType() {
+Machine::Type Gameboy::GetType() {
 	return m_machineType;
 }
 
@@ -38,7 +38,7 @@ const char* Gameboy::GetRomTitle() {
 }
 
 // Application interface
-void Gameboy::SetApplicationInterface(IMachineToApplication* applicationInterface) {
+void Gameboy::SetApplicationInterface(MachineToApplication* applicationInterface) {
 	m_applicationInterface = applicationInterface;
 }
 
@@ -77,23 +77,23 @@ void Gameboy::RemoveApplicationEvent(unsigned int eventId) {
 }
 
 // Component access
-IEmulatedDisplay* Gameboy::GetDisplay() {
+EmulatedDisplay* Gameboy::GetDisplay() {
 	return m_display;
 }
 
-IEmulatedInput* Gameboy::GetInput() {
+EmulatedInput* Gameboy::GetInput() {
 	return m_input;
 }
 
-IEmulatedMemory* Gameboy::GetMemory() {
+EmulatedMemory* Gameboy::GetMemory() {
 	return m_memory;
 }
 
-IEmulatedProcessor* Gameboy::GetProcessor() {
+EmulatedProcessor* Gameboy::GetProcessor() {
 	return m_cpu;
 }
 
-IEmulatedSound* Gameboy::GetSound() {
+EmulatedSound* Gameboy::GetSound() {
 	return m_sound;
 }
 
@@ -151,24 +151,24 @@ void Gameboy::DisableBreakpoint(int address) {
 // Gameboy
 
 // Creation
-Gameboy* Gameboy::Create(const char* filename, EmulatedMachine::Type machineType) {
+Gameboy* Gameboy::Create(const char* filename, Machine::Type machineType) {
 	Memory* memory = Memory::CreateFromFile(filename);
 	if (memory == nullptr) {
 		return nullptr;
 	}
 
-	if (machineType == EmulatedMachine::AutoSelect) {
+	if (machineType == Machine::AutoSelect) {
 		u8 cgbValue = memory->Read8(0x0143);
 
 		if (cgbValue & 0x80) {
-			machineType = EmulatedMachine::GameboyColor;
+			machineType = Machine::GameboyColor;
 		}
 		else {
-			machineType = EmulatedMachine::Gameboy;
+			machineType = Machine::Gameboy;
 		}
 	}
 
-	if (machineType != EmulatedMachine::Gameboy && machineType != EmulatedMachine::GameboyColor) {
+	if (machineType != Machine::Gameboy && machineType != Machine::GameboyColor) {
 		return nullptr;
 	}
 
@@ -186,7 +186,7 @@ void Gameboy::Release(Gameboy* machine) {
 }
 
 // Application interface
-IMachineToApplication* Gameboy::GetApplicationInterface() {
+MachineToApplication* Gameboy::GetApplicationInterface() {
 	return m_applicationInterface;
 }
 
@@ -269,7 +269,7 @@ void Gameboy::SetDoubleSpeed(bool doubleSpeed) {
 
 // protected:
 
-Gameboy::Gameboy(Memory* memory, EmulatedMachine::Type machineType) {
+Gameboy::Gameboy(Memory* memory, Machine::Type machineType) {
 	m_machineType = machineType;
 
 	m_applicationInterface = nullptr;

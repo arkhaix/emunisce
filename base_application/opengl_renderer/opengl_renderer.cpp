@@ -97,8 +97,8 @@ struct OpenGLScreenBuffer {
 
 class OpenGLRenderer_Private {
 public:
-	IEmulatedMachine* _Machine;
-	IEmulatedDisplay* _Display;
+	EmulatedMachine* _Machine;
+	EmulatedDisplay* _Display;
 
 	bool _NeedsShutdown;
 
@@ -592,7 +592,7 @@ void OpenGLRenderer::Shutdown() {
 	m_private->ShutdownOpenGL();
 }
 
-void OpenGLRenderer::SetMachine(IEmulatedMachine* machine) {
+void OpenGLRenderer::SetMachine(EmulatedMachine* machine) {
 	// todo: lock things
 	m_private->_Machine = machine;
 	m_private->_Display = machine->GetDisplay();

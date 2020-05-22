@@ -55,7 +55,7 @@ public:
 	GdiplusStartupInput _GdiplusStartupInput;
 	ULONG_PTR _GdiplusToken;
 
-	IEmulatedMachine* _Machine;
+	EmulatedMachine* _Machine;
 
 	GdiPlusRenderer_Private() {
 		_Phoenix = nullptr;
@@ -119,7 +119,7 @@ public:
 			return;
 		}
 
-		IEmulatedDisplay* display = _Machine->GetDisplay();
+		EmulatedDisplay* display = _Machine->GetDisplay();
 
 		if (_LastFrameRendered == display->GetScreenBufferCount()) {
 			return;
@@ -182,7 +182,7 @@ void GdiPlusRenderer::Shutdown() {
 	delete m_private;
 }
 
-void GdiPlusRenderer::SetMachine(IEmulatedMachine* machine) {
+void GdiPlusRenderer::SetMachine(EmulatedMachine* machine) {
 	// todo: lock things to prevent crashing
 	m_private->_Machine = machine;
 }

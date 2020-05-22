@@ -19,21 +19,21 @@ cc_library(
 
     hdrs = [
         "MachineIncludes.h",
-        "MachineTypes.h",
+        "machine_types.h",
 
-        "MachineFactory.h",
-        "MachineSerialization.h",
+        "machine_factory.h",
+        "machine_serialization.h",
 
-        "IMachineToApplication.h",
+        "machine_to_application.h",
 
-        "IEmulatedMachine.h",
-        "IEmulatedDisplay.h",
-        "IEmulatedInput.h",
-        "IEmulatedMemory.h",
-        "IEmulatedProcessor.h",
-        "IEmulatedsound.h",
+        "emulated_machine.h",
+        "emulated_display.h",
+        "emulated_input.h",
+        "emulated_memory.h",
+        "emulated_processor.h",
+        "emulated_sound.h",
 
-        "ScreenBuffer.h",
+        "screen_buffer.h",
     ],
 
     includes = ["."],

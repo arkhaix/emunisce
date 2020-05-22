@@ -110,7 +110,7 @@ BaseApplication::~BaseApplication() {
 }
 
 // Emulated machine
-void BaseApplication::NotifyMachineChanged(IEmulatedMachine* newMachine) {
+void BaseApplication::NotifyMachineChanged(EmulatedMachine* newMachine) {
 	if (newMachine != m_gui && newMachine != m_inputRecorder && newMachine != m_rewinder) {
 		m_gui->SetFocus(false);
 		m_machine->SetEmulatedMachine(newMachine);
@@ -123,7 +123,7 @@ void BaseApplication::NotifyMachineChanged(IEmulatedMachine* newMachine) {
 	newMachine->SetApplicationInterface(this);
 }
 
-IEmulatedMachine* BaseApplication::GetMachine() {
+EmulatedMachine* BaseApplication::GetMachine() {
 	return m_machine;
 }
 
@@ -176,7 +176,7 @@ bool BaseApplication::LoadRom(const char* filename) {
 	}
 
 	// Load it
-	IEmulatedMachine* machine = MachineFactory::CreateMachine(filename);
+	EmulatedMachine* machine = MachineFactory::CreateMachine(filename);
 	if (machine == nullptr) {
 		if (selectedFilename != nullptr) {
 			free((void*)selectedFilename);
@@ -186,7 +186,7 @@ bool BaseApplication::LoadRom(const char* filename) {
 	}
 
 	// Successfully created a new Machine
-	IEmulatedMachine* oldMachine = m_wrappedMachine;
+	EmulatedMachine* oldMachine = m_wrappedMachine;
 
 	bool wasPaused = m_machineRunner->IsPaused();
 	m_machineRunner->Pause();

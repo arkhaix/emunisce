@@ -62,7 +62,7 @@ namespace emunisce {
 #define INV_H (f ^= (1 << BIT_H))
 #define INV_C (f ^= (1 << BIT_C))
 
-class Cpu : public IEmulatedProcessor {
+class Cpu : public EmulatedProcessor {
 public:
 	u16 pc;
 	u16 sp;
@@ -104,7 +104,7 @@ public:
 
 private:
 	Gameboy* m_machine;
-	EmulatedMachine::Type m_machineType;
+	Machine::Type m_machineType;
 
 	Memory* m_memory;
 

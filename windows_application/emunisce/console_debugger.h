@@ -40,7 +40,7 @@ public:
 	void Initialize(EmunisceApplication* phoenix);
 	void Shutdown();
 
-	void SetMachine(IEmulatedMachine* machine);
+	void SetMachine(EmulatedMachine* machine);
 
 	void Run();
 
@@ -108,10 +108,10 @@ private:
 	EmunisceApplication* m_phoenix;
 	IUserInterface* m_userInterface;
 
-	IEmulatedMachine* m_machine;
-	IEmulatedProcessor* m_cpu;
-	IEmulatedDisplay* m_display;
-	IEmulatedMemory* m_memory;
+	EmulatedMachine* m_machine;
+	EmulatedProcessor* m_cpu;
+	EmulatedDisplay* m_display;
+	EmulatedMemory* m_memory;
 
 	std::string m_lastFileLoaded;
 	int m_frameTicksRemaining;

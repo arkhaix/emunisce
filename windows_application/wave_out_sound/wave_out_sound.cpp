@@ -35,7 +35,7 @@ class WaveOutSound_Private {
 public:
 	EmunisceApplication* _Phoenix;
 
-	IEmulatedMachine* _Machine;
+	EmulatedMachine* _Machine;
 	unsigned int _LastFrameQueued;
 
 	bool _Mute;
@@ -348,7 +348,7 @@ void WaveOutSound::Shutdown() {
 	m_private->Shutdown();
 }
 
-void WaveOutSound::SetMachine(IEmulatedMachine* machine) {
+void WaveOutSound::SetMachine(EmulatedMachine* machine) {
 	m_private->_Machine = machine;
 }
 

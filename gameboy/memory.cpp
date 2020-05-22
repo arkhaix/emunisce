@@ -248,12 +248,12 @@ void Memory::Serialize(Archive& archive) {
 		// The Display doesn't save its vram and oam caches since they're already saved by Memory
 		// so this is here to restore those caches
 
-		if (m_machineType == EmulatedMachine::Gameboy) {
+		if (m_machineType == Machine::Gameboy) {
 			for (int address = 0x8000; address < 0xa000; address++) {
 				m_display->WriteVram(0, address, m_memoryData[address]);
 			}
 		}
-		else if (m_machineType == EmulatedMachine::GameboyColor) {
+		else if (m_machineType == Machine::GameboyColor) {
 			for (int bank = 0; bank < 2; bank++) {
 				for (int address = 0x8000; address < 0xa000; address++) {
 					m_display->WriteVram(bank, address, m_cgbVramBanks[bank][address - 0x8000]);
@@ -273,7 +273,7 @@ void Memory::SetRegisterLocation(u8 registerOffset, u8* pRegister, bool writeabl
 }
 
 u8* Memory::GetVram(int bank) {
-	if (m_machineType != EmulatedMachine::GameboyColor) {
+	if (m_machineType != Machine::GameboyColor) {
 		return &m_memoryData[0x8000];
 	}
 
@@ -387,7 +387,7 @@ void Memory::Write8(u16 address, u8 value) {
 	}
 
 	// CGB banks
-	if (m_machineType == EmulatedMachine::GameboyColor) {
+	if (m_machineType == Machine::GameboyColor) {
 		if (address >= 0x8000 && address < 0xa000) {
 			m_cgbVramBanks[m_selectedCgbVramBank][address - 0x8000] = value;
 		}
@@ -433,7 +433,7 @@ void Memory::DisableBootRom(u8 value) {
 }
 
 void Memory::SetCgbRamBank(u8 value) {
-	if (m_machineType != EmulatedMachine::GameboyColor) {
+	if (m_machineType != Machine::GameboyColor) {
 		return;
 	}
 
@@ -447,7 +447,7 @@ void Memory::SetCgbRamBank(u8 value) {
 }
 
 void Memory::SetCgbVramBank(u8 value) {
-	if (m_machineType != EmulatedMachine::GameboyColor) {
+	if (m_machineType != Machine::GameboyColor) {
 		return;
 	}
 
@@ -470,7 +470,7 @@ void Memory::SetWaveRamLock(WaveRamLock::Type lockType, u8 readValue) {
 }
 
 void Memory::SetCgbDmaSourceHigh(u8 value) {
-	if (m_machineType != EmulatedMachine::GameboyColor) {
+	if (m_machineType != Machine::GameboyColor) {
 		return;
 	}
 
@@ -479,7 +479,7 @@ void Memory::SetCgbDmaSourceHigh(u8 value) {
 }
 
 void Memory::SetCgbDmaSourceLow(u8 value) {
-	if (m_machineType != EmulatedMachine::GameboyColor) {
+	if (m_machineType != Machine::GameboyColor) {
 		return;
 	}
 
@@ -490,7 +490,7 @@ void Memory::SetCgbDmaSourceLow(u8 value) {
 }
 
 void Memory::SetCgbDmaDestinationHigh(u8 value) {
-	if (m_machineType != EmulatedMachine::GameboyColor) {
+	if (m_machineType != Machine::GameboyColor) {
 		return;
 	}
 
@@ -501,7 +501,7 @@ void Memory::SetCgbDmaDestinationHigh(u8 value) {
 }
 
 void Memory::SetCgbDmaDestinationLow(u8 value) {
-	if (m_machineType != EmulatedMachine::GameboyColor) {
+	if (m_machineType != Machine::GameboyColor) {
 		return;
 	}
 
@@ -512,7 +512,7 @@ void Memory::SetCgbDmaDestinationLow(u8 value) {
 }
 
 void Memory::CgbDmaTrigger(u8 value) {
-	if (m_machineType != EmulatedMachine::GameboyColor) {
+	if (m_machineType != Machine::GameboyColor) {
 		return;
 	}
 

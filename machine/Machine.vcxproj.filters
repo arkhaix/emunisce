@@ -14,52 +14,52 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="IEmulatedDisplay.h">
+    <ClInclude Include="emulated_display.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="IEmulatedMachine.h">
+    <ClInclude Include="emulated_machine.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="IEmulatedsound.h">
+    <ClInclude Include="emulated_sound.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="IEmulatedInput.h">
+    <ClInclude Include="emulated_input.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="IEmulatedProcessor.h">
+    <ClInclude Include="emulated_processor.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="MachineFactory.h">
+    <ClInclude Include="machine_factory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MachineIncludes.h" />
-    <ClInclude Include="MachineTypes.h">
+    <ClInclude Include="machine_types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IEmulatedMemory.h">
+    <ClInclude Include="emulated_memory.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="ScreenBuffer.h">
+    <ClInclude Include="screen_buffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TScreenBuffer.hpp">
+    <ClInclude Include="machine_serialization.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MachineSerialization.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IMachineToApplication.h">
+    <ClInclude Include="machine_to_application.h">
       <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="t_screen_buffer.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MachineFactory.cpp">
+    <ClCompile Include="machine_factory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ScreenBuffer.cpp">
+    <ClCompile Include="screen_buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MachineSerialization.cpp">
+    <ClCompile Include="machine_serialization.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

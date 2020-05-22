@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef IEMULATEDDISPLAY_H
 #define IEMULATEDDISPLAY_H
 
-#include "MachineTypes.h"
+#include "machine_types.h"
 
 namespace emunisce {
 
@@ -29,7 +29,7 @@ struct ScreenResolution {
 	int height;
 };
 
-class IEmulatedDisplay {
+class EmulatedDisplay {
 public:
 	virtual ScreenResolution
 	GetScreenResolution() = 0;  ///< Returns the native resolution of the screen.  Should be static per machine.

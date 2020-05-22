@@ -577,7 +577,7 @@ void Display::Run_VBlank(int ticks) {
 }
 
 void Display::RenderBackgroundPixel(int screenX, int screenY) {
-	if ((m_lcdControl & LCDC_Background) == 0 && m_machineType != EmulatedMachine::GameboyColor) {
+	if ((m_lcdControl & LCDC_Background) == 0 && m_machineType != Machine::GameboyColor) {
 		return;
 	}
 
@@ -610,7 +610,7 @@ void Display::RenderBackgroundPixel(int screenX, int screenY) {
 	// Get the tile attributes (cgb only)
 	u8* cgbVram = nullptr;
 	u8 bgTileAttributes = 0;
-	if (m_machineType == EmulatedMachine::GameboyColor) {
+	if (m_machineType == Machine::GameboyColor) {
 		cgbVram = m_memory->GetVram(1);
 		bgTileAttributes = cgbVram[bgTileMapAddress + bgTileIndex - m_vramOffset];
 	}
@@ -640,7 +640,7 @@ void Display::RenderBackgroundPixel(int screenX, int screenY) {
 		int finalPixelX = tilePixelX;
 		int finalPixelY = tilePixelY;
 
-		if (m_machineType == EmulatedMachine::GameboyColor) {
+		if (m_machineType == Machine::GameboyColor) {
 			if (bgTileAttributes & 0x08) {
 				bank = 1;
 			}
@@ -658,7 +658,7 @@ void Display::RenderBackgroundPixel(int screenX, int screenY) {
 		DisplayPixel finalValue = m_displayPalette[0];  ///< Re-assigned after a palette lookup
 
 		// Ok...so we have our pixel.  Now we still have to look it up in the palette.
-		if (m_machineType == EmulatedMachine::GameboyColor) {
+		if (m_machineType == Machine::GameboyColor) {
 			// CGB uses one of 8 background color palette registers
 			int paletteIndex = bgTileAttributes & 0x07;
 			finalValue = m_cgbBackgroundDisplayColor[(paletteIndex * 4) + bgPixelValue];  ///< 4 colors per palette
@@ -690,7 +690,7 @@ void Display::RenderSpritePixel(int screenX, int screenY) {
 	}
 
 	// Check priority
-	if (m_machineType != EmulatedMachine::GameboyColor) {
+	if (m_machineType != Machine::GameboyColor) {
 		if (m_spriteHasPriority[screenX] == false &&
 			m_activeScreenBuffer->GetPixel(screenX, screenY) != m_displayPalette[0]) {
 			return;
@@ -752,7 +752,7 @@ void Display::RenderWindowPixel(int screenX, int screenY) {
 	// Get the tile attributes (cgb only)
 	u8* cgbVram = nullptr;
 	u8 tileAttributes = 0;
-	if (m_machineType == EmulatedMachine::GameboyColor) {
+	if (m_machineType == Machine::GameboyColor) {
 		cgbVram = m_memory->GetVram(1);
 		tileAttributes = cgbVram[tileMapAddress + tilePositionIndex - m_vramOffset];
 	}
@@ -782,7 +782,7 @@ void Display::RenderWindowPixel(int screenX, int screenY) {
 		int finalPixelX = tilePixelX;
 		int finalPixelY = tilePixelY;
 
-		if (m_machineType == EmulatedMachine::GameboyColor) {
+		if (m_machineType == Machine::GameboyColor) {
 			if (tileAttributes & 0x08) {
 				bank = 1;
 			}
@@ -800,7 +800,7 @@ void Display::RenderWindowPixel(int screenX, int screenY) {
 		DisplayPixel finalValue = m_displayPalette[0];  ///< value is overwritten after the palette lookup
 
 		// Ok...so we have our pixel.  Now we still have to look it up in the palette.
-		if (m_machineType == EmulatedMachine::GameboyColor) {
+		if (m_machineType == Machine::GameboyColor) {
 			// CGB uses one of 8 background color palette registers
 			int paletteIndex = tileAttributes & 0x07;
 			finalValue = m_cgbBackgroundDisplayColor[(paletteIndex * 4) + pixelValue];  ///< 4 colors per palette
@@ -884,7 +884,7 @@ void Display::RenderSprites(int screenY) {
 
 		// Figure out which bank to read the tile data from (cgb only)
 		int bank = 0;
-		if (m_machineType == EmulatedMachine::GameboyColor && (spriteFlags & 0x08)) {
+		if (m_machineType == Machine::GameboyColor && (spriteFlags & 0x08)) {
 			bank = 1;
 		}
 
@@ -933,7 +933,7 @@ void Display::RenderSprites(int screenY) {
 				DisplayPixel finalValue = m_displayPalette[0];  ///< value is overwritten after the palette lookup
 
 				// Ok...so we have our pixel.  Now we still have to look it up in the palette.
-				if (m_machineType == EmulatedMachine::GameboyColor) {
+				if (m_machineType == Machine::GameboyColor) {
 					// CGB uses one of 8 background color palette registers
 					int paletteIndex = spriteFlags & 0x07;
 					finalValue = m_cgbSpriteDisplayColor[(paletteIndex * 4) + pixelValue];  ///< 4 colors per palette

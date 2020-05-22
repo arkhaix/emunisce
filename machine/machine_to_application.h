@@ -3,7 +3,7 @@
 
 namespace emunisce {
 
-class IMachineToApplication {
+class MachineToApplication {
 public:
 	virtual void HandleApplicationEvent(unsigned int eventId) = 0;  ///< For application-requested mid-frame interrupts
 

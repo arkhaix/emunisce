@@ -29,7 +29,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace emunisce {
 
-class IEmulatedMachine;
+class EmulatedMachine;
 
 namespace StepMode {
 typedef int Type;
@@ -52,7 +52,7 @@ public:
 	void Initialize();
 	void Shutdown();
 
-	void SetMachine(IEmulatedMachine* machine);
+	void SetMachine(EmulatedMachine* machine);
 
 	// Machine runner
 
@@ -68,7 +68,7 @@ public:
 	virtual void StepFrame();        ///< Pauses if necessary, then steps forward 1/60th of a second.
 
 protected:
-	IEmulatedMachine* m_machine;
+	EmulatedMachine* m_machine;
 
 	std::thread m_runnerThread;
 	int RunnerThread();

@@ -17,12 +17,23 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef IEMULATEDMEMORY_H
-#define IEMULATEDMEMORY_H
+#ifndef IEMULATEDINPUT_H
+#define IEMULATEDINPUT_H
 
 namespace emunisce {
 
-class IEmulatedMemory {};
+class EmulatedInput {
+public:
+	// Digital buttons
+
+	virtual unsigned int NumButtons() = 0;
+	virtual const char* GetButtonName(unsigned int index) = 0;
+
+	virtual void ButtonDown(unsigned int index) = 0;
+	virtual void ButtonUp(unsigned int index) = 0;
+
+	virtual bool IsButtonDown(unsigned int index) = 0;
+};
 
 }  // namespace emunisce
 

@@ -38,7 +38,7 @@ public:
 
 	// BaseApplication overrides
 
-	virtual void NotifyMachineChanged(IEmulatedMachine* newMachine);
+	virtual void NotifyMachineChanged(EmulatedMachine* newMachine);
 	virtual void RequestShutdown();
 
 	// BaseApplication interface

@@ -437,24 +437,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="IEmulatedDisplay.h" />
-    <ClInclude Include="IEmulatedInput.h" />
-    <ClInclude Include="IEmulatedMachine.h" />
-    <ClInclude Include="IEmulatedMemory.h" />
-    <ClInclude Include="IEmulatedProcessor.h" />
-    <ClInclude Include="IEmulatedsound.h" />
-    <ClInclude Include="IMachineToApplication.h" />
-    <ClInclude Include="MachineFactory.h" />
+    <ClInclude Include="emulated_display.h" />
+    <ClInclude Include="emulated_input.h" />
+    <ClInclude Include="emulated_machine.h" />
+    <ClInclude Include="emulated_memory.h" />
+    <ClInclude Include="emulated_processor.h" />
+    <ClInclude Include="emulated_sound.h" />
+    <ClInclude Include="machine_to_application.h" />
+    <ClInclude Include="machine_factory.h" />
     <ClInclude Include="MachineIncludes.h" />
-    <ClInclude Include="MachineSerialization.h" />
-    <ClInclude Include="MachineTypes.h" />
-    <ClInclude Include="ScreenBuffer.h" />
-    <ClInclude Include="TScreenBuffer.hpp" />
+    <ClInclude Include="machine_serialization.h" />
+    <ClInclude Include="machine_types.h" />
+    <ClInclude Include="screen_buffer.h" />
+    <ClInclude Include="t_screen_buffer.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MachineFactory.cpp" />
-    <ClCompile Include="MachineSerialization.cpp" />
-    <ClCompile Include="ScreenBuffer.cpp" />
+    <ClCompile Include="machine_factory.cpp" />
+    <ClCompile Include="machine_serialization.cpp" />
+    <ClCompile Include="screen_buffer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

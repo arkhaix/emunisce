@@ -30,25 +30,25 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace emunisce {
 
-class Gameboy : public IEmulatedMachine {
+class Gameboy : public EmulatedMachine {
 public:
-	// IEmulatedMachine
+	// EmulatedMachine
 
 	// Machine type
-	EmulatedMachine::Type GetType() override;
+	Machine::Type GetType() override;
 	const char* GetRomTitle() override;
 
 	// Application interface
-	void SetApplicationInterface(IMachineToApplication* applicationInterface) override;
+	void SetApplicationInterface(MachineToApplication* applicationInterface) override;
 	void AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount) override;
 	void RemoveApplicationEvent(unsigned int eventId) override;
 
 	// Component access
-	IEmulatedDisplay* GetDisplay() override;
-	IEmulatedInput* GetInput() override;
-	IEmulatedMemory* GetMemory() override;
-	IEmulatedProcessor* GetProcessor() override;
-	IEmulatedSound* GetSound() override;
+	EmulatedDisplay* GetDisplay() override;
+	EmulatedInput* GetInput() override;
+	EmulatedMemory* GetMemory() override;
+	EmulatedProcessor* GetProcessor() override;
+	EmulatedSound* GetSound() override;
 
 	// Machine info
 	unsigned int GetFrameCount() override;
@@ -73,11 +73,11 @@ public:
 	// Gameboy
 
 	// Creation
-	static Gameboy* Create(const char* filename, EmulatedMachine::Type machineType);
+	static Gameboy* Create(const char* filename, Machine::Type machineType);
 	static void Release(Gameboy* machine);
 
 	// Application interface
-	IMachineToApplication* GetApplicationInterface();
+	MachineToApplication* GetApplicationInterface();
 
 	// Gameboy Components (non-virtual functions, direct concrete types)
 	Cpu* GetGbCpu();
@@ -95,7 +95,7 @@ public:
 	void SetDoubleSpeed(bool doubleSpeed);
 
 protected:
-	Gameboy(Memory* memory, EmulatedMachine::Type machineType);
+	Gameboy(Memory* memory, Machine::Type machineType);
 	virtual ~Gameboy();
 	void Initialize();
 
@@ -103,9 +103,9 @@ protected:
 
 	virtual void Serialize(Archive& archive);
 
-	EmulatedMachine::Type m_machineType;
+	Machine::Type m_machineType;
 
-	IMachineToApplication* m_applicationInterface;
+	MachineToApplication* m_applicationInterface;
 
 	Cpu* m_cpu;
 	Memory* m_memory;

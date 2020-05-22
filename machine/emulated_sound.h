@@ -58,7 +58,7 @@ enum {
 };
 }  // namespace SquareSynthesisMethod
 
-class IEmulatedSound {
+class EmulatedSound {
 public:
 	virtual AudioBuffer GetStableAudioBuffer() = 0;
 	virtual int GetAudioBufferCount() = 0;

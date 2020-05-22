@@ -39,12 +39,12 @@ public:
 	virtual void RunToNextFrame() = 0;
 };
 
-class MachineFeature : public IEmulatedMachine,
-					   public IEmulatedDisplay,
-					   public IEmulatedInput,
-					   public IEmulatedMemory,
-					   public IEmulatedProcessor,
-					   public IEmulatedSound {
+class MachineFeature : public EmulatedMachine,
+					   public EmulatedDisplay,
+					   public EmulatedInput,
+					   public EmulatedMemory,
+					   public EmulatedProcessor,
+					   public EmulatedSound {
 public:
 	// MachineFeature
 
@@ -53,28 +53,28 @@ public:
 
 	virtual void SetApplication(BaseApplication* application);
 
-	virtual void SetComponentMachine(IEmulatedMachine* componentMachine);
-	virtual void SetEmulatedMachine(IEmulatedMachine* emulatedMachine);
+	virtual void SetComponentMachine(EmulatedMachine* componentMachine);
+	virtual void SetEmulatedMachine(EmulatedMachine* emulatedMachine);
 
 	virtual void SetFocus(bool hasFocus);
 
-	// IEmulatedMachine
+	// EmulatedMachine
 
 	// Machine type
-	EmulatedMachine::Type GetType() override;
+	Machine::Type GetType() override;
 	const char* GetRomTitle() override;
 
 	// Application interface
-	void SetApplicationInterface(IMachineToApplication* applicationInterface) override;
+	void SetApplicationInterface(MachineToApplication* applicationInterface) override;
 	void AddApplicationEvent(ApplicationEvent& applicationEvent, bool relativeFrameCount /*= true*/) override;
 	void RemoveApplicationEvent(unsigned int eventId) override;
 
 	// Component access
-	IEmulatedDisplay* GetDisplay() override;
-	IEmulatedInput* GetInput() override;
-	IEmulatedMemory* GetMemory() override;
-	IEmulatedProcessor* GetProcessor() override;
-	IEmulatedSound* GetSound() override;
+	EmulatedDisplay* GetDisplay() override;
+	EmulatedInput* GetInput() override;
+	EmulatedMemory* GetMemory() override;
+	EmulatedProcessor* GetProcessor() override;
+	EmulatedSound* GetSound() override;
 
 	// Machine info
 	unsigned int GetFrameCount() override;
@@ -126,22 +126,22 @@ protected:
 
 	bool m_hasFocus;
 
-	IEmulatedMachine* m_wrappedMachine;
+	EmulatedMachine* m_wrappedMachine;
 	bool m_isWrappingComponent;
 
-	IEmulatedDisplay* m_wrappedDisplay;
-	IEmulatedInput* m_wrappedInput;
-	IEmulatedMemory* m_wrappedMemory;
-	IEmulatedProcessor* m_wrappedProcessor;
-	IEmulatedSound* m_wrappedSound;
+	EmulatedDisplay* m_wrappedDisplay;
+	EmulatedInput* m_wrappedInput;
+	EmulatedMemory* m_wrappedMemory;
+	EmulatedProcessor* m_wrappedProcessor;
+	EmulatedSound* m_wrappedSound;
 
 	IExecutableFeature* m_featureExecution;
 
-	IEmulatedDisplay* m_featureDisplay;
-	IEmulatedInput* m_featureInput;
-	IEmulatedMemory* m_featureMemory;
-	IEmulatedProcessor* m_featureProcessor;
-	IEmulatedSound* m_featureSound;
+	EmulatedDisplay* m_featureDisplay;
+	EmulatedInput* m_featureInput;
+	EmulatedMemory* m_featureMemory;
+	EmulatedProcessor* m_featureProcessor;
+	EmulatedSound* m_featureSound;
 
 	ScreenResolution m_defaultScreenResolution;
 	TScreenBuffer<640, 480> m_defaultScreenBuffer;

@@ -112,7 +112,7 @@ int Cpu::Step() {
 	else {
 		opcode = m_memory->Read8(pc);
 
-		if (m_machineType == EmulatedMachine::GameboyColor) {
+		if (m_machineType == Machine::GameboyColor) {
 			// Apparently (demotronic demo), CGB has no halt bug?
 			pc++;
 		}
@@ -237,7 +237,7 @@ int Cpu::Step() {
 
 		case 0x10:
 			// 10      DJNZ PC+dd      STOP
-			if (m_machineType == EmulatedMachine::GameboyColor && (m_cgbSpeedSwitch & 0x01)) {
+			if (m_machineType == Machine::GameboyColor && (m_cgbSpeedSwitch & 0x01)) {
 				bool enteringDoubleSpeed = true;
 				if (m_cgbSpeedSwitch & 0x80) {
 					enteringDoubleSpeed = false;

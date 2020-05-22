@@ -20,11 +20,11 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef IEMULATEDMACHINE_H
 #define IEMULATEDMACHINE_H
 
-#include "MachineTypes.h"
+#include "machine_types.h"
 
 namespace emunisce {
 
-namespace EmulatedMachine {
+namespace Machine {
 typedef int Type;
 
 enum {
@@ -63,14 +63,14 @@ struct ApplicationEvent {
 	}
 };
 
-class IEmulatedMachine {
+class EmulatedMachine {
 public:
 	// Machine type
-	virtual EmulatedMachine::Type GetType() = 0;
+	virtual Machine::Type GetType() = 0;
 	virtual const char* GetRomTitle() = 0;
 
 	// Application interface
-	virtual void SetApplicationInterface(IMachineToApplication* applicationInterface) = 0;
+	virtual void SetApplicationInterface(MachineToApplication* applicationInterface) = 0;
 	virtual void AddApplicationEvent(
 		ApplicationEvent& applicationEvent,
 		bool relativeFrameCount =
@@ -83,11 +83,11 @@ public:
 	virtual void RemoveApplicationEvent(unsigned int eventId) = 0;
 
 	// Component access
-	virtual IEmulatedDisplay* GetDisplay() = 0;
-	virtual IEmulatedInput* GetInput() = 0;
-	virtual IEmulatedMemory* GetMemory() = 0;
-	virtual IEmulatedProcessor* GetProcessor() = 0;
-	virtual IEmulatedSound* GetSound() = 0;
+	virtual EmulatedDisplay* GetDisplay() = 0;
+	virtual EmulatedInput* GetInput() = 0;
+	virtual EmulatedMemory* GetMemory() = 0;
+	virtual EmulatedProcessor* GetProcessor() = 0;
+	virtual EmulatedSound* GetSound() = 0;
 
 	// Machine info
 	virtual unsigned int GetFrameCount() = 0;

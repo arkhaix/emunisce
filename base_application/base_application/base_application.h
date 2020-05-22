@@ -22,14 +22,14 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <string>
 
-#include "IMachineToApplication.h"
+#include "machine_to_application.h"
 #include "user_interface.h"
 
 namespace emunisce {
 
 class Archive;
 
-class IEmulatedMachine;
+class EmulatedMachine;
 
 class MachineFeature;
 class Gui;
@@ -41,7 +41,7 @@ class MachineRunner;
 
 class CommandTrie;
 
-class BaseApplication : public IUserInterface, public IMachineToApplication {
+class BaseApplication : public IUserInterface, public MachineToApplication {
 public:
 	// BaseApplication
 
@@ -49,8 +49,8 @@ public:
 	~BaseApplication();
 
 	// Emulated machine
-	virtual void NotifyMachineChanged(IEmulatedMachine* newMachine);
-	virtual IEmulatedMachine* GetMachine();
+	virtual void NotifyMachineChanged(EmulatedMachine* newMachine);
+	virtual EmulatedMachine* GetMachine();
 
 	// Machine features
 	virtual Gui* GetGui();
@@ -176,7 +176,7 @@ protected:
 
 	// Emulated machine
 	MachineFeature* m_machine;
-	IEmulatedMachine* m_wrappedMachine;
+	EmulatedMachine* m_wrappedMachine;
 
 	// Machine features
 	Gui* m_gui;

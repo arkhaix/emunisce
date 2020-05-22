@@ -69,7 +69,7 @@ protected:
 
 	// GuiFeature
 
-	class GuiFeature : public IExecutableFeature, public IEmulatedDisplay, public IEmulatedInput {
+	class GuiFeature : public IExecutableFeature, public EmulatedDisplay, public EmulatedInput {
 	public:
 		// GuiFeature
 

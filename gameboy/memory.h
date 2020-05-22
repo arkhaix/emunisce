@@ -51,7 +51,7 @@ enum {
 };
 }  // namespace DmaMode
 
-class Memory : public IEmulatedMemory {
+class Memory : public EmulatedMemory {
 public:
 	virtual ~Memory();
 
@@ -108,7 +108,7 @@ protected:
 	// Component pointers for handling registers.
 
 	Gameboy* m_machine;
-	EmulatedMachine::Type m_machineType;
+	Machine::Type m_machineType;
 
 	Cpu* m_cpu;
 	Display* m_display;

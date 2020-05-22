@@ -34,7 +34,7 @@ class Sound4;
 
 class ChannelController;
 
-class Sound : public IEmulatedSound {
+class Sound : public EmulatedSound {
 public:
 	Sound();
 	virtual ~Sound();

@@ -34,7 +34,7 @@ namespace emunisce {
 
 typedef TScreenBuffer<160, 144> GameboyScreenBuffer;
 
-class Display : public IEmulatedDisplay {
+class Display : public EmulatedDisplay {
 public:
 	Display();
 	virtual ~Display();
@@ -105,7 +105,7 @@ private:
 	void CheckCoincidence();
 
 	Gameboy* m_machine;
-	EmulatedMachine::Type m_machineType;
+	Machine::Type m_machineType;
 
 	Memory* m_memory;
 

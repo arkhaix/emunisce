@@ -33,7 +33,7 @@ void InputManager::Initialize(BaseApplication* application) {
 	m_application = application;
 }
 
-void InputManager::SetMachine(IEmulatedMachine* machine) {
+void InputManager::SetMachine(EmulatedMachine* machine) {
 	m_machine = machine;
 	m_input = machine->GetInput();
 	GenerateKeymap();

@@ -17,12 +17,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef IEMULATEDPROCESSOR_H
-#define IEMULATEDPROCESSOR_H
+#ifndef MACHINEFACTORY_H
+#define MACHINEFACTORY_H
+
+#include "emulated_machine.h"
 
 namespace emunisce {
 
-class IEmulatedProcessor {};
+class MachineFactory {
+public:
+	static EmulatedMachine* CreateMachine(const char* romFilename,
+										   Machine::Type machineType = Machine::AutoSelect);
+	static void ReleaseMachine(EmulatedMachine* machine);
+};
 
 }  // namespace emunisce
 

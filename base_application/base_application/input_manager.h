@@ -27,8 +27,8 @@ namespace emunisce {
 
 class BaseApplication;
 
-class IEmulatedInput;
-class IEmulatedMachine;
+class EmulatedInput;
+class EmulatedMachine;
 
 class InputManager {
 public:
@@ -36,7 +36,7 @@ public:
 
 	void Initialize(BaseApplication* application);
 
-	void SetMachine(IEmulatedMachine* machine);
+	void SetMachine(EmulatedMachine* machine);
 
 	void KeyDown(int key);
 	void KeyUp(int key);
@@ -52,8 +52,8 @@ private:
 
 	BaseApplication* m_application;
 
-	IEmulatedMachine* m_machine;
-	IEmulatedInput* m_input;
+	EmulatedMachine* m_machine;
+	EmulatedInput* m_input;
 
 	std::multimap<std::string, int> m_nameKeyMap;
 	std::map<int, unsigned int> m_keyMap;  ///< Built from _NameKeyMap

@@ -17,24 +17,18 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef IEMULATEDINPUT_H
-#define IEMULATEDINPUT_H
+#include "machine_factory.h"
+using namespace emunisce;
 
-namespace emunisce {
+#include "gameboy.h"
 
-class IEmulatedInput {
-public:
-	// Digital buttons
+EmulatedMachine* MachineFactory::CreateMachine(const char* romFilename, Machine::Type machineType) {
+	return Gameboy::Create(romFilename, machineType);
+}
 
-	virtual unsigned int NumButtons() = 0;
-	virtual const char* GetButtonName(unsigned int index) = 0;
-
-	virtual void ButtonDown(unsigned int index) = 0;
-	virtual void ButtonUp(unsigned int index) = 0;
-
-	virtual bool IsButtonDown(unsigned int index) = 0;
-};
-
-}  // namespace emunisce
-
-#endif
+void MachineFactory::ReleaseMachine(EmulatedMachine* machine) {
+	Gameboy* gameboy = dynamic_cast<Gameboy*>(machine);
+	if (gameboy != nullptr) {
+		Gameboy::Release(gameboy);
+	}
+}

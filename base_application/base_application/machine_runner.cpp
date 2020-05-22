@@ -62,7 +62,7 @@ void MachineRunner::Shutdown() {
 	}
 }
 
-void MachineRunner::SetMachine(IEmulatedMachine* machine) {
+void MachineRunner::SetMachine(EmulatedMachine* machine) {
 	m_machine = machine;
 }
 
