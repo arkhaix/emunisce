@@ -21,126 +21,126 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Cpu.cpp">
-      <Filter>Cpu</Filter>
-    </ClCompile>
-    <ClCompile Include="Display.cpp">
+    <ClCompile Include="display.cpp">
       <Filter>Display</Filter>
     </ClCompile>
-    <ClCompile Include="Input.cpp">
+    <ClCompile Include="input.cpp">
       <Filter>Input</Filter>
     </ClCompile>
-    <ClCompile Include="Mbc1.cpp">
+    <ClCompile Include="mbc1.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
-    <ClCompile Include="Mbc3.cpp">
+    <ClCompile Include="mbc3.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
-    <ClCompile Include="Mbc5.cpp">
+    <ClCompile Include="mbc5.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
-    <ClCompile Include="Memory.cpp">
+    <ClCompile Include="memory.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
-    <ClCompile Include="RomOnly.cpp">
+    <ClCompile Include="rom_only.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
-    <ClCompile Include="ChannelController.cpp">
+    <ClCompile Include="gameboy.cpp">
+      <Filter>Gameboy</Filter>
+    </ClCompile>
+    <ClCompile Include="channel_controller.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
-    <ClCompile Include="SoundGenerator.cpp">
+    <ClCompile Include="duty_unit.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
-    <ClCompile Include="DutyUnit.cpp">
+    <ClCompile Include="envelope_unit.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
-    <ClCompile Include="EnvelopeUnit.cpp">
+    <ClCompile Include="length_unit.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
-    <ClCompile Include="LengthUnit.cpp">
+    <ClCompile Include="sound.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
-    <ClCompile Include="Sound.cpp">
+    <ClCompile Include="sound_generator.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
-    <ClCompile Include="Sound1.cpp">
+    <ClCompile Include="sound1.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
-    <ClCompile Include="Sound2.cpp">
+    <ClCompile Include="sound2.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
-    <ClCompile Include="Sound3.cpp">
+    <ClCompile Include="sound3.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
-    <ClCompile Include="Sound4.cpp">
+    <ClCompile Include="sound4.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
-    <ClCompile Include="CpuExec.cpp">
+    <ClCompile Include="cpu.cpp">
       <Filter>Cpu</Filter>
     </ClCompile>
-    <ClCompile Include="Gameboy.cpp">
-      <Filter>Gameboy</Filter>
+    <ClCompile Include="cpu_exec.cpp">
+      <Filter>Cpu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Cpu.h">
+    <ClInclude Include="cpu.h">
       <Filter>Cpu</Filter>
     </ClInclude>
-    <ClInclude Include="Display.h">
+    <ClInclude Include="display.h">
       <Filter>Display</Filter>
     </ClInclude>
-    <ClInclude Include="Input.h">
+    <ClInclude Include="input.h">
       <Filter>Input</Filter>
     </ClInclude>
-    <ClInclude Include="Memory.h">
+    <ClInclude Include="memory.h">
       <Filter>Memory</Filter>
     </ClInclude>
-    <ClInclude Include="Mbc1.h">
+    <ClInclude Include="mbc1.h">
       <Filter>Memory</Filter>
     </ClInclude>
-    <ClInclude Include="Mbc3.h">
+    <ClInclude Include="mbc3.h">
       <Filter>Memory</Filter>
     </ClInclude>
-    <ClInclude Include="Mbc5.h">
+    <ClInclude Include="mbc5.h">
       <Filter>Memory</Filter>
     </ClInclude>
-    <ClInclude Include="RomOnly.h">
+    <ClInclude Include="rom_only.h">
       <Filter>Memory</Filter>
     </ClInclude>
-    <ClInclude Include="SoundGenerator.h">
+    <ClInclude Include="sound_generator.h">
       <Filter>Sound</Filter>
     </ClInclude>
-    <ClInclude Include="ChannelController.h">
+    <ClInclude Include="channel_controller.h">
       <Filter>Sound</Filter>
     </ClInclude>
-    <ClInclude Include="DutyUnit.h">
+    <ClInclude Include="duty_unit.h">
       <Filter>Sound</Filter>
     </ClInclude>
-    <ClInclude Include="EnvelopeUnit.h">
+    <ClInclude Include="envelope_unit.h">
       <Filter>Sound</Filter>
     </ClInclude>
-    <ClInclude Include="LengthUnit.h">
+    <ClInclude Include="length_unit.h">
       <Filter>Sound</Filter>
     </ClInclude>
-    <ClInclude Include="Sound.h">
+    <ClInclude Include="sound.h">
       <Filter>Sound</Filter>
     </ClInclude>
-    <ClInclude Include="Sound1.h">
+    <ClInclude Include="sound1.h">
       <Filter>Sound</Filter>
     </ClInclude>
-    <ClInclude Include="Sound2.h">
+    <ClInclude Include="sound2.h">
       <Filter>Sound</Filter>
     </ClInclude>
-    <ClInclude Include="Sound3.h">
+    <ClInclude Include="sound3.h">
       <Filter>Sound</Filter>
     </ClInclude>
-    <ClInclude Include="Sound4.h">
+    <ClInclude Include="sound4.h">
       <Filter>Sound</Filter>
     </ClInclude>
-    <ClInclude Include="Gameboy.h">
+    <ClInclude Include="gameboy.h">
       <Filter>Gameboy</Filter>
     </ClInclude>
-    <ClInclude Include="GameboyTypes.h">
+    <ClInclude Include="gameboy_types.h">
       <Filter>Gameboy</Filter>
     </ClInclude>
     <ClInclude Include="GameboyIncludes.h" />

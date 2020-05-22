@@ -20,10 +20,10 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 // This is a convenience header for pulling in all the Gameboy types
 
-#include "Cpu.h"
-#include "Display.h"
-#include "Gameboy.h"
-#include "GameboyTypes.h"
-#include "Input.h"
-#include "Memory.h"
-#include "Sound.h"
+#include "cpu.h"
+#include "display.h"
+#include "gameboy.h"
+#include "gameboy_types.h"
+#include "input.h"
+#include "memory.h"
+#include "sound.h"

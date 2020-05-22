@@ -58,16 +58,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="ChannelController.h" />
-    <ClInclude Include="DutyUnit.h" />
-    <ClInclude Include="EnvelopeUnit.h" />
-    <ClInclude Include="LengthUnit.h" />
-    <ClInclude Include="Sound.h" />
-    <ClInclude Include="Sound1.h" />
-    <ClInclude Include="Sound2.h" />
-    <ClInclude Include="Sound3.h" />
-    <ClInclude Include="Sound4.h" />
-    <ClInclude Include="SoundGenerator.h" />
+    <ClInclude Include="channel_controller.h" />
+    <ClInclude Include="duty_unit.h" />
+    <ClInclude Include="envelope_unit.h" />
+    <ClInclude Include="length_unit.h" />
+    <ClInclude Include="sound.h" />
+    <ClInclude Include="sound1.h" />
+    <ClInclude Include="sound2.h" />
+    <ClInclude Include="sound3.h" />
+    <ClInclude Include="sound4.h" />
+    <ClInclude Include="sound_generator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChannelController.cpp" />

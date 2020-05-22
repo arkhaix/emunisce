@@ -22,7 +22,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "gui.h"
 using namespace emunisce;
 
-#include <Memory.h>
+#include <memory.h>
 
 #include "hqnx/HqNx.h"
 #include "kings_dream.h"

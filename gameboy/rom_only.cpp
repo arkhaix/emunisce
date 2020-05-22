@@ -17,18 +17,21 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "MachineFactory.h"
+#include "rom_only.h"
 using namespace emunisce;
 
-#include "gameboy.h"
+#include <cstdlib>
+#include <fstream>
 
-IEmulatedMachine* MachineFactory::CreateMachine(const char* romFilename, EmulatedMachine::Type machineType) {
-	return Gameboy::Create(romFilename, machineType);
-}
+bool RomOnly::LoadFile(const char* filename) {
+	std::ifstream ifile(filename, std::ios::in | std::ios::binary);
 
-void MachineFactory::ReleaseMachine(IEmulatedMachine* machine) {
-	Gameboy* gameboy = dynamic_cast<Gameboy*>(machine);
-	if (gameboy != nullptr) {
-		Gameboy::Release(gameboy);
+	if (ifile.fail() || ifile.eof() || !ifile.good()) {
+		return false;
 	}
+
+	ifile.read((char*)&m_memoryData[0], 0x8000);
+	ifile.close();
+
+	return true;
 }

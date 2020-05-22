@@ -31,7 +31,7 @@ cc_library(
         "IEmulatedInput.h",
         "IEmulatedMemory.h",
         "IEmulatedProcessor.h",
-        "IEmulatedSound.h",
+        "IEmulatedsound.h",
 
         "ScreenBuffer.h",
     ],

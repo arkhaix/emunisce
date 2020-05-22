@@ -11,36 +11,36 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Memory.cpp">
+    <ClCompile Include="memory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RomOnly.cpp">
+    <ClCompile Include="rom_only.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Mbc1.cpp">
+    <ClCompile Include="mbc1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Mbc3.cpp">
+    <ClCompile Include="mbc3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Mbc5.cpp">
+    <ClCompile Include="mbc5.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Memory.h">
+    <ClInclude Include="memory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RomOnly.h">
+    <ClInclude Include="rom_only.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mbc1.h">
+    <ClInclude Include="mbc1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mbc3.h">
+    <ClInclude Include="mbc3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mbc5.h">
+    <ClInclude Include="mbc5.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

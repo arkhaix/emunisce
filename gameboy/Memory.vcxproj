@@ -60,18 +60,18 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Mbc1.cpp" />
-    <ClCompile Include="Mbc3.cpp" />
-    <ClCompile Include="Mbc5.cpp" />
-    <ClCompile Include="Memory.cpp" />
-    <ClCompile Include="RomOnly.cpp" />
+    <ClCompile Include="mbc1.cpp" />
+    <ClCompile Include="mbc3.cpp" />
+    <ClCompile Include="mbc5.cpp" />
+    <ClCompile Include="memory.cpp" />
+    <ClCompile Include="rom_only.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Mbc1.h" />
-    <ClInclude Include="Mbc3.h" />
-    <ClInclude Include="Mbc5.h" />
-    <ClInclude Include="Memory.h" />
-    <ClInclude Include="RomOnly.h" />
+    <ClInclude Include="mbc1.h" />
+    <ClInclude Include="mbc3.h" />
+    <ClInclude Include="mbc5.h" />
+    <ClInclude Include="memory.h" />
+    <ClInclude Include="rom_only.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

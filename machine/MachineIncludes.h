@@ -27,7 +27,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "IEmulatedMachine.h"
 #include "IEmulatedMemory.h"
 #include "IEmulatedProcessor.h"
-#include "IEmulatedSound.h"
+#include "IEmulatedsound.h"
 #include "IMachineToApplication.h"
 #include "MachineFactory.h"
 #include "MachineSerialization.h"

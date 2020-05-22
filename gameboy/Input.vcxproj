@@ -62,10 +62,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Input.h" />
+    <ClInclude Include="input.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Input.cpp" />
+    <ClCompile Include="input.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

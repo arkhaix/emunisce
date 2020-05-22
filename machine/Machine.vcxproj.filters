@@ -20,7 +20,7 @@
     <ClInclude Include="IEmulatedMachine.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="IEmulatedSound.h">
+    <ClInclude Include="IEmulatedsound.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="IEmulatedInput.h">

@@ -64,7 +64,7 @@
     <ClCompile Include="CpuExec.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Cpu.h" />
+    <ClInclude Include="cpu.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

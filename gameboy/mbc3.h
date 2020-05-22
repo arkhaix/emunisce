@@ -17,18 +17,22 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "MachineFactory.h"
-using namespace emunisce;
+#ifndef MBC3_H
+#define MBC3_H
 
-#include "gameboy.h"
+#include "mbc1.h"
 
-IEmulatedMachine* MachineFactory::CreateMachine(const char* romFilename, EmulatedMachine::Type machineType) {
-	return Gameboy::Create(romFilename, machineType);
-}
+namespace emunisce {
 
-void MachineFactory::ReleaseMachine(IEmulatedMachine* machine) {
-	Gameboy* gameboy = dynamic_cast<Gameboy*>(machine);
-	if (gameboy != nullptr) {
-		Gameboy::Release(gameboy);
-	}
-}
+class Mbc3 : public Mbc1 {
+public:
+	Mbc3();
+
+	void Write8(u16 address, u8 value) override;
+
+protected:
+};
+
+}  // namespace emunisce
+
+#endif

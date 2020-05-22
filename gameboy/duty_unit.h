@@ -17,18 +17,45 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "MachineFactory.h"
-using namespace emunisce;
+#ifndef DUTYUNIT_H
+#define DUTYUNIT_H
 
-#include "gameboy.h"
+#include "sound.h"  ///<for SquareSynthesisMethod
 
-IEmulatedMachine* MachineFactory::CreateMachine(const char* romFilename, EmulatedMachine::Type machineType) {
-	return Gameboy::Create(romFilename, machineType);
-}
+namespace emunisce {
 
-void MachineFactory::ReleaseMachine(IEmulatedMachine* machine) {
-	Gameboy* gameboy = dynamic_cast<Gameboy*>(machine);
-	if (gameboy != nullptr) {
-		Gameboy::Release(gameboy);
-	}
-}
+class DutyUnit {
+public:
+	DutyUnit();
+
+	void Serialize(Archive& archive);
+
+	void Run(int ticks);
+	void Trigger();
+
+	void SetFrequency(int frequency);
+	void WriteDutyRegister(u8 value);
+
+	float GetSample();
+
+	void SetSynthesisMethod(SquareSynthesisMethod::Type method);
+
+private:
+	int m_timerPeriod;
+	int m_timerValue;
+
+	int m_dutyPosition;
+	int m_dutyMode;
+	int m_dutyTable[4][8];
+
+	SquareSynthesisMethod::Type m_synthesisMethod;
+
+	bool m_hasTransitioned;
+	bool m_hitNyquist;
+	int m_ticksSinceLastSample;
+	int m_sumSinceLastSample;
+};
+
+}  // namespace emunisce
+
+#endif

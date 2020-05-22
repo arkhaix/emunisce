@@ -11,34 +11,34 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Sound.h">
+    <ClInclude Include="sound.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sound1.h">
+    <ClInclude Include="sound1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sound2.h">
+    <ClInclude Include="sound2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sound3.h">
+    <ClInclude Include="sound3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sound4.h">
+    <ClInclude Include="sound4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SoundGenerator.h">
+    <ClInclude Include="sound_generator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ChannelController.h">
+    <ClInclude Include="channel_controller.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LengthUnit.h">
+    <ClInclude Include="length_unit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EnvelopeUnit.h">
+    <ClInclude Include="envelope_unit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DutyUnit.h">
+    <ClInclude Include="duty_unit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

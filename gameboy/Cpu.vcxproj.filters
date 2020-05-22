@@ -19,7 +19,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Cpu.h">
+    <ClInclude Include="cpu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

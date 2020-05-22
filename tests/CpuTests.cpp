@@ -17,7 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "../Cpu/Cpu.h"
+#include "../Cpu/cpu.h"
 #include "gtest/gtest.h"
 
 class CPUTest : public ::testing::Test {

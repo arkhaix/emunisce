@@ -17,18 +17,24 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "MachineFactory.h"
+#include "channel_controller.h"
 using namespace emunisce;
 
-#include "gameboy.h"
-
-IEmulatedMachine* MachineFactory::CreateMachine(const char* romFilename, EmulatedMachine::Type machineType) {
-	return Gameboy::Create(romFilename, machineType);
+ChannelController::ChannelController(u8& nr52, int channelBit) : m_nr52(nr52), m_channelBit(channelBit) {
 }
 
-void MachineFactory::ReleaseMachine(IEmulatedMachine* machine) {
-	Gameboy* gameboy = dynamic_cast<Gameboy*>(machine);
-	if (gameboy != nullptr) {
-		Gameboy::Release(gameboy);
+void ChannelController::EnableChannel() {
+	m_nr52 |= (1 << m_channelBit);
+}
+
+void ChannelController::DisableChannel() {
+	m_nr52 &= ~(1 << m_channelBit);
+}
+
+bool ChannelController::IsChannelEnabled() {
+	if (m_nr52 & (1 << m_channelBit)) {
+		return true;
 	}
+
+	return false;
 }

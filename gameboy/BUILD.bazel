@@ -22,7 +22,7 @@ cc_library(
 #         "CpuExec.cpp",
 #     ],
 #     hdrs = [
-#         "Cpu.h",
+#         "cpu.h",
 #     ],
 # )
 
@@ -31,10 +31,10 @@ cc_library(
 #     visibility = ["//visibility:public"],
 
 #     srcs = [
-#         "Display.cpp",
+#         "display.cpp",
 #     ],
 #     hdrs = [
-#         "Display.h",
+#         "display.h",
 #     ],
 # )
 
@@ -43,10 +43,10 @@ cc_library(
 #     visibility = ["//visibility:public"],
 
 #     srcs = [
-#         "Input.cpp",
+#         "input.cpp",
 #     ],
 #     hdrs = [
-#         "Input.h",
+#         "input.h",
 #     ],
 # )
 
@@ -55,18 +55,18 @@ cc_library(
 #     visibility = ["//visibility:public"],
 
 #     srcs = [
-#         "Memory.cpp",
-#         "RomOnly.cpp",
-#         "Mbc1.cpp",
-#         "Mbc3.cpp",
-#         "Mbc5.cpp",
+#         "memory.cpp",
+#         "rom_only.cpp",
+#         "mbc1.cpp",
+#         "mbc3.cpp",
+#         "mbc5.cpp",
 #     ],
 #     hdrs = [
-#         "Memory.h",
-#         "RomOnly.h",
-#         "Mbc1.h",
-#         "Mbc3.h",
-#         "Mbc5.h",
+#         "memory.h",
+#         "rom_only.h",
+#         "mbc1.h",
+#         "mbc3.h",
+#         "mbc5.h",
 #     ],
 # )
 
@@ -87,15 +87,15 @@ cc_library(
 #         "SoundGenerator.cpp",
 #     ],
 #     hdrs = [
-#         "ChannelController.h",
-#         "DutyUnit.h",
-#         "EnvelopeUnit.h",
-#         "LengthUnit.h",
-#         "Sound.h",
-#         "Sound1.h",
-#         "Sound2.h",
-#         "Sound3.h",
-#         "Sound4.h",
-#         "SoundGenerator.h",
+#         "channel_controller.h",
+#         "duty_unit.h",
+#         "envelope_unit.h",
+#         "length_unit.h",
+#         "sound.h",
+#         "sound1.h",
+#         "sound2.h",
+#         "sound3.h",
+#         "sound4.h",
+#         "sound_generator.h",
 #     ],
 # )
