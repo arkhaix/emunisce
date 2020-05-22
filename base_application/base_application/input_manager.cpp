@@ -20,9 +20,9 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "input_manager.h"
 using namespace emunisce;
 
-#include "base_application.h"
 #include "MachineIncludes.h"
 #include "PlatformIncludes.h"
+#include "base_application.h"
 
 InputManager::InputManager() {
 	m_machine = nullptr;

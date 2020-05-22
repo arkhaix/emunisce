@@ -20,13 +20,14 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONSOLEDEBUGGER_H
 #define CONSOLEDEBUGGER_H
 
+#include "windows.h"
+
 #include <set>
 #include <string>
 #include <vector>
 
 #include "MachineIncludes.h"
 #include "base_application/user_interface.h"  ///<For DisplayFilter
-#include "windows.h"
 
 namespace emunisce {
 

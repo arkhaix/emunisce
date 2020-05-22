@@ -20,13 +20,14 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include "windows.h"
+
 #include <list>
 #include <map>
 #include <mutex>
 #include <set>
 
 #include "Window.h"
-#include "windows.h"
 
 namespace emunisce {
 

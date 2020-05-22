@@ -22,6 +22,11 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "Emunisce.h"
 using namespace emunisce;
 
+#include "windows.h"
+
+#include "shlobj.h"
+#include "shlwapi.h"
+
 #include "MachineIncludes.h"
 #include "PlatformIncludes.h"
 #include "base_application/input_manager.h"
@@ -29,9 +34,6 @@ using namespace emunisce;
 #include "console_debugger.h"
 #include "serialization/FileSerializer.h"
 #include "serialization/SerializationIncludes.h"
-#include "shlobj.h"
-#include "shlwapi.h"
-#include "windows.h"
 
 EmunisceApplication::EmunisceApplication() {
 	m_window = new Window();

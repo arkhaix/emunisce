@@ -17,11 +17,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include "windows.h"
+
 #include "../gdi_plus_renderer/gdi_plus_renderer.h"
 #include "../win32_common/window.h"
 #include "console_debugger.h"
 #include "emunisce.h"
-#include "windows.h"
 using namespace emunisce;
 
 EmunisceApplication* g_phoenix = nullptr;
