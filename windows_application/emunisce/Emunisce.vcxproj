@@ -622,13 +622,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ConsoleDebugger.cpp" />
-    <ClCompile Include="Emunisce.cpp" />
-    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="console_debugger.cpp" />
+    <ClCompile Include="emunisce.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ConsoleDebugger.h" />
-    <ClInclude Include="Emunisce.h" />
+    <ClInclude Include="console_debugger.h" />
+    <ClInclude Include="emunisce.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -21,8 +21,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 using namespace emunisce;
 
 #include "ChannelController.h"
-#include "serialization/SerializationIncludes.h"
 #include "SoundGenerator.h"
+#include "serialization/SerializationIncludes.h"
 
 EnvelopeUnit::EnvelopeUnit(SoundGenerator* soundGenerator) {
 	m_soundGenerator = soundGenerator;

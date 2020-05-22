@@ -17,13 +17,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "WaveOutSound.h"
+#include "wave_out_sound.h"
 using namespace emunisce;
 
 #include <iostream>
 #include <queue>
 
-#include "../emunisce/Emunisce.h"  ///<todo: this is just here for requesting shutdown?  refactor this.
+#include "../emunisce/emunisce.h"  ///<todo: this is just here for requesting shutdown?  refactor this.
 #include "MachineIncludes.h"
 #include "base_application/MachineRunner.h"
 #include "windows.h"

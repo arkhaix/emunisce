@@ -11,12 +11,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GdiPlusRenderer.cpp">
+    <ClCompile Include="gdi_plus_renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GdiPlusRenderer.h">
+    <ClInclude Include="gdi_plus_renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

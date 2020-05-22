@@ -21,7 +21,7 @@ along with PhoenixGB.  If not, see <http://www.gnu.org/licenses/>.
 #include "gtest/gtest.h"
 
 class CPUTest : public ::testing::Test {
-   protected:
+protected:
 	Cpu cpu;
 };
 

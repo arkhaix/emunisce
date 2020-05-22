@@ -66,6 +66,12 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="gdi_plus_renderer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="gdi_plus_renderer.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{EC091F82-1E1C-4B24-A41E-899CF6458295}</ProjectGuid>
     <RootNamespace>GdiPlusRenderer</RootNamespace>
@@ -484,12 +490,6 @@
       <AdditionalDependencies>gdiplus.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="GdiPlusRenderer.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="GdiPlusRenderer.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

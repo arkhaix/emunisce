@@ -22,11 +22,11 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "Emunisce.h"
 using namespace emunisce;
 
-#include "ConsoleDebugger.h"
 #include "MachineIncludes.h"
 #include "PlatformIncludes.h"
 #include "base_application/InputManager.h"
 #include "base_application/MachineFeature.h"
+#include "console_debugger.h"
 #include "serialization/FileSerializer.h"
 #include "serialization/SerializationIncludes.h"
 #include "shlobj.h"

@@ -66,6 +66,12 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="wave_out_sound.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="wave_out_sound.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B47D9786-8300-4349-AB06-5FCE239DA5C5}</ProjectGuid>
     <RootNamespace>WaveOutSound</RootNamespace>
@@ -484,12 +490,6 @@
       <AdditionalDependencies>winmm.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="WaveOutSound.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="WaveOutSound.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -24,8 +24,8 @@ using namespace emunisce;
 
 #include <Memory.h>
 
-#include "hqnx/HqNx.h"
 #include "KingsDream.h"
+#include "hqnx/HqNx.h"
 
 // Gui
 

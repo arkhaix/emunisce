@@ -19,7 +19,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 #undef NOMINMAX
 
-#include "GdiPlusRenderer.h"
+#include "gdi_plus_renderer.h"
 using namespace emunisce;
 
 // Windows

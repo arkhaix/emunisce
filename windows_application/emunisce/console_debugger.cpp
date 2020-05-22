@@ -19,7 +19,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 #define EmulatedMachine_ToString 1
 
-#include "ConsoleDebugger.h"
+#include "console_debugger.h"
 using namespace emunisce;
 
 // Windows
@@ -45,9 +45,9 @@ using namespace emunisce;
 #include "MachineIncludes.h"
 
 // Application
-#include "../wave_out_sound/WaveOutSound.h"
-#include "Emunisce.h"
+#include "../wave_out_sound/wave_out_sound.h"
 #include "base_application/IUserInterface.h"
+#include "emunisce.h"
 
 ConsoleDebugger::ConsoleDebugger() {
 	m_machine = nullptr;

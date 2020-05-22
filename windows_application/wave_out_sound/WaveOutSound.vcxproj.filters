@@ -11,12 +11,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WaveOutSound.cpp">
+    <ClCompile Include="wave_out_sound.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="WaveOutSound.h">
+    <ClInclude Include="wave_out_sound.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

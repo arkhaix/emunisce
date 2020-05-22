@@ -27,9 +27,9 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 // WindowsApplication
 #include <string>
 
-#include "../gdi_plus_renderer/GdiPlusRenderer.h"
-#include "../wave_out_sound/WaveOutSound.h"
-#include "../win32_common/Window.h"
+#include "../gdi_plus_renderer/gdi_plus_renderer.h"
+#include "../wave_out_sound/wave_out_sound.h"
+#include "../win32_common/window.h"
 
 namespace emunisce {
 
