@@ -19,12 +19,12 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 #define EmulatedMachine_ToString 1
 
-#include "Application.h"
+#include "application.h"
 using namespace emunisce;
 
 // wx
-#include "ConsoleWindow.h"
-#include "WindowMain.h"
+#include "console_window.h"
+#include "window_main.h"
 #include "wx/sizer.h"
 #include "wx/textctrl.h"
 

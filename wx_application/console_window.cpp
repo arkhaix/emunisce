@@ -18,10 +18,10 @@ You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "ConsoleWindow.h"
+#include "console_window.h"
 using namespace emunisce;
 
-#include "Application.h"
+#include "application.h"
 
 class ConsoleTextCtrl : public wxTextCtrl {
 public:

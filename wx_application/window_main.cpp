@@ -17,14 +17,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "WindowMain.h"
+#include "window_main.h"
 using namespace emunisce;
 
 #include <thread>
 
 // Emunisce stuff
 
-#include "Application.h"
+#include "application.h"
 #include "platform_includes.h"
 
 void WindowMain::SetApplication(Application* application) {
