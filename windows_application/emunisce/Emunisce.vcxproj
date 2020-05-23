@@ -593,31 +593,34 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\base_application\base_application\BaseApplication.vcxproj">
+    <ProjectReference Include="..\..\base_application\base_application\base_application.vcxproj">
       <Project>{cf7183bb-c90f-4c19-b0c1-9932ad2abe58}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\base_application\opengl_renderer\OpenGLRenderer.vcxproj">
+    <ProjectReference Include="..\..\base_application\opengl_renderer\opengl_renderer.vcxproj">
       <Project>{4913cbb4-2d7d-4d39-b3c2-1440ebff3953}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Gameboy\Gameboy.vcxproj">
+    <ProjectReference Include="..\..\gameboy\gameboy.vcxproj">
       <Project>{9d59f9e7-2668-4089-9aab-e609df7d6cad}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Machine\Machine.vcxproj">
+    <ProjectReference Include="..\..\machine\machine.vcxproj">
       <Project>{6a47e539-4cfd-423b-b93a-b7cb5b1ce7d1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\platform\platform.vcxproj">
+      <Project>{d7e7c4f1-5404-450c-ad82-bd9883635d1c}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Utility\hqx\hqx.vcxproj">
       <Project>{f80ec023-b987-4b57-b756-95dc6a8447bd}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Utility\Serialization\Serialization.vcxproj">
+    <ProjectReference Include="..\..\utility\serialization\serialization.vcxproj">
       <Project>{7da30ea8-57a1-46f1-af7a-c9ddea094396}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\gdi_plus_renderer\GdiPlusRenderer.vcxproj">
+    <ProjectReference Include="..\gdi_plus_renderer\gdi_plus_renderer.vcxproj">
       <Project>{ec091f82-1e1c-4b24-a41e-899cf6458295}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\wave_out_sound\WaveOutSound.vcxproj">
+    <ProjectReference Include="..\wave_out_sound\wave_out_sound.vcxproj">
       <Project>{b47d9786-8300-4349-ab06-5fce239da5c5}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\win32_common\Win32Common.vcxproj">
+    <ProjectReference Include="..\win32_common\win32_common.vcxproj">
       <Project>{179a002e-8f22-4252-987e-2653363daa7f}</Project>
     </ProjectReference>
   </ItemGroup>
