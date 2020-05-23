@@ -44,7 +44,7 @@ static const char* ToString[] = {"None", "AutoSelect",
 
 								 "NumEmulatedMachines"};
 #endif
-}  // namespace EmulatedMachine
+}  // namespace Machine
 
 class Archive;
 

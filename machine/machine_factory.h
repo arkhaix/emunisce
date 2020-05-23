@@ -26,8 +26,7 @@ namespace emunisce {
 
 class MachineFactory {
 public:
-	static EmulatedMachine* CreateMachine(const char* romFilename,
-										   Machine::Type machineType = Machine::AutoSelect);
+	static EmulatedMachine* CreateMachine(const char* romFilename, Machine::Type machineType = Machine::AutoSelect);
 	static void ReleaseMachine(EmulatedMachine* machine);
 };
 

@@ -26,8 +26,8 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include <string>
 #include <vector>
 
-#include "machine_includes.h"
 #include "base_application/user_interface.h"  ///<For DisplayFilter
+#include "machine_includes.h"
 
 namespace emunisce {
 

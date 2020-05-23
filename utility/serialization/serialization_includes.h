@@ -21,5 +21,5 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 // This is a convenience header for pulling in all the Serialization types.
 
 #include "archive.h"
-#include "serializer.h"
 #include "serialize_item.h"
+#include "serializer.h"

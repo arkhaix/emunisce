@@ -22,11 +22,11 @@ using namespace emunisce;
 
 #include "channel_controller.h"
 #include "gameboy_includes.h"
+#include "serialization/serialization_includes.h"
 #include "sound1.h"
 #include "sound2.h"
 #include "sound3.h"
 #include "sound4.h"
-#include "serialization/serialization_includes.h"
 
 #if 0
 #include <cstdio>

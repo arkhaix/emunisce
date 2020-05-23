@@ -27,14 +27,14 @@ using namespace emunisce;
 #include <string>
 #include <vector>
 
-#include "machine_includes.h"
-#include "platform_includes.h"
 #include "command_trie.h"
 #include "gui.h"
 #include "input_manager.h"
 #include "input_recording.h"
 #include "machine_feature.h"
+#include "machine_includes.h"
 #include "machine_runner.h"
+#include "platform_includes.h"
 #include "rewinder.h"
 #include "serialization/memory_serializer.h"
 #include "serialization/serialization_includes.h"

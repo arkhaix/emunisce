@@ -22,9 +22,9 @@ using namespace emunisce;
 
 #include "channel_controller.h"
 #include "gameboy_includes.h"
+#include "serialization/serialization_includes.h"
 #include "sound.h"
 #include "sound_generator.h"
-#include "serialization/serialization_includes.h"
 
 LengthUnit::LengthUnit(SoundGenerator* soundGenerator) {
 	m_soundGenerator = soundGenerator;

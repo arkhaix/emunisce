@@ -27,11 +27,11 @@ using namespace emunisce;
 #include "shlobj.h"
 #include "shlwapi.h"
 
-#include "machine_includes.h"
-#include "platform_includes.h"
 #include "base_application/input_manager.h"
 #include "base_application/machine_feature.h"
 #include "console_debugger.h"
+#include "machine_includes.h"
+#include "platform_includes.h"
 #include "serialization/file_serializer.h"
 #include "serialization/serialization_includes.h"
 
