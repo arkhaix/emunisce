@@ -21,7 +21,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 using namespace emunisce;
 
 // Gameboy
-#include "GameboyIncludes.h"
+#include "gameboy_includes.h"
 
 // Serialization
 #include "serialization/serialization_includes.h"

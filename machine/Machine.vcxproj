@@ -445,7 +445,7 @@
     <ClInclude Include="emulated_sound.h" />
     <ClInclude Include="machine_to_application.h" />
     <ClInclude Include="machine_factory.h" />
-    <ClInclude Include="MachineIncludes.h" />
+    <ClInclude Include="machine_includes.h" />
     <ClInclude Include="machine_serialization.h" />
     <ClInclude Include="machine_types.h" />
     <ClInclude Include="screen_buffer.h" />

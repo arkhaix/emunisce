@@ -32,7 +32,7 @@
     <ClInclude Include="machine_factory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MachineIncludes.h" />
+    <ClInclude Include="machine_includes.h" />
     <ClInclude Include="machine_types.h">
       <Filter>Header Files</Filter>
     </ClInclude>

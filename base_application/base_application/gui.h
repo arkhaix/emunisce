@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef GUI_H
 #define GUI_H
 
-#include "MachineIncludes.h"
+#include "machine_includes.h"
 #include "machine_feature.h"
 #include "user_interface.h"  ///<For DisplayFilter
 

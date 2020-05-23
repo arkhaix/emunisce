@@ -465,7 +465,7 @@
     <ClInclude Include="duty_unit.h" />
     <ClInclude Include="envelope_unit.h" />
     <ClInclude Include="gameboy.h" />
-    <ClInclude Include="GameboyIncludes.h" />
+    <ClInclude Include="gameboy_includes.h" />
     <ClInclude Include="gameboy_types.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="length_unit.h" />

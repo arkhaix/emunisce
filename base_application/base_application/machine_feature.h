@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MACHINEFEATURE_H
 #define MACHINEFEATURE_H
 
-#include "MachineIncludes.h"
+#include "machine_includes.h"
 
 namespace emunisce {
 

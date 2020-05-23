@@ -24,7 +24,7 @@ using namespace emunisce;
 #include <stdlib.h>
 #include <time.h>
 
-#include "MachineIncludes.h"
+#include "machine_includes.h"
 
 KingsDream::KingsDream() {
 	srand((unsigned int)time(nullptr));

@@ -21,7 +21,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #define SOUND_H
 
 #include "gameboy_types.h"
-#include "MachineIncludes.h"
+#include "machine_includes.h"
 #include "platform_types.h"
 
 namespace emunisce {

@@ -21,7 +21,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 using namespace emunisce;
 
 #include "channel_controller.h"
-#include "GameboyIncludes.h"
+#include "gameboy_includes.h"
 #include "sound1.h"
 #include "sound2.h"
 #include "sound3.h"

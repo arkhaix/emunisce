@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "cpu.h"
 using namespace emunisce;
 
-#include "GameboyIncludes.h"
+#include "gameboy_includes.h"
 
 int Cpu::Step() {
 	int instructionTime = 0;

@@ -37,7 +37,7 @@ using namespace emunisce;
 
 #include <cstdlib>
 
-#include "MachineIncludes.h"
+#include "machine_includes.h"
 #include "platform_includes.h"
 
 namespace emunisce {

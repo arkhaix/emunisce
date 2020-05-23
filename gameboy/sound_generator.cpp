@@ -22,7 +22,7 @@ using namespace emunisce;
 
 #include "channel_controller.h"
 #include "envelope_unit.h"
-#include "GameboyIncludes.h"
+#include "gameboy_includes.h"
 #include "length_unit.h"
 #include "sound.h"
 #include "serialization/serialization_includes.h"

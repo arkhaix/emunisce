@@ -32,7 +32,7 @@ using namespace emunisce;
 #include "rom_only.h"
 
 // Solution
-#include "GameboyIncludes.h"
+#include "gameboy_includes.h"
 #include "serialization/serialization_includes.h"
 
 Memory::Memory() {

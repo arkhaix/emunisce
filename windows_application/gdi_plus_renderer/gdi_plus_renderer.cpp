@@ -35,7 +35,7 @@ using namespace Gdiplus;
 #include "platform_includes.h"
 
 // Machine
-#include "MachineIncludes.h"
+#include "machine_includes.h"
 
 // Application
 #include "../emunisce/Emunisce.h"  ///<todo: this is just here for requesting shutdown.  Refactor this.

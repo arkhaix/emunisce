@@ -27,7 +27,7 @@ using namespace emunisce;
 #include "shlobj.h"
 #include "shlwapi.h"
 
-#include "MachineIncludes.h"
+#include "machine_includes.h"
 #include "platform_includes.h"
 #include "base_application/input_manager.h"
 #include "base_application/machine_feature.h"

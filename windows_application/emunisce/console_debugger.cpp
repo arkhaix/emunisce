@@ -42,7 +42,7 @@ using namespace emunisce;
 #include "platform_includes.h"
 
 // Machine
-#include "MachineIncludes.h"
+#include "machine_includes.h"
 
 // Application
 #include "../wave_out_sound/wave_out_sound.h"

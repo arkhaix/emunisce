@@ -22,7 +22,7 @@ using namespace emunisce;
 
 #include <stdlib.h>
 
-#include "MachineIncludes.h"
+#include "machine_includes.h"
 #include "platform_types.h"
 
 extern void hq2x_32(unsigned char* pIn, unsigned char* pOut, int Xres, int Yres, int BpL);

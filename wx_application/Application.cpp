@@ -37,7 +37,7 @@ using namespace emunisce;
 #endif
 
 // Machine
-#include "MachineIncludes.h"
+#include "machine_includes.h"
 
 // BaseApplication
 #include "base_application/input_manager.h"

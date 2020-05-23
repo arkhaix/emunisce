@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "machine_runner.h"
 using namespace emunisce;
 
-#include "MachineIncludes.h"
+#include "machine_includes.h"
 
 MachineRunner::MachineRunner() {
 	m_machine = nullptr;
