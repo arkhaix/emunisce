@@ -20,12 +20,12 @@
     <ClCompile Include="hq4x.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HqNx.cpp">
+    <ClCompile Include="hqx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="HqNx.h">
+    <ClInclude Include="hqx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

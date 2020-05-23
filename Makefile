@@ -1,4 +1,4 @@
-SRCDIRS=utility/serialization utility/hqnx linux_platform machine base_application/base_application base_application/opengl_renderer gameboy wx_application
+SRCDIRS=utility/serialization utility/hqx linux_platform machine base_application/base_application base_application/opengl_renderer gameboy wx_application
 INCDIRS=utility platform base_application
 LIBDIRS=
 IMPORTLIBS=GL GLEW

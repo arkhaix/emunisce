@@ -17,7 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "HqNx.h"
+#include "hqx.h"
 using namespace emunisce;
 
 #include <stdlib.h>
@@ -100,19 +100,19 @@ public:
 	}
 };
 
-ScreenBuffer* HqNx::Hq2x(ScreenBuffer* originalScreen) {
+ScreenBuffer* hqx::Hq2x(ScreenBuffer* originalScreen) {
 	return HqHelper::HqConvert(originalScreen, 2);
 }
 
-ScreenBuffer* HqNx::Hq3x(ScreenBuffer* originalScreen) {
+ScreenBuffer* hqx::Hq3x(ScreenBuffer* originalScreen) {
 	return HqHelper::HqConvert(originalScreen, 3);
 }
 
-ScreenBuffer* HqNx::Hq4x(ScreenBuffer* originalScreen) {
+ScreenBuffer* hqx::Hq4x(ScreenBuffer* originalScreen) {
 	return HqHelper::HqConvert(originalScreen, 4);
 }
 
-void HqNx::Release(ScreenBuffer* buffer) {
+void hqx::Release(ScreenBuffer* buffer) {
 	DynamicScreenBuffer* rtBuffer = dynamic_cast<DynamicScreenBuffer*>(buffer);
 	if (rtBuffer != nullptr) {
 		delete rtBuffer;

@@ -437,12 +437,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="HqNx.h" />
+    <ClInclude Include="hqx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="hq2x.cpp" />
     <ClCompile Include="hq3x.cpp" />
-    <ClCompile Include="HqNx.cpp" />
+    <ClCompile Include="hqx.cpp" />
     <ClCompile Include="hq4x.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

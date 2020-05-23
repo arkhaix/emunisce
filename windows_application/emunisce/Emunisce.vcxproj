@@ -605,7 +605,7 @@
     <ProjectReference Include="..\..\Machine\Machine.vcxproj">
       <Project>{6a47e539-4cfd-423b-b93a-b7cb5b1ce7d1}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Utility\HqNx\HqNx.vcxproj">
+    <ProjectReference Include="..\..\Utility\hqx\hqx.vcxproj">
       <Project>{f80ec023-b987-4b57-b756-95dc6a8447bd}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Utility\Serialization\Serialization.vcxproj">

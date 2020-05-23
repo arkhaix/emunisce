@@ -24,7 +24,7 @@ namespace emunisce {
 
 class ScreenBuffer;
 
-class HqNx {
+class hqx {
 public:
 	static ScreenBuffer* Hq2x(ScreenBuffer* originalScreen);
 	static ScreenBuffer* Hq3x(ScreenBuffer* originalScreen);

@@ -21,7 +21,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GdiPlusRenderer", "windows_
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WaveOutSound", "windows_application\wave_out_sound\WaveOutSound.vcxproj", "{B47D9786-8300-4349-AB06-5FCE239DA5C5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HqNx", "utility\HqNx\HqNx.vcxproj", "{F80EC023-B987-4B57-B756-95DC6A8447BD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hqx", "utility\hqx\hqx.vcxproj", "{F80EC023-B987-4B57-B756-95DC6A8447BD}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Serialization", "utility\serialization\Serialization.vcxproj", "{7DA30EA8-57A1-46F1-AF7A-C9DDEA094396}"
 EndProject

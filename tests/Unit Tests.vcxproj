@@ -78,7 +78,7 @@
     <ProjectReference Include="..\Display\Display.vcxproj">
       <Project>{e913fab3-3258-423d-ae0a-3c23b2ca31b5}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\HqNx\HqNx.vcxproj">
+    <ProjectReference Include="..\hqx\hqx.vcxproj">
       <Project>{f80ec023-b987-4b57-b756-95dc6a8447bd}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Input\Input.vcxproj">

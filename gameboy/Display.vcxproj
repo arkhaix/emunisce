@@ -69,7 +69,7 @@
     <ClCompile Include="display.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HqNx\HqNx.vcxproj">
+    <ProjectReference Include="..\hqx\hqx.vcxproj">
       <Project>{f80ec023-b987-4b57-b756-95dc6a8447bd}</Project>
     </ProjectReference>
   </ItemGroup>

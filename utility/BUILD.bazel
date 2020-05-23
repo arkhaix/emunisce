@@ -3,7 +3,7 @@ cc_library(
     visibility = ["//visibility:public"],
 
     deps = [
-        "//utility/hqnx:hqnx",
+        "//utility/hqx:hqx",
         "//utility/serialization:serialization",
     ],
     includes = ["."],

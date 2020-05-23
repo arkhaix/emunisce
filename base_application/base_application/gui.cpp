@@ -24,7 +24,7 @@ using namespace emunisce;
 
 #include <memory.h>
 
-#include "hqnx/HqNx.h"
+#include "hqx/hqx.h"
 #include "kings_dream.h"
 
 // Gui
@@ -85,13 +85,13 @@ ScreenBuffer* Gui::GetStableScreenBuffer() {
 	m_screenBufferCopyFilter = m_displayFilter;
 
 	if (m_displayFilter == DisplayFilter::Hq2x) {
-		m_filteredScreenBuffer = HqNx::Hq2x(m_screenBufferCopy);
+		m_filteredScreenBuffer = hqx::Hq2x(m_screenBufferCopy);
 	}
 	else if (m_displayFilter == DisplayFilter::Hq3x) {
-		m_filteredScreenBuffer = HqNx::Hq3x(m_screenBufferCopy);
+		m_filteredScreenBuffer = hqx::Hq3x(m_screenBufferCopy);
 	}
 	else if (m_displayFilter == DisplayFilter::Hq4x) {
-		m_filteredScreenBuffer = HqNx::Hq4x(m_screenBufferCopy);
+		m_filteredScreenBuffer = hqx::Hq4x(m_screenBufferCopy);
 	}
 
 	return m_filteredScreenBuffer;
