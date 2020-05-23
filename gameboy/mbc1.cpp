@@ -27,7 +27,7 @@ using namespace emunisce;
 #include <fstream>
 
 #include "gameboy.h"
-#include "serialization/SerializationIncludes.h"
+#include "serialization/serialization_includes.h"
 
 Mbc1::Mbc1() {
 	m_fiveBitBankCheck = true;

@@ -23,7 +23,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 using namespace emunisce;
 
 #include "GameboyIncludes.h"
-#include "serialization/SerializationIncludes.h"
+#include "serialization/serialization_includes.h"
 
 Input::Input() {
 }

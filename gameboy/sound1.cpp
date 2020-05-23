@@ -25,7 +25,7 @@ using namespace emunisce;
 #include "envelope_unit.h"
 #include "GameboyIncludes.h"
 #include "length_unit.h"
-#include "serialization/SerializationIncludes.h"
+#include "serialization/serialization_includes.h"
 
 Sound1::Sound1() {
 	m_machine = nullptr;

@@ -22,7 +22,7 @@ using namespace emunisce;
 
 #include "channel_controller.h"
 #include "sound_generator.h"
-#include "serialization/SerializationIncludes.h"
+#include "serialization/serialization_includes.h"
 
 EnvelopeUnit::EnvelopeUnit(SoundGenerator* soundGenerator) {
 	m_soundGenerator = soundGenerator;

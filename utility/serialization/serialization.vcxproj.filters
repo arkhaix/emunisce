@@ -14,22 +14,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ISerializer.h">
+    <ClInclude Include="serializer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Archive.h">
+    <ClInclude Include="archive.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SerializeItem.h">
+    <ClInclude Include="serialize_item.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SerializationIncludes.h">
+    <ClInclude Include="serialization_includes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MemorySerializer.h">
+    <ClInclude Include="memory_serializer.h">
       <Filter>Serializers</Filter>
     </ClInclude>
-    <ClInclude Include="FileSerializer.h">
+    <ClInclude Include="file_serializer.h">
       <Filter>Serializers</Filter>
     </ClInclude>
   </ItemGroup>

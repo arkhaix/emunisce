@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef SERIALIZEITEM_H
 #define SERIALIZEITEM_H
 
-#include "Archive.h"
+#include "archive.h"
 
 namespace emunisce {
 

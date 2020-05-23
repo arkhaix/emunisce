@@ -437,18 +437,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Archive.h" />
-    <ClInclude Include="FileSerializer.h" />
-    <ClInclude Include="ISerializer.h" />
-    <ClInclude Include="MemorySerializer.h" />
-    <ClInclude Include="SerializationIncludes.h" />
-    <ClInclude Include="SerializeItem.h" />
+    <ClInclude Include="archive.h" />
+    <ClInclude Include="file_serializer.h" />
+    <ClInclude Include="serializer.h" />
+    <ClInclude Include="memory_serializer.h" />
+    <ClInclude Include="serialization_includes.h" />
+    <ClInclude Include="serialize_item.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Archive.cpp" />
-    <ClCompile Include="FileSerializer.cpp" />
-    <ClCompile Include="MemorySerializer.cpp" />
-    <ClCompile Include="SerializeItem.cpp" />
+    <ClCompile Include="archive.cpp" />
+    <ClCompile Include="file_serializer.cpp" />
+    <ClCompile Include="memory_serializer.cpp" />
+    <ClCompile Include="serialize_item.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

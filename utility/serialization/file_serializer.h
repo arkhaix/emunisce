@@ -23,7 +23,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include <fstream>
 #include <string>
 
-#include "ISerializer.h"
+#include "serializer.h"
 
 namespace emunisce {
 

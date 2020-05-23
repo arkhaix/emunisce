@@ -25,7 +25,7 @@ using namespace emunisce;
 #include "GameboyIncludes.h"
 #include "length_unit.h"
 #include "sound.h"
-#include "serialization/SerializationIncludes.h"
+#include "serialization/serialization_includes.h"
 
 SoundGenerator::SoundGenerator() {
 	m_lengthUnit = new LengthUnit(this);

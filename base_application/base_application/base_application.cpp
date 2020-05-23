@@ -36,8 +36,8 @@ using namespace emunisce;
 #include "machine_feature.h"
 #include "machine_runner.h"
 #include "rewinder.h"
-#include "serialization/MemorySerializer.h"
-#include "serialization/SerializationIncludes.h"
+#include "serialization/memory_serializer.h"
+#include "serialization/serialization_includes.h"
 
 // BaseApplication
 

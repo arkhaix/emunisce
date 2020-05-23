@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "duty_unit.h"
 using namespace emunisce;
 
-#include "serialization/SerializationIncludes.h"
+#include "serialization/serialization_includes.h"
 
 DutyUnit::DutyUnit() {
 	m_timerPeriod = 0;

@@ -17,13 +17,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "FileSerializer.h"
+#include "file_serializer.h"
 using namespace emunisce;
 
 #include <stdio.h>
 #include <string.h>
 
-#include "Archive.h"
+#include "archive.h"
 
 FileSerializer::FileSerializer() {
 	m_filename = "";

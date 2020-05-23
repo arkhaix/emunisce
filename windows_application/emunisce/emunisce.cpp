@@ -32,8 +32,8 @@ using namespace emunisce;
 #include "base_application/input_manager.h"
 #include "base_application/machine_feature.h"
 #include "console_debugger.h"
-#include "serialization/FileSerializer.h"
-#include "serialization/SerializationIncludes.h"
+#include "serialization/file_serializer.h"
+#include "serialization/serialization_includes.h"
 
 EmunisceApplication::EmunisceApplication() {
 	m_window = new Window();

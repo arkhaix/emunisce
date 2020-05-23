@@ -26,7 +26,7 @@ using namespace emunisce;
 #include "sound2.h"
 #include "sound3.h"
 #include "sound4.h"
-#include "serialization/SerializationIncludes.h"
+#include "serialization/serialization_includes.h"
 
 #if 0
 #include <cstdio>

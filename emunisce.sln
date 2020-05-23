@@ -23,7 +23,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WaveOutSound", "windows_app
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hqx", "utility\hqx\hqx.vcxproj", "{F80EC023-B987-4B57-B756-95DC6A8447BD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Serialization", "utility\serialization\Serialization.vcxproj", "{7DA30EA8-57A1-46F1-AF7A-C9DDEA094396}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Serialization", "utility\serialization\serialization.vcxproj", "{7DA30EA8-57A1-46F1-AF7A-C9DDEA094396}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Emunisce", "windows_application\emunisce\Emunisce.vcxproj", "{ABBF9FBE-F84E-4383-BBC3-2836879E5A87}"
 EndProject

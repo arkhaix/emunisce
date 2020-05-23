@@ -44,8 +44,8 @@ using namespace emunisce;
 #include "base_application/machine_feature.h"
 
 // Serialization
-#include "serialization/FileSerializer.h"
-#include "serialization/SerializationIncludes.h"
+#include "serialization/file_serializer.h"
+#include "serialization/serialization_includes.h"
 
 Application::Application() {
 	m_renderer = new OpenGLRenderer();

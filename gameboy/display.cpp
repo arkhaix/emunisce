@@ -21,7 +21,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 using namespace emunisce;
 
 #include "GameboyIncludes.h"
-#include "serialization/SerializationIncludes.h"
+#include "serialization/serialization_includes.h"
 
 // 70224 t-states per frame (59.7fps)
 // 4560 t-states per v-blank (mode 01)
