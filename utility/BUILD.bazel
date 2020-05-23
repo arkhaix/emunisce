@@ -1,0 +1,10 @@
+cc_library(
+    name = "utility",
+    visibility = ["//visibility:public"],
+
+    deps = [
+        "//utility/hqx:hqx",
+        "//utility/serialization:serialization",
+    ],
+    includes = ["."],
+)

@@ -1,0 +1,40 @@
+cc_library(
+    name = "machine",
+    visibility = ["//visibility:public"],
+
+    srcs = glob(["*.cpp"]),
+    hdrs = glob(["*.h", "*.hpp"]),
+
+    deps = [
+        "//platform:platform",
+        "//utility:utility",
+        "//gameboy:gameboy",
+    ],
+    includes = ["."],
+)
+
+cc_library(
+    name = "machine_interfaces",
+    visibility = ["//visibility:public"],
+
+    hdrs = [
+        "machine_includes.h",
+        "machine_types.h",
+
+        "machine_factory.h",
+        "machine_serialization.h",
+
+        "machine_to_application.h",
+
+        "emulated_machine.h",
+        "emulated_display.h",
+        "emulated_input.h",
+        "emulated_memory.h",
+        "emulated_processor.h",
+        "emulated_sound.h",
+
+        "screen_buffer.h",
+    ],
+
+    includes = ["."],
+)

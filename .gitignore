@@ -9,6 +9,7 @@ Emunisce
 .vscode
 
 # Visual Studio
+.vs
 **.VC.*
 **.idb
 **.lastbuildstate

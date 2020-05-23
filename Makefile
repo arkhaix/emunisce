@@ -1,9 +1,9 @@
-SRCDIRS=Utility/Serialization Utility/HqNx LinuxPlatform Machine BaseApplication/BaseApplication BaseApplication/OpenGLRenderer Gameboy wxApplication
-INCDIRS=Utility Platform BaseApplication
+SRCDIRS=utility/serialization utility/hqx linux_platform machine base_application/base_application base_application/opengl_renderer gameboy wx_application
+INCDIRS=utility platform base_application
 LIBDIRS=
 IMPORTLIBS=GL GLEW
 STATICLIBS=
-OUTPUT=Emunisce
+OUTPUT=emunisce
 
 CC=gcc
 CXX=g++
@@ -36,4 +36,4 @@ dist-clean: clean
 include .depend
 
 get-deps:
-	apt-get install libwxgtk3.0-dev libglew-dev
+	apt-get install libwxgtk3.0-gtk3-dev libglew-dev

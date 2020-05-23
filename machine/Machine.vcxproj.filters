@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{70131f4c-d3f7-480c-abcf-c6269219abfd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="emulated_display.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="emulated_machine.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="emulated_sound.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="emulated_input.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="emulated_processor.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="machine_factory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="machine_includes.h" />
+    <ClInclude Include="machine_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="emulated_memory.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="screen_buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="machine_serialization.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="machine_to_application.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="t_screen_buffer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="machine_factory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="screen_buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="machine_serialization.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

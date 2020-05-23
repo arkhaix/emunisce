@@ -1,0 +1,101 @@
+cc_library(
+    name = "gameboy",
+    visibility = ["//visibility:public"],
+
+    srcs = glob(["*.cpp"]),
+    hdrs = glob(["*.h"]),
+
+    deps = [
+        "//machine:machine_interfaces",
+        "//platform:platform",
+        "//utility:utility",
+    ],
+    includes = ["."],
+)
+
+# cc_library(
+#     name = "cpu",
+#     visibility = ["//visibility:public"],
+
+#     srcs = [
+#         "Cpu.cpp",
+#         "CpuExec.cpp",
+#     ],
+#     hdrs = [
+#         "cpu.h",
+#     ],
+# )
+
+# cc_library(
+#     name = "display",
+#     visibility = ["//visibility:public"],
+
+#     srcs = [
+#         "display.cpp",
+#     ],
+#     hdrs = [
+#         "display.h",
+#     ],
+# )
+
+# cc_library(
+#     name = "input",
+#     visibility = ["//visibility:public"],
+
+#     srcs = [
+#         "input.cpp",
+#     ],
+#     hdrs = [
+#         "input.h",
+#     ],
+# )
+
+# cc_library(
+#     name = "memory",
+#     visibility = ["//visibility:public"],
+
+#     srcs = [
+#         "memory.cpp",
+#         "rom_only.cpp",
+#         "mbc1.cpp",
+#         "mbc3.cpp",
+#         "mbc5.cpp",
+#     ],
+#     hdrs = [
+#         "memory.h",
+#         "rom_only.h",
+#         "mbc1.h",
+#         "mbc3.h",
+#         "mbc5.h",
+#     ],
+# )
+
+# cc_library(
+#     name = "sound",
+#     visibility = ["//visibility:public"],
+
+#     srcs = [
+#         "ChannelController.cpp",
+#         "DutyUnit.cpp",
+#         "EnvelopeUnit.cpp",
+#         "LengthUnit.cpp",
+#         "Sound.cpp",
+#         "Sound1.cpp",
+#         "Sound2.cpp",
+#         "Sound3.cpp",
+#         "Sound4.cpp",
+#         "SoundGenerator.cpp",
+#     ],
+#     hdrs = [
+#         "channel_controller.h",
+#         "duty_unit.h",
+#         "envelope_unit.h",
+#         "length_unit.h",
+#         "sound.h",
+#         "sound1.h",
+#         "sound2.h",
+#         "sound3.h",
+#         "sound4.h",
+#         "sound_generator.h",
+#     ],
+# )
