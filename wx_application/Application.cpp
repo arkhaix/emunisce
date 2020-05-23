@@ -256,7 +256,7 @@ void Application::ReleaseArchive(Archive* archive) {
 	if (archive == nullptr)
 		return;
 
-	ISerializer* serializer = archive->GetSerializer();
+	Serializer* serializer = archive->GetSerializer();
 
 	archive->Close();
 
