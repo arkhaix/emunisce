@@ -27,7 +27,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace emunisce {
 
-class FileSerializer : public ISerializer {
+class FileSerializer : public Serializer {
 public:
 	// FileSerializer
 
@@ -37,7 +37,7 @@ public:
 	virtual void SetFile(const char* filename);
 	virtual void CloseFile();
 
-	// ISerializer
+	// Serializer
 
 	void SetArchive(Archive* archive) override;
 

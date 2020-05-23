@@ -70,7 +70,7 @@ void MemorySerializer::SetBuffer(unsigned char* buffer, unsigned int size) {
 	memcpy(m_buffer, buffer, size);
 }
 
-// ISerializer
+// Serializer
 
 void MemorySerializer::SetArchive(Archive* archive) {
 }

@@ -22,7 +22,7 @@ using namespace emunisce;
 
 #include "ISerializer.h"
 
-Archive::Archive(ISerializer* serializer, ArchiveMode::Type archiveMode) {
+Archive::Archive(Serializer* serializer, ArchiveMode::Type archiveMode) {
 	m_serializer = serializer;
 	m_archiveMode = archiveMode;
 
@@ -33,7 +33,7 @@ void Archive::Close() {
 	m_serializer->Close();
 }
 
-ISerializer* Archive::GetSerializer() {
+Serializer* Archive::GetSerializer() {
 	return m_serializer;
 }
 

@@ -49,7 +49,7 @@ void FileSerializer::CloseFile() {
 	}
 }
 
-// ISerializer
+// Serializer
 
 void FileSerializer::SetArchive(Archive* archive) {
 	if (archive == nullptr) {

@@ -36,4 +36,4 @@ dist-clean: clean
 include .depend
 
 get-deps:
-	apt-get install libwxgtk3.0-dev libglew-dev
+	apt-get install libwxgtk3.0-gtk3-dev libglew-dev

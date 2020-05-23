@@ -392,7 +392,7 @@ void EmunisceApplication::ReleaseArchive(Archive* archive) {
 		return;
 	}
 
-	ISerializer* serializer = archive->GetSerializer();
+	Serializer* serializer = archive->GetSerializer();
 
 	archive->Close();
 

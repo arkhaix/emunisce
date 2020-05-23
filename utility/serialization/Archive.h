@@ -24,7 +24,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace emunisce {
 
-class ISerializer;
+class Serializer;
 
 namespace ArchiveMode {
 typedef int Type;
@@ -39,10 +39,10 @@ enum {
 
 class Archive {
 public:
-	Archive(ISerializer* serializer, ArchiveMode::Type archiveMode);
+	Archive(Serializer* serializer, ArchiveMode::Type archiveMode);
 	void Close();
 
-	ISerializer* GetSerializer();
+	Serializer* GetSerializer();
 	ArchiveMode::Type GetArchiveMode();
 
 	void SerializeBuffer(unsigned char* buffer, unsigned int bytes);
@@ -62,7 +62,7 @@ public:
 	Archive& operator&(double& data);
 
 protected:
-	ISerializer* m_serializer;
+	Serializer* m_serializer;
 	ArchiveMode::Type m_archiveMode;
 };
 

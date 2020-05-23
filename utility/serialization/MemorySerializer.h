@@ -24,7 +24,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace emunisce {
 
-class MemorySerializer : public ISerializer {
+class MemorySerializer : public Serializer {
 public:
 	// MemorySerializer
 
@@ -41,7 +41,7 @@ public:
 
 	virtual void SetBuffer(unsigned char* buffer, unsigned int size);
 
-	// ISerializer
+	// Serializer
 
 	void SetArchive(Archive* archive) override;
 

@@ -24,9 +24,9 @@ namespace emunisce {
 
 class Archive;
 
-class ISerializer {
+class Serializer {
 public:
-	virtual ~ISerializer() {
+	virtual ~Serializer() {
 	}
 
 	virtual void SetArchive(Archive* archive) = 0;
