@@ -1,9 +1,9 @@
-SRCDIRS=Utility/Serialization Utility/HqNx LinuxPlatform Machine BaseApplication/BaseApplication BaseApplication/OpenGLRenderer Gameboy wxApplication
-INCDIRS=Utility Platform BaseApplication
+SRCDIRS=utility/serialization utility/hqnx linux_platform machine base_application/base_application base_application/opengl_renderer gameboy wx_application
+INCDIRS=utility platform base_application
 LIBDIRS=
 IMPORTLIBS=GL GLEW
 STATICLIBS=
-OUTPUT=Emunisce
+OUTPUT=emunisce
 
 CC=gcc
 CXX=g++
