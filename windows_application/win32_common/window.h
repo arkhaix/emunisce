@@ -27,8 +27,6 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include <mutex>
 #include <set>
 
-#include "Window.h"
-
 namespace emunisce {
 
 class IWindowMessageListener {
