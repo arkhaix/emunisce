@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef SOUND2_H
 #define SOUND2_H
 
-#include "PlatformTypes.h"
+#include "platform_types.h"
 #include "sound.h"  ///<for SquareSynthesisMethod
 #include "sound_generator.h"
 

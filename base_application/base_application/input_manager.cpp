@@ -21,7 +21,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 using namespace emunisce;
 
 #include "MachineIncludes.h"
-#include "PlatformIncludes.h"
+#include "platform_includes.h"
 #include "base_application.h"
 
 InputManager::InputManager() {

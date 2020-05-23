@@ -25,7 +25,7 @@ using namespace emunisce;
 // Emunisce stuff
 
 #include "Application.h"
-#include "PlatformIncludes.h"
+#include "platform_includes.h"
 
 void WindowMain::SetApplication(Application* application) {
 	m_application = application;

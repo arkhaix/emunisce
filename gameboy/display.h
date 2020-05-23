@@ -24,7 +24,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "gameboy_types.h"
 #include "MachineIncludes.h"
-#include "PlatformIncludes.h"
+#include "platform_includes.h"
 #include "stdlib.h"
 
 #define PIXEL_NOT_CACHED (DisplayPixelFromRGBA((u8)254, (u8)0, (u8)254, (u8)255))

@@ -405,9 +405,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="PlatformDefines.h" />
-    <ClInclude Include="PlatformIncludes.h" />
-    <ClInclude Include="PlatformTypes.h" />
+    <ClInclude Include="platform_defines.h" />
+    <ClInclude Include="platform_includes.h" />
+    <ClInclude Include="platform_types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

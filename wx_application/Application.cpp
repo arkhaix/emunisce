@@ -29,7 +29,7 @@ using namespace emunisce;
 #include "wx/textctrl.h"
 
 // Platform
-#include "PlatformIncludes.h"
+#include "platform_includes.h"
 
 #ifdef EMUNISCE_PLATFORM_LINUX
 #include <sys/stat.h>

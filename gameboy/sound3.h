@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef SOUND3_H
 #define SOUND3_H
 
-#include "PlatformTypes.h"
+#include "platform_types.h"
 #include "sound_generator.h"
 
 namespace emunisce {

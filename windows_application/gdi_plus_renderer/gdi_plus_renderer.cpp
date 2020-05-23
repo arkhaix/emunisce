@@ -32,7 +32,7 @@ using namespace Gdiplus;
 #include "stdio.h"
 
 // Platform
-#include "PlatformIncludes.h"
+#include "platform_includes.h"
 
 // Machine
 #include "MachineIncludes.h"

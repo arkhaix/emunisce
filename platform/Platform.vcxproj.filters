@@ -11,13 +11,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PlatformTypes.h">
+    <ClInclude Include="platform_types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PlatformDefines.h">
+    <ClInclude Include="platform_defines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PlatformIncludes.h">
+    <ClInclude Include="platform_includes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

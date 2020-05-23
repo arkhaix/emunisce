@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #include "opengl_renderer.h"
 using namespace emunisce;
 
-#include "PlatformDefines.h"
+#include "platform_defines.h"
 
 #ifdef EMUNISCE_PLATFORM_WINDOWS
 #include "windows.h"
@@ -38,7 +38,7 @@ using namespace emunisce;
 #include <cstdlib>
 
 #include "MachineIncludes.h"
-#include "PlatformIncludes.h"
+#include "platform_includes.h"
 
 namespace emunisce {
 

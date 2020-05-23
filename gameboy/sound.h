@@ -22,7 +22,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "gameboy_types.h"
 #include "MachineIncludes.h"
-#include "PlatformTypes.h"
+#include "platform_types.h"
 
 namespace emunisce {
 

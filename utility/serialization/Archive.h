@@ -20,7 +20,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef ARCHIVE_H
 #define ARCHIVE_H
 
-#include "PlatformTypes.h"
+#include "platform_types.h"
 
 namespace emunisce {
 

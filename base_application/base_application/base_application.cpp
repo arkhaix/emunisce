@@ -28,7 +28,7 @@ using namespace emunisce;
 #include <vector>
 
 #include "MachineIncludes.h"
-#include "PlatformIncludes.h"
+#include "platform_includes.h"
 #include "command_trie.h"
 #include "gui.h"
 #include "input_manager.h"
