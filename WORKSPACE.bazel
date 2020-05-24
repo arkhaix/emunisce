@@ -96,7 +96,7 @@ new_local_repository(
 
 new_local_repository(
     name = "wx_setup_arch",
-    path = "/usr/lib/wx/include/gtk2-unicode-3.0",
+    path = "/usr/lib/wx/include/gtk3-unicode-3.0",
 
     build_file_content = WX_SETUP_BUILD,
 )
