@@ -213,8 +213,8 @@ void KingsDream::BlendBuffers() {
 }
 
 void KingsDream::SilentDream() {
-	float newX = sin(m_y * m_b) + m_c * sin(m_x * m_b);
-	float newY = sin(m_x * m_a) + m_d * sin(m_y * m_a);
+	float newX = (float)(sin(m_y * m_b) + m_c * sin(m_x * m_b));
+	float newY = (float)(sin(m_x * m_a) + m_d * sin(m_y * m_a));
 
 	m_x = newX;
 	m_y = newY;

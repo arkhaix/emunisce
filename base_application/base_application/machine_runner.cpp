@@ -203,6 +203,6 @@ void MachineRunner::ResetSynchronizationState() {
 	m_syncState.CurrentRealTime = now;
 	m_syncState.CurrentMachineTime = now;
 
-	m_syncState.ElapsedRealTime.zero();
-	m_syncState.ElapsedMachineTime.zero();
+	m_syncState.ElapsedRealTime = clock::duration::zero();
+	m_syncState.ElapsedMachineTime = clock::duration::zero();
 }

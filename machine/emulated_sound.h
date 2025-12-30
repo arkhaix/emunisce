@@ -39,7 +39,7 @@ struct AudioBuffer {
 		SamplesPerSecond / 20;  ///< Constant is frames (full buffers) per second
 	static const unsigned int BufferSizeBytes = BufferSizeSamples * BytesPerSample;
 
-	SampleType Samples[2][BufferSizeSamples];  ///< 2 channels
+	SampleType Samples[2][BufferSizeSamples]{0};  ///< 2 channels
 	unsigned int NumSamples;
 
 	AudioBuffer() {

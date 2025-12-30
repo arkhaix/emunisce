@@ -96,8 +96,8 @@ protected:
 		clock::time_point CurrentRealTime;
 		clock::time_point CurrentMachineTime;
 
-		clock::duration ElapsedRealTime;
-		clock::duration ElapsedMachineTime;
+		clock::duration ElapsedRealTime{clock::duration::zero()};
+		clock::duration ElapsedMachineTime{clock::duration::zero()};
 	};
 
 	SynchronizationInfo m_syncState;
