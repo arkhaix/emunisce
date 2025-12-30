@@ -33,6 +33,7 @@ Emunisce
 # Bazel
 **bazel-*
 !bazel_vs/*
+.clwb/
 
 # clang-tidy
 compile_commands.json
