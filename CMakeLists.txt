@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.30)
 
-set(VCPKG_TARGET_TRIPLET "arm64-osx" CACHE STRING "VCPKG Target Triplet" FORCE)
 set(CMAKE_OSX_ARCHITECTURES "arm64" CACHE STRING "Build architectures for macOS" FORCE)
+set(CMAKE_OSX_DEPLOYMENT_TARGET "15.5" CACHE STRING "" FORCE)
+set(VCPKG_TARGET_TRIPLET "arm64-osx" CACHE STRING "VCPKG Target Triplet" FORCE)
 set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
 
 project(emunisce CXX)
@@ -28,5 +29,5 @@ endif()
 
 # Windows-specific application
 if(WIN32)
-    add_subdirectory(windows_application)
+  add_subdirectory(windows_application)
 endif()

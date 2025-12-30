@@ -62,6 +62,9 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #elif defined(_M_X64) || defined(__amd64__)
 #define EMUNISCE_ARCHITECTURE_64BIT 1
 
+#elif defined(__aarch64__) || defined(_M_ARM64)
+#define EMUNISCE_ARCHITECTURE_64BIT 1
+
 #else
 #define EMUNISCE_ARCHITECTURE_UNKNOWN 1
 #pragma message("Unrecognized architecture")
