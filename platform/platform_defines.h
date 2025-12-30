@@ -42,6 +42,9 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 #elif defined(__linux)
 #define EMUNISCE_PLATFORM_LINUX 1
 
+#elif defined(__APPLE__)
+#define EMUNISCE_PLATFORM_MACOS 1
+
 #else
 #define EMUNISCE_PLATFORM_UNKNOWN 1
 #pragma message("Unrecognized platform")

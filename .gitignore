@@ -35,6 +35,14 @@ Emunisce
 !bazel_vs/*
 .clwb/
 
+# CMake
+.build/
+build/
+cmake-build-*/
+
+# vcpkg
+vcpkg_installed/
+
 # clang-tidy
 compile_commands.json
 

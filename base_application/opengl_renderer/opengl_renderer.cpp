@@ -26,13 +26,17 @@ using namespace emunisce;
 #include "windows.h"
 #endif
 
-#ifdef EMUNISCE_PLATFORM_LINUX
+#if defined(EMUNISCE_PLATFORM_LINUX)
 #include "GL/glew.h"
-#endif
 #include "GL/gl.h"
-
-#ifdef EMUNISCE_PLATFORM_WINDOWS
+#elif defined(EMUNISCE_PLATFORM_MACOS)
+#include <OpenGL/gl.h>
+#include <OpenGL/glext.h>
+#elif defined(EMUNISCE_PLATFORM_WINDOWS)
+#include "GL/gl.h"
 #include "glext.h"
+#else
+#include "GL/gl.h"
 #endif
 
 #include <cstdlib>
@@ -312,6 +316,9 @@ public:
 #elif EMUNISCE_PLATFORM_LINUX
 		if (GLEW_ARB_pixel_buffer_object)
 			_PboSupported = true;
+#elif EMUNISCE_PLATFORM_MACOS
+		// On macOS, these functions are core in OpenGL
+		_PboSupported = true;
 #endif
 	}
 

@@ -1,0 +1,15 @@
+{
+  "name": "remunisce",
+  "version": "0.1.0",
+  "dependencies": [
+    {
+      "name": "imgui",
+        "features": [
+            "sdlgpu3-binding"
+        ]
+    },
+    {
+      "name": "sdl3"
+    }
+  ]
+}
