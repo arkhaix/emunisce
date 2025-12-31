@@ -1,0 +1,11 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+include("${CMAKE_CURRENT_LIST_DIR}/emunisceTargets.cmake")
+
+# Provide convenient variables
+set(EMUNISCE_LIBRARIES emunisce::machine emunisce::gameboy)
+set(EMUNISCE_INCLUDE_DIRS "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
+
+check_required_components(emunisce)

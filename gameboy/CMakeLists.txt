@@ -42,9 +42,15 @@ add_library(gameboy
     sound4.h
     sound_generator.h
 )
-target_include_directories(gameboy PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(gameboy PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include/emunisce/gameboy>
+)
 target_link_libraries(gameboy PUBLIC
     machine_interfaces
     platform
     utility
 )
+
+# Provide namespaced alias for use via FetchContent/add_subdirectory
+add_library(emunisce::gameboy ALIAS gameboy)

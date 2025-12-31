@@ -10,5 +10,11 @@ add_library(serialization
     serialize_item.h
     serializer.h
 )
-target_include_directories(serialization PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(serialization PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include/emunisce/utility/serialization>
+)
 target_link_libraries(serialization PUBLIC platform)
+
+# Provide namespaced alias for use via FetchContent/add_subdirectory
+add_library(emunisce::serialization ALIAS serialization)
