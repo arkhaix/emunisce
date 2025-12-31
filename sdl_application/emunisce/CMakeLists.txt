@@ -14,5 +14,6 @@ target_link_libraries(emunisce_sdl PUBLIC
     platform
     machine
     base_application_lib
+    sdl_gpu_renderer
     SDL3::SDL3-static
 )
