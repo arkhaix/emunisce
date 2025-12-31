@@ -1,0 +1,50 @@
+# GameBoy emulator library
+add_library(gameboy
+    channel_controller.cpp
+    cpu.cpp
+    cpu_exec.cpp
+    display.cpp
+    duty_unit.cpp
+    envelope_unit.cpp
+    gameboy.cpp
+    input.cpp
+    length_unit.cpp
+    mbc1.cpp
+    mbc3.cpp
+    mbc5.cpp
+    memory.cpp
+    rom_only.cpp
+    sound.cpp
+    sound1.cpp
+    sound2.cpp
+    sound3.cpp
+    sound4.cpp
+    sound_generator.cpp
+    channel_controller.h
+    cpu.h
+    display.h
+    duty_unit.h
+    envelope_unit.h
+    gameboy.h
+    gameboy_includes.h
+    gameboy_types.h
+    input.h
+    length_unit.h
+    mbc1.h
+    mbc3.h
+    mbc5.h
+    memory.h
+    rom_only.h
+    sound.h
+    sound1.h
+    sound2.h
+    sound3.h
+    sound4.h
+    sound_generator.h
+)
+target_include_directories(gameboy PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(gameboy PUBLIC
+    machine_interfaces
+    platform
+    utility
+)

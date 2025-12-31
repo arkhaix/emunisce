@@ -53,7 +53,7 @@ struct ApplicationEvent {
 	unsigned int frameCount;
 	unsigned int tickCount;
 
-	bool operator<(const ApplicationEvent& rhs) {
+	bool operator<(const ApplicationEvent& rhs) const {
 		if (frameCount < rhs.frameCount)
 			return true;
 		else if (frameCount > rhs.frameCount)

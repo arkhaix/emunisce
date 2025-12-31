@@ -71,6 +71,8 @@ BaseApplication::BaseApplication() {
 
 	m_machineRunner = new MachineRunner();
 	m_machineRunner->Initialize();
+	m_machineRunner->SetMachine(m_machine);  // Set initial machine (Gui with background animation)
+	m_machineRunner->Run();                  // Start the background animation running
 
 	// Console commands
 	m_commandTrie = new CommandTrie();
