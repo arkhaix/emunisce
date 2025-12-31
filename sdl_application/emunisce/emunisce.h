@@ -28,6 +28,7 @@ along with Emunisce.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "base_application.h"
 #include "sdl_gpu_renderer.h"
+#include "sdl_sound.h"
 
 namespace emunisce {
 
@@ -42,6 +43,7 @@ public:
 
 	SDL_Window* GetWindow();
 	SDLGPURenderer* GetRenderer();
+	SDLSound* GetSound();
 
 	ConsoleDebugger* GetDebugger();
 
@@ -104,6 +106,7 @@ private:
 
 	ConsoleDebugger* m_debugger;
 	SDLGPURenderer* m_renderer;
+	SDLSound* m_sound;
 
 	bool m_vsyncEnabled;
 

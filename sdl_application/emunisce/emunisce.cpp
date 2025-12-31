@@ -46,6 +46,7 @@ EmunisceApplication::EmunisceApplication() {
 
 	m_debugger = new ConsoleDebugger();
 	m_renderer = new SDLGPURenderer();
+	m_sound = new SDLSound();
 
 	m_vsyncEnabled = true;
 
@@ -56,6 +57,7 @@ EmunisceApplication::EmunisceApplication() {
 
 	m_debugger->Initialize(this);
 	m_renderer->Initialize(m_window);
+	m_sound->Initialize(this);
 
 	MapDefaultKeys();
 
@@ -68,6 +70,12 @@ EmunisceApplication::EmunisceApplication() {
 }
 
 EmunisceApplication::~EmunisceApplication() {
+	if (m_sound) {
+		m_sound->Shutdown();
+		delete m_sound;
+		m_sound = nullptr;
+	}
+
 	if (m_renderer) {
 		m_renderer->Shutdown();
 		delete m_renderer;
@@ -152,6 +160,10 @@ SDL_Window* EmunisceApplication::GetWindow() {
 
 SDLGPURenderer* EmunisceApplication::GetRenderer() {
 	return m_renderer;
+}
+
+SDLSound* EmunisceApplication::GetSound() {
+	return m_sound;
 }
 
 ConsoleDebugger* EmunisceApplication::GetDebugger() {
@@ -343,6 +355,10 @@ void EmunisceApplication::HandlePendingMachineChange() {
 
 	if (m_renderer) {
 		m_renderer->SetMachine(m_machine);
+	}
+
+	if (m_sound) {
+		m_sound->SetMachine(m_machine);
 	}
 
 	// Start out at the native resolution or 320x240 (adjusted for aspect ratio), whichever is larger.
