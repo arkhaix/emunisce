@@ -67,3 +67,113 @@ if(EMUNISCE_BUILD_APPLICATIONS)
     add_subdirectory(windows_application)
   endif()
 endif()
+
+# Installation configuration
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+
+# Install core libraries
+install(TARGETS platform machine_interfaces machine gameboy serialization hqx utility
+  EXPORT emunisceTargets
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+# Install headers
+install(FILES
+  platform/platform_defines.h
+  platform/platform_includes.h
+  platform/platform_types.h
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/emunisce/platform
+)
+
+install(FILES
+  machine/emulated_display.h
+  machine/emulated_input.h
+  machine/emulated_machine.h
+  machine/emulated_memory.h
+  machine/emulated_processor.h
+  machine/emulated_sound.h
+  machine/machine_factory.h
+  machine/machine_includes.h
+  machine/machine_serialization.h
+  machine/machine_to_application.h
+  machine/machine_types.h
+  machine/screen_buffer.h
+  machine/t_screen_buffer.hpp
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/emunisce/machine
+)
+
+install(FILES
+  gameboy/channel_controller.h
+  gameboy/cpu.h
+  gameboy/display.h
+  gameboy/duty_unit.h
+  gameboy/envelope_unit.h
+  gameboy/gameboy.h
+  gameboy/gameboy_includes.h
+  gameboy/gameboy_types.h
+  gameboy/input.h
+  gameboy/length_unit.h
+  gameboy/mbc1.h
+  gameboy/mbc3.h
+  gameboy/mbc5.h
+  gameboy/memory.h
+  gameboy/rom_only.h
+  gameboy/sound.h
+  gameboy/sound1.h
+  gameboy/sound2.h
+  gameboy/sound3.h
+  gameboy/sound4.h
+  gameboy/sound_generator.h
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/emunisce/gameboy
+)
+
+install(FILES
+  utility/serialization/archive.h
+  utility/serialization/file_serializer.h
+  utility/serialization/memory_serializer.h
+  utility/serialization/serialization_includes.h
+  utility/serialization/serialize_item.h
+  utility/serialization/serializer.h
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/emunisce/utility/serialization
+)
+
+install(FILES
+  utility/hqx/hqx.h
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/emunisce/utility/hqx
+)
+
+# Install SDL application if built
+if(EMUNISCE_BUILD_APPLICATIONS AND BUILD_SDL_APPLICATION AND TARGET emunisce_sdl)
+  install(TARGETS emunisce_sdl
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  )
+endif()
+
+# Generate and install package configuration files
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/emunisceConfigVersion.cmake"
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion
+)
+
+configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/emunisceConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/emunisceConfig.cmake"
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/emunisce
+)
+
+install(EXPORT emunisceTargets
+  FILE emunisceTargets.cmake
+  NAMESPACE emunisce::
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/emunisce
+)
+
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/emunisceConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/emunisceConfigVersion.cmake"
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/emunisce
+)

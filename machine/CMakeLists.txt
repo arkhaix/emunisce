@@ -7,20 +7,6 @@ target_include_directories(machine_interfaces INTERFACE
     $<INSTALL_INTERFACE:include/emunisce/machine>
 )
 add_library(emunisce::machine_interfaces ALIAS machine_interfaces)
-target_sources(machine_interfaces INTERFACE
-    ${CMAKE_CURRENT_SOURCE_DIR}/emulated_display.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/emulated_input.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/emulated_machine.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/emulated_memory.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/emulated_processor.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/emulated_sound.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/machine_factory.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/machine_includes.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/machine_serialization.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/machine_to_application.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/machine_types.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/screen_buffer.h
-)
 
 # Machine implementation library
 add_library(machine
