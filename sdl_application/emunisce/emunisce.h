@@ -41,7 +41,7 @@ public:
 	void RunMainLoop();  ///< Main loop. Blocks until shutdown.
 
 	SDL_Window* GetWindow();
-	SDL_Renderer* GetRenderer();
+	SDLGPURenderer* GetRenderer();
 
 	ConsoleDebugger* GetDebugger();
 

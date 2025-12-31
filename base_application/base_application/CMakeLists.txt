@@ -20,7 +20,10 @@ add_library(base_application
     rewinder.h
     user_interface.h
 )
-target_include_directories(base_application PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(base_application PUBLIC 
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/..
+)
 target_link_libraries(base_application PUBLIC
     platform
     utility

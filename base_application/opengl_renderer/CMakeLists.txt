@@ -10,7 +10,10 @@ add_library(opengl_renderer
     glext.h
     opengl_renderer.h
 )
-target_include_directories(opengl_renderer PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(opengl_renderer PUBLIC 
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/..
+)
 target_link_libraries(opengl_renderer PUBLIC
     platform
     machine

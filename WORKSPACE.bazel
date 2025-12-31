@@ -22,7 +22,7 @@ new_local_repository(
 
 new_local_repository(
     name = "win32",
-    path = "C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64",
+    path = "C:/Program Files (x86)/Windows Kits/10/Lib/10.0.17763.0/um/x64",
 
     build_file_content = """
 cc_library(

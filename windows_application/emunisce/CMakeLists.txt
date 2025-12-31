@@ -1,5 +1,5 @@
 # Emunisce Windows executable
-add_executable(emunisce_windows
+add_executable(emunisce_windows WIN32
     console_debugger.cpp
     emunisce.cpp
     main.cpp
@@ -14,4 +14,5 @@ target_link_libraries(emunisce_windows PUBLIC
     win32_common
     gdi_plus_renderer
     wave_out_sound
+    shlwapi
 )

@@ -9,7 +9,10 @@ add_library(sdl_gpu_renderer
     sdl_gpu_renderer.cpp
     sdl_gpu_renderer.h
 )
-target_include_directories(sdl_gpu_renderer PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(sdl_gpu_renderer PUBLIC 
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/..
+)
 target_link_libraries(sdl_gpu_renderer PUBLIC
     platform
     machine

@@ -150,7 +150,7 @@ SDL_Window* EmunisceApplication::GetWindow() {
 	return m_window;
 }
 
-SDL_Renderer* EmunisceApplication::GetRenderer() {
+SDLGPURenderer* EmunisceApplication::GetRenderer() {
 	return m_renderer;
 }
 
