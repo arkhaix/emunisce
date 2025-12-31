@@ -75,11 +75,16 @@ public:
 
 		SDL_Log("InitializeGPU: Starting GPU initialization...");
 
-		// Create GPU device
-		_Device = SDL_CreateGPUDevice(
-			SDL_GPU_SHADERFORMAT_SPIRV | SDL_GPU_SHADERFORMAT_MSL,
-			true,  // debugMode
-			nullptr  // name
+		// Create GPU device with support for all shader formats
+		// Windows needs DXBC (D3D11) or DXIL (D3D12), macOS needs MSL, Linux needs SPIRV (Vulkan)
+		SDL_GPUShaderFormat shaderFormats = SDL_GPU_SHADERFORMAT_SPIRV |  // Vulkan (Linux, some Windows)
+											SDL_GPU_SHADERFORMAT_DXBC |   // Direct3D 11 (Windows)
+											SDL_GPU_SHADERFORMAT_DXIL |   // Direct3D 12 (Windows)
+											SDL_GPU_SHADERFORMAT_MSL;     // Metal (macOS)
+
+		_Device = SDL_CreateGPUDevice(shaderFormats,
+									  true,    // debugMode
+									  nullptr  // name (let SDL pick the best backend)
 		);
 
 		if (!_Device) {
